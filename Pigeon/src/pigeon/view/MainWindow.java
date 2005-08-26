@@ -204,15 +204,15 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     // </editor-fold>//GEN-END:initComponents
 
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
-        int index = racepointsList.getSelectedIndex();
-        season.getClub().getRacepoints().remove(index);
-        racepointsList.setListData(season.getClub().getRacepoints());
+        Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
+        season.getClub().removeRacepoint( racepoint );
+        reloadRacepointsList();
     }//GEN-LAST:event_racepointDeleteButtonActionPerformed
 
     private void memberDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberDeleteButtonActionPerformed
-        int index = membersList.getSelectedIndex();
-        season.getClub().getMembers().remove(index);
-        membersList.setListData(season.getClub().getMembers());
+        Member member = (Member)membersList.getSelectedValue();
+        season.getClub().removeMember( member );
+        reloadMembersList();
     }//GEN-LAST:event_memberDeleteButtonActionPerformed
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
@@ -281,9 +281,17 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
 
     private void reloadControlData() {
         clubNameText.setText(season.getName());
-        membersList.setListData(season.getClub().getMembers());
-        racepointsList.setListData(season.getClub().getRacepoints());
+        reloadMembersList();
+        reloadRacepointsList();
         refreshButtons();
+    }
+
+    private void reloadMembersList() {
+        membersList.setListData(season.getClub().getMembers());
+    }
+    
+    private void reloadRacepointsList() {
+        racepointsList.setListData(season.getClub().getRacepoints());
     }
     
     private void refreshButtons() {

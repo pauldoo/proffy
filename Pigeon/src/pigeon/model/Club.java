@@ -45,10 +45,14 @@ public class Club implements Serializable {
         return getName();
     }
 
+    /** Returns a shallow copy of the members list.
+     */
     public Vector<Member> getMembers() {
         return new Vector<Member>(members);
     }
 
+    /** Returns a shallow copy of the racepoints list.
+     */
     public Vector<Racepoint> getRacepoints() {
         return new Vector<Racepoint>(racepoints);
     }
@@ -61,4 +65,11 @@ public class Club implements Serializable {
         racepoints.add( racepoint );
     }
     
+    public void removeMember(Member member) {
+        members.remove(member);
+    }
+    
+    public void removeRacepoint(Racepoint racepoint) {
+        racepoints.remove(racepoint);
+    }
 }
