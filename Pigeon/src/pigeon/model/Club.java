@@ -58,11 +58,15 @@ public class Club implements Serializable {
     }
     
     public void addMember(Member member) {
-        members.add( member );
+        if (!members.add( member )) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void addRacepoint(Racepoint racepoint) {
-        racepoints.add( racepoint );
+        if (!racepoints.add( racepoint )) {
+            throw new IllegalArgumentException();
+        }
     }
     
     public void removeMember(Member member) {
@@ -71,5 +75,13 @@ public class Club implements Serializable {
     
     public void removeRacepoint(Racepoint racepoint) {
         racepoints.remove(racepoint);
+    }
+    
+    public int getNumberOfMembers() {
+        return members.size();
+    }
+    
+    public int getNumberOfRacepoints() {
+        return racepoints.size();
     }
 }

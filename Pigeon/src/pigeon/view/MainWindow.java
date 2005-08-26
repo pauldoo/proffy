@@ -8,11 +8,23 @@ package pigeon.view;
 
 import java.awt.CardLayout;
 import java.awt.Container;
-import javax.swing.JList;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import pigeon.model.Member;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
@@ -64,14 +76,23 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         racepointEditButton = new javax.swing.JButton();
         racepointDeleteButton = new javax.swing.JButton();
         finishedButton = new javax.swing.JButton();
+        viewingSeason = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         getContentPane().setLayout(new java.awt.CardLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pigeon");
+        setLocationByPlatform(true);
         mainMenuPanel.setLayout(new java.awt.GridBagLayout());
 
         loadSeasonButton.setText("Load existing season");
+        loadSeasonButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadSeasonButtonActionPerformed(evt);
+            }
+        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -97,7 +118,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
 
         clubPanel.setLayout(new java.awt.GridBagLayout());
 
-        clubNameLabel.setText("Name");
+        clubNameLabel.setText("Club Name");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -195,14 +216,121 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         setupClubPanel.add(tabbedPane, java.awt.BorderLayout.CENTER);
 
         finishedButton.setText("Finished");
+        finishedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishedButtonActionPerformed(evt);
+            }
+        });
+
         setupClubPanel.add(finishedButton, java.awt.BorderLayout.SOUTH);
 
         getContentPane().add(setupClubPanel, "setupClub");
+
+        jLabel1.setText("This bit isn't written yet.");
+        viewingSeason.add(jLabel1);
+
+        getContentPane().add(viewingSeason, "viewingSeason");
 
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
 
+    private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed
+        promptLoadSeason();
+    }//GEN-LAST:event_loadSeasonButtonActionPerformed
+
+    private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
+        String clubName = clubNameText.getText();
+        season.getClub().setName( clubName );
+        int memberCount = season.getClub().getNumberOfMembers();
+        int racepointCount = season.getClub().getNumberOfRacepoints();
+        String message =
+                "Have you finished adding all of the members (currently " + memberCount + ") " +
+                "and racepoints (currently " + racepointCount + ") for the club \"" + clubName + "\"?";
+        int result = JOptionPane.showConfirmDialog(this, message, "Finishing club setup", JOptionPane.YES_NO_OPTION);
+        switch (result) {
+            case JOptionPane.YES_OPTION:
+                promptSaveSeason();
+                break;
+            case JOptionPane.NO_OPTION:
+                JOptionPane.showMessageDialog(this, "Please continue to add members and racepoints.");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+    }//GEN-LAST:event_finishedButtonActionPerformed
+
+    private void promptSaveSeason() {
+        JFileChooser chooser = new JFileChooser();
+        FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
+        chooser.addChoosableFileFilter(filter);
+        chooser.setAcceptAllFileFilterUsed(false);
+        int result = chooser.showSaveDialog(this);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                if (!file.getName().endsWith(".pcs")) {
+                    file = new File(file.getParentFile(), file.getName() + ".pcs");
+                }
+                try {
+                    writeSeasonToFile(file);
+                    switchToCard("viewingSeason");
+                } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                break;
+            case JFileChooser.ERROR_OPTION:
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    private void promptLoadSeason() {
+        JFileChooser chooser = new JFileChooser();
+        FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
+        chooser.addChoosableFileFilter(filter);
+        chooser.setAcceptAllFileFilterUsed(false);
+        int result = chooser.showOpenDialog(this);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                try {
+                    loadSeasonFromFile(file);
+                    switchToCard("viewingSeason");
+                } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
+                } catch (ClassNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                break;
+            case JFileChooser.ERROR_OPTION:
+            default:
+                throw new IllegalStateException();
+        }
+    }
+    
+    private void writeSeasonToFile(File file) throws FileNotFoundException, IOException {
+        ObjectOutput out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+        out.writeObject(season);
+        out.close();
+    }
+
+    private void loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+        ObjectInput in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+        Season loaded = (Season)in.readObject();
+        in.close();
+        setSeason( loaded );
+    }
+    
+    
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         season.getClub().removeRacepoint( racepoint );
@@ -280,7 +408,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
     private void reloadControlData() {
-        clubNameText.setText(season.getName());
+        clubNameText.setText(season.getClub().getName());
         reloadMembersList();
         reloadRacepointsList();
         refreshButtons();
@@ -301,10 +429,14 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
     }
     
+    private void switchToCard(String cardName) {
+        Container parent = this.getContentPane();
+        ((CardLayout)parent.getLayout()).show(parent, cardName);        
+    }
+    
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
         setSeason( new Season() );
-        Container parent = this.getContentPane();
-        ((CardLayout)parent.getLayout()).show(parent, "setupClub");
+        switchToCard("setupClub");
     }//GEN-LAST:event_newSeasonButtonActionPerformed
     
     /**
@@ -340,6 +472,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private javax.swing.JTextField clubNameText;
     private javax.swing.JPanel clubPanel;
     private javax.swing.JButton finishedButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JButton memberAddButton;
@@ -359,6 +492,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private javax.swing.JPanel racepointsPanel;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
     
 }
