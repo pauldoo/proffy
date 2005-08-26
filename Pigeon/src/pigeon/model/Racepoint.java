@@ -16,7 +16,7 @@ import java.io.Serializable;
  *
  * @author Paul
  */
-public class Racepoint implements Serializable {
+public class Racepoint implements Serializable, Comparable<Racepoint> {
     
     private static final long serialVersionUID = 42L;
     
@@ -36,6 +36,18 @@ public class Racepoint implements Serializable {
     
     public String toString() {
         return getName();
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
+    
+    public int compareTo(Racepoint other) {
+        if (this == other) {
+            return 0;
+        } else {
+            return name.compareTo(other.name);
+        }
     }
     
 }

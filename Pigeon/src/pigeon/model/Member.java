@@ -16,7 +16,7 @@ import java.io.Serializable;
  *
  * @author Paul
  */
-public class Member implements Serializable {
+public class Member implements Serializable, Comparable<Member> {
     
     private static final long serialVersionUID = 42L;
     
@@ -36,6 +36,18 @@ public class Member implements Serializable {
     
     public String toString() {
         return getName();
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
+    
+    public int compareTo(Member other) {
+        if (this == other) {
+            return 0;
+        } else {
+            return name.compareTo(other.name);
+        }
     }
     
 }

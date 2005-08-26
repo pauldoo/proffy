@@ -11,6 +11,8 @@
 package pigeon.model;
 
 import java.io.Serializable;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -22,13 +24,13 @@ public class Club implements Serializable {
     private static final long serialVersionUID = 42L;
     
     private String name;
-    private Vector<Member> members;
-    private Vector<Racepoint> racepoints;
+    private SortedSet<Member> members;
+    private SortedSet<Racepoint> racepoints;
     
     /** Creates a new instance of Club */
     public Club() {
-        members = new Vector<Member>();
-        racepoints = new Vector<Racepoint>();
+        members = new TreeSet<Member>();
+        racepoints = new TreeSet<Racepoint>();
     }
 
     public String getName() {
@@ -44,19 +46,19 @@ public class Club implements Serializable {
     }
 
     public Vector<Member> getMembers() {
-        return members;
+        return new Vector<Member>(members);
     }
 
     public Vector<Racepoint> getRacepoints() {
-        return racepoints;
+        return new Vector<Racepoint>(racepoints);
     }
     
     public void addMember(Member member) {
-        getMembers().add( member );
+        members.add( member );
     }
 
     public void addRacepoint(Racepoint racepoint) {
-        getRacepoints().add( racepoint );
+        racepoints.add( racepoint );
     }
     
 }
