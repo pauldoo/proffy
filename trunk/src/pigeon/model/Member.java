@@ -13,7 +13,7 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- *
+ * Equality and hashing are based only on the member's name.
  * @author Paul
  */
 public class Member implements Serializable, Comparable<Member> {
@@ -21,6 +21,10 @@ public class Member implements Serializable, Comparable<Member> {
     private static final long serialVersionUID = 42L;
     
     private String name;
+    private String address;
+    private String telephone;
+    private String ringNumberFrom;
+    private String ringNumberTo;
     
     /** Creates a new instance of Member */
     public Member() {
@@ -49,5 +53,38 @@ public class Member implements Serializable, Comparable<Member> {
             return name.compareTo(other.name);
         }
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getRingNumberFrom() {
+        return ringNumberFrom;
+    }
+
+    public void setRingNumberFrom(String ringNumberFrom) {
+        this.ringNumberFrom = ringNumberFrom;
+    }
+
+    public String getRingNumberTo() {
+        return ringNumberTo;
+    }
+
+    public void setRingNumberTo(String ringNumberTo) {
+        this.ringNumberTo = ringNumberTo;
+    }
+
     
 }

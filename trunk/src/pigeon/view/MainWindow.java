@@ -365,16 +365,8 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
         Member member = season.getClub().getMembers().get(index);
-        String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + member + "\"", "Edit member name", JOptionPane.QUESTION_MESSAGE);
-        if (name != null) {
-             name = name.trim();
-             if (name.length() > 0) {
-                 member.setName( name );
-                 membersList.setListData(season.getClub().getMembers());
-             } else {
-                 JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
-             }
-        }
+        MemberInfo.editMember(this, member);
+        membersList.setListData(season.getClub().getMembers());
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
     private void racepointAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointAddButtonActionPerformed
@@ -393,18 +385,9 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     }//GEN-LAST:event_racepointAddButtonActionPerformed
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
-         String name = JOptionPane.showInputDialog(this, "Please enter a name", "New member", JOptionPane.QUESTION_MESSAGE);
-         if (name != null) {
-             name = name.trim();
-             if (name.length() > 0) {
-                 Member member = new Member();
-                 member.setName(name);
-                 season.getClub().addMember( member );
-                 membersList.setListData(season.getClub().getMembers());
-             } else {
-                 JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
-             }
-         }
+        Member member = MemberInfo.createMember(this);  
+        season.getClub().addMember( member );
+        membersList.setListData(season.getClub().getMembers());
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
     private void reloadControlData() {
@@ -447,7 +430,8 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                MainWindow window = new MainWindow();
+                window.setVisible(true);
             }
         });
     }

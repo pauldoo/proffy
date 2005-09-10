@@ -6,15 +6,39 @@
 
 package pigeon.view;
 
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import pigeon.model.Member;
+
 /**
  *
  * @author  Sarah
  */
 public class MemberInfo extends javax.swing.JPanel {
     
+    private static final long serialVersionUID = 42L;
+
     /** Creates new form MemberInfo */
-    public MemberInfo() {
+    public MemberInfo(Member member, boolean editable) {
         initComponents();
+        nameText.setText( member.getName() );
+        nameText.setEditable( editable );
+        addressText.setText( member.getAddress() );
+        addressText.setEditable( editable );
+        telephoneText.setText( member.getTelephone() );
+        telephoneText.setEditable( editable );
+        ringNumberFromText.setText( member.getRingNumberFrom() );
+        ringNumberFromText.setEditable( editable );
+        ringNumberToText.setText( member.getRingNumberTo() );
+        ringNumberToText.setEditable( editable );
+    }
+    
+    private void updateMemberObject(Member member) {
+        member.setName( nameText.getText() );
+        member.setAddress( addressText.getText() );
+        member.setTelephone( telephoneText.getText() );
+        member.setRingNumberFrom( ringNumberFromText.getText() );
+        member.setRingNumberTo( ringNumberToText.getText() );
     }
     
     /** This method is called from within the constructor to
@@ -26,31 +50,30 @@ public class MemberInfo extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        MemNameLabel = new javax.swing.JLabel();
-        MemNameText = new javax.swing.JTextField();
-        AddressLabel = new javax.swing.JLabel();
-        AddressBox = new javax.swing.JScrollPane();
+        nameLabel = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
+        addressLabel = new javax.swing.JLabel();
+        addressScrollPane = new javax.swing.JScrollPane();
         addressText = new javax.swing.JTextArea();
-        TelNoLabel = new javax.swing.JLabel();
-        TelNoText = new javax.swing.JTextField();
-        RingNoLabel = new javax.swing.JLabel();
-        RingFromLabel = new javax.swing.JLabel();
-        RingFromText = new javax.swing.JTextField();
-        RingToLabel = new javax.swing.JLabel();
-        RingToText = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        telephoneLabel = new javax.swing.JLabel();
+        telephoneText = new javax.swing.JTextField();
+        ringNumberLabel = new javax.swing.JLabel();
+        ringNumberFromLabel = new javax.swing.JLabel();
+        ringNumberFromText = new javax.swing.JTextField();
+        ringNumberToLabel = new javax.swing.JLabel();
+        ringNumberToText = new javax.swing.JTextField();
+        memberInformationLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
-        MemNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        MemNameLabel.setText("Member Name");
+        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        nameLabel.setText("Member Name");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(MemNameLabel, gridBagConstraints);
+        add(nameLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -59,114 +82,126 @@ public class MemberInfo extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(MemNameText, gridBagConstraints);
+        add(nameText, gridBagConstraints);
 
-        AddressLabel.setText("Contact Address");
+        addressLabel.setText("Contact Address");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(AddressLabel, gridBagConstraints);
+        add(addressLabel, gridBagConstraints);
 
         addressText.setRows(5);
-        AddressBox.setViewportView(addressText);
+        addressScrollPane.setViewportView(addressText);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(AddressBox, gridBagConstraints);
+        add(addressScrollPane, gridBagConstraints);
 
-        TelNoLabel.setText("Telephone No.");
+        telephoneLabel.setText("Telephone No.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(TelNoLabel, gridBagConstraints);
+        add(telephoneLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(TelNoText, gridBagConstraints);
+        add(telephoneText, gridBagConstraints);
 
-        RingNoLabel.setFont(new java.awt.Font("Tahoma", 1, 12));
-        RingNoLabel.setText("Ring Numbers");
+        ringNumberLabel.setText("Ring Numbers");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(RingNoLabel, gridBagConstraints);
+        add(ringNumberLabel, gridBagConstraints);
 
-        RingFromLabel.setText("From");
+        ringNumberFromLabel.setText("From");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(RingFromLabel, gridBagConstraints);
+        add(ringNumberFromLabel, gridBagConstraints);
 
+        ringNumberFromText.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(RingFromText, gridBagConstraints);
+        add(ringNumberFromText, gridBagConstraints);
 
-        RingToLabel.setText("To");
+        ringNumberToLabel.setText("To");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(RingToLabel, gridBagConstraints);
+        add(ringNumberToLabel, gridBagConstraints);
 
+        ringNumberToText.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(RingToText, gridBagConstraints);
+        add(ringNumberToText, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jLabel1.setText("Member Information");
+        memberInformationLabel.setText("Member Information");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(jLabel1, gridBagConstraints);
+        add(memberInformationLabel, gridBagConstraints);
 
     }
     // </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane AddressBox;
-    private javax.swing.JLabel AddressLabel;
-    private javax.swing.JLabel MemNameLabel;
-    private javax.swing.JTextField MemNameText;
-    private javax.swing.JLabel RingFromLabel;
-    private javax.swing.JTextField RingFromText;
-    private javax.swing.JLabel RingNoLabel;
-    private javax.swing.JLabel RingToLabel;
-    private javax.swing.JTextField RingToText;
-    private javax.swing.JLabel TelNoLabel;
-    private javax.swing.JTextField TelNoText;
+    private javax.swing.JLabel addressLabel;
+    private javax.swing.JScrollPane addressScrollPane;
     private javax.swing.JTextArea addressText;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel memberInformationLabel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameText;
+    private javax.swing.JLabel ringNumberFromLabel;
+    private javax.swing.JTextField ringNumberFromText;
+    private javax.swing.JLabel ringNumberLabel;
+    private javax.swing.JLabel ringNumberToLabel;
+    private javax.swing.JTextField ringNumberToText;
+    private javax.swing.JLabel telephoneLabel;
+    private javax.swing.JTextField telephoneText;
     // End of variables declaration//GEN-END:variables
     
+    public static void editMember(Component parent, Member member) {
+        MemberInfo panel = new MemberInfo(member, true);
+        JOptionPane.showMessageDialog(parent, panel, "Member Information", JOptionPane.PLAIN_MESSAGE);
+        panel.updateMemberObject(member);
+    }
+    
+    public static Member createMember(Component parent) {
+        Member member = new Member();
+        editMember(parent, member);
+        return member;
+    }
 }
