@@ -7,6 +7,7 @@
 package pigeon.view;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,12 +20,14 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.SortedMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import pigeon.model.Distance;
 import pigeon.model.Member;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
@@ -377,6 +380,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
                  Racepoint racepoint = new Racepoint();
                  racepoint.setName(name);
                  season.getClub().addRacepoint( racepoint );
+                 editDistancesForRacepoint( racepoint );
                  racepointsList.setListData(season.getClub().getRacepoints());
              } else {
                  JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
@@ -387,6 +391,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         Member member = MemberInfo.createMember(this);  
         season.getClub().addMember( member );
+        editDistancesForMember( member );
         membersList.setListData(season.getClub().getMembers());
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
@@ -421,6 +426,18 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         setSeason( new Season() );
         switchToCard("setupClub");
     }//GEN-LAST:event_newSeasonButtonActionPerformed
+    
+    private void editDistancesForMember(Member member) {
+        Component parent = this.getContentPane();
+        SortedMap<Racepoint, Distance> distances = season.getClub().getDistancesForMember(member);
+        DistanceEditorPanel.editMemberDistances(parent, member, distances);
+    }
+
+    private void editDistancesForRacepoint(Racepoint racepoint) {
+        Component parent = this.getContentPane();
+        SortedMap<Member, Distance> distances = season.getClub().getDistancesForRacepoint(racepoint);
+        DistanceEditorPanel.editRacepointDistances(parent, racepoint, distances);
+    }
     
     /**
      * @param args the command line arguments

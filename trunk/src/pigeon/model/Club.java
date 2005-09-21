@@ -110,7 +110,7 @@ public class Club implements Serializable {
         return distances.get(member);
     }
     
-    public SortedMap<Member, Distance> getdistancesForRacepoint(Racepoint racepoint) {
+    public SortedMap<Member, Distance> getDistancesForRacepoint(Racepoint racepoint) {
         SortedMap<Member, Distance> retval = new TreeMap<Member, Distance>();
         for (Map.Entry<Member, SortedMap<Racepoint, Distance>> entry: distances.entrySet()) {
             retval.put(entry.getKey(), entry.getValue().get(racepoint));

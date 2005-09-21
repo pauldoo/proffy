@@ -20,10 +20,10 @@ public class Distance implements Serializable, Comparable<Distance> {
     
     private static final long serialVersionUID = 42L;
     
-    private static double METRES_PER_YARD = 0.9144;
-    private static int YARDS_PER_MILE = 1760;
+    private static final double METRES_PER_YARD = 0.9144;
+    private static final int YARDS_PER_MILE = 1760;
     
-    private double distanceInMetres;
+    private final double distanceInMetres;
     
     /** Creates a new instance of Distance */
     private Distance(double metres) {
