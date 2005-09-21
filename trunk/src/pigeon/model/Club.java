@@ -11,7 +11,10 @@
 package pigeon.model;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -26,11 +29,13 @@ public class Club implements Serializable {
     private String name;
     private SortedSet<Member> members;
     private SortedSet<Racepoint> racepoints;
+    private SortedMap<Member, SortedMap<Racepoint, Distance>> distances; 
     
     /** Creates a new instance of Club */
     public Club() {
         members = new TreeSet<Member>();
         racepoints = new TreeSet<Racepoint>();
+        distances = new TreeMap<Member, SortedMap<Racepoint, Distance>>();
     }
 
     public String getName() {
@@ -61,11 +66,19 @@ public class Club implements Serializable {
         if (!members.add( member )) {
             throw new IllegalArgumentException();
         }
+        SortedMap<Racepoint, Distance> racepointDistances = new TreeMap<Racepoint, Distance>();
+        for (Racepoint racepoint: racepoints) {
+            racepointDistances.put(racepoint, Distance.createFromMetric(0));
+        }
+        distances.put(member, racepointDistances);
     }
 
     public void addRacepoint(Racepoint racepoint) {
         if (!racepoints.add( racepoint )) {
             throw new IllegalArgumentException();
+        }
+        for (Map.Entry<Member, SortedMap<Racepoint, Distance>> entry: distances.entrySet()) {
+            entry.getValue().put(racepoint, Distance.createFromMetric(0));
         }
     }
     
@@ -83,5 +96,25 @@ public class Club implements Serializable {
     
     public int getNumberOfRacepoints() {
         return racepoints.size();
+    }
+    
+    public Distance getDistance(Member member, Racepoint racepoint) {
+        return distances.get(member).get(racepoint);
+    }
+    
+    public void setDistance(Member member, Racepoint racepoint, Distance distance) {
+        distances.get(member).put(racepoint, distance);
+    }
+    
+    public SortedMap<Racepoint, Distance> getDistancesForMember(Member member) {
+        return distances.get(member);
+    }
+    
+    public SortedMap<Member, Distance> getdistancesForRacepoint(Racepoint racepoint) {
+        SortedMap<Member, Distance> retval = new TreeMap<Member, Distance>();
+        for (Map.Entry<Member, SortedMap<Racepoint, Distance>> entry: distances.entrySet()) {
+            retval.put(entry.getKey(), entry.getValue().get(racepoint));
+        }
+        return retval;
     }
 }
