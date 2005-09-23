@@ -17,9 +17,12 @@ import pigeon.model.Member;
 public class MemberInfo extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
+    
+    private Member member;
 
     /** Creates new form MemberInfo */
     public MemberInfo(Member member, boolean editable) {
+        this.member = member;
         initComponents();
         nameText.setText( member.getName() );
         nameText.setEditable( editable );
@@ -31,11 +34,11 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberFromText.setEditable( editable );
         ringNumberToText.setText( member.getRingNumberTo() );
         ringNumberToText.setEditable( editable );
-        SHUNumberText.setText(member.getSHUNumber());
-        SHUNumberText.setEditable(editable);
+        SHUNumberText.setText( member.getSHUNumber() );
+        SHUNumberText.setEditable( editable );
     }
     
-    private void updateMemberObject(Member member) {
+    private void updateMemberObject() {
         member.setName( nameText.getText() );
         member.setAddress( addressText.getText() );
         member.setTelephone( telephoneText.getText() );
@@ -218,7 +221,7 @@ public class MemberInfo extends javax.swing.JPanel {
     public static void editMember(Component parent, Member member) {
         MemberInfo panel = new MemberInfo(member, true);
         JOptionPane.showMessageDialog(parent, panel, "Member Information", JOptionPane.PLAIN_MESSAGE);
-        panel.updateMemberObject(member);
+        panel.updateMemberObject();
     }
     
     public static Member createMember(Component parent) {

@@ -354,6 +354,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
              name = name.trim();
              if (name.length() > 0) {
                  racepoint.setName( name );
+                 editDistancesForRacepoint( racepoint );
                  racepointsList.setListData(season.getClub().getRacepoints());
              } else {
                  JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
@@ -369,6 +370,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         int index = membersList.getSelectedIndex();
         Member member = season.getClub().getMembers().get(index);
         MemberInfo.editMember(this, member);
+        editDistancesForMember( member );
         membersList.setListData(season.getClub().getMembers());
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
@@ -429,14 +431,12 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     
     private void editDistancesForMember(Member member) {
         Component parent = this.getContentPane();
-        SortedMap<Racepoint, Distance> distances = season.getClub().getDistancesForMember(member);
-        DistanceEditorPanel.editMemberDistances(parent, member, distances);
+        DistanceEditorPanel.editMemberDistances(parent, member, season.getClub());
     }
 
     private void editDistancesForRacepoint(Racepoint racepoint) {
         Component parent = this.getContentPane();
-        SortedMap<Member, Distance> distances = season.getClub().getDistancesForRacepoint(racepoint);
-        DistanceEditorPanel.editRacepointDistances(parent, racepoint, distances);
+        DistanceEditorPanel.editRacepointDistances(parent, racepoint, season.getClub());
     }
     
     /**

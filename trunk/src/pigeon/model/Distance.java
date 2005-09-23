@@ -48,9 +48,17 @@ public class Distance implements Serializable, Comparable<Distance> {
         return distanceInMetres / METRES_PER_YARD;
     }
     
+    public int getMiles() {
+        return (int)Math.round(getYards()) / YARDS_PER_MILE;
+    }
+    
+    public int getYardsRemainder() {
+        return (int)Math.round(getYards()) % YARDS_PER_MILE;
+    }
+    
     public String toString() {
-        int yards = (int)(Math.round(getYards())) % YARDS_PER_MILE;
-        int miles = (int)(Math.round(getYards())) / YARDS_PER_MILE;
+        int miles = getMiles();
+        int yards = getYardsRemainder();
         return miles + "miles " + yards + "yards";
     }    
 
