@@ -31,6 +31,8 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberFromText.setEditable( editable );
         ringNumberToText.setText( member.getRingNumberTo() );
         ringNumberToText.setEditable( editable );
+        SHUNumberText.setText(member.getSHUNumber());
+        SHUNumberText.setEditable(editable);
     }
     
     private void updateMemberObject(Member member) {
@@ -39,6 +41,7 @@ public class MemberInfo extends javax.swing.JPanel {
         member.setTelephone( telephoneText.getText() );
         member.setRingNumberFrom( ringNumberFromText.getText() );
         member.setRingNumberTo( ringNumberToText.getText() );
+        member.setSHUNumber(SHUNumberText.getText());
     }
     
     /** This method is called from within the constructor to
@@ -63,6 +66,8 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberToLabel = new javax.swing.JLabel();
         ringNumberToText = new javax.swing.JTextField();
         memberInformationLabel = new javax.swing.JLabel();
+        SHUNumberLabel = new javax.swing.JLabel();
+        SHUNumberText = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -124,7 +129,7 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberLabel.setText("Ring Numbers");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -133,7 +138,7 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberFromLabel.setText("From");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(ringNumberFromLabel, gridBagConstraints);
@@ -141,7 +146,7 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberFromText.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -150,7 +155,7 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberToLabel.setText("To");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(ringNumberToLabel, gridBagConstraints);
@@ -158,7 +163,7 @@ public class MemberInfo extends javax.swing.JPanel {
         ringNumberToText.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -173,11 +178,28 @@ public class MemberInfo extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(memberInformationLabel, gridBagConstraints);
 
+        SHUNumberLabel.setText("SHU Registration No.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(SHUNumberLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(SHUNumberText, gridBagConstraints);
+
     }
     // </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SHUNumberLabel;
+    private javax.swing.JTextField SHUNumberText;
     private javax.swing.JLabel addressLabel;
     private javax.swing.JScrollPane addressScrollPane;
     private javax.swing.JTextArea addressText;

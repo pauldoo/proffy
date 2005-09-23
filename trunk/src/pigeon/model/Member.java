@@ -25,6 +25,7 @@ public class Member implements Serializable, Comparable<Member> {
     private String telephone;
     private String ringNumberFrom;
     private String ringNumberTo;
+    private String SHUNumber;
     
     /** Creates a new instance of Member */
     public Member() {
@@ -84,6 +85,14 @@ public class Member implements Serializable, Comparable<Member> {
 
     public void setRingNumberTo(String ringNumberTo) {
         this.ringNumberTo = ringNumberTo;
+    }
+
+    public String getSHUNumber() {
+        return SHUNumber;
+    }
+
+    public void setSHUNumber(String SHUNumber) {
+        this.SHUNumber = SHUNumber;
     }
 
     
