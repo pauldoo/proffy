@@ -24,6 +24,9 @@ import java.util.Vector;
  */
 public class Club implements Serializable {
     
+    // TODO: Fix deletion of members and racepoints
+    // TODO: Fix serialization so that member/racepoint references are stored 
+    
     private static final long serialVersionUID = 42L;
     
     private String name;
