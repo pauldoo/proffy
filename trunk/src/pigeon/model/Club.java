@@ -24,7 +24,6 @@ import java.util.Vector;
  */
 public class Club implements Serializable {
     
-    // TODO: Fix deletion of members and racepoints
     // TODO: Fix serialization so that member/racepoint references are stored 
     
     private static final long serialVersionUID = 42L;
@@ -87,10 +86,14 @@ public class Club implements Serializable {
     
     public void removeMember(Member member) {
         members.remove(member);
+        distances.remove(member);
     }
     
     public void removeRacepoint(Racepoint racepoint) {
         racepoints.remove(racepoint);
+        for (Map.Entry<Member, SortedMap<Racepoint, Distance>> entry: distances.entrySet()) {
+            entry.getValue().remove(racepoint);
+        }
     }
     
     public int getNumberOfMembers() {
