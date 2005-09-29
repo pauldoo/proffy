@@ -42,6 +42,18 @@ public class Racepoint implements Serializable, Comparable<Racepoint> {
         return name.hashCode();
     }
     
+    public boolean equals(Object other) {
+        return equals((Racepoint)other);
+    }
+    
+    public boolean equals(Racepoint other) {
+        if (this == other) {
+            return true;
+        } else {
+            return name.equals(other.name);
+        }
+    }
+    
     public int compareTo(Racepoint other) {
         if (this == other) {
             return 0;

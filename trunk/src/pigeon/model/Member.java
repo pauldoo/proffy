@@ -47,6 +47,18 @@ public class Member implements Serializable, Comparable<Member> {
         return name.hashCode();
     }
     
+    public boolean equals(Object other) {
+        return equals((Member)other);
+    }
+    
+    public boolean equals(Member other) {
+        if (this == other) {
+            return true;
+        } else {
+            return name.equals(other.name);
+        }
+    }
+    
     public int compareTo(Member other) {
         if (this == other) {
             return 0;
