@@ -23,12 +23,10 @@ public class Season implements Serializable {
     
     private String name;
     private Club club;
-    private Vector<Result> results;
     
     /** Creates a new instance of Season */
     public Season() {
         club = new Club();
-        results = new Vector<Result>();
     }
 
     public Club getClub() {
