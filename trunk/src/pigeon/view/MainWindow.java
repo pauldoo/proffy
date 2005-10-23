@@ -61,7 +61,6 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         newSeasonButton = new javax.swing.JButton();
         setupClubPanel = new javax.swing.JPanel();
         finishedButton = new javax.swing.JButton();
-        mainPanel = new javax.swing.JPanel();
         clubPanel = new javax.swing.JPanel();
         clubNameLabel = new javax.swing.JLabel();
         clubNameText = new javax.swing.JTextField();
@@ -80,7 +79,11 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         racepointEditButton = new javax.swing.JButton();
         racepointDeleteButton = new javax.swing.JButton();
         viewingSeason = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        raceresultPanel = new javax.swing.JPanel();
+        raceresultListScrollPane = new javax.swing.JScrollPane();
+        raceresultList = new javax.swing.JList();
+        raceresultButtonPanel = new javax.swing.JPanel();
+        raceresultAddButton = new javax.swing.JButton();
 
         getContentPane().setLayout(new java.awt.CardLayout());
 
@@ -117,7 +120,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
 
         getContentPane().add(mainMenuPanel, "mainMenu");
 
-        setupClubPanel.setLayout(new java.awt.BorderLayout(5, 5));
+        setupClubPanel.setLayout(new java.awt.GridBagLayout());
 
         finishedButton.setText("Finished");
         finishedButton.addActionListener(new java.awt.event.ActionListener() {
@@ -126,9 +129,11 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
             }
         });
 
-        setupClubPanel.add(finishedButton, java.awt.BorderLayout.SOUTH);
-
-        mainPanel.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        setupClubPanel.add(finishedButton, gridBagConstraints);
 
         clubPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -150,8 +155,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        mainPanel.add(clubPanel, gridBagConstraints);
+        setupClubPanel.add(clubPanel, gridBagConstraints);
 
         membersPanel.setLayout(new java.awt.BorderLayout());
 
@@ -197,7 +201,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        mainPanel.add(membersPanel, gridBagConstraints);
+        setupClubPanel.add(membersPanel, gridBagConstraints);
 
         racepointsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -243,14 +247,29 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        mainPanel.add(racepointsPanel, gridBagConstraints);
-
-        setupClubPanel.add(mainPanel, java.awt.BorderLayout.CENTER);
+        setupClubPanel.add(racepointsPanel, gridBagConstraints);
 
         getContentPane().add(setupClubPanel, "setupClub");
 
-        jLabel1.setText("This bit isn't written yet.");
-        viewingSeason.add(jLabel1);
+        viewingSeason.setLayout(new java.awt.GridBagLayout());
+
+        raceresultPanel.setLayout(new java.awt.BorderLayout());
+
+        raceresultPanel.setBorder(new javax.swing.border.TitledBorder("Race Results"));
+        raceresultListScrollPane.setViewportView(raceresultList);
+
+        raceresultPanel.add(raceresultListScrollPane, java.awt.BorderLayout.CENTER);
+
+        raceresultAddButton.setText("Add");
+        raceresultButtonPanel.add(raceresultAddButton);
+
+        raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.SOUTH);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        viewingSeason.add(raceresultPanel, gridBagConstraints);
 
         getContentPane().add(viewingSeason, "viewingSeason");
 
@@ -493,10 +512,8 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private javax.swing.JTextField clubNameText;
     private javax.swing.JPanel clubPanel;
     private javax.swing.JButton finishedButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JButton memberAddButton;
     private javax.swing.JPanel memberButtonPanel;
     private javax.swing.JButton memberDeleteButton;
@@ -512,6 +529,11 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private javax.swing.JScrollPane racepointListScrollPane;
     private javax.swing.JList racepointsList;
     private javax.swing.JPanel racepointsPanel;
+    private javax.swing.JButton raceresultAddButton;
+    private javax.swing.JPanel raceresultButtonPanel;
+    private javax.swing.JList raceresultList;
+    private javax.swing.JScrollPane raceresultListScrollPane;
+    private javax.swing.JPanel raceresultPanel;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
