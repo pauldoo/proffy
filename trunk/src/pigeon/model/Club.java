@@ -53,16 +53,12 @@ public class Club implements Serializable {
         return getName();
     }
 
-    /** Returns a shallow copy of the members list.
-     */
-    public Vector<Member> getMembers() {
-        return new Vector<Member>(new TreeSet<Member>(members));
+    public Collection<Member> getMembers() {
+        return members;
     }
 
-    /** Returns a shallow copy of the racepoints list.
-     */
-    public Vector<Racepoint> getRacepoints() {
-        return new Vector<Racepoint>(new TreeSet<Racepoint>(racepoints));
+    public Collection<Racepoint> getRacepoints() {
+        return racepoints;
     }
     
     public void addMember(Member member) {
@@ -154,9 +150,5 @@ public class Club implements Serializable {
         }
         return retval;
     }
-    
-    public SortedSet<DistanceEntry> getDistances() {
-        return new TreeSet<DistanceEntry>( distances );
-    }
-    
+        
 }

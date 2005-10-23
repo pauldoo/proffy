@@ -11,7 +11,8 @@
 package pigeon.model;
 
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
@@ -23,10 +24,12 @@ public class Season implements Serializable {
     
     private String name;
     private Club club;
+    private Collection<Race> races;
     
     /** Creates a new instance of Season */
     public Season() {
         club = new Club();
+        races = new ArrayList<Race>();
     }
 
     public Club getClub() {
@@ -43,6 +46,14 @@ public class Season implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public void addRace(Race race) {
+        races.add(race);
+    }
+    
+    public Collection<Race> getRaces() {
+        return races;
     }
     
 }

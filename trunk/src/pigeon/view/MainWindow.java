@@ -387,14 +387,14 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
         int index = racepointsList.getSelectedIndex();
-        Racepoint racepoint = season.getClub().getRacepoints().get(index);
+        Racepoint racepoint = Utilities.sortCollection( season.getClub().getRacepoints() ).get(index);
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE);
         if (name != null) {
              name = name.trim();
              if (name.length() > 0) {
                  racepoint.setName( name );
                  editDistancesForRacepoint( racepoint );
-                 racepointsList.setListData(season.getClub().getRacepoints());
+                 reloadRacepointsList();
              } else {
                  JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
              }
@@ -407,10 +407,10 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
-        Member member = season.getClub().getMembers().get(index);
+        Member member = Utilities.sortCollection(season.getClub().getMembers()).get(index);
         MemberInfo.editMember(this, member);
         editDistancesForMember( member );
-        membersList.setListData(season.getClub().getMembers());
+        reloadMembersList();
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
     private void racepointAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointAddButtonActionPerformed
@@ -422,7 +422,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
                  racepoint.setName(name);
                  season.getClub().addRacepoint( racepoint );
                  editDistancesForRacepoint( racepoint );
-                 racepointsList.setListData(season.getClub().getRacepoints());
+                 reloadRacepointsList();
              } else {
                  JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
              }
@@ -433,7 +433,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         Member member = MemberInfo.createMember(this);  
         season.getClub().addMember( member );
         editDistancesForMember( member );
-        membersList.setListData(season.getClub().getMembers());
+        reloadMembersList();
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
     private void reloadControlData() {
@@ -444,11 +444,11 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     }
 
     private void reloadMembersList() {
-        membersList.setListData(season.getClub().getMembers());
+        membersList.setListData(Utilities.sortCollection(season.getClub().getMembers()));
     }
     
     private void reloadRacepointsList() {
-        racepointsList.setListData(season.getClub().getRacepoints());
+        racepointsList.setListData(Utilities.sortCollection(season.getClub().getRacepoints()));
     }
     
     private void refreshButtons() {
