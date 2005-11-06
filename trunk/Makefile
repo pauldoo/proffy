@@ -17,5 +17,5 @@ images/mandelbrot_16.pnm: fractal
 	./fractal --output $@
 
 images/julia_16.pnm: fractal
-	./fractal --julia_real 1.0 --julia_imag 0.5 --output $@
+	./fractal --julia_real 0.0 --julia_imag 1.0 --output $@
 

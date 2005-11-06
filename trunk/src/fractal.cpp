@@ -25,8 +25,7 @@ class MandelbrotIterator
     
     void Iterate(void)
     {
-        //m_z = m_z * m_z + m_c;
-        m_z = sin(m_z) * m_c;
+        m_z = m_z * m_z + m_c;
     }
     
     bool Escaped(void)
