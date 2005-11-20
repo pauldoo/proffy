@@ -10,54 +10,18 @@
 #include <sstream>
 #include <string>
 
-class MandelbrotIterator
-{
-    public:
-    MandelbrotIterator(const std::complex<double>& c, const std::complex<double>& z0)
-      : m_c(c),
-        m_z(z0)
-    {
-    }
-    
-    ~MandelbrotIterator()
-    {
-    };
-    
-    void Iterate(void)
-    {
-        m_z = m_z * m_z + m_c;
-    }
-    
-    bool Escaped(void)
-    {
-        return abs(m_z) > 1e6;
-    }
-    
-    int IterateUntilEscaped(const int max_iter)
-    {
-        int count = 0;
-        while (count < max_iter && !Escaped()) {
-            Iterate();
-            count++;
-        }
-        if (count == max_iter) {
-            count = 0;
-        }
-        return count;
-    }
+#include "JuliaIterator.h"
+#include "MandelbrotIterator.h"
 
-    private:
-    const std::complex<double> m_c;
-    std::complex<double> m_z;
-};
+using namespace Fractal;
 
-
-void ProduceJuliaRendering(
+void ProduceRendering(
     Magick::Image& image,
-    const std::complex<double> top_left,
-    const std::complex<double> bottom_right,
-    const std::complex<double> c,
-    const double exposure)
+    const std::complex<double>& top_left,
+    const std::complex<double>& bottom_right,
+    ComplexIterator<double>& iterator,
+    const double exposure
+)
 {
     const int width = image.size().width();
     const int height = image.size().height();
@@ -70,8 +34,11 @@ void ProduceJuliaRendering(
                 top_left.real() + (x + 0.5) / width * (bottom_right.real() - top_left.real()),
                 top_left.imag() + (y + 0.5) / height * (bottom_right.imag() - top_left.imag())
             );
-            MandelbrotIterator it(c, z);
-            const int count = it.IterateUntilEscaped(max_iter);
+            iterator.Seed(z);
+            int count = iterator.IterateUntilEscaped(max_iter, 1e6);
+            if (count == max_iter) {
+                count = 0;
+            }
             const double v = 1.0 - std::exp(-count * exposure);
             image.pixelColor(x, y, Magick::ColorGray(v));
         }
@@ -79,30 +46,25 @@ void ProduceJuliaRendering(
     }
 }
 
-void ProduceMandelbrotRendering(
+void ProduceJuliaRendering(
     Magick::Image& image,
-    const std::complex<double> top_left,
-    const std::complex<double> bottom_right,
+    const std::complex<double>& top_left,
+    const std::complex<double>& bottom_right,
+    const std::complex<double>& c,
     const double exposure)
 {
-    const int width = image.size().width();
-    const int height = image.size().height();
-    const int max_iter = static_cast<int>(image.depth() * log(2) / exposure + 1);
-    boost::progress_display progress( height );
-    
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            const std::complex<double> c(
-                top_left.real() + (x + 0.5) / width * (bottom_right.real() - top_left.real()),
-                top_left.imag() + (y + 0.5) / height * (bottom_right.imag() - top_left.imag())
-            );
-            MandelbrotIterator it(c, c);
-            const int count = it.IterateUntilEscaped(max_iter);
-            const double v = 1.0 - std::exp(-count * exposure);
-            image.pixelColor(x, y, Magick::ColorGray(v));
-        }
-        ++progress;
-    }
+    JuliaIterator iterator(c);
+    ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+}
+
+void ProduceMandelbrotRendering(
+    Magick::Image& image,
+    const std::complex<double>& top_left,
+    const std::complex<double>& bottom_right,
+    const double exposure)
+{
+    MandelbrotIterator iterator;
+    ProduceRendering( image, top_left, bottom_right, iterator, exposure );
 }
 
 int main(int argc, char* argv[])

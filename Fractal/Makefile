@@ -1,13 +1,16 @@
-all: fractal images/mandelbrot_8.pnm images/julia_8.pnm
-
+targets := fractal images/mandelbrot_8.pnm images/julia_8.pnm
 objects := $(patsubst src/%.cpp, obj/%.o, $(wildcard src/*.cpp))
 
+all: $(targets)
+
+clean:
+	rm -f fractal images/* obj/*
+
 fractal: $(objects)
-	g++ -Wall -O3 -pipe -o $@ $< -lboost_program_options `Magick++-config --ldflags --libs`
+	g++ -Wall -O3 -pipe -o $@ $(objects) -lboost_program_options `Magick++-config --ldflags --libs`
 
 obj/%.o: src/%.cpp
 	g++ -Wall -O3 -pipe -c -o $@ $< `Magick++-config --cppflags --cxxflags`
-	
 
 
 %_8.pnm: %_16.pnm
