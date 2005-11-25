@@ -10,41 +10,10 @@
 #include <sstream>
 #include <string>
 
+#include "ComplexSampler.h"
 #include "JuliaIterator.h"
 #include "MandelbrotIterator.h"
 
-using namespace Fractal;
-
-void ProduceRendering(
-    Magick::Image& image,
-    const std::complex<double>& top_left,
-    const std::complex<double>& bottom_right,
-    ComplexIterator<double>& iterator,
-    const double exposure
-)
-{
-    const int width = image.size().width();
-    const int height = image.size().height();
-    const int max_iter = static_cast<int>(image.depth() * log(2) / exposure + 1);
-    boost::progress_display progress( height );
-    
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            const std::complex<double> z(
-                top_left.real() + (x + 0.5) / width * (bottom_right.real() - top_left.real()),
-                top_left.imag() + (y + 0.5) / height * (bottom_right.imag() - top_left.imag())
-            );
-            iterator.Seed(z);
-            int count = iterator.IterateUntilEscaped(max_iter, 1e6);
-            if (count == max_iter) {
-                count = 0;
-            }
-            const double v = 1.0 - std::exp(-count * exposure);
-            image.pixelColor(x, y, Magick::ColorGray(v));
-        }
-        ++progress;
-    }
-}
 
 void ProduceJuliaRendering(
     Magick::Image& image,
@@ -53,8 +22,10 @@ void ProduceJuliaRendering(
     const std::complex<double>& c,
     const double exposure)
 {
-    JuliaIterator iterator(c);
-    ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+    Fractal::JuliaIterator iterator(c);
+    Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
+    sampler.Render(image, exposure);
+    //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
 }
 
 void ProduceMandelbrotRendering(
@@ -63,8 +34,10 @@ void ProduceMandelbrotRendering(
     const std::complex<double>& bottom_right,
     const double exposure)
 {
-    MandelbrotIterator iterator;
-    ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+    Fractal::MandelbrotIterator iterator;
+    Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
+    sampler.Render(image, exposure);
+    //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
 }
 
 int main(int argc, char* argv[])

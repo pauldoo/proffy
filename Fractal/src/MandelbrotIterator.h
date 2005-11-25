@@ -4,7 +4,7 @@
 #include "ComplexIterator.h"
 
 namespace Fractal {
-    class MandelbrotIterator : public ComplexIterator<double>
+    class MandelbrotIterator : public ComplexIterator
     {
     public:
         // Iterator::Seed

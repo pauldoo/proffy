@@ -4,7 +4,7 @@
 #include "ComplexIterator.h"
 
 namespace Fractal {
-    class JuliaIterator : public ComplexIterator<double>
+    class JuliaIterator : public ComplexIterator
     {
     public:
         JuliaIterator(const Type& param);
