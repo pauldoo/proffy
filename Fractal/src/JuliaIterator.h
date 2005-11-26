@@ -3,11 +3,13 @@
 
 #include "ComplexIterator.h"
 
+namespace Fractal { class Accumulator; }
+
 namespace Fractal {
     class JuliaIterator : public ComplexIterator
     {
     public:
-        JuliaIterator(const Type& param);
+        JuliaIterator(Accumulator* accumulator00, const Type& param);
     
         // Iterator::Seed
         void Seed(const Type& seed);

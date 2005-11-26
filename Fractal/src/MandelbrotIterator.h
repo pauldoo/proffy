@@ -3,10 +3,14 @@
 
 #include "ComplexIterator.h"
 
+namespace Fractal { class Accumulator; }
+
 namespace Fractal {
     class MandelbrotIterator : public ComplexIterator
     {
     public:
+        MandelbrotIterator(Accumulator* accumulator00);
+        
         // Iterator::Seed
         void Seed(const Type& seed);
         

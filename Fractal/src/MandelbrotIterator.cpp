@@ -1,6 +1,11 @@
 #include "MandelbrotIterator.h"
 
 namespace Fractal {
+    MandelbrotIterator::MandelbrotIterator(Accumulator* accumulator00)
+    :   ComplexIterator(accumulator00)
+    {
+    }
+    
     void MandelbrotIterator::Seed(const MandelbrotIterator::Type& seed)
     {
         m_z0 = seed;

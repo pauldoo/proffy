@@ -10,33 +10,47 @@
 #include <sstream>
 #include <string>
 
+#include "Accumulator.h"
 #include "ComplexSampler.h"
+#include "Geometry.h"
 #include "JuliaIterator.h"
 #include "MandelbrotIterator.h"
 
 
 void ProduceJuliaRendering(
     Magick::Image& image,
+    Magick::Image& accum,
     const std::complex<double>& top_left,
     const std::complex<double>& bottom_right,
     const std::complex<double>& c,
-    const double exposure)
+    const double& exposure,
+    const double& accum_exposure
+)
 {
-    Fractal::JuliaIterator iterator(c);
+    const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
+    Fractal::Accumulator accumulator(accum, transform);
+    Fractal::JuliaIterator iterator(&accumulator, c);
     Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
     sampler.Render(image, exposure);
+    accumulator.Render(accum, accum_exposure);
     //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
 }
 
 void ProduceMandelbrotRendering(
     Magick::Image& image,
+    Magick::Image& accum,
     const std::complex<double>& top_left,
     const std::complex<double>& bottom_right,
-    const double exposure)
+    const double& exposure,
+    const double& accum_exposure
+)
 {
-    Fractal::MandelbrotIterator iterator;
+    const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
+    Fractal::Accumulator accumulator(accum, transform);
+    Fractal::MandelbrotIterator iterator(&accumulator);
     Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
     sampler.Render(image, exposure);
+    accumulator.Render(accum, accum_exposure);
     //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
 }
 
@@ -45,8 +59,8 @@ int main(int argc, char* argv[])
     try {
         std::ios::sync_with_stdio(false);
         int width, height, supersample;
-        double escape, exposure, left, right, top, bottom;
-        std::string output;
+        double escape, exposure, accum_exposure, left, right, top, bottom;
+        std::string output, accum_output;
         
         boost::program_options::options_description general_options("Image options");
         general_options.add_options()
@@ -54,7 +68,9 @@ int main(int argc, char* argv[])
             ("width", boost::program_options::value<int>(&width)->default_value(640), "width of output image in pixels")
             ("height", boost::program_options::value<int>(&height)->default_value(480), "height of output image in pixels")
             ("exposure", boost::program_options::value<double>(&exposure)->default_value(0.05), "exposure sensitivity")
+            ("accum_exposure", boost::program_options::value<double>(&accum_exposure)->default_value(0.05), "accumulated orbits exposure sensitivity")
             ("output", boost::program_options::value<std::string>(&output)->default_value("output.pnm"), "output image file")
+            ("accum_output", boost::program_options::value<std::string>(&accum_output)->default_value("output_accum.pnm"), "accumulated orbits output image file")
             ("supersample", boost::program_options::value<int>(&supersample)->default_value(2), "supersample in each dimension")
         ;
     
@@ -85,18 +101,21 @@ int main(int argc, char* argv[])
         const std::complex<double> bottom_right(right, bottom);
         
         Magick::Image image(Magick::Geometry(width * supersample, height * supersample), Magick::ColorRGB(1.0, 0.0, 0.0));
+        Magick::Image accum(Magick::Geometry(width * supersample, height * supersample), Magick::ColorRGB(1.0, 0.0, 0.0));
         
         if (variables.count("julia_real")) {
             const std::complex<double> c(
                 variables["julia_real"].as<double>(),
                 variables["julia_imag"].as<double>()
             );
-            ProduceJuliaRendering(image, top_left, bottom_right, c, exposure);
+            ProduceJuliaRendering(image, accum, top_left, bottom_right, c, exposure, accum_exposure);
         } else {
-            ProduceMandelbrotRendering(image, top_left, bottom_right, exposure);
+            ProduceMandelbrotRendering(image, accum, top_left, bottom_right, exposure, accum_exposure);
         }
         image.scale(Magick::Geometry(width, height));
+        accum.scale(Magick::Geometry(width, height));
         image.write(output);
+        accum.write(accum_output);
         
     } catch (std::exception& ex) {
         std::cerr << "Uncaught std::exception reached main():" << std::endl;

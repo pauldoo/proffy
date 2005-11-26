@@ -17,7 +17,7 @@ namespace Fractal
             ComplexIterator* iterator
         );
         
-        virtual void Render(Magick::Image& image, const double exposure);
+        virtual void Render(Magick::Image& image, const double& exposure);
         
     private:
         const std::complex<double> m_top_left;

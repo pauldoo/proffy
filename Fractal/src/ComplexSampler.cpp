@@ -3,7 +3,9 @@
 #include <boost/progress.hpp>
 #include <Magick++.h>
 
+#include "Accumulator.h"
 #include "ComplexIterator.h"
+#include "Utilities.h"
 
 namespace Fractal
 {
@@ -18,7 +20,7 @@ namespace Fractal
     {
     }
     
-    void ComplexSampler::Render(Magick::Image& image, const double exposure)
+    void ComplexSampler::Render(Magick::Image& image, const double& exposure)
     {
         const int width = image.size().width();
         const int height = image.size().height();
@@ -36,7 +38,7 @@ namespace Fractal
                 if (count == max_iter) {
                     count = 0;
                 }
-                const double v = 1.0 - std::exp(-count * exposure);
+                const double v = Utilities::Expose(count, exposure);
                 image.pixelColor(x, y, Magick::ColorGray(v));
             }
             ++progress;
