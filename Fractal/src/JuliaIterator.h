@@ -14,10 +14,10 @@ namespace Fractal {
         // Iterator::Seed
         void Seed(const Type& seed);
         
-        // Iterator::Seed
+        // Iterator::Value
         const Type& Value(void) const;
     
-        // Iterator::Seed
+        // Iterator::Iterate
         const Type& Iterate(void);
         
     private:
