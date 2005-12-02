@@ -23,10 +23,10 @@ namespace Fractal
         Vector4 ComplexToVector(const std::complex<double>& value)
         {
             Vector4 result;
-            result[0] = value.real();
-            result[1] = value.imag();
-            result[2] = 0.0;
-            result[3] = 1.0;
+            result(0) = value.real();
+            result(1) = value.imag();
+            result(2) = 0.0;
+            result(3) = 1.0;
             return result;
         }
         
@@ -36,13 +36,13 @@ namespace Fractal
         )
         {
             Matrix44 result;
-            result[0][0] = 1.0 / (bottom_right.real() - top_left.real());
-            result[0][3] = -top_left.real() * result[0][0];
-            result[1][1] = 1.0 / (bottom_right.imag() - top_left.imag());
-            result[1][3] = -top_left.imag() * result[1][1];
-            
-            result[2][3] = 0.5;
-            result[3][3] = 1;
+            result.clear();
+            result(0, 0) = 1.0 / (bottom_right.real() - top_left.real());
+            result(0, 3) = -top_left.real() * result(0, 0);
+            result(1, 1) = 1.0 / (bottom_right.imag() - top_left.imag());
+            result(1, 3) = -top_left.imag() * result(1, 1);
+            result(2, 3) = 0.5;
+            result(3, 3) = 1;
             return result;
         }
         

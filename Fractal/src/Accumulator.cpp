@@ -23,9 +23,9 @@ namespace Fractal
     void Accumulator::Accumulate(const Vector4& position, const double& value)
     {
         const Vector4 transformed = prod(m_transform, position);
-        if ( transformed[3] >= 0 && transformed[3] <= 1.0 ) {
-            const int x = static_cast<int>(transformed[0] * m_width);
-            const int y = static_cast<int>(transformed[1] * m_height);
+        if ( transformed(3) >= 0 && transformed(3) <= 1.0 ) {
+            const int x = static_cast<int>(transformed(0) * m_width);
+            const int y = static_cast<int>(transformed(1) * m_height);
             if (
                 x >= 0 && x < static_cast<int>(m_width) &&
                 y >= 0 && y < static_cast<int>(m_height)

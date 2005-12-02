@@ -1,27 +1,22 @@
-targets := fractal images/mandelbrot_8.pnm images/julia_8.pnm images/mandelbrot_accum_8.pnm images/julia_accum_8.pnm
-objects := $(patsubst src/%.cpp, obj/%.o, $(wildcard src/*.cpp))
+all: fractal images/mandelbrot.bmp images/julia.bmp images/mandelbrot_accum.bmp images/julia_accum.bmp
 
-all: $(targets)
+dep:
+	+make -C src dep
 
 clean:
-	rm -f fractal images/* obj/*
+	+make -C src clean
+	rm -f fractal images/*
 
-fractal: $(objects)
-	g++ -Wall -O3 -pipe -o $@ $(objects) -lboost_program_options `Magick++-config --ldflags --libs`
-
-obj/%.o: src/%.cpp
-	g++ -Wall -O3 -pipe -c -o $@ $< `Magick++-config --cppflags --cxxflags`
+fractal: $(wildcard src/*.h) $(wildcard src/*.cpp)
+	+make -C src
+	g++ -Wall -O3 -pipe -o $@ src/*.o -lboost_program_options `Magick++-config --ldflags --libs`
 
 
-%_8.pnm: %_16.pnm
-	cat $< | pnmdepth 255 > $@
+images/%_accum.bmp: images/%.bmp
 
-images/mandelbrot_accum_16.pnm: images/mandelbrot_16.pnm
-images/julia_accum_16.pnm: images/julia_16.pnm
+images/mandelbrot.bmp: fractal
+	./fractal --width 512 --height 384 --output $@ --accum_output images/mandelbrot_accum.bmp
 
-images/mandelbrot_16.pnm: fractal
-	./fractal --width 2048 --height 1536 --output $@ --accum_output images/mandelbrot_accum_16.pnm
-
-images/julia_16.pnm: fractal
-	./fractal --width 2048 --height 1536 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum_16.pnm
+images/julia.bmp: fractal
+	./fractal --width 512 --height 384 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum.bmp
 
