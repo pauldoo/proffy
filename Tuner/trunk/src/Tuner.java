@@ -57,7 +57,7 @@ public class Tuner extends JFrame implements ActionListener, Runnable {
     private JPanel chooserPanel;
     private JComboBox instrumentBox;
     private JComboBox noteBox;
-    private TuningBars bars;
+    private TuningSpectrum spectrum;
     
     // Main
     public static void main(String[] args) throws Exception {
@@ -115,7 +115,7 @@ public class Tuner extends JFrame implements ActionListener, Runnable {
     
     
     public void launch() throws Exception {
-	this.audioInput = TuningBars.createAudioInput();
+	this.audioInput = AudioInput.createMicrophoneInput();
 
         updateInstrument();
         this.setVisible(true);
@@ -129,12 +129,12 @@ public class Tuner extends JFrame implements ActionListener, Runnable {
     
     private void updateNote() {
 	int noteNumber = getNoteNumber();
-	if (bars != null) {
-	    this.getContentPane().remove( bars );
+	if (spectrum != null) {
+	    this.getContentPane().remove( spectrum );
 	}
 	int[] iSemitones = semitones[getInstrumentNumber()];
-	bars = new TuningBars( audioInput, iSemitones[noteNumber] );
-	this.getContentPane().add( bars, BorderLayout.CENTER );
+	spectrum = new TuningSpectrum( audioInput, iSemitones[noteNumber] );
+	this.getContentPane().add( spectrum, BorderLayout.CENTER );
         this.pack();
     }
     
@@ -166,7 +166,7 @@ public class Tuner extends JFrame implements ActionListener, Runnable {
     public void run() {
         try {
             while (true) {
-		bars.update();
+		spectrum.update();
 	    }
         } catch (Exception e) {
             e.printStackTrace();
