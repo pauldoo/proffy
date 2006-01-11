@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileFilter;
  *
  * @author Paul
  */
-public class SimpleFileFilter extends FileFilter {
+class SimpleFileFilter extends FileFilter {
     
     private String extensions[];
     private String description;

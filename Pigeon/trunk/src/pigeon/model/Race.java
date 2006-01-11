@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author pauldoo
  */
-public class Race implements Serializable {
+public class Race implements Serializable, Comparable<Race> {
     
     private static final long serialVersionUID = 42L;
     
@@ -61,4 +61,11 @@ public class Race implements Serializable {
         return getResults(member).get(ringNumber);
     }
     
+    public int compareTo(Race other) {
+        if (this == other) {
+            return 0;
+        } else {
+            return date.compareTo(other.date);
+        }
+    }
 }

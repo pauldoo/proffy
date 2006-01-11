@@ -26,7 +26,7 @@ import pigeon.model.Racepoint;
  *
  * @author  pauldoo
  */
-public class DistanceEditorPanel<Subject, Target> extends javax.swing.JPanel {
+class DistanceEditorPanel<Subject, Target> extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
     

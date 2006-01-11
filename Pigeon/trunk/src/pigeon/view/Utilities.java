@@ -18,7 +18,7 @@ import java.util.Vector;
  *
  * @author pauldoo
  */
-public class Utilities {
+class Utilities {
     
     public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {
         return new Vector<T>(new TreeSet<T>(collection));

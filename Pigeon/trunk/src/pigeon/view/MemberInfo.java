@@ -14,7 +14,7 @@ import pigeon.model.Member;
  *
  * @author  Sarah
  */
-public class MemberInfo extends javax.swing.JPanel {
+class MemberInfo extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
     

@@ -36,7 +36,7 @@ import pigeon.model.Season;
  *
  * @author  Paul
  */
-public class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
+class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private static final long serialVersionUID = 42L;
 
@@ -81,7 +81,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         viewingSeason = new javax.swing.JPanel();
         raceresultPanel = new javax.swing.JPanel();
         raceresultListScrollPane = new javax.swing.JScrollPane();
-        raceresultList = new javax.swing.JList();
+        raceresultsTable = new javax.swing.JTable();
         raceresultButtonPanel = new javax.swing.JPanel();
         raceresultAddButton = new javax.swing.JButton();
 
@@ -256,7 +256,18 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         raceresultPanel.setLayout(new java.awt.BorderLayout());
 
         raceresultPanel.setBorder(new javax.swing.border.TitledBorder("Race Results"));
-        raceresultListScrollPane.setViewportView(raceresultList);
+        raceresultsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        raceresultListScrollPane.setViewportView(raceresultsTable);
 
         raceresultPanel.add(raceresultListScrollPane, java.awt.BorderLayout.CENTER);
 
@@ -440,6 +451,7 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
         clubNameText.setText(season.getClub().getName());
         reloadMembersList();
         reloadRacepointsList();
+        reloadRaceresultsTable();
         refreshButtons();
     }
 
@@ -449,6 +461,10 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     
     private void reloadRacepointsList() {
         racepointsList.setListData(Utilities.sortCollection(season.getClub().getRacepoints()));
+    }
+    
+    private void reloadRaceresultsTable() {
+        raceresultsTable.setModel(new RaceresultsTableModel(Utilities.sortCollection(season.getRaces())));
     }
     
     private void refreshButtons() {
@@ -531,9 +547,9 @@ public class MainWindow extends javax.swing.JFrame implements ListSelectionListe
     private javax.swing.JPanel racepointsPanel;
     private javax.swing.JButton raceresultAddButton;
     private javax.swing.JPanel raceresultButtonPanel;
-    private javax.swing.JList raceresultList;
     private javax.swing.JScrollPane raceresultListScrollPane;
     private javax.swing.JPanel raceresultPanel;
+    private javax.swing.JTable raceresultsTable;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
