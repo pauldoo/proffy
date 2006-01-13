@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -25,7 +26,7 @@ public class Race implements Serializable, Comparable<Race> {
     
     private Racepoint racepoint;
     private Date date;
-    private Map<Member, Map<String, Long>> results;
+    private Map<Member, Map<String, Long>> results = new HashMap<Member, Map<String, Long>>();
     
     public Race(Club club) {
         for (Member m: club.getMembers()) {

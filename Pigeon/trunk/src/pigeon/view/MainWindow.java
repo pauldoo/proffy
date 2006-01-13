@@ -20,15 +20,14 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.util.SortedMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
-import pigeon.model.Distance;
 import pigeon.model.Member;
+import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 
@@ -272,6 +271,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         raceresultPanel.add(raceresultListScrollPane, java.awt.BorderLayout.CENTER);
 
         raceresultAddButton.setText("Add");
+        raceresultAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raceresultAddButtonActionPerformed(evt);
+            }
+        });
+
         raceresultButtonPanel.add(raceresultAddButton);
 
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.SOUTH);
@@ -287,6 +292,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
+
+    private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
+        Race race = RaceInfo.createRace(this, season.getClub());  
+        season.addRace( race );
+        //editResultsForRace( member );
+        reloadRaceresultsTable();
+    }//GEN-LAST:event_raceresultAddButtonActionPerformed
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed
         promptLoadSeason();

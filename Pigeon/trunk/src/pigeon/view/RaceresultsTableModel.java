@@ -20,6 +20,8 @@ import pigeon.model.Race;
  */
 class RaceresultsTableModel extends AbstractTableModel {
     
+    private static final long serialVersionUID = 42L;
+        
     private final Vector<Race> races;
     
     /** Creates a new instance of RaceresultsTableModel */
