@@ -1,7 +1,20 @@
 /*
- * MainWindow.java
- *
- * Created on 21 August 2005, 15:55
+ * Pigeon: A pigeon club race result management program.
+ * Copyright (C) 2005-2006  Paul Richards
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 package pigeon.view;
@@ -40,6 +53,16 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private static final long serialVersionUID = 42L;
 
+    private static final String VERSION = "0.1";
+    private static final String LICENSE_MESSAGE =
+            "Pigeon version " + VERSION + ", Copyright (C) 2005-2006 Paul Richards\n" +
+            "Pigeon comes with ABSOLUTELY NO WARRANTY; for details\n" +
+            "see the file COPYRIGHT.txt.  This is free software, and you are welcome\n" +
+            "to redistribute it under certain conditions; see the file COPYRIGHT.txt\n" +
+            "for details.";
+    private static final String TITLE = "Pigeon v" + VERSION;
+    private static final String CREDITS = "Created by Paul Richards <pauldoo@users.sf.net>";
+    
     private Season season;
     
     /** Creates new form MainWindow */
@@ -307,22 +330,26 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
         String clubName = clubNameText.getText();
-        season.getClub().setName( clubName );
-        int memberCount = season.getClub().getNumberOfMembers();
-        int racepointCount = season.getClub().getNumberOfRacepoints();
-        String message =
-                "Have you finished adding all of the members (currently " + memberCount + ") " +
-                "and racepoints (currently " + racepointCount + ") for the club \"" + clubName + "\"?";
-        int result = JOptionPane.showConfirmDialog(this, message, "Finishing club setup", JOptionPane.YES_NO_OPTION);
-        switch (result) {
-            case JOptionPane.YES_OPTION:
-                promptSaveSeason();
-                break;
-            case JOptionPane.NO_OPTION:
-                JOptionPane.showMessageDialog(this, "Please continue to add members and racepoints.");
-                break;
-            default:
-                throw new IllegalStateException();
+        try {
+            season.getClub().setName( clubName );
+            int memberCount = season.getClub().getNumberOfMembers();
+            int racepointCount = season.getClub().getNumberOfRacepoints();
+            String message =
+                    "Have you finished adding all of the members (currently " + memberCount + ") " +
+                    "and racepoints (currently " + racepointCount + ") for the club \"" + clubName + "\"?";
+            int result = JOptionPane.showConfirmDialog(this, message, "Finishing club setup", JOptionPane.YES_NO_OPTION);
+            switch (result) {
+                case JOptionPane.YES_OPTION:
+                    promptSaveSeason();
+                    break;
+                case JOptionPane.NO_OPTION:
+                    JOptionPane.showMessageDialog(this, "Please continue to add members and racepoints.");
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
     }//GEN-LAST:event_finishedButtonActionPerformed
 
@@ -419,7 +446,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                  editDistancesForRacepoint( racepoint );
                  reloadRacepointsList();
             } catch (ValidationException e) {
-                e.showWarning(this);
+                e.displayErrorDialog(this);
             }
         }
     }//GEN-LAST:event_racepointEditButtonActionPerformed
@@ -449,7 +476,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                  editDistancesForRacepoint( racepoint );
                  reloadRacepointsList();
              } catch (ValidationException e) {
-                 e.showWarning(this);
+                 e.displayErrorDialog(this);
              }
          }
     }//GEN-LAST:event_racepointAddButtonActionPerformed
@@ -517,6 +544,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
      */
     public static void main(String args[]) {
         setSwingLAF();
+
+        Object[] options = { "Agree", "Cancel" };
+        int result = JOptionPane.showOptionDialog(null, LICENSE_MESSAGE, "License", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if (result != 0) {
+            return;
+        }
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
