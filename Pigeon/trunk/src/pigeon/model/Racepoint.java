@@ -30,7 +30,11 @@ public class Racepoint implements Serializable, Comparable<Racepoint> {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws ValidationException {
+        name = name.trim();
+        if (name.length() == 0) {
+            throw new ValidationException("Name is empty");
+        }
         this.name = name;
     }
     

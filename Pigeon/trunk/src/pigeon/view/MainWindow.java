@@ -30,6 +30,7 @@ import pigeon.model.Member;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
+import pigeon.model.ValidationException;
 
 /**
  *
@@ -165,7 +166,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         membersPanel.add(memberListScrollPane, java.awt.BorderLayout.CENTER);
 
-        memberAddButton.setText("Add");
+        memberAddButton.setText("Add Member");
         memberAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 memberAddButtonActionPerformed(evt);
@@ -174,7 +175,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         memberButtonPanel.add(memberAddButton);
 
-        memberEditButton.setText("Edit");
+        memberEditButton.setText("Edit Member");
         memberEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 memberEditButtonActionPerformed(evt);
@@ -183,7 +184,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         memberButtonPanel.add(memberEditButton);
 
-        memberDeleteButton.setText("Delete");
+        memberDeleteButton.setText("Delete Member");
         memberDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 memberDeleteButtonActionPerformed(evt);
@@ -211,7 +212,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         racepointsPanel.add(racepointListScrollPane, java.awt.BorderLayout.CENTER);
 
-        racepointAddButton.setText("Add");
+        racepointAddButton.setText("Add Racepoint");
         racepointAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 racepointAddButtonActionPerformed(evt);
@@ -220,7 +221,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         racepointButtonPanel.add(racepointAddButton);
 
-        racepointEditButton.setText("Edit");
+        racepointEditButton.setText("Edit Racepoint");
         racepointEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 racepointEditButtonActionPerformed(evt);
@@ -229,7 +230,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         racepointButtonPanel.add(racepointEditButton);
 
-        racepointDeleteButton.setText("Delete");
+        racepointDeleteButton.setText("Delete Racepoint");
         racepointDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 racepointDeleteButtonActionPerformed(evt);
@@ -413,14 +414,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Racepoint racepoint = Utilities.sortCollection( season.getClub().getRacepoints() ).get(index);
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE);
         if (name != null) {
-             name = name.trim();
-             if (name.length() > 0) {
+            try {
                  racepoint.setName( name );
                  editDistancesForRacepoint( racepoint );
                  reloadRacepointsList();
-             } else {
-                 JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
-             }
+            } catch (ValidationException e) {
+                e.showWarning(this);
+            }
         }
     }//GEN-LAST:event_racepointEditButtonActionPerformed
 
@@ -431,31 +431,37 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
         Member member = Utilities.sortCollection(season.getClub().getMembers()).get(index);
-        MemberInfo.editMember(this, member);
-        editDistancesForMember( member );
+        try {
+            MemberInfo.editMember(this, member);
+            editDistancesForMember( member );
+        } catch (UserCancelledException e) {
+        }    
         reloadMembersList();
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
     private void racepointAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointAddButtonActionPerformed
          String name = JOptionPane.showInputDialog(this, "Please enter a name", "New racepoint", JOptionPane.QUESTION_MESSAGE);
          if (name != null) {
-             name = name.trim();
-             if (name.length() > 0) {
+             try {
                  Racepoint racepoint = new Racepoint();
                  racepoint.setName(name);
                  season.getClub().addRacepoint( racepoint );
                  editDistancesForRacepoint( racepoint );
                  reloadRacepointsList();
-             } else {
-                 JOptionPane.showMessageDialog(this, "You entered a blank name", "Blank name", JOptionPane.ERROR_MESSAGE);
+             } catch (ValidationException e) {
+                 e.showWarning(this);
              }
          }
     }//GEN-LAST:event_racepointAddButtonActionPerformed
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
-        Member member = MemberInfo.createMember(this);  
-        season.getClub().addMember( member );
-        editDistancesForMember( member );
+        try {
+            // FIXME: Cancelling with some distances entered is bad
+            Member member = MemberInfo.createMember(this);  
+            season.getClub().addMember( member );
+            editDistancesForMember( member );
+        } catch (UserCancelledException e) {
+        }
         reloadMembersList();
     }//GEN-LAST:event_memberAddButtonActionPerformed
 

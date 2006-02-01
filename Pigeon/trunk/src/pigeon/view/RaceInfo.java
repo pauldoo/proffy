@@ -7,6 +7,7 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import pigeon.model.Club;
@@ -42,7 +43,6 @@ public class RaceInfo extends javax.swing.JPanel {
         racepointLabel = new javax.swing.JLabel();
         racepointCombo = new javax.swing.JComboBox();
         liberationTimeLabel = new javax.swing.JLabel();
-        liberationTimePicker = new org.jdesktop.swingx.JXDatePicker();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -57,25 +57,19 @@ public class RaceInfo extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         add(liberationTimeLabel, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        add(liberationTimePicker, gridBagConstraints);
-
     }
     // </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel liberationTimeLabel;
-    private org.jdesktop.swingx.JXDatePicker liberationTimePicker;
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
     // End of variables declaration//GEN-END:variables
 
     private void updateRaceObject() {
         race.setRacepoint((Racepoint)racepointCombo.getSelectedItem());
-        race.setDate(liberationTimePicker.getDate());
+        race.setDate(new Date());
     }
     
     public void addRacepointsToCombo(Vector<Racepoint> racepoints) {

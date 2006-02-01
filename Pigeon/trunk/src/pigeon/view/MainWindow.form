@@ -158,7 +158,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="memberAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Add"/>
+                    <Property name="text" type="java.lang.String" value="Add Member"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="memberAddButtonActionPerformed"/>
@@ -166,7 +166,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="memberEditButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Edit"/>
+                    <Property name="text" type="java.lang.String" value="Edit Member"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="memberEditButtonActionPerformed"/>
@@ -174,7 +174,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="memberDeleteButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Delete"/>
+                    <Property name="text" type="java.lang.String" value="Delete Member"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="memberDeleteButtonActionPerformed"/>
@@ -230,7 +230,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="racepointAddButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Add"/>
+                    <Property name="text" type="java.lang.String" value="Add Racepoint"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="racepointAddButtonActionPerformed"/>
@@ -238,7 +238,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="racepointEditButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Edit"/>
+                    <Property name="text" type="java.lang.String" value="Edit Racepoint"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="racepointEditButtonActionPerformed"/>
@@ -246,7 +246,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="racepointDeleteButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Delete"/>
+                    <Property name="text" type="java.lang.String" value="Delete Racepoint"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="racepointDeleteButtonActionPerformed"/>

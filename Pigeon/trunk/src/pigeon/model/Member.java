@@ -35,7 +35,11 @@ public class Member implements Serializable, Comparable<Member> {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws ValidationException {
+        name = name.trim();
+        if (name.length() == 0) {
+            throw new ValidationException("Name is empty");
+        }
         this.name = name;
     }
     
@@ -106,6 +110,4 @@ public class Member implements Serializable, Comparable<Member> {
     public void setSHUNumber(String SHUNumber) {
         this.SHUNumber = SHUNumber;
     }
-
-    
 }

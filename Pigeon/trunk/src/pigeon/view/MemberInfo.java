@@ -9,6 +9,7 @@ package pigeon.view;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import pigeon.model.Member;
+import pigeon.model.ValidationException;
 
 /**
  *
@@ -38,7 +39,7 @@ class MemberInfo extends javax.swing.JPanel {
         SHUNumberText.setEditable( editable );
     }
     
-    private void updateMemberObject() {
+    private void updateMemberObject() throws ValidationException {
         member.setName( nameText.getText() );
         member.setAddress( addressText.getText() );
         member.setTelephone( telephoneText.getText() );
@@ -218,13 +219,28 @@ class MemberInfo extends javax.swing.JPanel {
     private javax.swing.JTextField telephoneText;
     // End of variables declaration//GEN-END:variables
     
-    public static void editMember(Component parent, Member member) {
+    public static void editMember(Component parent, Member member) throws UserCancelledException {
         MemberInfo panel = new MemberInfo(member, true);
-        JOptionPane.showMessageDialog(parent, panel, "Member Information", JOptionPane.PLAIN_MESSAGE);
-        panel.updateMemberObject();
+        while (true) {
+            Object[] options = { "Add", "Cancel" };
+            int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+            if (result == 0) {
+                try {
+                    panel.updateMemberObject();
+                    break;
+                } catch (ValidationException e) {
+                    e.showWarning(parent);
+                }
+            } else {
+                result = JOptionPane.showConfirmDialog(parent, "Return to main menu and discard this information?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    throw new UserCancelledException();
+                }
+            }
+        }
     }
     
-    public static Member createMember(Component parent) {
+    public static Member createMember(Component parent) throws UserCancelledException {
         Member member = new Member();
         editMember(parent, member);
         return member;

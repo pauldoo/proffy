@@ -98,7 +98,7 @@ public class Club implements Serializable {
     }
     
     public void removeRacepoint(Racepoint racepoint) {
-        if (!racepoints.contains( racepoint ) || !racepoints.add( racepoint )) {
+        if (!racepoints.contains( racepoint ) || !racepoints.remove( racepoint )) {
             throw new IllegalArgumentException();
         }
         for (Member member: members) {
