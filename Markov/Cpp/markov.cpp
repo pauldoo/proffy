@@ -84,7 +84,7 @@ int main(const int argc, const char* argv[])
 {
     try {
         std::ios::sync_with_stdio(false);
-        srandomdev();
+        srandom(time(0));
         if (argc != 2) {
             std::clog << "Usage:" << std::endl;
             std::clog << argv[0] << " [prefix length]" << std::endl;
