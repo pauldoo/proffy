@@ -31,7 +31,7 @@ import pigeon.model.Racepoint;
  *
  * @author  Paul
  */
-public class RaceInfo extends javax.swing.JPanel {
+class RaceInfo extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
 

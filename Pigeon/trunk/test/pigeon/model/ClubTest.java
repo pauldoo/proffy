@@ -56,7 +56,7 @@ public class ClubTest extends TestCase {
         return suite;
     }
 
-    public void testSerialization() throws IOException, ClassNotFoundException{
+    public void testSerialization() throws IOException, ClassNotFoundException, ValidationException {
         Club club = new Club();
         {
             List<Member> members = new ArrayList<Member>();

@@ -442,12 +442,19 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE);
         if (name != null) {
             try {
-                 racepoint.setName( name );
-                 editDistancesForRacepoint( racepoint );
-                 reloadRacepointsList();
+                String oldName = racepoint.getName();
+                racepoint.setName( name );
+                try {
+                    editDistancesForRacepoint( racepoint );
+                } catch (UserCancelledException e) {
+                    racepoint.setName( oldName );
+                    throw e;
+                }
+            } catch (UserCancelledException e) {
             } catch (ValidationException e) {
                 e.displayErrorDialog(this);
             }
+            reloadRacepointsList();
         }
     }//GEN-LAST:event_racepointEditButtonActionPerformed
 
@@ -473,20 +480,30 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                  Racepoint racepoint = new Racepoint();
                  racepoint.setName(name);
                  season.getClub().addRacepoint( racepoint );
-                 editDistancesForRacepoint( racepoint );
-                 reloadRacepointsList();
+                 try {
+                     editDistancesForRacepoint( racepoint );
+                 } catch (UserCancelledException e) {
+                     season.getClub().removeRacepoint(racepoint);
+                     throw e;
+                 }
+             } catch (UserCancelledException e) {
              } catch (ValidationException e) {
                  e.displayErrorDialog(this);
              }
+             reloadRacepointsList();
          }
     }//GEN-LAST:event_racepointAddButtonActionPerformed
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            // FIXME: Cancelling with some distances entered is bad
             Member member = MemberInfo.createMember(this);  
             season.getClub().addMember( member );
-            editDistancesForMember( member );
+            try {
+                editDistancesForMember( member );
+            } catch (UserCancelledException e) {
+                season.getClub().removeMember( member );
+                throw e;
+            }
         } catch (UserCancelledException e) {
         }
         reloadMembersList();
@@ -529,14 +546,14 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         switchToCard("setupClub");
     }//GEN-LAST:event_newSeasonButtonActionPerformed
     
-    private void editDistancesForMember(Member member) {
+    private void editDistancesForMember(Member member) throws UserCancelledException {
         Component parent = this.getContentPane();
-        DistanceEditorPanel.editMemberDistances(parent, member, season.getClub());
+        DistanceEditor.editMemberDistances(parent, member, season.getClub());
     }
 
-    private void editDistancesForRacepoint(Racepoint racepoint) {
+    private void editDistancesForRacepoint(Racepoint racepoint) throws UserCancelledException {
         Component parent = this.getContentPane();
-        DistanceEditorPanel.editRacepointDistances(parent, racepoint, season.getClub());
+        DistanceEditor.editRacepointDistances(parent, racepoint, season.getClub());
     }
     
     /**
