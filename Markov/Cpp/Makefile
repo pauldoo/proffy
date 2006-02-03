@@ -1,7 +1,7 @@
 all: markov
 
 markov: markov.cpp
-	g++ -Wall -O3 -o $@ $<
+	g++ -Wall -Os -o $@ $<
 
 clean:
 	rm -f markov
