@@ -6,6 +6,7 @@
 #include <vector>
 
 namespace {
+    template <typename TokenType>
     class Markov
     {
     public:
@@ -21,7 +22,7 @@ namespace {
         {
             Prefix prefix;
             while (true) {
-                std::string word;
+                TokenType word;
                 in >> word;
                 if (!in) break;
                 if (prefix.size() == m_prefix_length) {
@@ -33,7 +34,7 @@ namespace {
             if (prefix.size() != m_prefix_length) {
                 throw std::string("Input not long enough");
             }
-            AddSuffix(prefix, "\n");
+            AddSuffix(prefix, TokenType());
         }
         
         void GenerateOutput(std::ostream& out)
@@ -42,14 +43,14 @@ namespace {
                 throw std::string("Suitable data not loaded");
             }
             Prefix prefix = m_start_prefix;
-            for (Prefix::const_iterator i = prefix.begin(); i != prefix.end(); ++i) {
+            for (typename Prefix::const_iterator i = prefix.begin(); i != prefix.end(); ++i) {
                 out << (*i) << " ";
             }
             while (true) {
                 const SuffixList& suffixes = m_suffix_map[prefix];
-                const std::string& word = suffixes[random() % suffixes.size()];
+                const TokenType& word = suffixes[random() % suffixes.size()];
                 out << word;
-                if (word == "\n") {
+                if (word == TokenType()) {
                     return;
                 }
                 out << " ";
@@ -59,14 +60,14 @@ namespace {
         }
         
     private:
-        typedef std::list<std::string> Prefix;
-        typedef std::vector<std::string> SuffixList;
+        typedef std::list<TokenType> Prefix;
+        typedef std::vector<TokenType> SuffixList;
 
         const unsigned int m_prefix_length;
         Prefix m_start_prefix;
         std::map<Prefix, SuffixList> m_suffix_map;
         
-        void AddSuffix(const Prefix& prefix, const std::string& word)
+        void AddSuffix(const Prefix& prefix, const TokenType& word)
         {
             if (prefix.size() != m_prefix_length) {
                 throw std::string("Invalid suffix length");
@@ -95,7 +96,7 @@ int main(const int argc, const char* argv[])
         unsigned int prefix_length = 0;
         prefix_length_stream >> prefix_length;
         
-        Markov markov(prefix_length);
+        Markov<std::string> markov(prefix_length);
         markov.AccumulateInput(std::cin);
         markov.GenerateOutput(std::cout);
         return EXIT_SUCCESS;
