@@ -103,8 +103,6 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
         distancesPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
         distancesTable = new javax.swing.JTable();
@@ -115,6 +113,7 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
 
         distancesPanel.setBorder(new javax.swing.border.TitledBorder("Distances For"));
         distancesTable.setModel(distancesTableModel);
+        distancesTable.setRowSelectionAllowed(false);
         scrollPane.setViewportView(distancesTable);
 
         distancesPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
