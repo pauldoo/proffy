@@ -32,8 +32,10 @@ public class TuningSpectrum extends JComponent {
     
     // Frequency of middle C in Hz
     private static final double MIDDLE_C = 261.6256;
+    // Time delta between samples
+    private static final double TIME_STEP = 1.0 / AudioInput.SAMPLE_FREQ;
     // Samples to take in each chunk
-    private static final int CHUNK_SIZE = 1 << 15;
+    private static final int CHUNK_SIZE = 32768;
     
     
     private final AudioInput audioInput;
@@ -46,30 +48,33 @@ public class TuningSpectrum extends JComponent {
 	// Set input stream for samples
 	this.audioInput = audioInput;
         this.semitone = semitone;
-        setMinimumSize(new Dimension(100, 100));
-        setPreferredSize(new Dimension(200, 200));
     }
     
     // Run for CHUNK_SIZE audio samples and update display
     public void update() {
         try {
             
-            final double[] samples = new double[CHUNK_SIZE];
+            double[] sample_real = new double[CHUNK_SIZE];
+            double[] sample_imag = new double[CHUNK_SIZE];
 	    for (int i = 0; i < CHUNK_SIZE; i++) {
-		samples[i] = audioInput.readSample();
+		sample_real[i] = audioInput.readSample();
 	    }
-            final double[] magnitudes = FFT.RealFFT(samples);
             
+            FFT.FFT(sample_real, sample_imag);
+            double max = 0;
             int max_index = 0;
-            for (int i = 0; i < magnitudes.length; i++) {
-                if (magnitudes[i] > magnitudes[max_index]) {
+            for (int i = 0; i < CHUNK_SIZE; i++) {
+                sample_real[i] = Math.sqrt(sample_real[i] * sample_real[i] + sample_imag[i] * sample_imag[i]);
+                if (sample_real[i] > max) {
+                    max = sample_real[i];
                     max_index = i;
                 }
             }
+            if (max_index > CHUNK_SIZE / 2) max_index = CHUNK_SIZE - max_index;
 
             synchronized (this) {
-                max_value = magnitudes[max_index];
-                spectrum = magnitudes;
+                max_value = max;
+                spectrum = sample_real;
             }
 
             repaint();
@@ -79,55 +84,36 @@ public class TuningSpectrum extends JComponent {
         }
     }
     
-    private static double frequencyToIndex(double freq) {
-        return freq * CHUNK_SIZE / AudioInput.SAMPLE_FREQ;
-    }
-    
-    private static double semitoneToFrequency(double semitone) {
-        return Math.pow( 2.0, semitone / 12.0 ) * MIDDLE_C;
-    }
-    
     public void paint(Graphics g) {
         g.setColor(Color.BLACK);
         final int width = getWidth();
         final int height = getHeight();
         g.fillRect(0, 0, width, height);
         
-        synchronized (this) {
-            if (spectrum != null) {
-                final double lower_index = frequencyToIndex(semitoneToFrequency(semitone - 2.5));
-                final double upper_index = frequencyToIndex(semitoneToFrequency(semitone + 2.5));
-                
-                g.setColor(Color.RED);
-                for (int index = (int)lower_index; index <= (int)upper_index; index++) {
-                    final int pos = (int)((index - lower_index) * width / (upper_index - lower_index));
-                    g.fillRect(pos, 0, 1, (int)(spectrum[index] * height / max_value));
-                }
-                
-                /*
-                for (int i = 0; i < width; i++) {
-                    int a = (int)(lower_index + i * (upper_index - lower_index) / width);
-                    int b = (int)(lower_index + (i+1) * (upper_index - lower_index) / width);
-                    double v = 0;
-                    for (int j = a; j < b; j++) {
-                        if (spectrum[j] > v) {
-                            v = spectrum[j];
-                        }
+        if (spectrum != null) {
+            final double lower_index = Math.pow( 2.0, (semitone - 2.5) / 12 ) * MIDDLE_C * CHUNK_SIZE / AudioInput.SAMPLE_FREQ;
+            final double upper_index = Math.pow( 2.0, (semitone + 2.5) / 12 ) * MIDDLE_C * CHUNK_SIZE / AudioInput.SAMPLE_FREQ;
+            
+            g.setColor(Color.RED);
+            for (int i = 0; i < width; i++) {
+                int a = (int)(lower_index + i * (upper_index - lower_index) / width);
+                int b = (int)(lower_index + (i+1) * (upper_index - lower_index) / width);
+                double v = 0;
+                for (int j = a; j < b; j++) {
+                    if (spectrum[j] > v) {
+                        v = spectrum[j];
                     }
-                    g.fillRect(i, 0, 1, (int)(v * height / max_value));
                 }
-                */
+                g.fillRect(i, 0, 1, (int)(v * height / max_value));
+            }
+            
+            g.setColor(Color.WHITE);
+            for (int dev = -2; dev <= 2; dev++) {
+                final double index = Math.pow( 2.0, (semitone + dev) / 12.0 ) * MIDDLE_C * CHUNK_SIZE / AudioInput.SAMPLE_FREQ;
+                final int pos = (int)((index - lower_index) * width / (upper_index - lower_index));
                 
-                g.setColor(Color.WHITE);
-                System.out.println( semitoneToFrequency(semitone) );
-                for (int dev = -2; dev <= 2; dev++) {
-                    final double index = frequencyToIndex(semitoneToFrequency(semitone + dev));
-                    System.out.print( index + "\t" );
-                    final int pos = (int)((index - lower_index) * width / (upper_index - lower_index));
-                    
-                    g.fillRect(pos, 0, 1, height);
-                }
-                System.out.println();
+                g.fillRect(pos, 0, 1, height);
+                
             }
         }
         

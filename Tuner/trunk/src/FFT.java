@@ -21,26 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 public class FFT {
 
-    // Performans a DFT on a real signal and returns the magnitude of the left
-    // half.  The real values are stomped on in the process.
-    public static double[] RealFFT(double[] real) {
-        final int length = real.length;
-        if (length % 2 != 0) {
-            throw new IllegalArgumentException("Array length not divisible by two");
-        }
-
-        final double[] imag = new double[length];
-        FFT.FFT(real, imag);
-        final double[] result = new double[length / 2];
-        for (int i = 0; i < length / 2; i++) {
-            result[i] = Math.sqrt(real[i] * real[i] + imag[i] * imag[i]);
-        }
-        return result;
-    }
-        
-    
     // Performs an in place DFT on real and imag
-    private static void FFT(double[] real, double[] imag) {
+    public static void FFT(double[] real, double[] imag) {
         if (real.length != imag.length) {
             throw new IllegalArgumentException("Array lengths differ");
         }

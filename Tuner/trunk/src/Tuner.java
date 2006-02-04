@@ -120,7 +120,7 @@ public class Tuner extends JFrame implements ActionListener, Runnable {
         updateInstrument();
         this.setVisible(true);
 	
-        new Thread(this, "Analyzer").start();
+        new Thread(this).start();
     }
     
     private int getNoteNumber() {
