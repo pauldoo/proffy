@@ -13,7 +13,7 @@
         <delete dir="build/jar"/>
         <mkdir dir="build/jar"/>
         
-        <javac destdir="build/jar" includes="**/*.java" debug="on" optimize="on" source="1.4" encoding="UTF-8">
+        <javac destdir="build/jar" includes="**/*.java" debug="on" source="1.4" encoding="UTF-8">
             <src path="src"/>
         </javac>
 	
