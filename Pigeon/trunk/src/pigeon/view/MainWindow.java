@@ -426,20 +426,26 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
-        season.getClub().removeRacepoint( racepoint );
-        reloadRacepointsList();
+        int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+            season.getClub().removeRacepoint( racepoint );
+            reloadRacepointsList();
+        }        
     }//GEN-LAST:event_racepointDeleteButtonActionPerformed
 
     private void memberDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberDeleteButtonActionPerformed
         Member member = (Member)membersList.getSelectedValue();
-        season.getClub().removeMember( member );
-        reloadMembersList();
+        int result = JOptionPane.showConfirmDialog(this, "Really delete '" + member + "' and all their distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+            season.getClub().removeMember( member );
+            reloadMembersList();
+        }    
     }//GEN-LAST:event_memberDeleteButtonActionPerformed
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
         int index = racepointsList.getSelectedIndex();
         Racepoint racepoint = Utilities.sortCollection( season.getClub().getRacepoints() ).get(index);
-        String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE);
+        String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()).toString();
         if (name != null) {
             try {
                 String oldName = racepoint.getName();

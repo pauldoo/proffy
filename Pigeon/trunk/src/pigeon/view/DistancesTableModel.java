@@ -61,6 +61,19 @@ class DistancesTableModel<Target> extends AbstractTableModel {
         return iter.next();
     }
     
+    public Class getColumnClass(int column) {
+        switch (column) {
+            case 0:
+                return String.class;
+            case 1:
+                return Integer.class;
+            case 2:
+                return Integer.class;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+    
     public Object getValueAt(int row, int column) {
         Map.Entry<Target, Distance> entry = getEntry(row);
         
