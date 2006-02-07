@@ -11,7 +11,7 @@ Makefile.dep: $(wildcard *.cpp)
 	g++ -MM $< > $@
 
 %.o: %.cpp
-	g++ -Wall -O3 -pipe -c -o $@ $< `Magick++-config --cppflags --cxxflags`
+	g++ -Wall -Os -pipe -c -o $@ $< `Magick++-config --cppflags --cxxflags`
 
 include Makefile.dep
 

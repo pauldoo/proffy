@@ -9,7 +9,7 @@ clean:
 
 fractal: $(wildcard src/*.h) $(wildcard src/*.cpp)
 	+make -C src
-	g++ -Wall -O3 -pipe -o $@ src/*.o -lboost_program_options `Magick++-config --ldflags --libs`
+	g++ -Wall -Os -pipe -o $@ src/*.o -lboost_program_options `Magick++-config --ldflags --libs`
 
 
 images/%_accum.bmp: images/%.bmp
