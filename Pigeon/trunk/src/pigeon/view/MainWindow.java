@@ -33,6 +33,8 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -411,13 +413,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }
     
     private void writeSeasonToFile(File file) throws FileNotFoundException, IOException {
-        ObjectOutput out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+        ObjectOutput out = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file))));
         out.writeObject(season);
         out.close();
     }
 
     private void loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        ObjectInput in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+        ObjectInput in = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(file))));
         Season loaded = (Season)in.readObject();
         in.close();
         setSeason( loaded );
