@@ -34,8 +34,6 @@ import java.util.Vector;
  */
 public class Club implements Serializable {
 
-    // LIKE: Member/Racepoint lists and DistanceEntry list to be something more intelligent.
-    
     private static final long serialVersionUID = 42L;
     
     private String name;

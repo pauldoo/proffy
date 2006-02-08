@@ -236,7 +236,7 @@ class MemberInfo extends javax.swing.JPanel {
         MemberInfo panel = new MemberInfo(member, true);
         while (true) {
             Object[] options = { "Add", "Cancel" };
-            int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+            int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 try {
                     panel.updateMemberObject();
