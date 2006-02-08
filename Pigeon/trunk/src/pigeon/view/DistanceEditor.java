@@ -46,7 +46,7 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
         DistanceEditor<Member, Racepoint> panel = new DistanceEditor<Member, Racepoint>(member, "Racepoint", distances);
         while (true) {
             Object[] options = {"Ok", "Cancel"};
-            int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+            int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 for (Map.Entry<Racepoint, Distance> entry: distances.entrySet()) {
                     club.setDistance(member, entry.getKey(), entry.getValue());
@@ -67,7 +67,7 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
         DistanceEditor<Racepoint, Member> panel = new DistanceEditor<Racepoint, Member>(racepoint, "Member", distances);
         while (true) {
             Object[] options = {"Ok", "Cancel"};
-            int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+            int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 for (Map.Entry<Member, Distance> entry: distances.entrySet()) {
                     club.setDistance(entry.getKey(), racepoint, entry.getValue());

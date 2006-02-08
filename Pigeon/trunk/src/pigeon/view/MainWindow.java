@@ -571,7 +571,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         setSwingLAF();
 
         Object[] options = { "Agree", "Cancel" };
-        int result = JOptionPane.showOptionDialog(null, LICENSE_MESSAGE, "License", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        int result = JOptionPane.showOptionDialog(null, LICENSE_MESSAGE, "License", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         if (result != 0) {
             return;
         }
