@@ -1,15 +1,12 @@
 all: fractal images/mandelbrot.bmp images/julia.bmp images/mandelbrot_accum.bmp images/julia_accum.bmp
 
-dep:
-	+make -C src dep
-
 clean:
-	+make -C src clean
+	+make -C Fractal clean
 	rm -f fractal images/*
 
-fractal: $(wildcard src/*.h) $(wildcard src/*.cpp)
-	+make -C src
-	g++ -Wall -Os -pipe -o $@ src/*.o -lboost_program_options `Magick++-config --ldflags --libs`
+fractal: $(wildcard Fractal/*.h) $(wildcard Fractal/*.cpp)
+	+make -C Fractal
+	g++ -Wall -Os -pipe -o $@ Fractal/*.o -lboost_program_options `Magick++-config --ldflags --libs`
 
 
 images/%_accum.bmp: images/%.bmp

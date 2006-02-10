@@ -1,7 +1,10 @@
 objects := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 deps := $(patsubst %.cpp, %.dep, $(wildcard *.cpp))
 
-all: $(objects)
+all: ../Fractal.a
+
+Fractal.a: $(objects)
+	ar -rc $@ $<
 
 clean:
 	rm -f *.o
