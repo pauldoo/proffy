@@ -1,1 +1,0 @@
-Accumulator.o: Accumulator.cpp Accumulator.h Geometry.h Utilities.h

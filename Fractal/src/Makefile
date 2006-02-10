@@ -1,17 +1,16 @@
 objects := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
+deps := $(patsubst %.cpp, %.dep, $(wildcard *.cpp))
 
-all: Makefile.dep $(objects)
-
-dep: Makefile.dep
+all: $(objects)
 
 clean:
 	rm -f *.o
 
-Makefile.dep: $(wildcard *.cpp)
+%.dep: %.cpp
 	g++ -MM $< > $@
 
-%.o: %.cpp
+%.o: %.cpp %.dep
 	g++ -Wall -Os -pipe -c -o $@ $< `Magick++-config --cppflags --cxxflags`
 
-include Makefile.dep
+include $(deps)
 
