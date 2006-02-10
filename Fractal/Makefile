@@ -1,19 +1,27 @@
-all: fractal images/mandelbrot.bmp images/julia.bmp images/mandelbrot_accum.bmp images/julia_accum.bmp
+all: build images
+
+build: libFractal.a Bin/Mandelbrot
+images: images/mandelbrot.png images/julia.png images/mandelbrot_accum.png images/julia_accum.png
 
 clean:
 	+make -C Fractal clean
-	rm -f fractal images/*
+	+make -C Bin clean
+	rm -rf images
 
-fractal: $(wildcard Fractal/*.h) $(wildcard Fractal/*.cpp)
+libFractal.a:
 	+make -C Fractal
-	g++ -Wall -Os -pipe -o $@ Fractal/*.o -lboost_program_options `Magick++-config --ldflags --libs`
 
+Bin/Mandelbrot: libFractal.a
+	+make -C Bin
+	
+images/%_accum.png: images/%.png
 
-images/%_accum.bmp: images/%.bmp
+images/mandelbrot.png: Bin/Mandelbrot
+	mkdir -p images
+	./Bin/Mandelbrot --width 512 --height 384 --output $@ --accum_output images/mandelbrot_accum.png
 
-images/mandelbrot.bmp: fractal
-	./fractal --width 512 --height 384 --output $@ --accum_output images/mandelbrot_accum.bmp
+images/julia.png: Bin/Mandelbrot
+	mkdir -p images
+	./Bin/Mandelbrot --width 512 --height 384 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum.png
 
-images/julia.bmp: fractal
-	./fractal --width 512 --height 384 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum.bmp
 

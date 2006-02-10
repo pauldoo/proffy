@@ -10,48 +10,49 @@
 #include <sstream>
 #include <string>
 
-#include "Accumulator.h"
-#include "ComplexSampler.h"
-#include "Geometry.h"
-#include "JuliaIterator.h"
-#include "MandelbrotIterator.h"
+#include "Fractal/Accumulator.h"
+#include "Fractal/ComplexSampler.h"
+#include "Fractal/Geometry.h"
+#include "Fractal/JuliaIterator.h"
+#include "Fractal/MandelbrotIterator.h"
 
-
-void ProduceJuliaRendering(
-    Magick::Image& image,
-    Magick::Image& accum,
-    const std::complex<double>& top_left,
-    const std::complex<double>& bottom_right,
-    const std::complex<double>& c,
-    const double& exposure,
-    const double& accum_exposure
-)
-{
-    const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
-    Fractal::Accumulator accumulator(accum, transform);
-    Fractal::JuliaIterator iterator(&accumulator, c);
-    Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
-    sampler.Render(image, exposure);
-    accumulator.Render(accum, accum_exposure);
-    //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
-}
-
-void ProduceMandelbrotRendering(
-    Magick::Image& image,
-    Magick::Image& accum,
-    const std::complex<double>& top_left,
-    const std::complex<double>& bottom_right,
-    const double& exposure,
-    const double& accum_exposure
-)
-{
-    const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
-    Fractal::Accumulator accumulator(accum, transform);
-    Fractal::MandelbrotIterator iterator(&accumulator);
-    Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
-    sampler.Render(image, exposure);
-    accumulator.Render(accum, accum_exposure);
-    //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+namespace {
+    void ProduceJuliaRendering(
+        Magick::Image& image,
+        Magick::Image& accum,
+        const std::complex<double>& top_left,
+        const std::complex<double>& bottom_right,
+        const std::complex<double>& c,
+        const double& exposure,
+        const double& accum_exposure
+    )
+    {
+        const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
+        Fractal::Accumulator accumulator(accum, transform);
+        Fractal::JuliaIterator iterator(&accumulator, c);
+        Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
+        sampler.Render(image, exposure);
+        accumulator.Render(accum, accum_exposure);
+        //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+    }
+    
+    void ProduceMandelbrotRendering(
+        Magick::Image& image,
+        Magick::Image& accum,
+        const std::complex<double>& top_left,
+        const std::complex<double>& bottom_right,
+        const double& exposure,
+        const double& accum_exposure
+    )
+    {
+        const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
+        Fractal::Accumulator accumulator(accum, transform);
+        Fractal::MandelbrotIterator iterator(&accumulator);
+        Fractal::ComplexSampler sampler(top_left, bottom_right, &iterator);
+        sampler.Render(image, exposure);
+        accumulator.Render(accum, accum_exposure);
+        //ProduceRendering( image, top_left, bottom_right, iterator, exposure );
+    }
 }
 
 int main(int argc, char* argv[])
