@@ -4,16 +4,25 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <complex>
+#include <ostream>
 
 namespace Fractal
 {
+    typedef boost::numeric::ublas::c_vector<double, 2> Vector2;
     typedef boost::numeric::ublas::c_vector<double, 4> Vector4;
     typedef boost::numeric::ublas::c_matrix<double, 4, 4> Matrix44;
     
     namespace Geometry {
-        Vector4 ComplexToVector(const std::complex<double>&);
+        const Vector2 ComplexToVector2(const std::complex<double>&);
+        const Vector4 ComplexToVector4(const std::complex<double>&);
+        const Vector4 Vector2ToVector4(const Vector2&);
         
-        Matrix44 CreateBoundsTransform(
+        const Matrix44 CreateBoundsTransform(
+            const Vector2& top_left,
+            const Vector2& bottom_right
+        );
+        
+        const Matrix44 CreateBoundsTransform(
             const std::complex<double>& top_left,
             const std::complex<double>& bottom_right
         );

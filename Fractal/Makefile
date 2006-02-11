@@ -1,27 +1,25 @@
-all: build images
+all: build
 
-build: libFractal.a Bin/Mandelbrot
-images: images/mandelbrot.png images/julia.png images/mandelbrot_accum.png images/julia_accum.png
+build:
+	+make -C Fractal
+	+make -C Bin
+	mkdir -p images
+
+images: images/mandelbrot.bmp images/julia.bmp images/mandelbrot_accum.bmp images/julia_accum.bmp
 
 clean:
 	+make -C Fractal clean
 	+make -C Bin clean
 	rm -rf images
 
-libFractal.a:
-	+make -C Fractal
+images/%_accum.bmp: images/%.bmp
 
-Bin/Mandelbrot: libFractal.a
-	+make -C Bin
-	
-images/%_accum.png: images/%.png
-
-images/mandelbrot.png: Bin/Mandelbrot
+images/mandelbrot.bmp: Bin/Mandelbrot
 	mkdir -p images
-	./Bin/Mandelbrot --width 512 --height 384 --output $@ --accum_output images/mandelbrot_accum.png
+	./Bin/Mandelbrot --width 512 --height 384 --output $@ --accum_output images/mandelbrot_accum.bmp
 
-images/julia.png: Bin/Mandelbrot
+images/julia.bmp: Bin/Mandelbrot
 	mkdir -p images
-	./Bin/Mandelbrot --width 512 --height 384 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum.png
+	./Bin/Mandelbrot --width 512 --height 384 --julia_real 0.3 --julia_imag 0.6 --output $@ --accum_output images/julia_accum.bmp
 
 

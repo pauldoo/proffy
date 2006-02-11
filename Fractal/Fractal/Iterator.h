@@ -8,9 +8,7 @@ namespace Fractal {
     public:
         typedef T Type;
     
-        virtual ~Iterator()
-        {
-        }
+        virtual ~Iterator() = 0;
         
         virtual void Seed(const Type& seed) = 0;
         virtual const Type& Value(void) const = 0;

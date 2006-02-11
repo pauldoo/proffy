@@ -13,7 +13,7 @@ clean:
 	g++ -MM $< > $@
 
 %.o: %.cpp %.dep
-	g++ -Wall -Os -pipe -c -o $@ $< -I.. `Magick++-config --cppflags --cxxflags`
+	g++ -Wall -O3 -g -pipe -c -o $@ $< -I .. `Magick++-config --cppflags --cxxflags`
 
 include $(deps)
 

@@ -11,13 +11,13 @@ namespace Fractal {
     public:
         JuliaIterator(Accumulator* accumulator00, const Type& param);
     
-        // Iterator::Seed
+        // Fractal::Iterator
         void Seed(const Type& seed);
         
-        // Iterator::Value
+        // Fractal::Iterator
         const Type& Value(void) const;
     
-        // Iterator::Iterate
+        // Fractal::Iterator
         const Type& Iterate(void);
         
     private:

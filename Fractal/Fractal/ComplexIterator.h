@@ -12,8 +12,9 @@ namespace Fractal {
     {
     public:
         ComplexIterator(Accumulator* accumulator00);
-    
-        virtual int IterateUntilEscaped(const int max_iter, const double& escape);
+        ~ComplexIterator();
+        
+        const int IterateUntilEscaped(const int max_iter, const double escape);
     
     private:
         Accumulator* const m_accumulator00;

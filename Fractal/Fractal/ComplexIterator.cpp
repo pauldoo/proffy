@@ -10,7 +10,11 @@ namespace Fractal
     {
     }
     
-    int ComplexIterator::IterateUntilEscaped(const int max_iter, const double& escape)
+    ComplexIterator::~ComplexIterator()
+    {
+    }
+    
+    const int ComplexIterator::IterateUntilEscaped(const int max_iter, const double escape)
     {
         std::vector<std::complex<double> > points;
         int iter = 0;
@@ -23,7 +27,7 @@ namespace Fractal
         }
         if (m_accumulator00 != 0 && iter != max_iter) {
             for (std::vector<std::complex<double> >::const_iterator i = points.begin(); i != points.end(); ++i) {
-                m_accumulator00->Accumulate( Fractal::Geometry::ComplexToVector(*i), 1.0 );
+                m_accumulator00->Accumulate( Fractal::Geometry::ComplexToVector4(*i), 1.0 );
             }
         }
         return iter;

@@ -11,13 +11,13 @@ namespace Fractal {
     public:
         MandelbrotIterator(Accumulator* accumulator00);
         
-        // Iterator::Seed
+        // Fractal::Iterator
         void Seed(const Type& seed);
         
-        // Iterator::Value
+        // Fractal::Iterator
         const Type& Value(void) const;
         
-        // Iterator::Iterator
+        // Fractal::Iterator
         const Type& Iterate(void);
         
     private:

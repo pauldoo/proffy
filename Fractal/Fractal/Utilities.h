@@ -4,7 +4,9 @@
 namespace Fractal
 {
     namespace Utilities {
-        double Expose(const double& value, const double& exposure);
+        const double Expose(const double& value, const double& exposure);
+        
+        const double Random(void);
     }
 }
 

@@ -1,12 +1,19 @@
+objects := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 bins = $(patsubst %.cpp, %, $(wildcard *.cpp))
 
 LIBS = ../libFractal.a -lboost_program_options `Magick++-config --ldflags --libs`
 
-all: $(bins)
+all: $(objects) $(bins)
 
 clean:
-	rm -f $(bins)
+	rm -f $(bins) *.o
 
-%: %.cpp ../libFractal.a
-	g++ -Wall -Os -pipe -o $@ $< -I.. $(LIBS)
+%: %.o ../libFractal.a
+	g++ -Wall -O3 -g -pipe $< -o $@ $(LIBS)
+
+%.o: %.cpp
+	g++ -Wall -O3 -g -pipe -c $< -o $@ -I .. `Magick++-config --cppflags --cxxflags`
+
+
+
 
