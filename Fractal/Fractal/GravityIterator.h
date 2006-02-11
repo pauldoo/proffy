@@ -19,7 +19,7 @@ namespace Fractal
         GravityIterator(
             Accumulator* accumulator00,
             const VectorList& masses,
-            const double time_step,
+            const double acc_step,
             const double damping,
             const double distance_cutoff
         );
@@ -44,8 +44,8 @@ namespace Fractal
     
         Accumulator* const m_accumulator00;
         const VectorList m_masses;
-        const double m_time_step;
-        const double m_efficiency;
+	const double m_acc_step;
+        const double m_damping;
         const double m_distance_cutoff;
         
         Vector m_position;

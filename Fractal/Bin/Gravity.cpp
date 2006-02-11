@@ -8,16 +8,15 @@
 
 namespace
 {
-    const int sources = 2;
-    const int width = 32;
-    const int height = 32;
-    const int supersample = 1;
-    const int accum_scale = 10;
+    const int width = 1024;
+    const int height = 1024;
+    const int supersample = 2;
+    const int accum_scale = 1;
     const double damping = 5e-2;
-    const double dt = 1e-4;
+    const double da = 1e-1;
     const double distance_cutoff = 1e-2;
     const double image_exposure = 1;
-    const double accumulator_exposure = 1e-2;
+    const double accumulator_exposure = 1;
 
     void ProduceGravityFractal(const std::vector<Fractal::Vector2>& source_list, Magick::Image& image, Magick::Image& accum)
     {
@@ -33,13 +32,8 @@ namespace
         Fractal::Vector2 bottom_right = top_left + top_edge_vector + left_edge_vector;;
         
         const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
-        std::cout << transform(0, 0) << ", " << transform(0, 1) << ", " << transform(0, 2) << ", " << transform(0, 3) << std::endl;
-        std::cout << transform(1, 0) << ", " << transform(1, 1) << ", " << transform(1, 2) << ", " << transform(1, 3) << std::endl;
-        std::cout << transform(2, 0) << ", " << transform(2, 1) << ", " << transform(2, 2) << ", " << transform(2, 3) << std::endl;
-        std::cout << transform(3, 0) << ", " << transform(3, 1) << ", " << transform(3, 2) << ", " << transform(3, 3) << std::endl;
-        
         Fractal::Accumulator accumulator(accum, transform);
-        Fractal::GravityIterator< Fractal::Vector2 > iterator(&accumulator, source_list, dt, damping, distance_cutoff);
+        Fractal::GravityIterator< Fractal::Vector2 > iterator(&accumulator, source_list, da, damping, distance_cutoff);
         Fractal::VectorSampler< Fractal::Vector2 > sampler(top_left, top_edge_vector, left_edge_vector, &iterator);
         sampler.Render(image, image_exposure);
         accumulator.Render(accum, accumulator_exposure);
@@ -88,8 +82,8 @@ int main(int argc, char* argv[])
 
     image.scale(Magick::Geometry(width, height));
     accum.scale(Magick::Geometry(width * accum_scale, height * accum_scale));
-    image.write("images/gravity_image.bmp");
-    accum.write("images/gravity_accum.bmp");
+    image.write("images/gravity_image.png");
+    accum.write("images/gravity_accum.png");
     
     return 0;
 }

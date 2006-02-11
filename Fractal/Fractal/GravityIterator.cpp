@@ -9,19 +9,16 @@ namespace Fractal
     GravityIterator<T>::GravityIterator(
         Accumulator* accumulator00,
         const std::vector<Vector>& masses,
-        const double time_step,
+        const double acc_step,
         const double damping,
         const double distance_cutoff
     ) :
         m_accumulator00(accumulator00),
         m_masses(masses),
-        m_time_step(time_step),
-        m_efficiency(pow(1.0 - damping, time_step)),
+        m_acc_step(acc_step),
+        m_damping(damping),
         m_distance_cutoff(distance_cutoff)
     {
-        for (typename VectorList::const_iterator i = m_masses.begin(); i != m_masses.end(); ++i) {
-            std::cout << (*i)(0) << "\t" << (*i)(1) << std::endl;
-        }
     }
     
     template<typename T>
@@ -54,9 +51,13 @@ namespace Fractal
             const Vector force = displacement_unit_vec / (distance * distance);
             acceleration += force;
         }
-        m_velocity *= m_efficiency;
-        m_velocity += acceleration * m_time_step;
-        m_position += m_velocity * m_time_step;
+	const double time_step = m_acc_step / norm_2(acceleration);
+        m_velocity *= pow(1.0 - m_damping, time_step);
+	m_velocity += acceleration * time_step;
+        m_position += m_velocity * time_step;
+	if (m_accumulator00) {
+	    m_accumulator00->Accumulate( Fractal::Geometry::Vector2ToVector4(Value()), time_step );
+	}
         return Value();
     }
     
@@ -67,9 +68,6 @@ namespace Fractal
             const int result = Trapped();
             if (result != -1) {
                 return result;
-            }
-            if (m_accumulator00) {
-                m_accumulator00->Accumulate( Fractal::Geometry::Vector2ToVector4(Value()), 1.0 );
             }
             Iterate();
         }
