@@ -1,4 +1,4 @@
-#include <Magick++.h>
+#include "Fractal/External.h"
 
 #include "Fractal/Accumulator.h"
 #include "Fractal/Geometry.h"

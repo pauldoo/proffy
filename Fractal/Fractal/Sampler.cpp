@@ -1,8 +1,7 @@
+#include "External.h"
 #include "Sampler.h"
 
 #include "Geometry.h"
-
-#include <complex>
 
 namespace Fractal
 {

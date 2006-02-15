@@ -1,8 +1,5 @@
+#include "External.h"
 #include "Utilities.h"
-
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
 
 namespace Fractal {
     namespace Utilities {

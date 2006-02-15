@@ -1,7 +1,5 @@
+#include "External.h"
 #include "ComplexSampler.h"
-
-#include <boost/progress.hpp>
-#include <Magick++.h>
 
 #include "Accumulator.h"
 #include "ComplexIterator.h"

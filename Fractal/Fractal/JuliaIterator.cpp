@@ -1,3 +1,4 @@
+#include "External.h"
 #include "JuliaIterator.h"
 
 namespace Fractal {

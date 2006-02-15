@@ -1,3 +1,4 @@
+#include "External.h"
 #include "Geometry.h"
 
 namespace Fractal

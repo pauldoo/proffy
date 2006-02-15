@@ -3,8 +3,6 @@
 
 #include "Iterator.h"
 
-#include <vector>
-
 namespace Fractal { class Accumulator; }
 
 namespace Fractal

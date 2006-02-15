@@ -1,3 +1,4 @@
+#include "External.h"
 #include "GravityIterator.h"
 
 #include "Accumulator.h"

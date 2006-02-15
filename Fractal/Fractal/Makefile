@@ -1,10 +1,13 @@
 objects := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 deps := $(patsubst %.cpp, %.dep, $(wildcard *.cpp))
 
-all: ../libFractal.a
+CXXFLAGS = -Wall -O3 -g -pipe `Magick++-config --cxxflags`
+CPPFLAGS = `Magick++-config --cppflags`
+
+all: External.h.gch ../libFractal.a
 
 clean:
-	rm -f ../libFractal.a *.o
+	rm -f ../libFractal.a *.o *.gch
 
 ../libFractal.a: $(objects)
 	ar -rc $@ $(objects)
@@ -12,8 +15,11 @@ clean:
 %.dep: %.cpp
 	g++ -MM $< > $@
 
+%.h.gch: %.h
+	g++ $(CXXFLAGS) -c -o $@ $< $(CPPFLAGS)
+
 %.o: %.cpp %.dep
-	g++ -Wall -O3 -g -pipe -c -o $@ $< -I .. `Magick++-config --cppflags --cxxflags`
+	g++ $(CXXFLAGS) -c -o $@ $<
 
 include $(deps)
 

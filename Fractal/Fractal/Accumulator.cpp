@@ -1,10 +1,7 @@
+#include "External.h"
 #include "Accumulator.h"
 
-#include <Magick++.h>
-#include <cassert>
-
 #include "Utilities.h"
-
 
 namespace Fractal
 {

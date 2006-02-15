@@ -1,14 +1,4 @@
-#include <Magick++.h>
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/parsers.hpp>
-#include <boost/program_options/variables_map.hpp>
-#include <boost/progress.hpp>
-#include <cmath>
-#include <complex>
-#include <exception>
-#include <iostream>
-#include <sstream>
-#include <string>
+#include "Fractal/External.h"
 
 #include "Fractal/Accumulator.h"
 #include "Fractal/ComplexSampler.h"

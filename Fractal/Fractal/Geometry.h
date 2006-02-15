@@ -1,11 +1,6 @@
 #ifndef Fractal_Geometry
 #define Fractal_Geometry
 
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
-#include <complex>
-#include <ostream>
-
 namespace Fractal
 {
     typedef boost::numeric::ublas::c_vector<double, 2> Vector2;

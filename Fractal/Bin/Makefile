@@ -12,8 +12,6 @@ clean:
 	g++ -Wall -O3 -g -pipe $< -o $@ $(LIBS)
 
 %.o: %.cpp
-	g++ -Wall -O3 -g -pipe -c $< -o $@ -I .. `Magick++-config --cppflags --cxxflags`
-
-
+	g++ -Wall -O3 -g -pipe `Magick++-config --cxxflags` -c -o $@ $< -I ..
 
 

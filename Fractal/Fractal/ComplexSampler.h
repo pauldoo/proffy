@@ -3,8 +3,6 @@
 
 #include "Sampler.h"
 
-#include <complex>
-
 namespace Fractal { class ComplexIterator; }
 namespace Magick { class Image; }
 

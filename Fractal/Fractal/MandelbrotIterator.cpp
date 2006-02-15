@@ -1,3 +1,4 @@
+#include "External.h"
 #include "MandelbrotIterator.h"
 
 namespace Fractal {

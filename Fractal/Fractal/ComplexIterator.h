@@ -1,8 +1,6 @@
 #ifndef Fractal_ComplexIterator
 #define Fractal_ComplexIterator
 
-#include <complex>
-
 #include "Iterator.h"
 
 namespace Fractal { class Accumulator; }

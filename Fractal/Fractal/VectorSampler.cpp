@@ -1,7 +1,5 @@
+#include "External.h"
 #include "VectorSampler.h"
-
-#include <boost/progress.hpp>
-#include <Magick++.h>
 
 #include "Geometry.h"
 #include "Utilities.h"
