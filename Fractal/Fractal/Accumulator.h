@@ -2,6 +2,7 @@
 #define Fractal_Accumulator
 
 #include "Geometry.h"
+#include <boost/multi_array.hpp>
 
 namespace Magick { class Image; }
 

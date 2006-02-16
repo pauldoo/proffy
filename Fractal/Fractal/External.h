@@ -1,3 +1,6 @@
+#ifndef Fractal_External
+#define Fractal_External
+
 #include <cassert>
 #include <cmath>
 #include <complex>
@@ -10,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/multi_array.hpp>
+//#include <boost/multi_array.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/program_options/options_description.hpp>
@@ -20,4 +23,5 @@
 
 #include <Magick++.h>
 
+#endif
 
