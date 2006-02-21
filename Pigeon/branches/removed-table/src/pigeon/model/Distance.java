@@ -21,7 +21,7 @@ package pigeon.model;
 
 import java.io.Serializable;
 
-/**
+/** Immutable class representing a distance.
  *
  * @author pauldoo
  */

@@ -20,6 +20,8 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import javax.swing.JOptionPane;
@@ -27,7 +29,7 @@ import pigeon.model.Distance;
 import pigeon.model.Club;
 import pigeon.model.Member;
 import pigeon.model.Racepoint;
-import pigeon.model.ValidationException;
+
 
 /**
  *
@@ -38,7 +40,6 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
     private static final long serialVersionUID = 42L;
     
     private SortedMap<Target, Distance> distances;
-    private DistancesTableModel<Target> distancesTableModel;
     
     public static void editMemberDistances(Component parent, Member member, Club club) throws UserCancelledException {
         SortedMap<Racepoint, Distance> distances = club.getDistancesForMember(member);
@@ -87,9 +88,9 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
      */
     public DistanceEditor(Subject subject, String targetTitle, SortedMap<Target, Distance> distances) {
         this.distances = distances;
-        this.distancesTableModel = new DistancesTableModel<Target>(targetTitle, distances, true);
         initComponents();
         distancesPanel.setBorder(new javax.swing.border.TitledBorder("Distances For " + subject));
+        scrollPane.setViewportView(new DistancesPanel<Target>(distances));
     }
     
     private void updateDistancesMap() {
@@ -105,17 +106,12 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
     private void initComponents() {
         distancesPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
-        distancesTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
         distancesPanel.setLayout(new java.awt.BorderLayout());
 
         distancesPanel.setBorder(new javax.swing.border.TitledBorder("Distances For"));
-        distancesTable.setModel(distancesTableModel);
-        distancesTable.setRowSelectionAllowed(false);
-        scrollPane.setViewportView(distancesTable);
-
         distancesPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
 
         add(distancesPanel, java.awt.BorderLayout.CENTER);
@@ -126,7 +122,6 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel distancesPanel;
-    private javax.swing.JTable distancesTable;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
     
