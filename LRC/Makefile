@@ -3,7 +3,7 @@ deps := $(patsubst %.cpp, %.dep, $(wildcard *.cpp))
 
 CXXFLAGS = -Wall -O2 -g -pipe
 CPPFLAGS =
-CXX = g++-3.4
+LIBS = -lcrypto++
 
 all: External.h.gch lrc
 
