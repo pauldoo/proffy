@@ -21,9 +21,13 @@ namespace LRC
                 return;
             }
             {
+		//std::cerr << "Raw: " << raw_size << std::endl;
                 std::vector<char> buffer(raw_size);
                 input.read(&(buffer.front()), raw_size);
                 m_output->write(&(buffer.front()), raw_size);
+		if (!(*m_output)) {
+		    throw std::string("Write failed");
+		}
             }
             
             while (true) {
@@ -37,6 +41,8 @@ namespace LRC
                 }
                 unsigned int repeat_size;
                 input.read(reinterpret_cast<char*>(&repeat_size), sizeof(unsigned int));
+
+		//std::cerr << "Block: " << repeat_offset << " : " << repeat_size << std::endl;
                 
                 const unsigned int head = m_output->tellg();
                 m_output->seekg(repeat_offset);
@@ -44,6 +50,9 @@ namespace LRC
                 m_output->read(&(buffer.front()), repeat_size);
                 m_output->seekg(head);
                 m_output->write(&(buffer.front()), repeat_size);
+		if (!(*m_output)) {
+		    throw std::string("Write failed");
+		}
             }
         }
     }

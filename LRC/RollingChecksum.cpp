@@ -4,7 +4,10 @@
 namespace LRC
 {
     RollingChecksum::RollingChecksum(const unsigned int block_size)
-      : m_buffer(block_size)
+      : m_rolling_a(0),
+	m_rolling_b(0),
+	m_offset(0),
+        m_buffer(block_size)
     {
     }
     

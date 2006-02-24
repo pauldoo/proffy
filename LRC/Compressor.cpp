@@ -12,7 +12,8 @@ namespace LRC
         m_bytes_to_skip(0),
         m_mode(eMode_Raw),
         m_checker(new RollingChecksum(m_block_size)),
-        m_current_raw00(0)
+        m_current_raw00(0),
+	m_previous_blocks(new WeakMap)
     {
     }
     
@@ -41,9 +42,11 @@ namespace LRC
         if (m_current_raw00.get() != 0 && m_current_raw00->size() > 0) {
             if (m_mode == eMode_Block) {
                 const int mark = -1;
+		//std::cerr << "End block sequence" << std::endl;
                 m_output->write(reinterpret_cast<const char*>(&mark), sizeof(int));
             }
             const unsigned int size = m_current_raw00->size();
+	    //std::cerr << "Raw: " << size << std::endl;
             m_output->write(reinterpret_cast<const char*>(&size), sizeof(unsigned int));
             m_output->write(reinterpret_cast<const char*>(&(m_current_raw00->front())), size);
             m_mode = eMode_Raw;
@@ -54,6 +57,7 @@ namespace LRC
     void Compressor::WriteBlock(const unsigned int offset)
     {
         FlushRaw();
+	//std::cerr << "Block: " << offset << " : " << m_block_size << std::endl;
         m_output->write(reinterpret_cast<const char*>(&offset), sizeof(unsigned int));
         m_output->write(reinterpret_cast<const char*>(&m_block_size), sizeof(unsigned int));
         m_mode = eMode_Block;
@@ -75,24 +79,27 @@ namespace LRC
             if (m_bytes_to_skip > 0) {
                 m_bytes_to_skip--;
             } else {
-                WeakMap::const_iterator weak_matches = m_previous_blocks.find(weak_checksum);
-                if (weak_matches != m_previous_blocks.end()) {
+                WeakMap::const_iterator weak_matches = m_previous_blocks->find(weak_checksum);
+                if (weak_matches != m_previous_blocks->end()) {
                     strong_checksum = m_checker->StrongChecksum();
                     StrongMap::const_iterator strong_match = weak_matches->second.find(strong_checksum);
                     if (strong_match != weak_matches->second.end()) {
-                        SnipRawBuffer();
-                        WriteBlock(strong_match->second);
-                        m_bytes_to_skip = m_block_size - 1;
+			if ((strong_match->second + 2 * m_block_size) <= m_bytes_read) {
+                            SnipRawBuffer();
+                            WriteBlock(strong_match->second);
+                            m_bytes_to_skip = m_block_size - 1;
+			}
                     }
                 }
             }
             
             if ((m_bytes_read % m_block_size) == 0) {
-                StrongMap& weak_matches = m_previous_blocks[weak_checksum];
+                StrongMap& weak_matches = (*m_previous_blocks)[weak_checksum];
                 if (strong_checksum.empty()) {
                     strong_checksum = m_checker->StrongChecksum();
                 }
                 if (weak_matches.find(strong_checksum) == weak_matches.end()) {
+		    //std::cerr << "Remembering: " << (m_bytes_read - m_block_size) << " : " << weak_checksum << std::endl;
                     weak_matches[strong_checksum] = m_bytes_read - m_block_size;
                 }
             }

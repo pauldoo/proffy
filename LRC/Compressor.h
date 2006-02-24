@@ -35,8 +35,8 @@ namespace LRC
             unsigned int m_bytes_to_skip;
             eMode m_mode;
             std::auto_ptr<RollingChecksum> m_checker;
-            std::auto_ptr< std::vector<Byte> > m_current_raw00;
-            WeakMap m_previous_blocks;
+            std::auto_ptr<std::vector<Byte> > m_current_raw00;
+	    std::auto_ptr<WeakMap> m_previous_blocks;
     };
 }
 
