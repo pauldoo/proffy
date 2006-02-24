@@ -16,10 +16,20 @@ namespace
     const double da = 1e-1;
     const double distance_cutoff = 1e-2;
     const double image_exposure = 1;
-    const double accumulator_exposure = 1;
+    const double accumulator_exposure = 0.3;
 
     void ProduceGravityFractal(const std::vector<Fractal::Vector2>& source_list, Magick::Image& image, Magick::Image& accum)
     {
+        Fractal::Vector2 accum_top_left;
+        accum_top_left(0) = 0.0;
+        accum_top_left(1) = 0.125;
+        Fractal::Vector2 accum_bottom_right;
+        accum_bottom_right(0) = 1.0;
+        accum_bottom_right(1) = 0.875;
+        
+        const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(accum_top_left, accum_bottom_right);
+        Fractal::Accumulator accumulator(accum, transform);
+
         Fractal::Vector2 top_left;
         top_left(0) = 149 / 1024.0;
         top_left(1) = 602 / 1024.0;
@@ -29,10 +39,7 @@ namespace
         Fractal::Vector2 left_edge_vector;
         left_edge_vector(0) = 0.0;
         left_edge_vector(1) = 27 / 1024.0;
-        Fractal::Vector2 bottom_right = top_left + top_edge_vector + left_edge_vector;;
         
-        const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
-        Fractal::Accumulator accumulator(accum, transform);
         Fractal::GravityIterator< Fractal::Vector2 > iterator(&accumulator, source_list, da, damping, distance_cutoff);
         Fractal::VectorSampler< Fractal::Vector2 > sampler(top_left, top_edge_vector, left_edge_vector, &iterator);
         sampler.Render(image, image_exposure);
@@ -82,8 +89,8 @@ int main(int argc, char* argv[])
 
     image.scale(Magick::Geometry(width, height));
     accum.scale(Magick::Geometry(width * accum_scale, height * accum_scale));
-    image.write("images/gravity_image.tga");
-    accum.write("images/gravity_accum.tga");
+    image.write("images/gravity_image.tiff");
+    accum.write("images/gravity_accum.tiff");
     
     return 0;
 }
