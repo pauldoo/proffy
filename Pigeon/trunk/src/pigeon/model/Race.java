@@ -20,10 +20,11 @@
 package pigeon.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  *
@@ -35,7 +36,7 @@ public class Race implements Serializable, Comparable<Race> {
     
     private Racepoint racepoint;
     private Date liberationDate;
-    private int daysCovered;
+    private int daysCovered = 1;
     private String windDirection;
     private Map<Member, Map<String, Long>> results = new HashMap<Member, Map<String, Long>>();
     
@@ -44,6 +45,12 @@ public class Race implements Serializable, Comparable<Race> {
         for (Member m: club.getMembers()) {
             results.put(m, new HashMap<String, Long>());
         }
+        GregorianCalendar cal = new GregorianCalendar();
+        cal = new GregorianCalendar(
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
+        setLiberationDate(cal.getTime());
     }
 
     public Racepoint getRacepoint() {
@@ -106,7 +113,10 @@ public class Race implements Serializable, Comparable<Race> {
         return daysCovered;
     }
 
-    public void setDaysCovered(int daysCovered) {
+    public void setDaysCovered(int daysCovered) throws ValidationException {
+        if (!(daysCovered >= 1 && daysCovered <= 3)) {
+            throw new ValidationException("Days covered should be between 1 and 3");
+        }
         this.daysCovered = daysCovered;
     }
 
@@ -115,6 +125,6 @@ public class Race implements Serializable, Comparable<Race> {
     }
 
     public void setWindDirection(String windDirection) {
-        this.windDirection = windDirection;
+        this.windDirection = windDirection.trim();
     }
 }

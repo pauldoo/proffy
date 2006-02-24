@@ -232,10 +232,10 @@ class MemberInfo extends javax.swing.JPanel {
     private javax.swing.JTextField telephoneText;
     // End of variables declaration//GEN-END:variables
     
-    public static void editMember(Component parent, Member member) throws UserCancelledException {
+    public static void editMember(Component parent, Member member, boolean newMember) throws UserCancelledException {
         MemberInfo panel = new MemberInfo(member, true);
         while (true) {
-            Object[] options = { "Add", "Cancel" };
+            Object[] options = { (newMember ? "Add" : "Ok"), "Cancel" };
             int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 try {
@@ -245,7 +245,7 @@ class MemberInfo extends javax.swing.JPanel {
                     e.displayErrorDialog(parent);
                 }
             } else {
-                result = JOptionPane.showConfirmDialog(parent, "Return to main menu and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                result = JOptionPane.showConfirmDialog(parent, "Return to Club window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
                     throw new UserCancelledException();
                 }
@@ -255,7 +255,7 @@ class MemberInfo extends javax.swing.JPanel {
     
     public static Member createMember(Component parent) throws UserCancelledException {
         Member member = new Member();
-        editMember(parent, member);
+        editMember(parent, member, true);
         return member;
     }
 }

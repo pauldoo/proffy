@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import pigeon.model.Club;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
+import pigeon.model.ValidationException;
 
 /**
  *
@@ -37,21 +38,38 @@ class RaceInfo extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
 
+    private static final int BASE_YEAR = 2000;
+    
     private final Race race;
     
     /** Creates new form RaceInfo */
-    public RaceInfo(Race race, Vector<Racepoint> racepoints, boolean editable) {
+    public RaceInfo(Race race, Club club, boolean editable) {
         this.race = race;
         initComponents();
-        addRacepointsToCombo(racepoints);
+        addComboOptions(club);
+
         if (race.getRacepoint() != null) {
             racepointCombo.setSelectedItem(race.getRacepoint());
+        } else {
+            racepointCombo.setSelectedIndex(0);
         }
-        addDatesAndTimes(race.getLiberationDate());
         
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(race.getLiberationDate());
+        dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
+        monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
+        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - BASE_YEAR);
+        hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
+        minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        
+        daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
     }
     
-    private void addDatesAndTimes(Date date) {
+    private void addComboOptions(Club club) {
+        for (Racepoint r: Utilities.sortCollection(club.getRacepoints())) {
+            racepointCombo.addItem( r );
+        }
+        
         for (int day = 1; day <= 31; day++) {
             String str = new Integer(day).toString();
             if (day < 10) {
@@ -68,8 +86,7 @@ class RaceInfo extends javax.swing.JPanel {
             monthCombo.addItem(str);
         }
         
-        final int baseYear = 2000;
-        for (int year = baseYear; year <= baseYear + 20; year++) {
+        for (int year = BASE_YEAR; year <= BASE_YEAR + 20; year++) {
             yearCombo.addItem(year);
         }
         
@@ -92,14 +109,6 @@ class RaceInfo extends javax.swing.JPanel {
             }
             minuteCombo.addItem(str);
         }
-        
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
-        monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - baseYear);
-        hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
-        minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
     }
     
     /** This method is called from within the constructor to
@@ -271,11 +280,11 @@ class RaceInfo extends javax.swing.JPanel {
     private javax.swing.JComboBox yearCombo;
     // End of variables declaration//GEN-END:variables
 
-    private void updateRaceObject() {
+    private void updateRaceObject() throws ValidationException {
         race.setRacepoint((Racepoint)racepointCombo.getSelectedItem());
         Date liberationDate = new GregorianCalendar(
                 new Integer(yearCombo.getSelectedItem().toString()),
-                new Integer(monthCombo.getSelectedItem().toString()),
+                new Integer(monthCombo.getSelectedItem().toString()) - 1,
                 new Integer(dayCombo.getSelectedItem().toString()),
                 new Integer(hourCombo.getSelectedItem().toString()),
                 new Integer(minuteCombo.getSelectedItem().toString())).getTime();
@@ -283,26 +292,31 @@ class RaceInfo extends javax.swing.JPanel {
         race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
         race.setWindDirection(windDirectionText.getText());
     }
-    
-    public void addRacepointsToCombo(Vector<Racepoint> racepoints) {
-        for (Racepoint r: racepoints) {
-            racepointCombo.addItem( r );
+        
+    public static void editRace(Component parent, Race race, Club club, boolean newRace) throws UserCancelledException {
+        RaceInfo panel = new RaceInfo(race, club, true);
+        while (true) {
+            Object[] options = { (newRace ? "Add" : "Ok"), "Cancel" };
+            int result = JOptionPane.showOptionDialog(parent, panel, "Race Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            if (result == 0) {
+                try {
+                    panel.updateRaceObject();
+                    break;
+                } catch (ValidationException e) {
+                    e.displayErrorDialog(parent);
+                }
+            } else {
+                result = JOptionPane.showConfirmDialog(parent, "Return to Race window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    throw new UserCancelledException();
+                }
+            }
         }
     }
     
-    public static void editRace(Component parent, Race race, Vector<Racepoint> racepoints) {
-        RaceInfo panel = new RaceInfo(race, racepoints, true);
-        JOptionPane.showMessageDialog(parent, panel, "Race Information", JOptionPane.PLAIN_MESSAGE);
-        panel.updateRaceObject();
-    }
-    
-    public static Race createRace(Component parent, Club club) {
+    public static Race createRace(Component parent, Club club) throws UserCancelledException {
         Race race = new Race(club);
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        race.setLiberationDate(cal.getTime());
-        editRace(parent, race, Utilities.sortCollection(club.getRacepoints()));
+        editRace(parent, race, club, true);
         return race;
     }
 

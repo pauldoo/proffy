@@ -57,7 +57,13 @@ public class Season implements Serializable {
         this.name = name;
     }
     
-    public void addRace(Race race) {
+    public void addRace(Race race) throws ValidationException {
+        if (races.contains( race ) || !races.add( race )) {
+            throw new ValidationException("Race already exists");
+        }
+    }
+
+    public void removeRace(Race race) {
         races.add(race);
     }
     
