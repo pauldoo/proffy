@@ -9,7 +9,7 @@
 namespace
 {
     const int width = 1024;
-    const int height = 1024;
+    const int height = 768;
     const int supersample = 2;
     const int accum_scale = 1;
     const double damping = 5e-2;
@@ -21,14 +21,14 @@ namespace
     void ProduceGravityFractal(const std::vector<Fractal::Vector2>& source_list, Magick::Image& image, Magick::Image& accum)
     {
         Fractal::Vector2 top_left;
-        top_left(0) = 0.0;
-        top_left(1) = 0.0;
+        top_left(0) = 149 / 1024.0;
+        top_left(1) = 602 / 1024.0;
         Fractal::Vector2 top_edge_vector;
-        top_edge_vector(0) = 1.0;
+        top_edge_vector(0) = 36 / 1024.0;
         top_edge_vector(1) = 0.0;
         Fractal::Vector2 left_edge_vector;
         left_edge_vector(0) = 0.0;
-        left_edge_vector(1) = 1.0;
+        left_edge_vector(1) = 27 / 1024.0;
         Fractal::Vector2 bottom_right = top_left + top_edge_vector + left_edge_vector;;
         
         const Fractal::Matrix44 transform = Fractal::Geometry::CreateBoundsTransform(top_left, bottom_right);
@@ -82,8 +82,8 @@ int main(int argc, char* argv[])
 
     image.scale(Magick::Geometry(width, height));
     accum.scale(Magick::Geometry(width * accum_scale, height * accum_scale));
-    image.write("images/gravity_image.png");
-    accum.write("images/gravity_accum.png");
+    image.write("images/gravity_image.tga");
+    accum.write("images/gravity_accum.tga");
     
     return 0;
 }
