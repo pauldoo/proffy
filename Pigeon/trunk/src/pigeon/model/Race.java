@@ -34,8 +34,11 @@ public class Race implements Serializable, Comparable<Race> {
     private static final long serialVersionUID = 42L;
     
     private Racepoint racepoint;
-    private Date date;
+    private Date liberationDate;
+    private int daysCovered;
+    private String windDirection;
     private Map<Member, Map<String, Long>> results = new HashMap<Member, Map<String, Long>>();
+    
     
     public Race(Club club) {
         for (Member m: club.getMembers()) {
@@ -51,12 +54,12 @@ public class Race implements Serializable, Comparable<Race> {
         this.racepoint = racepoint;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getLiberationDate() {
+        return liberationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLiberationDate(Date date) {
+        this.liberationDate = date;
     }
     
     public void addResult(Member member, String ringNumber, long time) {
@@ -70,12 +73,48 @@ public class Race implements Serializable, Comparable<Race> {
     public long getResult(Member member, String ringNumber) {
         return getResults(member).get(ringNumber);
     }
+
+    public boolean equals(Object other) {
+        return equals((Race)other);
+    }
+    
+    public boolean equals(Race other) {
+        if (this == other) {
+            return true;
+        }
+        if (liberationDate.compareTo(other.liberationDate) != 0) {
+            return false;
+        }
+        if (racepoint.compareTo(other.racepoint) != 0) {
+            return false;
+        }
+        return true;
+    }
     
     public int compareTo(Race other) {
         if (this == other) {
             return 0;
-        } else {
-            return date.compareTo(other.date);
         }
+        int result = liberationDate.compareTo(other.liberationDate);
+        if (result != 0) {
+            return result;
+        }
+        return racepoint.compareTo(other.racepoint);
+    }
+
+    public int getDaysCovered() {
+        return daysCovered;
+    }
+
+    public void setDaysCovered(int daysCovered) {
+        this.daysCovered = daysCovered;
+    }
+
+    public String getWindDirection() {
+        return windDirection;
+    }
+
+    public void setWindDirection(String windDirection) {
+        this.windDirection = windDirection;
     }
 }

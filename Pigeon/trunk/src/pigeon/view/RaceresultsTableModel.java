@@ -19,9 +19,11 @@
 
 package pigeon.view;
 
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Race;
+import pigeon.model.Racepoint;
 
 /**
  *
@@ -45,12 +47,23 @@ class RaceresultsTableModel extends AbstractTableModel {
     public int getColumnCount() {
         return 2;
     }
+
+    public Class getColumnClass(int column) {
+        switch (column) {
+            case 0:
+                return Date.class;
+            case 1:
+                return Racepoint.class;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
     
     public Object getValueAt(int row, int column) {
         Race race = races.get(row);
         switch (column) {
             case 0:
-                return race.getDate();
+                return race.getLiberationDate();
             case 1:
                 return race.getRacepoint();
             default:

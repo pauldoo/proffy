@@ -20,7 +20,9 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import pigeon.model.Club;
@@ -38,10 +40,66 @@ class RaceInfo extends javax.swing.JPanel {
     private final Race race;
     
     /** Creates new form RaceInfo */
-    public RaceInfo(Race race, Vector<Racepoint> racepoints) {
+    public RaceInfo(Race race, Vector<Racepoint> racepoints, boolean editable) {
         this.race = race;
         initComponents();
         addRacepointsToCombo(racepoints);
+        if (race.getRacepoint() != null) {
+            racepointCombo.setSelectedItem(race.getRacepoint());
+        }
+        addDatesAndTimes(race.getLiberationDate());
+        
+    }
+    
+    private void addDatesAndTimes(Date date) {
+        for (int day = 1; day <= 31; day++) {
+            String str = new Integer(day).toString();
+            if (day < 10) {
+                str = "0" + str;
+            }
+            dayCombo.addItem(str);
+        }
+        
+        for (int month = 1; month <= 12; month++) {
+            String str = new Integer(month).toString();
+            if (month < 10) {
+                str = "0" + str;
+            }
+            monthCombo.addItem(str);
+        }
+        
+        final int baseYear = 2000;
+        for (int year = baseYear; year <= baseYear + 20; year++) {
+            yearCombo.addItem(year);
+        }
+        
+        for (int day = 1; day <= 3; day++) {
+            daysCoveredCombo.addItem(day);
+        }
+        
+        for (int hour = 0; hour <= 23; hour++) {
+            String str = new Integer(hour).toString();
+            if (hour < 10) {
+                str = "0" + str;
+            }
+            hourCombo.addItem(str);
+        }
+        
+        for (int minute = 0; minute <= 59; minute++) {
+            String str = new Integer(minute).toString();
+            if (minute < 10) {
+                str = "0" + str;
+            }
+            minuteCombo.addItem(str);
+        }
+        
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
+        monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
+        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - baseYear);
+        hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
+        minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
     }
     
     /** This method is called from within the constructor to
@@ -55,34 +113,175 @@ class RaceInfo extends javax.swing.JPanel {
 
         racepointLabel = new javax.swing.JLabel();
         racepointCombo = new javax.swing.JComboBox();
+        liberationDateLabel = new javax.swing.JLabel();
+        dayCombo = new javax.swing.JComboBox();
+        hourCombo = new javax.swing.JComboBox();
+        minuteCombo = new javax.swing.JComboBox();
+        yearCombo = new javax.swing.JComboBox();
+        monthCombo = new javax.swing.JComboBox();
+        monthYearSeperator = new javax.swing.JLabel();
+        hourMinuteSeperator = new javax.swing.JLabel();
+        dayMonthSeperator = new javax.swing.JLabel();
         liberationTimeLabel = new javax.swing.JLabel();
+        windDirectionLabel = new javax.swing.JLabel();
+        windDirectionText = new javax.swing.JTextField();
+        daysCoveredLabel = new javax.swing.JLabel();
+        daysCoveredCombo = new javax.swing.JComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
         racepointLabel.setText("Racepoint");
-        add(racepointLabel, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(racepointLabel, gridBagConstraints);
 
-        add(racepointCombo, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(racepointCombo, gridBagConstraints);
+
+        liberationDateLabel.setText("Liberation Date");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(liberationDateLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 2);
+        add(dayCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 2);
+        add(hourCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 10);
+        add(minuteCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 10);
+        add(yearCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(monthCombo, gridBagConstraints);
+
+        monthYearSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        monthYearSeperator.setText("/");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(monthYearSeperator, gridBagConstraints);
+
+        hourMinuteSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        hourMinuteSeperator.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(hourMinuteSeperator, gridBagConstraints);
+
+        dayMonthSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        dayMonthSeperator.setText("/");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(dayMonthSeperator, gridBagConstraints);
 
         liberationTimeLabel.setText("Liberation Time");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(liberationTimeLabel, gridBagConstraints);
 
-    }
-    // </editor-fold>//GEN-END:initComponents
+        windDirectionLabel.setText("Wind Direction");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(windDirectionLabel, gridBagConstraints);
+
+        windDirectionText.setColumns(20);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(windDirectionText, gridBagConstraints);
+
+        daysCoveredLabel.setText("No. of days covered");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(daysCoveredLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(daysCoveredCombo, gridBagConstraints);
+
+    }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox dayCombo;
+    private javax.swing.JLabel dayMonthSeperator;
+    private javax.swing.JComboBox daysCoveredCombo;
+    private javax.swing.JLabel daysCoveredLabel;
+    private javax.swing.JComboBox hourCombo;
+    private javax.swing.JLabel hourMinuteSeperator;
+    private javax.swing.JLabel liberationDateLabel;
     private javax.swing.JLabel liberationTimeLabel;
+    private javax.swing.JComboBox minuteCombo;
+    private javax.swing.JComboBox monthCombo;
+    private javax.swing.JLabel monthYearSeperator;
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
+    private javax.swing.JLabel windDirectionLabel;
+    private javax.swing.JTextField windDirectionText;
+    private javax.swing.JComboBox yearCombo;
     // End of variables declaration//GEN-END:variables
 
     private void updateRaceObject() {
         race.setRacepoint((Racepoint)racepointCombo.getSelectedItem());
-        race.setDate(new Date());
+        Date liberationDate = new GregorianCalendar(
+                new Integer(yearCombo.getSelectedItem().toString()),
+                new Integer(monthCombo.getSelectedItem().toString()),
+                new Integer(dayCombo.getSelectedItem().toString()),
+                new Integer(hourCombo.getSelectedItem().toString()),
+                new Integer(minuteCombo.getSelectedItem().toString())).getTime();
+        race.setLiberationDate(liberationDate);
+        race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
+        race.setWindDirection(windDirectionText.getText());
     }
     
     public void addRacepointsToCombo(Vector<Racepoint> racepoints) {
@@ -92,13 +291,17 @@ class RaceInfo extends javax.swing.JPanel {
     }
     
     public static void editRace(Component parent, Race race, Vector<Racepoint> racepoints) {
-        RaceInfo panel = new RaceInfo(race, racepoints);
+        RaceInfo panel = new RaceInfo(race, racepoints, true);
         JOptionPane.showMessageDialog(parent, panel, "Race Information", JOptionPane.PLAIN_MESSAGE);
         panel.updateRaceObject();
     }
     
     public static Race createRace(Component parent, Club club) {
         Race race = new Race(club);
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        race.setLiberationDate(cal.getTime());
         editRace(parent, race, Utilities.sortCollection(club.getRacepoints()));
         return race;
     }
