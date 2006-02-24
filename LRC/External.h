@@ -1,6 +1,7 @@
 #ifndef LRC_External
 #define LRC_External
 
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <string>

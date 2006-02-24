@@ -18,6 +18,7 @@ namespace LRC
     
     Compressor::~Compressor()
     {
+        FlushRaw();
     }
     
     void Compressor::WriteRaw(const Byte value)
@@ -54,10 +55,11 @@ namespace LRC
     {
         FlushRaw();
         m_output->write(reinterpret_cast<const char*>(&offset), sizeof(unsigned int));
+        m_output->write(reinterpret_cast<const char*>(&m_block_size), sizeof(unsigned int));
         m_mode = eMode_Block;
     }
     
-    void Compressor::WriteStream(std::istream& input)
+    void Compressor::Compress(std::istream& input)
     {
         while (true) {
             const Byte value = static_cast<Byte>(input.get());
@@ -95,7 +97,6 @@ namespace LRC
                 }
             }
         }
-        FlushRaw();
     }
 }
 

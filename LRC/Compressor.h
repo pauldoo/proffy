@@ -13,7 +13,7 @@ namespace LRC
             Compressor(std::ostream* const output, const unsigned int block_size);
             ~Compressor();
     
-            void WriteStream(std::istream& input);
+            void Compress(std::istream& input);
         
         private:
             typedef std::map<StrongHash, unsigned int> StrongMap;
