@@ -14,13 +14,13 @@ lrc: $(objects)
 	$(CXX) $(CXXFLAGS) -o $@ $(objects) $(LIBS)
 
 %.dep: %.cpp
-	$(CXX) -MM $< > $@
+	$(CXX) -MM $< > $@ $(CPPFLAGS)
 
 %.h.gch: %.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $< $(CPPFLAGS)
 
 %.o: %.cpp %.dep
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c -o $@ $< $(CPPFLAGS)
 
 include $(deps)
 
