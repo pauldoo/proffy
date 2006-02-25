@@ -45,21 +45,29 @@ int main(int argc, char* argv[])
         
     try {
         std::string output_filename;
+        unsigned int block_size;
     
-        boost::program_options::options_description options("Command line options");
-        options.add_options()
-            ("help", "Display this help message")
-            ("compress", "Compresses stdin to stdout")
-            ("decompress", boost::program_options::value<std::string>(&output_filename), "Decompress stdin to specified output file")
-            ("quiet", "Suppress copyright preamble");
+        boost::program_options::options_description basic_options("Basic options");
+        basic_options.add_options()
+            ("help,h", "Display this help message.")
+            ("compress,c", "Compresses stdin to stdout.")
+            ("decompress,d", boost::program_options::value<std::string>(&output_filename), "Decompress stdin to specified output file.")
+            ("quiet,q", "Suppress copyright preamble.");
+            
+        boost::program_options::options_description advanced_options("Advanced options");
+        advanced_options.add_options()
+            ("blocksize", boost::program_options::value<unsigned int>(&block_size)->default_value(512), "Block size used when compressing (in bytes).  Smaller values may give higher compression at the cost of using more memory.");
+
+        boost::program_options::options_description all_options("Command line options");
+        all_options.add(basic_options).add(advanced_options);
             
         boost::program_options::variables_map variables;
-        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, options), variables);
+        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, all_options), variables);
         boost::program_options::notify(variables);
         
         if (variables.count("help")) {
-            LRC::PrintUsage(std::cout, options);
-            return 0;
+            LRC::PrintUsage(std::cout, all_options);
+            return EXIT_SUCCESS;
         }
 
         if (!variables.count("quiet")) {
@@ -67,15 +75,19 @@ int main(int argc, char* argv[])
         }
         
         if ((variables.count("compress") + variables.count("decompress")) != 1) {
-            std::clog << "Must specifiy exactly one compress or decompress flag, use --help for details" << std::endl;
-            return 1;
+            std::clog << "Must specifiy exactly one compress or decompress flag, use --help for details." << std::endl;
+            return EXIT_FAILURE;
         }
-    
+        
         if (variables.count("compress")) {
-            LRC::Compressor lrc(&std::cout, 512);
+            LRC::Compressor lrc(&std::cout, block_size);
             lrc.Compress(std::cin);
             std::cout.flush();
         } else if (variables.count("decompress")) {
+            if (variables.count("blocksize")) {
+                std::clog << "The blocksize flag is only applicable when compressing." << std::endl;
+                return EXIT_FAILURE;
+            }
             std::fstream output(output_filename.c_str(), std::ios::binary | std::ios::in | std::ios::out | std::ios::trunc);
             if (!output) {
                 throw std::string("Failed to open output file");
@@ -87,17 +99,17 @@ int main(int argc, char* argv[])
         }
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     } catch (const std::string& ex) {
         std::cerr << "Exception: " << ex << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     } catch (const char* ex) {
         std::cerr << "Exception: " << ex << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     } catch (...) {
         std::cerr << "Unknown exception" << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
 
