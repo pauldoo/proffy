@@ -32,9 +32,13 @@ public class RaceEditor extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
     
+    private final Race race;
+    
     /** Creates new form RaceEditor */
-    public RaceEditor() {
+    public RaceEditor(Race race) {
+        this.race = race;
         initComponents();
+        reloadResultsTable();
     }
     
     /** This method is called from within the constructor to
@@ -44,37 +48,84 @@ public class RaceEditor extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jLabel1 = new javax.swing.JLabel();
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1.setText("Race Editor!!");
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultsTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        addResultButton = new javax.swing.JButton();
+        editResultButton = new javax.swing.JButton();
+        deleteResultButton = new javax.swing.JButton();
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(121, 121, 121)
-                .add(jLabel1)
-                .addContainerGap(201, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(128, 128, 128)
-                .add(jLabel1)
-                .addContainerGap(156, Short.MAX_VALUE))
-        );
+        setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results"));
+        resultsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(resultsTable);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        addResultButton.setText("Add Result");
+        addResultButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addResultButtonActionPerformed(evt);
+            }
+        });
+
+        jPanel2.add(addResultButton);
+
+        editResultButton.setText("Edit Result");
+        jPanel2.add(editResultButton);
+
+        deleteResultButton.setText("Delete Result");
+        jPanel2.add(deleteResultButton);
+
+        jPanel1.add(jPanel2, java.awt.BorderLayout.SOUTH);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jPanel1, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addResultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addResultButtonActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_addResultButtonActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton addResultButton;
+    private javax.swing.JButton deleteResultButton;
+    private javax.swing.JButton editResultButton;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable resultsTable;
     // End of variables declaration//GEN-END:variables
     
     static public void editRaceResults(Component parent, Race race, Club club) {
-        RaceEditor panel = new RaceEditor();
+        RaceEditor panel = new RaceEditor(race);
         Object[] options = {"Ok", "Cancel"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Results", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    }
+    
+    private void reloadResultsTable() {
+        resultsTable.setModel(new ResultsTableModel(Utilities.sortCollection(race.getResults())));
     }
     
 }

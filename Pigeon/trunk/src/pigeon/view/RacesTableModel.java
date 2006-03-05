@@ -29,14 +29,16 @@ import pigeon.model.Racepoint;
  *
  * @author Paul
  */
-class RaceresultsTableModel extends AbstractTableModel {
+class RacesTableModel extends AbstractTableModel {
     
     private static final long serialVersionUID = 42L;
         
     private final Vector<Race> races;
     
-    /** Creates a new instance of RaceresultsTableModel */
-    public RaceresultsTableModel(Vector<Race> races) {
+    /**
+     * Creates a new instance of RacesTableModel
+     */
+    public RacesTableModel(Vector<Race> races) {
         this.races = races;
     }
     

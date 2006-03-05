@@ -20,11 +20,11 @@
 package pigeon.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -38,13 +38,10 @@ public class Race implements Serializable, Comparable<Race> {
     private Date liberationDate;
     private int daysCovered = 1;
     private String windDirection;
-    private Map<Member, Map<String, Long>> results = new HashMap<Member, Map<String, Long>>();
+    private Collection<Result> results = new ArrayList<Result>();
     
     
     public Race(Club club) {
-        for (Member m: club.getMembers()) {
-            results.put(m, new HashMap<String, Long>());
-        }
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
                 cal.get(Calendar.YEAR),
@@ -69,16 +66,14 @@ public class Race implements Serializable, Comparable<Race> {
         this.liberationDate = date;
     }
     
-    public void addResult(Member member, String ringNumber, long time) {
-        results.get(member).put(ringNumber, time);
+    public void addResult(Result result) throws ValidationException {
+        if (results.contains( result ) || !results.add( result )) {
+            throw new ValidationException("Result already exists");
+        }
     }
     
-    public Map<String, Long> getResults(Member member) {
-        return results.get(member);
-    }
-    
-    public long getResult(Member member, String ringNumber) {
-        return getResults(member).get(ringNumber);
+    public Collection<Result> getResults() {
+        return results;
     }
 
     public boolean equals(Object other) {
@@ -89,13 +84,9 @@ public class Race implements Serializable, Comparable<Race> {
         if (this == other) {
             return true;
         }
-        if (liberationDate.compareTo(other.liberationDate) != 0) {
-            return false;
-        }
-        if (racepoint.compareTo(other.racepoint) != 0) {
-            return false;
-        }
-        return true;
+        return
+                liberationDate.equals(other.liberationDate) &&
+                racepoint.equals(other.racepoint);
     }
     
     public int compareTo(Race other) {

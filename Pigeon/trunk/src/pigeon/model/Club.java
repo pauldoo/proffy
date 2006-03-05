@@ -34,15 +34,12 @@ public class Club implements Serializable {
     private static final long serialVersionUID = 42L;
     
     private String name;
-    private Collection<Member> members;
-    private Collection<Racepoint> racepoints;
-    private Collection<DistanceEntry> distances;
+    private Collection<Member> members = new ArrayList<Member>();
+    private Collection<Racepoint> racepoints = new ArrayList<Racepoint>();
+    private Collection<DistanceEntry> distances = new ArrayList<DistanceEntry>();
     
     /** Creates a new instance of Club */
     public Club() {
-        members = new ArrayList<Member>();
-        racepoints = new ArrayList<Racepoint>();
-        distances = new ArrayList<DistanceEntry>();
     }
 
     public String getName() {

@@ -282,7 +282,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         raceresultPanel.setLayout(new java.awt.BorderLayout());
 
-        raceresultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Race Results"));
+        raceresultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Races"));
         raceresultsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -357,7 +357,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
         }
-        reloadRaceresultsTable();
+        reloadRacesTable();
     }//GEN-LAST:event_raceresultAddButtonActionPerformed
 
     private void editResultsForRace(Race race) throws UserCancelledException {
@@ -560,7 +560,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         clubNameText.setText(season.getClub().getName());
         reloadMembersList();
         reloadRacepointsList();
-        reloadRaceresultsTable();
+        reloadRacesTable();
         refreshButtons();
     }
 
@@ -572,8 +572,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         racepointsList.setListData(Utilities.sortCollection(season.getClub().getRacepoints()));
     }
     
-    private void reloadRaceresultsTable() {
-        raceresultsTable.setModel(new RaceresultsTableModel(Utilities.sortCollection(season.getRaces())));
+    private void reloadRacesTable() {
+        raceresultsTable.setModel(new RacesTableModel(Utilities.sortCollection(season.getRaces())));
     }
     
     private void refreshButtons() {

@@ -32,13 +32,11 @@ public class Season implements Serializable {
     private static final long serialVersionUID = 42L;
     
     private String name;
-    private Club club;
-    private Collection<Race> races;
+    private Club club = new Club();
+    private Collection<Race> races = new ArrayList<Race>();
     
     /** Creates a new instance of Season */
     public Season() {
-        club = new Club();
-        races = new ArrayList<Race>();
     }
 
     public Club getClub() {
