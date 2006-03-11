@@ -41,7 +41,7 @@ public class Race implements Serializable, Comparable<Race> {
     private Collection<Result> results = new ArrayList<Result>();
     
     
-    public Race(Club club) {
+    public Race() {
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
                 cal.get(Calendar.YEAR),

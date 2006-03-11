@@ -315,7 +315,7 @@ class RaceInfo extends javax.swing.JPanel {
     }
     
     public static Race createRace(Component parent, Club club) throws UserCancelledException {
-        Race race = new Race(club);
+        Race race = new Race();
         editRace(parent, race, club, true);
         return race;
     }

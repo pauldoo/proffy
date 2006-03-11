@@ -29,8 +29,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
 import junit.framework.*;
 
 
@@ -103,6 +101,30 @@ public class ClubTest extends TestCase {
                 DistanceEntry e = club.getDistanceEntry(member, racepoint);
                 assertTrue("Member instance in member list is same instance as that in distance list", e.getMember() == member);
                 assertTrue("Racepoint instance in racepoint list is same instance as that in distance list", e.getRacepoint() == racepoint);
+            }
+        }
+    }
+    
+    public void testClashes() throws ValidationException {
+        Club club = new Club();
+        {
+            Member m = new Member();
+            m.setName("foo");
+            club.addMember(m);
+        }
+        {
+            Member m = new Member();
+            m.setName("bar");
+            club.addMember(m);
+        }
+        {
+            Member m = new Member();
+            m.setName("foo");
+            try {
+                club.addMember(m);
+                assertTrue("Expected exception", false);
+            } catch (ValidationException ex) {
+                assertEquals("Exception contents as expected", "Member already exists", ex.toString());
             }
         }
     }

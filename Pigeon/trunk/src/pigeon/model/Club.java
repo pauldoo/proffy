@@ -66,50 +66,50 @@ public class Club implements Serializable {
         return racepoints;
     }
     
-    public void addMember(Member member) {
+    public void addMember(Member member) throws ValidationException {
         if (members.contains( member ) || !members.add( member )) {
-            throw new IllegalArgumentException();
+            throw new ValidationException("Member already exists");
         }
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (distances.contains( entry ) || !distances.add(entry)) {
-                throw new IllegalArgumentException();
+                assert false : entry;
             }
         }
     }
 
-    public void addRacepoint(Racepoint racepoint) {
+    public void addRacepoint(Racepoint racepoint) throws ValidationException {
         if (racepoints.contains( racepoint ) || !racepoints.add( racepoint )) {
-            throw new IllegalArgumentException();
+            throw new ValidationException("Racepoint already exists");
         }
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (distances.contains( entry ) || !distances.add(entry)) {
-                throw new IllegalArgumentException();
+                assert false : entry;
             }
         }
     }
     
     public void removeMember(Member member) {
         if (!members.contains( member ) || !members.remove( member )) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Member doesn't exist");
         }
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (!distances.contains( entry ) || !distances.remove(entry)) {
-                throw new IllegalArgumentException();
+                assert false : entry;
             }
         }
     }
     
     public void removeRacepoint(Racepoint racepoint) {
         if (!racepoints.contains( racepoint ) || !racepoints.remove( racepoint )) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Racepoint doesn't exist");
         }
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (!distances.contains( entry ) || !distances.remove(entry)) {
-                throw new IllegalArgumentException();
+                assert false : entry;
             }
         }
     }
@@ -129,7 +129,7 @@ public class Club implements Serializable {
                 return stored;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Member / Racepoint doesn't exist");
     }
     
     public Distance getDistance(Member member, Racepoint racepoint) {

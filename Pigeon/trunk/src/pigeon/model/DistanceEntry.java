@@ -29,8 +29,8 @@ class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
         
     private static final long serialVersionUID = 42L;
 
-    private Member member;
-    private Racepoint racepoint;
+    private final Member member;
+    private final Racepoint racepoint;
     private Distance distance;
 
     public DistanceEntry(Member member, Racepoint racepoint, Distance distance) {
@@ -72,16 +72,8 @@ class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
         return member;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
     public Racepoint getRacepoint() {
         return racepoint;
-    }
-
-    public void setRacepoint(Racepoint racepoint) {
-        this.racepoint = racepoint;
     }
 
     public Distance getDistance() {

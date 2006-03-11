@@ -66,6 +66,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private static final String CREDITS = "Created by Paul Richards <pauldoo@users.sf.net>";
     
     private Season season;
+
+    static {
+        boolean assertsEnabled = false;
+        assert assertsEnabled = true; // Intentional side effect!!!
+        if (!assertsEnabled)
+            throw new RuntimeException("Asserts must be enabled!!!");
+    }     
     
     /** Creates new form MainWindow */
     public MainWindow() {
@@ -552,6 +559,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                 throw e;
             }
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
         reloadMembersList();
     }//GEN-LAST:event_memberAddButtonActionPerformed
