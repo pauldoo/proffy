@@ -9,9 +9,9 @@ clean:
 	rm -f $(bins) *.o
 
 %: %.o ../libFractal.a
-	g++ -Wall -O3 -g -pipe $< -o $@ $(LIBS)
+	g++ -Wall -Os -g -pipe $< -o $@ $(LIBS)
 
 %.o: %.cpp
-	g++ -Wall -O3 -g -pipe `Magick++-config --cxxflags` -c -o $@ $< -I ..
+	g++ -Wall -Os -g -pipe `Magick++-config --cxxflags` -c -o $@ $< -I ..
 
 

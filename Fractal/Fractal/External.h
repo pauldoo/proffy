@@ -1,6 +1,7 @@
 #ifndef Fractal_External
 #define Fractal_External
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <complex>

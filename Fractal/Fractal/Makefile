@@ -1,7 +1,7 @@
 objects := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 deps := $(patsubst %.cpp, %.dep, $(wildcard *.cpp))
 
-CXXFLAGS = -Wall -O3 -g -pipe `Magick++-config --cxxflags`
+CXXFLAGS = -Wall -Os -g -pipe `Magick++-config --cxxflags`
 CPPFLAGS = `Magick++-config --cppflags`
 
 all: External.h.gch ../libFractal.a

@@ -6,6 +6,8 @@ namespace Fractal
     typedef boost::numeric::ublas::c_vector<double, 2> Vector2;
     typedef boost::numeric::ublas::c_vector<double, 4> Vector4;
     typedef boost::numeric::ublas::c_matrix<double, 4, 4> Matrix44;
+
+    typedef boost::numeric::ublas::c_vector<int, 2> iVector2;
     
     namespace Geometry {
         const Vector2 ComplexToVector2(const std::complex<double>&);
