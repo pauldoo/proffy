@@ -21,6 +21,7 @@ package pigeon.view;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.border.TitledBorder;
 import pigeon.model.Club;
 import pigeon.model.Race;
 
@@ -39,6 +40,7 @@ public class RaceEditor extends javax.swing.JPanel {
         this.race = race;
         initComponents();
         reloadResultsTable();
+        ((TitledBorder)jPanel1.getBorder()).setTitle("Results for " + race.toString());
     }
     
     /** This method is called from within the constructor to

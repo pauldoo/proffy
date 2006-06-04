@@ -66,13 +66,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private static final String CREDITS = "Created by Paul Richards <pauldoo@users.sf.net>";
     
     private Season season;
-
-    static {
-        boolean assertsEnabled = false;
-        assert assertsEnabled = true; // Intentional side effect!!!
-        if (!assertsEnabled)
-            throw new RuntimeException("Asserts must be enabled!!!");
-    }     
     
     /** Creates new form MainWindow */
     public MainWindow() {
@@ -616,6 +609,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        checkAssertions();
         setSwingLAF();
 
         Object[] options = { "Agree", "Cancel" };
@@ -639,6 +633,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     public void setSeason(Season season) {
         this.season = season;
         reloadControlData();
+    }
+    
+    private static void checkAssertions() {
+        boolean assertsEnabled = false;
+        assert assertsEnabled = true; // Intentional side effect!!!
+        if (!assertsEnabled)
+            throw new RuntimeException("Asserts must be enabled!!!");
     }
     
     private static void setSwingLAF() {

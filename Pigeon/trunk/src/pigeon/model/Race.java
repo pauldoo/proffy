@@ -118,4 +118,9 @@ public class Race implements Serializable, Comparable<Race> {
     public void setWindDirection(String windDirection) {
         this.windDirection = windDirection.trim();
     }
+    
+    public String toString()
+    {
+        return racepoint + " (" + liberationDate + ")";
+    }
 }
