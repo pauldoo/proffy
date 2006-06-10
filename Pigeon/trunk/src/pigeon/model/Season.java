@@ -62,7 +62,7 @@ public class Season implements Serializable {
     }
 
     public void removeRace(Race race) {
-        races.add(race);
+        races.remove(race);
     }
     
     public Collection<Race> getRaces() {

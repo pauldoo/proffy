@@ -317,6 +317,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         raceresultButtonPanel.add(raceresultEditButton);
 
         raceresultDeleteButton.setText("Delete Race");
+        raceresultDeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raceresultDeleteButtonActionPerformed(evt);
+            }
+        });
+
         raceresultButtonPanel.add(raceresultDeleteButton);
 
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.SOUTH);
@@ -332,20 +338,27 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void raceresultDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultDeleteButtonActionPerformed
+        int index = raceresultsTable.getSelectedRow();
+        Race race = Utilities.sortCollection(season.getRaces()).get(index);
+        season.removeRace(race);
+        reloadRacesTable();
+    }//GEN-LAST:event_raceresultDeleteButtonActionPerformed
+
     private void raceresultEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultEditButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
         Race race = Utilities.sortCollection(season.getRaces()).get(index);
         try {
-            RaceInfo.editRace(this, race, season.getClub(), false);
+            RaceSummary.editRace(this, race, season.getClub(), false);
             editResultsForRace( race );
         } catch (UserCancelledException e) {
         }    
-        reloadMembersList();
+        reloadRacesTable();
     }//GEN-LAST:event_raceresultEditButtonActionPerformed
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race race = RaceInfo.createRace(this, season.getClub());  
+            Race race = RaceSummary.createRace(this, season.getClub());  
             season.addRace( race );
             try {
                 editResultsForRace( race );

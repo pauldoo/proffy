@@ -20,10 +20,13 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import pigeon.model.Club;
+import pigeon.model.Member;
 import pigeon.model.Race;
+import pigeon.model.ValidationException;
 
 /**
  *
@@ -34,10 +37,12 @@ public class RaceEditor extends javax.swing.JPanel {
     private static final long serialVersionUID = 42L;
     
     private final Race race;
-    
+    Collection<Member> members;
+        
     /** Creates new form RaceEditor */
-    public RaceEditor(Race race) {
+    public RaceEditor(Race race, Collection<Member> members) {
         this.race = race;
+        this.members = members;
         initComponents();
         reloadResultsTable();
         ((TitledBorder)jPanel1.getBorder()).setTitle("Results for " + race.toString());
@@ -106,7 +111,6 @@ public class RaceEditor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addResultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addResultButtonActionPerformed
-// TODO add your handling code here:
     }//GEN-LAST:event_addResultButtonActionPerformed
     
     
@@ -121,13 +125,12 @@ public class RaceEditor extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     
     static public void editRaceResults(Component parent, Race race, Club club) {
-        RaceEditor panel = new RaceEditor(race);
-        Object[] options = {"Ok", "Cancel"};
+        RaceEditor panel = new RaceEditor(race, club.getMembers());
+        Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Results", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
     
     private void reloadResultsTable() {
-        resultsTable.setModel(new ResultsTableModel(Utilities.sortCollection(race.getResults())));
     }
     
 }

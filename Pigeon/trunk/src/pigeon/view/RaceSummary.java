@@ -34,7 +34,7 @@ import pigeon.model.ValidationException;
  *
  * @author  Paul
  */
-class RaceInfo extends javax.swing.JPanel {
+class RaceSummary extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
 
@@ -42,8 +42,10 @@ class RaceInfo extends javax.swing.JPanel {
     
     private final Race race;
     
-    /** Creates new form RaceInfo */
-    public RaceInfo(Race race, Club club, boolean editable) {
+    /**
+     * Creates new form RaceSummary
+     */
+    public RaceSummary(Race race, Club club, boolean editable) {
         this.race = race;
         initComponents();
         addComboOptions(club);
@@ -61,8 +63,8 @@ class RaceInfo extends javax.swing.JPanel {
         yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - BASE_YEAR);
         hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
-        
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
+        windDirectionText.setText(race.getWindDirection());
     }
     
     private void addComboOptions(Club club) {
@@ -301,7 +303,7 @@ class RaceInfo extends javax.swing.JPanel {
     }
         
     public static void editRace(Component parent, Race race, Club club, boolean newRace) throws UserCancelledException {
-        RaceInfo panel = new RaceInfo(race, club, true);
+        RaceSummary panel = new RaceSummary(race, club, true);
         while (true) {
             Object[] options = { (newRace ? "Add" : "Ok"), "Cancel" };
             int result = JOptionPane.showOptionDialog(parent, panel, "Race Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);

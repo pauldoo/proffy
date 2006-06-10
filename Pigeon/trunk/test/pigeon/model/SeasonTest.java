@@ -44,6 +44,22 @@ public class SeasonTest extends TestCase {
         return suite;
     }
 
+    public void testRemove() throws ValidationException {
+        Racepoint racepoint = new Racepoint();
+        Date liberationDate = new Date(1);
+        Season season = new Season();
+        
+        Race race1 = new Race();
+        race1.setRacepoint(racepoint);
+        race1.setLiberationDate(liberationDate);
+        
+        assertEquals(season.getRaces().size(), 0);
+        season.addRace(race1);
+        assertEquals(season.getRaces().size(), 1);
+        season.removeRace(race1);
+        assertEquals(season.getRaces().size(), 0);
+    }
+    
     public void testClashes() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);

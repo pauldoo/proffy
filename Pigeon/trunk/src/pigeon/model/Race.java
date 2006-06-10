@@ -38,8 +38,7 @@ public class Race implements Serializable, Comparable<Race> {
     private Date liberationDate;
     private int daysCovered = 1;
     private String windDirection;
-    private Collection<Result> results = new ArrayList<Result>();
-    
+    private Collection<Clock> clocks = new ArrayList<Clock>();
     
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
@@ -64,16 +63,6 @@ public class Race implements Serializable, Comparable<Race> {
 
     public void setLiberationDate(Date date) {
         this.liberationDate = date;
-    }
-    
-    public void addResult(Result result) throws ValidationException {
-        if (results.contains( result ) || !results.add( result )) {
-            throw new ValidationException("Result already exists");
-        }
-    }
-    
-    public Collection<Result> getResults() {
-        return results;
     }
 
     public boolean equals(Object other) {
