@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace Defrag
 {
@@ -12,41 +13,40 @@ namespace Defrag
             this.fileSystem = fileSystem;
         }
 
-        public void DefragFile(string path)
+        public void DefragFile(string path, TextWriter log)
         {
+            log.WriteLine("Looking at: " + path);
             FileLayout layout = new FileLayout(fileSystem.GetFileMap(path));
 
             if (free_space_map == null)
             {
+                log.WriteLine("Updating free space map");
                 UpdateFreeSpaceMap();
             }
 
             try
             {
-                DefragFile(path, layout);
+                DefragFile(path, layout, log);
             }
             catch (Exception)
             {
                 free_space_map = null;
+                throw;
             }
         }
 
         private void UpdateFreeSpaceMap()
         {
-            DateTime a = DateTime.Now;
             BitArray bitmap = fileSystem.GetVolumeMap();
-            DateTime b = DateTime.Now;
             free_space_map = new FreeSpaceTree(bitmap);
-            DateTime c = DateTime.Now;
-            //System.Console.WriteLine("Fetching bitmap took: " + (b.Subtract(a)).TotalMilliseconds + "ms");
-            //System.Console.WriteLine("Building free tree took: " + (c.Subtract(b)).TotalMilliseconds + "ms");
         }
         
 
-        private void DefragFile(string path, FileLayout layout)
+        private void DefragFile(string path, FileLayout layout, TextWriter log)
         {
             if (layout.Fragments() <= 1)
             {
+                log.WriteLine("Skipped, does not require defrag.");
                 return;
             }
 
@@ -54,9 +54,11 @@ namespace Defrag
             ulong free_space_position = free_space_map.FindFreeSpan(file_length);
             if (free_space_position == UInt64.MaxValue)
             {
+                log.WriteLine("Skipped, could not find a big enough span of free space.");
                 return;
             }
             fileSystem.MoveFile(path, 0, free_space_position, file_length);
+            log.WriteLine("Defrag successfull.");
         }
 
         private readonly IFileSystem fileSystem;

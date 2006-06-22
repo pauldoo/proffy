@@ -48,26 +48,35 @@ namespace Defrag
             }
             if (nodes.Count > 0)
             {
-                top_node = nodes[0];
+                top_node00 = nodes[0];
             }
         }
 
         public ulong TotalFreeSpace()
         {
-            return (top_node != null) ? top_node.TotalFreeSpace() : 0;
+            return (top_node00 != null) ? top_node00.TotalFreeSpace() : 0;
         }
 
         public ulong LargestFreeSpan()
         {
-            return (top_node != null) ? top_node.LargestFreeSpan() : 0;
+            return (top_node00 != null) ? top_node00.LargestFreeSpan() : 0;
         }
 
         public ulong FindFreeSpan(ulong length)
         {
-            return (top_node != null) ? top_node.FindFreeSpan(length) : UInt64.MaxValue;
+            return (top_node00 != null) ? top_node00.FindFreeSpan(length) : UInt64.MaxValue;
         }
 
-        private IFreeSpace top_node;
+        public IFreeSpace Allocate(ulong offset, ulong length)
+        {
+            if (top_node00 != null)
+            {
+                top_node00 = top_node00.Allocate(offset, length);
+            }
+            return this;
+        }
+
+        private IFreeSpace top_node00;
     }
 
     class Node : IFreeSpace
@@ -77,15 +86,15 @@ namespace Defrag
             this.left_node = left;
             this.right_node = right;
             largest_free_span = Math.Max(
-                (left_node != null) ? left_node.LargestFreeSpan() : 0,
-                (right_node != null) ? right_node.LargestFreeSpan() : 0);
+                left_node.LargestFreeSpan(),
+                right_node.LargestFreeSpan());
         }
 
         public ulong TotalFreeSpace()
         {
             return
-                ((left_node != null) ? left_node.TotalFreeSpace() : 0) +
-                ((right_node != null) ? right_node.TotalFreeSpace() : 0);
+                left_node.TotalFreeSpace() +
+                right_node.TotalFreeSpace();
         }
 
         public ulong LargestFreeSpan()
@@ -111,6 +120,38 @@ namespace Defrag
                 }
             }
 
+        }
+
+        public IFreeSpace Allocate(ulong offset, ulong length)
+        {
+            if (left_node.FindFreeSpan(1) < offset + length)
+            {
+                ulong right_node_offset = right_node.FindFreeSpan(1);
+                if (right_node_offset > offset)
+                {
+                    left_node = left_node.Allocate(offset, length);
+                }
+                if (right_node_offset < offset + length)
+                {
+                    right_node = right_node.Allocate(offset, length);
+                }
+                if (left_node == null && right_node == null)
+                {
+                    return null;
+                }
+                if (left_node == null)
+                {
+                    return right_node;
+                }
+                if (right_node == null)
+                {
+                    return right_node;
+                }
+                largest_free_span = Math.Max(
+                    left_node.LargestFreeSpan(),
+                    right_node.LargestFreeSpan());
+            }
+            return this;
         }
 
         private IFreeSpace left_node;
@@ -144,6 +185,35 @@ namespace Defrag
             else
             {
                 return UInt64.MaxValue;
+            }
+        }
+
+        public IFreeSpace Allocate(ulong offset, ulong length)
+        {
+            ulong left_offset = Math.Min(offset, this.offset);
+            ulong left_length = (offset > left_offset) ? (offset - left_offset) : 0;
+            ulong right_offset = Math.Min(offset + length, this.offset + this.length);
+            ulong right_length = (right_offset > this.offset + this.length) ? 0 : (this.offset + this.length - right_offset);
+            
+            if (left_length > 0 && right_length > 0)
+            {
+                return new Node(new Leaf(left_offset, left_length), new Leaf(right_offset, right_length));
+            }
+            else if (left_length > 0)
+            {
+                this.offset = left_offset;
+                this.length = left_length;
+                return this;
+            }
+            else if (right_length > 0)
+            {
+                this.offset = right_offset;
+                this.length = right_length;
+                return this;
+            }
+            else
+            {
+                return null;
             }
         }
 

@@ -10,26 +10,32 @@ namespace DefragBinary
     {
         public static void Main(string[] args)
         {
-            Defrag.IFileSystem fileSystem = new Defrag.Win32FileSystem("D:");
+            Defrag.IFileSystem fileSystem = new Defrag.Win32FileSystem("C:");
             Defrag.Optimizer optimizer = new Defrag.Optimizer(fileSystem);
 
-            Defrag.Win32ChangeWatcher watcher = new Defrag.Win32ChangeWatcher("D:\\");
+            Defrag.Win32ChangeWatcher watcher = new Defrag.Win32ChangeWatcher("C:\\");
+            System.IO.TextWriter log = new System.IO.StreamWriter(System.Console.OpenStandardOutput());
+
             while (true)
             {
                 String path = watcher.NextFile();
                 Thread.Sleep(100);
                 if (path != null)
                 {
-                    System.Console.WriteLine(path);
                     try
                     {
-                        optimizer.DefragFile(path);
-                        System.Console.WriteLine(" Defragged");
+                        optimizer.DefragFile(path, log);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        System.Console.WriteLine(" Failed!");
+                        log.WriteLine("* * Failed! * *");
                     }
+                    finally
+                    {
+                        log.WriteLine();
+                        log.Flush();
+                    }
+
                 }
             }
         }
