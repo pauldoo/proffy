@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.ComponentModel;
 
 namespace DefragBinary
 {
@@ -19,15 +20,15 @@ namespace DefragBinary
             while (true)
             {
                 String path = watcher.NextFile();
-                Thread.Sleep(100);
                 if (path != null)
                 {
                     try
                     {
                         optimizer.DefragFile(path, log);
                     }
-                    catch (Exception)
+                    catch (Win32Exception ex)
                     {
+                        log.WriteLine(ex.Message);
                         log.WriteLine("* * Failed! * *");
                     }
                     finally
@@ -35,7 +36,10 @@ namespace DefragBinary
                         log.WriteLine();
                         log.Flush();
                     }
-
+                }
+                else
+                {
+                    Thread.Sleep(500);
                 }
             }
         }

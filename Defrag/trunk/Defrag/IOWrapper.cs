@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace Defrag
 {
@@ -57,7 +58,7 @@ namespace Defrag
                 IntPtr.Zero);
             if ((int)hDevice == -1)
             {
-                throw new Exception(Marshal.GetLastWin32Error().ToString());
+                throw new Win32Exception();
             }
             return hDevice;
         }
@@ -75,7 +76,7 @@ namespace Defrag
                         IntPtr.Zero);
             if ((int)hFile == -1)
             {
-                throw new Exception(Marshal.GetLastWin32Error().ToString());
+                throw new Win32Exception();
             }
             return hFile;
         }
@@ -121,7 +122,7 @@ namespace Defrag
 
                 if (!fResult)
                 {
-                    throw new Exception(Marshal.GetLastWin32Error().ToString());
+                    throw new Win32Exception();
                 }
                 handle.Free();
 
@@ -201,7 +202,7 @@ namespace Defrag
 
                 if (!fResult)
                 {
-                    throw new Exception(Marshal.GetLastWin32Error().ToString());
+                    throw new Win32Exception();
                 }
 
                 handle.Free();
@@ -311,7 +312,7 @@ namespace Defrag
 
                 if (!fResult)
                 {
-                    throw new Exception(Marshal.GetLastWin32Error().ToString());
+                    throw new Win32Exception();
                 }
             }
             finally

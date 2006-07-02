@@ -16,6 +16,11 @@ namespace Defrag
         public void DefragFile(string path, TextWriter log)
         {
             log.WriteLine("Looking at: " + path);
+            if (!(new FileInfo(path).Exists))
+            {
+                log.WriteLine("File no longer exists");
+                return;
+            }
             FileLayout layout = new FileLayout(fileSystem.GetFileMap(path));
 
             if (free_space_map == null)
@@ -58,6 +63,7 @@ namespace Defrag
                 return;
             }
             fileSystem.MoveFile(path, 0, free_space_position, file_length);
+            free_space_map.Allocate(free_space_position, file_length);
             log.WriteLine("Defrag successfull.");
         }
 
