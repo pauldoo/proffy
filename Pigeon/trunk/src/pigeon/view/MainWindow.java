@@ -651,13 +651,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private static void checkAssertions() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true; // Intentional side effect!!!
-        if (!assertsEnabled)
-            throw new RuntimeException("Asserts must be enabled!!!");
+        if (!assertsEnabled) {
+            System.err.println("WARNING: Assertions are not enabled.");
+        }
     }
     
     private static void setSwingLAF() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) { }
     }
     

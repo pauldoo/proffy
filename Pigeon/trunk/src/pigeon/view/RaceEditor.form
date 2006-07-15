@@ -62,23 +62,29 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="addResultButton">
+            <Component class="javax.swing.JButton" name="addClockButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Add Result"/>
+                <Property name="text" type="java.lang.String" value="Add Clock"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addResultButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addClockButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="editResultButton">
+            <Component class="javax.swing.JButton" name="editClockButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edit Result"/>
+                <Property name="text" type="java.lang.String" value="Edit Clock"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editClockButtonActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="deleteResultButton">
+            <Component class="javax.swing.JButton" name="deleteClockButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete Result"/>
+                <Property name="text" type="java.lang.String" value="Delete Clock"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteClockButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

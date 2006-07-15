@@ -28,9 +28,10 @@ import java.util.Vector;
  * @author pauldoo
  */
 class Utilities {
+
+    public static final int BASE_YEAR = 2000;
     
     public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {
         return new Vector<T>(new TreeSet<T>(collection));
     }
-    
 }

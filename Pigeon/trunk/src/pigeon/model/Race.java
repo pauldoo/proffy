@@ -112,4 +112,23 @@ public class Race implements Serializable, Comparable<Race> {
     {
         return racepoint + " (" + liberationDate + ")";
     }
+    
+    public void addClock(Clock clock) throws ValidationException
+    {
+        if (clocks.contains( clock ) || !clocks.add( clock )) {
+            throw new ValidationException("Member clock already exists");
+        }
+    }
+    
+    public void removeClock(Clock clock) throws ValidationException
+    {
+        if (!clocks.contains( clock ) || !clocks.remove( clock )) {
+            throw new ValidationException("Member clock does not exists");
+        }
+    }
+    
+    public Collection<Clock> getClocks()
+    {
+        return clocks;
+    }
 }

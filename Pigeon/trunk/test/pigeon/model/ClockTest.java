@@ -7,6 +7,7 @@
 
 package pigeon.model;
 
+import java.util.Date;
 import junit.framework.*;
 
 /**
@@ -35,21 +36,21 @@ public class ClockTest extends TestCase {
      * Test of ConvertMemberTimeToMasterTime method, of class pigeon.model.Clock.
      */
     public void testConvertMemberTimeToMasterTime() {
-        Clock clock = new Clock(null);
-        clock.setTimeOnMasterWhenSet(200);
-        clock.setTimeOnMasterWhenOpened(300);
-        clock.setTimeOnMemberWhenSet(3000);
-        clock.setTimeOnMemberWhenOpened(4000);
+        Clock clock = new Clock();
+        clock.setTimeOnMasterWhenSet(new Date(200));
+        clock.setTimeOnMasterWhenOpened(new Date(300));
+        clock.setTimeOnMemberWhenSet(new Date(3000));
+        clock.setTimeOnMemberWhenOpened(new Date(4000));
         
 
-        assertEquals(200, clock.convertMemberTimeToMasterTime(3000));
-        assertEquals(300, clock.convertMemberTimeToMasterTime(4000));
-        assertEquals(250, clock.convertMemberTimeToMasterTime(3500));
+        assertEquals(200, clock.convertMemberTimeToMasterTime(new Date(3000)).getTime());
+        assertEquals(300, clock.convertMemberTimeToMasterTime(new Date(4000)).getTime());
+        assertEquals(250, clock.convertMemberTimeToMasterTime(new Date(3500)).getTime());
         
-        assertEquals(200, clock.getTimeOnMasterWhenSet());
-        assertEquals(300, clock.getTimeOnMasterWhenOpened());
-        assertEquals(3000, clock.getTimeOnMemberWhenSet());
-        assertEquals(4000, clock.getTimeOnMemberWhenOpened());
+        assertEquals(200, clock.getTimeOnMasterWhenSet().getTime());
+        assertEquals(300, clock.getTimeOnMasterWhenOpened().getTime());
+        assertEquals(3000, clock.getTimeOnMemberWhenSet().getTime());
+        assertEquals(4000, clock.getTimeOnMemberWhenOpened().getTime());
     }
     
 }

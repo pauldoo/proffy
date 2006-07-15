@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+import pigeon.model.Clock;
 import pigeon.model.Club;
 import pigeon.model.Member;
 import pigeon.model.Race;
@@ -61,9 +62,9 @@ public class RaceEditor extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultsTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        addResultButton = new javax.swing.JButton();
-        editResultButton = new javax.swing.JButton();
-        deleteResultButton = new javax.swing.JButton();
+        addClockButton = new javax.swing.JButton();
+        editClockButton = new javax.swing.JButton();
+        deleteClockButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -85,20 +86,32 @@ public class RaceEditor extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        addResultButton.setText("Add Result");
-        addResultButton.addActionListener(new java.awt.event.ActionListener() {
+        addClockButton.setText("Add Clock");
+        addClockButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addResultButtonActionPerformed(evt);
+                addClockButtonActionPerformed(evt);
             }
         });
 
-        jPanel2.add(addResultButton);
+        jPanel2.add(addClockButton);
 
-        editResultButton.setText("Edit Result");
-        jPanel2.add(editResultButton);
+        editClockButton.setText("Edit Clock");
+        editClockButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editClockButtonActionPerformed(evt);
+            }
+        });
 
-        deleteResultButton.setText("Delete Result");
-        jPanel2.add(deleteResultButton);
+        jPanel2.add(editClockButton);
+
+        deleteClockButton.setText("Delete Clock");
+        deleteClockButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteClockButtonActionPerformed(evt);
+            }
+        });
+
+        jPanel2.add(deleteClockButton);
 
         jPanel1.add(jPanel2, java.awt.BorderLayout.SOUTH);
 
@@ -110,14 +123,41 @@ public class RaceEditor extends javax.swing.JPanel {
 
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addResultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addResultButtonActionPerformed
-    }//GEN-LAST:event_addResultButtonActionPerformed
-    
-    
+    private void deleteClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteClockButtonActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_deleteClockButtonActionPerformed
+
+    private void editClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editClockButtonActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_editClockButtonActionPerformed
+
+    private void editResultsForClock(Clock clock) throws UserCancelledException
+    {
+        Component parent = this;
+        //ClockEditor.editClockResults(parent, clock);
+    }
+   
+    private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
+        try {
+            Clock clock = ClockSummary.createClock(this, members);  
+            race.addClock(clock);
+            try {
+                editResultsForClock( clock );
+            } catch (UserCancelledException e) {
+                race.removeClock( clock );
+                throw e;
+            }            
+        } catch (UserCancelledException ex) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
+        }
+        reloadResultsTable();
+    }//GEN-LAST:event_addClockButtonActionPerformed
+       
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addResultButton;
-    private javax.swing.JButton deleteResultButton;
-    private javax.swing.JButton editResultButton;
+    private javax.swing.JButton addClockButton;
+    private javax.swing.JButton deleteClockButton;
+    private javax.swing.JButton editClockButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -127,10 +167,11 @@ public class RaceEditor extends javax.swing.JPanel {
     static public void editRaceResults(Component parent, Race race, Club club) {
         RaceEditor panel = new RaceEditor(race, club.getMembers());
         Object[] options = {"Ok"};
-        int result = JOptionPane.showOptionDialog(parent, panel, "Results", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
     
     private void reloadResultsTable() {
+        resultsTable.setModel(new ClocksTableModel(Utilities.sortCollection(race.getClocks())));
     }
     
 }

@@ -37,8 +37,6 @@ import pigeon.model.ValidationException;
 class RaceSummary extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 42L;
-
-    private static final int BASE_YEAR = 2000;
     
     private final Race race;
     
@@ -60,7 +58,7 @@ class RaceSummary extends javax.swing.JPanel {
         calendar.setTime(race.getLiberationDate());
         dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
         monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - BASE_YEAR);
+        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
         hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
@@ -88,7 +86,7 @@ class RaceSummary extends javax.swing.JPanel {
             monthCombo.addItem(str);
         }
         
-        for (int year = BASE_YEAR; year <= BASE_YEAR + 20; year++) {
+        for (int year = Utilities.BASE_YEAR; year <= Utilities.BASE_YEAR + 20; year++) {
             yearCombo.addItem(year);
         }
         

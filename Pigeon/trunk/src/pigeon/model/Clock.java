@@ -19,63 +19,74 @@
 
 package pigeon.model;
 
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
  * @author pauldoo
  */
-public class Clock {
+public class Clock implements Comparable<Clock>
+{
     
     private Member member;
 
-    private long masterSet;
-    private long masterOpen;
-    private long memberSet;
-    private long memberOpen;
+    private Date masterSet;
+    private Date masterOpen;
+    private Date memberSet;
+    private Date memberOpen;
     
     private Collection<Time> times = new ArrayList<Time>();
     
     /** Creates a new instance of Clock */
-    public Clock(Member member) {
-        this.member = member;
+    public Clock() {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal = new GregorianCalendar(
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH));
+        setTimeOnMasterWhenSet(cal.getTime());
+        setTimeOnMasterWhenOpened(cal.getTime());
+        setTimeOnMemberWhenSet(cal.getTime());
+        setTimeOnMemberWhenOpened(cal.getTime());
     }
 
-    public long convertMemberTimeToMasterTime(long time) {
-        return ((time - memberSet) * (masterOpen - masterSet)) / (memberOpen - memberSet) + masterSet;
+    public Date convertMemberTimeToMasterTime(Date time) {
+        return new Date(((time.getTime() - memberSet.getTime()) * (masterOpen.getTime() - masterSet.getTime())) / (memberOpen.getTime() - memberSet.getTime()) + masterSet.getTime());
     }
     
-    public long getTimeOnMasterWhenSet() {
+    public Date getTimeOnMasterWhenSet() {
         return masterSet;
     }
 
-    public void setTimeOnMasterWhenSet(long timeOnMasterClockWhenSet) {
+    public void setTimeOnMasterWhenSet(Date timeOnMasterClockWhenSet) {
         this.masterSet = timeOnMasterClockWhenSet;
     }
 
-    public long getTimeOnMemberWhenSet() {
+    public Date getTimeOnMemberWhenSet() {
         return memberSet;
     }
 
-    public void setTimeOnMemberWhenSet(long timeOnMemberClockWhenSet) {
+    public void setTimeOnMemberWhenSet(Date timeOnMemberClockWhenSet) {
         this.memberSet = timeOnMemberClockWhenSet;
     }
 
-    public long getTimeOnMasterWhenOpened() {
+    public Date getTimeOnMasterWhenOpened() {
         return masterOpen;
     }
 
-    public void setTimeOnMasterWhenOpened(long timeOnMasterClockWhenOpened) {
+    public void setTimeOnMasterWhenOpened(Date timeOnMasterClockWhenOpened) {
         this.masterOpen = timeOnMasterClockWhenOpened;
     }
 
-    public long getTimeOnMemberWhenOpened() {
+    public Date getTimeOnMemberWhenOpened() {
         return memberOpen;
     }
 
-    public void setTimeOnMemberWhenOpened(long timeOnMemberClockWhenOpened) {
+    public void setTimeOnMemberWhenOpened(Date timeOnMemberClockWhenOpened) {
         this.memberOpen = timeOnMemberClockWhenOpened;
     }
     
@@ -87,8 +98,21 @@ public class Clock {
         this.times.remove(time);
     }
     
+    public Collection<Time> getTimes()
+    {
+        return times;
+    }
+    
     public Member getMember() {
         return member;
     }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
     
+    public int compareTo(Clock other)
+    {
+        return this.member.compareTo(other.getMember());
+    }   
 }

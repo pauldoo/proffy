@@ -29,7 +29,8 @@ import java.util.TreeMap;
  *
  * @author Paul
  */
-public class Club implements Serializable {
+public class Club implements Serializable
+{
 
     private static final long serialVersionUID = 42L;
     
