@@ -31,7 +31,7 @@ import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
 
 /**
- *
+ * Edits basic info regarding a race like the racepoint, date, time etc.
  * @author  Paul
  */
 class RaceSummary extends javax.swing.JPanel {
@@ -313,7 +313,7 @@ class RaceSummary extends javax.swing.JPanel {
                     e.displayErrorDialog(parent);
                 }
             } else {
-                result = JOptionPane.showConfirmDialog(parent, "Return to Race window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                result = JOptionPane.showConfirmDialog(parent, "Return to Races window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
                     throw new UserCancelledException();
                 }

@@ -20,7 +20,7 @@
 package pigeon.view;
 
 /**
- *
+ * Thrown by various chunks of gui when the user cancells an operation and backs out.
  * @author Paul
  */
 class UserCancelledException extends Exception {

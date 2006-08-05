@@ -31,7 +31,7 @@ import pigeon.model.Member;
 import pigeon.model.ValidationException;
 
 /**
- * Creates / edits the basic info about a clock, ie member and open / close times.
+ * Creates / edits the basic info about a clock, ie master/member open/close times.
  * The ClockEditor class edits the list of times.
  * @author  pauldoo
  */
@@ -520,7 +520,7 @@ public class ClockSummary extends javax.swing.JPanel {
                     e.displayErrorDialog(parent);
                 }
             } else {
-                result = JOptionPane.showConfirmDialog(parent, "Return to Race window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                result = JOptionPane.showConfirmDialog(parent, "Return to Clocks window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
                     throw new UserCancelledException();
                 }

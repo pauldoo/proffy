@@ -23,7 +23,7 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- *
+ * Simple implementation of javax.swing.filechooser.FileFilter to filter *.pcs files.
  * @author Paul
  */
 class SimpleFileFilter extends FileFilter {

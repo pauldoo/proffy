@@ -30,7 +30,7 @@ import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
 
 /**
- *
+ * Panel to let the user enter the distances (in the form of a table) for a given racepoint or member.
  * @author  pauldoo
  */
 class DistanceEditor<Subject, Target> extends javax.swing.JPanel {

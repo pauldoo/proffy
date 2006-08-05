@@ -26,7 +26,7 @@ import pigeon.model.Race;
 import pigeon.model.Racepoint;
 
 /**
- *
+ * Represents a list of races for use in a JTable, displays liberation date and racepoint name.
  * @author Paul
  */
 class RacesTableModel extends AbstractTableModel {

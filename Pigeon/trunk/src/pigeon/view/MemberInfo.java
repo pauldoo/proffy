@@ -25,8 +25,8 @@ import pigeon.model.Member;
 import pigeon.model.ValidationException;
 
 /**
- *
- * @author  Sarah
+ * Edits basic info for members like name, etc.
+ * @author  Paul
  */
 class MemberInfo extends javax.swing.JPanel {
     

@@ -25,7 +25,8 @@ import pigeon.model.Clock;
 import pigeon.model.Member;
 
 /**
- *
+ * Represents a list of clocks for placing into a JTable.
+ * Displays the associated member and the number of rings entered.
  * @author pauldoo
  */
 public class ClocksTableModel extends AbstractTableModel {

@@ -17,31 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package pigeon.view;
-
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.TimeZone;
-import java.util.TreeSet;
-import java.util.Vector;
+package pigeon.model;
 
 /**
- * Public static methods for doing various things.
+ * Some simple constants.
  * @author pauldoo
  */
-class Utilities {
-
-    public static final int BASE_YEAR = 2000;
-    
-    // DateFormat for storing times that span just a single day.
-    // Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
-    public static final DateFormat TIME_FORMAT;
-    static {
-        TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-        TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-    
-    public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {
-        return new Vector<T>(new TreeSet<T>(collection));
-    }
+public class Constants
+{
+    public static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;    
 }

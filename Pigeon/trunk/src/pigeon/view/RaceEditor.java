@@ -30,7 +30,8 @@ import pigeon.model.Race;
 import pigeon.model.ValidationException;
 
 /**
- *
+ * Lists the clocks for a given race and lets the user add more clocks
+ * or go on to edit the times associated with one of the clocks (using ClockEditor).
  * @author  pauldoo
  */
 public class RaceEditor extends javax.swing.JPanel {
@@ -140,8 +141,7 @@ public class RaceEditor extends javax.swing.JPanel {
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
     {
-        Component parent = this;
-        //ClockEditor.editClockResults(parent, clock);
+        ClockEditor.editClockResults(this, clock);
     }
    
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed

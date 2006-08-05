@@ -48,7 +48,8 @@ import pigeon.model.Season;
 import pigeon.model.ValidationException;
 
 /**
- *
+ * Entry point and top level window.
+ * All top level windows exist in here and are switched between using the card layout.
  * @author  Paul
  */
 class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
@@ -634,6 +635,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MainWindow window = new MainWindow();
+                window.setLocationRelativeTo(null);
                 window.setVisible(true);
             }
         });
@@ -658,8 +660,9 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private static void setSwingLAF() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            String name = UIManager.getSystemLookAndFeelClassName();
+            //String name = UIManager.getCrossPlatformLookAndFeelClassName();
+            UIManager.setLookAndFeel(name);
         } catch (Exception e) { }
     }
     
