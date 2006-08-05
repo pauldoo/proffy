@@ -45,8 +45,8 @@ public class RaceEditor extends javax.swing.JPanel {
         this.race = race;
         this.members = members;
         initComponents();
-        reloadResultsTable();
-        ((TitledBorder)jPanel1.getBorder()).setTitle("Results for " + race.toString());
+        reloadClocksTable();
+        ((TitledBorder)jPanel1.getBorder()).setTitle("Clocks for " + race.toString());
     }
     
     /** This method is called from within the constructor to
@@ -60,7 +60,7 @@ public class RaceEditor extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        resultsTable = new javax.swing.JTable();
+        clocksTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         addClockButton = new javax.swing.JButton();
         editClockButton = new javax.swing.JButton();
@@ -70,8 +70,8 @@ public class RaceEditor extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results"));
-        resultsTable.setModel(new javax.swing.table.DefaultTableModel(
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clocks"));
+        clocksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -82,7 +82,7 @@ public class RaceEditor extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(resultsTable);
+        jScrollPane1.setViewportView(clocksTable);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -128,7 +128,14 @@ public class RaceEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteClockButtonActionPerformed
 
     private void editClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editClockButtonActionPerformed
-// TODO add your handling code here:
+        int index = clocksTable.getSelectedRow();
+        Clock clock = Utilities.sortCollection(race.getClocks()).get(index);
+        try {
+            ClockSummary.editClock(this, clock, members, false);
+            editResultsForClock( clock );
+        } catch (UserCancelledException e) {
+        }    
+        reloadClocksTable();
     }//GEN-LAST:event_editClockButtonActionPerformed
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
@@ -151,17 +158,17 @@ public class RaceEditor extends javax.swing.JPanel {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
         }
-        reloadResultsTable();
+        reloadClocksTable();
     }//GEN-LAST:event_addClockButtonActionPerformed
        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addClockButton;
+    private javax.swing.JTable clocksTable;
     private javax.swing.JButton deleteClockButton;
     private javax.swing.JButton editClockButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable resultsTable;
     // End of variables declaration//GEN-END:variables
     
     static public void editRaceResults(Component parent, Race race, Club club) {
@@ -170,8 +177,8 @@ public class RaceEditor extends javax.swing.JPanel {
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
     
-    private void reloadResultsTable() {
-        resultsTable.setModel(new ClocksTableModel(Utilities.sortCollection(race.getClocks())));
+    private void reloadClocksTable() {
+        clocksTable.setModel(new ClocksTableModel(Utilities.sortCollection(race.getClocks())));
     }
     
 }
