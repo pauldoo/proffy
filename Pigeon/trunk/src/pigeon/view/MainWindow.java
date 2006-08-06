@@ -623,6 +623,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        ExceptionHandler.register();
         checkAssertions();
         setSwingLAF();
 
