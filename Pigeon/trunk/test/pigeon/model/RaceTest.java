@@ -48,6 +48,15 @@ public class RaceTest extends TestCase {
         
         return suite;
     }
+    
+    public void testClockOpenOffset() throws ValidationException {
+        final long today = Utilities.beginningOfDay(new Date()).getTime();
+
+        Race race = new Race();
+        race.setLiberationDate(new Date(today + 1000000));
+        race.setDaysCovered(2);
+        assertEquals(today + 1 * Constants.MILLISECONDS_PER_DAY, race.clockingDayOffset());
+    }
 
     public void testEquality() throws ValidationException {
         Date dateFoo = new Date(1);

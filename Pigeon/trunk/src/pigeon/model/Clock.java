@@ -60,7 +60,8 @@ public class Clock implements Comparable<Clock>
             throw new IllegalArgumentException("Member date is expected to be in the range of one day");
         }
         time = new Date(time.getTime() + race.clockingDayOffset());
-        return new Date(((time.getTime() - memberSet.getTime()) * (masterOpen.getTime() - masterSet.getTime())) / (memberOpen.getTime() - memberSet.getTime()) + masterSet.getTime());
+        time = new Date(((time.getTime() - memberSet.getTime()) * (masterOpen.getTime() - masterSet.getTime())) / (memberOpen.getTime() - memberSet.getTime()) + masterSet.getTime());
+        return time;
     }
     
     public Date getTimeOnMasterWhenSet()

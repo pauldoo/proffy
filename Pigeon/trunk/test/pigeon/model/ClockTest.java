@@ -35,22 +35,27 @@ public class ClockTest extends TestCase {
     /**
      * Test of ConvertMemberTimeToMasterTime method, of class pigeon.model.Clock.
      */
-    public void testConvertMemberTimeToMasterTime() {
+    public void testConvertMemberTimeToMasterTime() throws ValidationException {
+        final long today = Utilities.beginningOfDay(new Date()).getTime();
+        
         Clock clock = new Clock();
-        clock.setTimeOnMasterWhenSet(new Date(200));
-        clock.setTimeOnMasterWhenOpened(new Date(300));
-        clock.setTimeOnMemberWhenSet(new Date(3000));
-        clock.setTimeOnMemberWhenOpened(new Date(4000));
+        clock.setTimeOnMasterWhenSet(new Date(today + 200));
+        clock.setTimeOnMasterWhenOpened(new Date(today + 300));
+        clock.setTimeOnMemberWhenSet(new Date(today + 3000));
+        clock.setTimeOnMemberWhenOpened(new Date(today + 4000));
         
+        assertEquals(today + 200, clock.getTimeOnMasterWhenSet().getTime());
+        assertEquals(today + 300, clock.getTimeOnMasterWhenOpened().getTime());
+        assertEquals(today + 3000, clock.getTimeOnMemberWhenSet().getTime());
+        assertEquals(today + 4000, clock.getTimeOnMemberWhenOpened().getTime());
 
-        assertEquals(200, clock.convertMemberTimeToMasterTime(new Date(3000)).getTime());
-        assertEquals(300, clock.convertMemberTimeToMasterTime(new Date(4000)).getTime());
-        assertEquals(250, clock.convertMemberTimeToMasterTime(new Date(3500)).getTime());
+        Race race = new Race();
+        race.setLiberationDate(new Date(today));
+        race.setDaysCovered(1);
         
-        assertEquals(200, clock.getTimeOnMasterWhenSet().getTime());
-        assertEquals(300, clock.getTimeOnMasterWhenOpened().getTime());
-        assertEquals(3000, clock.getTimeOnMemberWhenSet().getTime());
-        assertEquals(4000, clock.getTimeOnMemberWhenOpened().getTime());
+        assertEquals(today + 200, clock.convertMemberTimeToMasterTime(new Date(3000), race).getTime());
+        assertEquals(today + 300, clock.convertMemberTimeToMasterTime(new Date(4000), race).getTime());
+        assertEquals(today + 250, clock.convertMemberTimeToMasterTime(new Date(3500), race).getTime());
     }
     
 }
