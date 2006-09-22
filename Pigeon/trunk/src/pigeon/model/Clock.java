@@ -19,6 +19,7 @@
 
 package pigeon.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,8 +30,10 @@ import java.util.List;
  *
  * @author pauldoo
  */
-public class Clock implements Comparable<Clock>
+public class Clock implements Comparable<Clock>, Serializable
 {
+    private static final long serialVersionUID = 42L;
+
     private Member member;
     
     private Date masterSet;

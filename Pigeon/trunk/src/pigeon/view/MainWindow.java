@@ -64,13 +64,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             "to redistribute it under certain conditions; see the file COPYRIGHT.txt\n" +
             "for details.";
     private static final String TITLE = "Pigeon v" + VERSION;
-    private static final String CREDITS = "Created by Paul Richards <pauldoo@users.sf.net>";
+    private static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>";
     
     private Season season;
+    private File currentlyLoadedFile;
     
     /** Creates new form MainWindow */
     public MainWindow() {
         initComponents();
+        switchToCard("mainMenu");
     }
     
     /** This method is called from within the constructor to
@@ -112,12 +114,26 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         raceresultAddButton = new javax.swing.JButton();
         raceresultEditButton = new javax.swing.JButton();
         raceresultDeleteButton = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        openItem = new javax.swing.JMenuItem();
+        closeItem = new javax.swing.JMenuItem();
+        saveItem = new javax.swing.JMenuItem();
+        exitItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
+        aboutItem = new javax.swing.JMenuItem();
 
         getContentPane().setLayout(new java.awt.CardLayout());
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Pigeon");
         setLocationByPlatform(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
         mainMenuPanel.setLayout(new java.awt.GridBagLayout());
 
         loadSeasonButton.setText("Load existing season");
@@ -172,6 +188,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         clubPanel.add(clubNameLabel, gridBagConstraints);
+
+        clubNameText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                clubNameTextFocusLost(evt);
+            }
+        });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -336,8 +358,128 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         getContentPane().add(viewingSeason, "viewingSeason");
 
+        fileMenu.setText("Menu");
+        fileMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileMenuActionPerformed(evt);
+            }
+        });
+
+        openItem.setText("Open");
+        openItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openItemActionPerformed(evt);
+            }
+        });
+
+        fileMenu.add(openItem);
+
+        closeItem.setText("Close");
+        closeItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeItemActionPerformed(evt);
+            }
+        });
+
+        fileMenu.add(closeItem);
+
+        saveItem.setText("Save");
+        saveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveItemActionPerformed(evt);
+            }
+        });
+
+        fileMenu.add(saveItem);
+
+        exitItem.setText("Exit");
+        exitItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitItemActionPerformed(evt);
+            }
+        });
+
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+
+        helpMenu.setText("Help");
+        helpMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpMenuActionPerformed(evt);
+            }
+        });
+
+        aboutItem.setText("About");
+        helpMenu.add(aboutItem);
+
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
+        try {
+            String clubName = clubNameText.getText();
+            season.getClub().setName(clubName);
+        } catch (ValidationException e) {
+        }
+    }//GEN-LAST:event_clubNameTextFocusLost
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            closeFile();
+            dispose();
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitItemActionPerformed
+    {//GEN-HEADEREND:event_exitItemActionPerformed
+        try {
+            closeFile();
+            dispose();
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_exitItemActionPerformed
+
+    private void saveItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveItemActionPerformed
+    {//GEN-HEADEREND:event_saveItemActionPerformed
+        try {
+            promptSaveSeason();
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_saveItemActionPerformed
+
+    private void closeItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_closeItemActionPerformed
+    {//GEN-HEADEREND:event_closeItemActionPerformed
+        try {
+            closeFile();
+            switchToCard("mainMenu");
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_closeItemActionPerformed
+
+    private void helpMenuActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_helpMenuActionPerformed
+    {//GEN-HEADEREND:event_helpMenuActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_helpMenuActionPerformed
+
+    private void openItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_openItemActionPerformed
+    {//GEN-HEADEREND:event_openItemActionPerformed
+        try {
+            closeFile();
+            promptLoadSeason();
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_openItemActionPerformed
+
+    private void fileMenuActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_fileMenuActionPerformed
+    {//GEN-HEADEREND:event_fileMenuActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_fileMenuActionPerformed
 
     private void raceresultDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultDeleteButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
@@ -384,18 +526,17 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }//GEN-LAST:event_loadSeasonButtonActionPerformed
 
     private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
-        String clubName = clubNameText.getText();
         try {
-            season.getClub().setName( clubName );
             int memberCount = season.getClub().getNumberOfMembers();
             int racepointCount = season.getClub().getNumberOfRacepoints();
             String message =
                     "Have you finished adding all of the members (currently " + memberCount + ") " +
-                    "and racepoints (currently " + racepointCount + ") for the club \"" + clubName + "\"?";
+                    "and racepoints (currently " + racepointCount + ") for the club \"" + season.getClub().getName() + "\"?";
             int result = JOptionPane.showConfirmDialog(this, message, "Finishing club setup", JOptionPane.YES_NO_OPTION);
             switch (result) {
                 case JOptionPane.YES_OPTION:
                     promptSaveSeason();
+                    switchToCard("viewingSeason");
                     break;
                 case JOptionPane.NO_OPTION:
                     JOptionPane.showMessageDialog(this, "Please continue to add members and racepoints.");
@@ -403,37 +544,50 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                 default:
                     throw new IllegalStateException();
             }
-        } catch (ValidationException e) {
-            e.displayErrorDialog(this);
+        } catch (UserCancelledException e) {
         }
     }//GEN-LAST:event_finishedButtonActionPerformed
 
-    private void promptSaveSeason() {
-        JFileChooser chooser = new JFileChooser();
-        FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
-        chooser.addChoosableFileFilter(filter);
-        chooser.setAcceptAllFileFilterUsed(false);
-        int result = chooser.showSaveDialog(this);
-        switch (result) {
-            case JFileChooser.APPROVE_OPTION:
-                File file = chooser.getSelectedFile();
-                if (!file.getName().endsWith(".pcs")) {
-                    file = new File(file.getParentFile(), file.getName() + ".pcs");
+    private void promptSaveSeason() throws UserCancelledException {
+        if (currentlyLoadedFile != null) {
+             try {
+                writeSeasonToFile(currentlyLoadedFile);
+            } catch (FileNotFoundException e) {
+                JOptionPane.showMessageDialog(this, e.toString());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, e.toString());
+            }
+       } else {
+            try {
+                JFileChooser chooser = new JFileChooser();
+                FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
+                chooser.addChoosableFileFilter(filter);
+                chooser.setAcceptAllFileFilterUsed(false);
+                while (true) {
+                    int result = chooser.showSaveDialog(this);
+                    switch (result) {
+                        case JFileChooser.APPROVE_OPTION:
+                            File file = chooser.getSelectedFile();
+                            if (!file.getName().endsWith(".pcs")) {
+                                file = new File(file.getParentFile(), file.getName() + ".pcs");
+                            }
+                            try {
+                                writeSeasonToFile(file);
+                            } catch (FileNotFoundException e) {
+                                JOptionPane.showMessageDialog(this, e.toString());
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(this, e.toString());
+                            }
+                            return;
+                        case JFileChooser.CANCEL_OPTION:
+                            throw new UserCancelledException();
+                        case JFileChooser.ERROR_OPTION:
+                        default:
+                            throw new IllegalStateException();
+                    }
                 }
-                try {
-                    writeSeasonToFile(file);
-                    switchToCard("viewingSeason");
-                } catch (FileNotFoundException e) {
-                    JOptionPane.showMessageDialog(this, e.toString());
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, e.toString());
-                }
-                break;
-            case JFileChooser.CANCEL_OPTION:
-                break;
-            case JFileChooser.ERROR_OPTION:
-            default:
-                throw new IllegalStateException();
+            } catch (UserCancelledException e) {
+            }
         }
     }
 
@@ -448,7 +602,11 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                 File file = chooser.getSelectedFile();
                 try {
                     loadSeasonFromFile(file);
-                    switchToCard("viewingSeason");
+                    if (season.getRaces().isEmpty()) {
+                        switchToCard("setupClub");
+                    } else {
+                        switchToCard("viewingSeason");
+                    }
                 } catch (FileNotFoundException e) {
                     JOptionPane.showMessageDialog(this, e.toString());
                 } catch (IOException e) {
@@ -469,6 +627,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         ObjectOutput out = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file))));
         out.writeObject(season);
         out.close();
+        currentlyLoadedFile = file;
+        JOptionPane.showMessageDialog(this, "Saved to " + file.toString());
     }
 
     private void loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -476,6 +636,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Season loaded = (Season)in.readObject();
         in.close();
         setSeason( loaded );
+        this.currentlyLoadedFile = file;
     }
     
     
@@ -601,7 +762,10 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private void switchToCard(String cardName) {
         Container parent = this.getContentPane();
-        ((CardLayout)parent.getLayout()).show(parent, cardName);        
+        ((CardLayout)parent.getLayout()).show(parent, cardName);
+        boolean isSomethingLoaded = cardName != "mainMenu";
+        saveItem.setEnabled(isSomethingLoaded);
+        closeItem.setEnabled(isSomethingLoaded);
     }
     
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
@@ -667,11 +831,33 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         } catch (Exception e) { }
     }
     
+    void closeFile() throws UserCancelledException {
+        if (this.season != null) {
+            int result = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_OPTION);
+            switch (result) {
+                case JOptionPane.YES_OPTION:
+                    promptSaveSeason();
+                    break;
+                case JOptionPane.NO_OPTION:
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+            this.season = null;
+            this.currentlyLoadedFile = null;
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutItem;
+    private javax.swing.JMenuItem closeItem;
     private javax.swing.JLabel clubNameLabel;
     private javax.swing.JTextField clubNameText;
     private javax.swing.JPanel clubPanel;
+    private javax.swing.JMenuItem exitItem;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
+    private javax.swing.JMenu helpMenu;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JButton memberAddButton;
@@ -681,7 +867,9 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JScrollPane memberListScrollPane;
     private javax.swing.JList membersList;
     private javax.swing.JPanel membersPanel;
+    private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton newSeasonButton;
+    private javax.swing.JMenuItem openItem;
     private javax.swing.JButton racepointAddButton;
     private javax.swing.JPanel racepointButtonPanel;
     private javax.swing.JButton racepointDeleteButton;
@@ -696,6 +884,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JScrollPane raceresultListScrollPane;
     private javax.swing.JPanel raceresultPanel;
     private javax.swing.JTable raceresultsTable;
+    private javax.swing.JMenuItem saveItem;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
