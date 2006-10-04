@@ -22,7 +22,8 @@ package pigeon.report;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.text.DateFormat;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -49,6 +50,14 @@ public class RaceReporter {
         this.race = race;
     }
     
+    private String StringPrintf(String format, Object... args) {
+            StringWriter buffer = new StringWriter();
+            PrintWriter writer = new PrintWriter(buffer);
+            writer.printf(format, args);
+            writer.flush();
+            return buffer.toString();
+    }
+        
     public void write(OutputStream stream) throws IOException {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
         out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -96,7 +105,7 @@ public class RaceReporter {
                 line.append("<td>H</td>");
                 line.append("<td></td>");
                 line.append("<td></td>");
-                line.append("<td>" + (velocity * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
+                line.append("<td>" + StringPrintf("%.3f", velocity * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
                 line.append("<tr>");
                 results.put(-velocity, line.toString());
             }
