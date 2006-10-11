@@ -25,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Paul
  */
-class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
+public class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
         
     private static final long serialVersionUID = 42L;
 

@@ -19,12 +19,16 @@
 
 package pigeon.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pauldoo
  */
-public class Time implements Comparable<Time>
+public class Time implements Comparable<Time>, Serializable
 {
+    private static final long serialVersionUID = 42L;
+
     private String ringNumber;
     private int time;
     

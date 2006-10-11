@@ -8,9 +8,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Menu"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileMenuActionPerformed"/>
-          </Events>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="openItem">
               <Properties>
@@ -408,6 +405,14 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="raceresultDeleteButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="raceresultCalculateResultsButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Calculate Results"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="raceresultCalculateResultsButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

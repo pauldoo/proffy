@@ -29,9 +29,6 @@ public class Distance implements Serializable, Comparable<Distance> {
     
     private static final long serialVersionUID = 42L;
     
-    private static final double METRES_PER_YARD = 0.9144;
-    private static final int YARDS_PER_MILE = 1760;
-    
     private final double distanceInMetres;
     
     /** Creates a new instance of Distance */
@@ -44,7 +41,7 @@ public class Distance implements Serializable, Comparable<Distance> {
     }
     
     public static Distance createFromImperial(int miles, int yards) {
-        return createFromMetric((miles * YARDS_PER_MILE + yards) * METRES_PER_YARD);
+        return createFromMetric((miles * Constants.YARDS_PER_MILE + yards) * Constants.METRES_PER_YARD);
     }
 
     // Return distance in metres
@@ -54,15 +51,15 @@ public class Distance implements Serializable, Comparable<Distance> {
     
     // Return distance in yards
     public double getYards() {
-        return distanceInMetres / METRES_PER_YARD;
+        return distanceInMetres / Constants.METRES_PER_YARD;
     }
     
     public int getMiles() {
-        return (int)Math.round(getYards()) / YARDS_PER_MILE;
+        return (int)Math.round(getYards()) / Constants.YARDS_PER_MILE;
     }
     
     public int getYardsRemainder() {
-        return (int)Math.round(getYards()) % YARDS_PER_MILE;
+        return (int)Math.round(getYards()) % Constants.YARDS_PER_MILE;
     }
     
     public String toString() {

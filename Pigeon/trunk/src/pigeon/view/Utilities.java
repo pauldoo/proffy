@@ -29,7 +29,7 @@ import java.util.Vector;
  * Public static methods for doing various things.
  * @author pauldoo
  */
-class Utilities {
+public class Utilities {
 
     public static final int BASE_YEAR = 2000;
     
@@ -39,6 +39,11 @@ class Utilities {
     static {
         TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.MEDIUM);
         TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+    public static final DateFormat DATE_FORMAT;
+    static {
+        DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
     
     public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {

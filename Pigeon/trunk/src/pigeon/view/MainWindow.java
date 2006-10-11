@@ -33,6 +33,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.JFileChooser;
@@ -46,6 +47,7 @@ import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
+import pigeon.report.RaceReporter;
 
 /**
  * Entry point and top level window.
@@ -114,6 +116,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         raceresultAddButton = new javax.swing.JButton();
         raceresultEditButton = new javax.swing.JButton();
         raceresultDeleteButton = new javax.swing.JButton();
+        raceresultCalculateResultsButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
@@ -348,6 +351,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         raceresultButtonPanel.add(raceresultDeleteButton);
 
+        raceresultCalculateResultsButton.setText("Calculate Results");
+        raceresultCalculateResultsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raceresultCalculateResultsButtonActionPerformed(evt);
+            }
+        });
+
+        raceresultButtonPanel.add(raceresultCalculateResultsButton);
+
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.SOUTH);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -359,12 +371,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         getContentPane().add(viewingSeason, "viewingSeason");
 
         fileMenu.setText("Menu");
-        fileMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileMenuActionPerformed(evt);
-            }
-        });
-
         openItem.setText("Open");
         openItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,6 +425,18 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
+        try {
+            int index = raceresultsTable.getSelectedRow();
+            Race race = Utilities.sortCollection(season.getRaces()).get(index);
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(new File("/tmp/test.html")));
+            new RaceReporter(season.getClub(), race).write(out);
+            out.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        }
+    }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
         try {
@@ -476,11 +494,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         }
     }//GEN-LAST:event_openItemActionPerformed
 
-    private void fileMenuActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_fileMenuActionPerformed
-    {//GEN-HEADEREND:event_fileMenuActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_fileMenuActionPerformed
-
     private void raceresultDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultDeleteButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
         Race race = Utilities.sortCollection(season.getRaces()).get(index);
@@ -527,6 +540,9 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
         try {
+            String clubName = clubNameText.getText();
+            season.getClub().setName(clubName);
+
             int memberCount = season.getClub().getNumberOfMembers();
             int racepointCount = season.getClub().getNumberOfRacepoints();
             String message =
@@ -544,6 +560,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                 default:
                     throw new IllegalStateException();
             }
+        } catch (ValidationException e) {
+            e.displayErrorDialog(getContentPane());
         } catch (UserCancelledException e) {
         }
     }//GEN-LAST:event_finishedButtonActionPerformed
@@ -879,6 +897,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JPanel racepointsPanel;
     private javax.swing.JButton raceresultAddButton;
     private javax.swing.JPanel raceresultButtonPanel;
+    private javax.swing.JButton raceresultCalculateResultsButton;
     private javax.swing.JButton raceresultDeleteButton;
     private javax.swing.JButton raceresultEditButton;
     private javax.swing.JScrollPane raceresultListScrollPane;

@@ -25,5 +25,9 @@ package pigeon.model;
  */
 public class Constants
 {
-    public static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;    
+    public static final double METRES_PER_YARD = 0.9144;
+    public static final int YARDS_PER_MILE = 1760;
+    public static final double METRES_PER_SECOND_TO_YARDS_PER_MINUTE = 60 / METRES_PER_YARD;
+    public static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
+    public static final int MILLISECONDS_PER_DAY = 24 * 60 * MILLISECONDS_PER_MINUTE;
 }

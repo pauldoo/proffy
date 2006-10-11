@@ -1,1 +1,9 @@
-What happens when we switch to / from daylight savings time?
+Need to be able to start a new season bringing over existing member / racepoint info.
+
+Generate reports for a race.
+
+Pigeon times are over the course of more than just 24hrs.
+
+Clock set and open times need to be second accurate.
+
+Unit test clock correction.

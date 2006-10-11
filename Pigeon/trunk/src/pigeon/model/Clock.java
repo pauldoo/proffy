@@ -57,13 +57,36 @@ public class Clock implements Comparable<Clock>, Serializable
         setTimeOnMemberWhenOpened(cal.getTime());
     }
     
+    /**
+     * Convert a 24hr time for the clocking day, to a full Date object with correction applied.
+     */
     public Date convertMemberTimeToMasterTime(Date time, Race race)
     {
         if (time.getTime() < 0 || time.getTime() >= Constants.MILLISECONDS_PER_DAY) {
             throw new IllegalArgumentException("Member date is expected to be in the range of one day");
         }
-        time = new Date(time.getTime() + race.clockingDayOffset());
-        time = new Date(((time.getTime() - memberSet.getTime()) * (masterOpen.getTime() - masterSet.getTime())) / (memberOpen.getTime() - memberSet.getTime()) + masterSet.getTime());
+        time = new Date(time.getTime() + race.clockingDayOffset() - memberSet.getTime() + masterSet.getTime());
+        
+        long raceDuration = masterOpen.getTime() - masterSet.getTime();
+        long totalDrift = (memberOpen.getTime() - memberSet.getTime()) - raceDuration;
+        long driftPerDay = Constants.MILLISECONDS_PER_DAY * totalDrift / raceDuration;
+        // +ve drift means that the member clock is running fast
+        // -ve drivt means that the member clock is running slow
+        if (driftPerDay > (3 * Constants.MILLISECONDS_PER_MINUTE)) {
+            // Clock is running fast by more than 3 mins per day, regard member clock as correct
+        } else {
+            long shortRun = time.getTime() - masterSet.getTime();
+            long longRun = memberOpen.getTime() - memberSet.getTime();
+            if (driftPerDay < (-3 * Constants.MILLISECONDS_PER_MINUTE)) {
+                // Clock is running slow by more than 3 mins per day, perform double correction
+                long correction = totalDrift * shortRun / longRun;
+                time = new Date(time.getTime() - 2*correction);
+            } else {
+                // Clock drift is within +/- 3 mins per day
+                long correction = totalDrift * shortRun / longRun;
+                time = new Date(time.getTime() - correction);
+            }
+        }
         return time;
     }
     
