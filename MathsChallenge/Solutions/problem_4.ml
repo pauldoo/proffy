@@ -1,4 +1,4 @@
-(* http://www.mathschallenge.net/index.php?section=project&ref=problems&id=4 *)
+(* http://mathschallenge.net/index.php?section=project&ref=problems&id=4 *)
 
 let rec reverse a b =
     if a = 0 then
