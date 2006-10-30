@@ -86,6 +86,7 @@ namespace {
         } else {
             assert(false);
         }
+        throw std::string("Not possible");
     }
 }
 
