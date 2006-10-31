@@ -1,4 +1,4 @@
-#include "Shared/gcd.h"
+#include "Shared/GCD.h"
 
 namespace MC {
     template const unsigned int gcd<unsigned int>(const unsigned int, const unsigned int);
