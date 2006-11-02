@@ -1,3 +1,3 @@
 PROJECT(MathsChallenge)
-SUBDIRS(Shared Solutions)
+SUBDIRS(Shared Solutions Tests)
 

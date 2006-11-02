@@ -2,7 +2,7 @@
 #define MC_GCD_H
 
 namespace MC {
-    template<typename T> const T gcd(const T a, const T b);
+    template<typename T> const T GCD(const T a, const T b);
 }
 
 #endif

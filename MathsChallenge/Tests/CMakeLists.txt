@@ -1,0 +1,6 @@
+INCLUDE_DIRECTORIES(${MathsChallenge_SOURCE_DIR})
+LINK_DIRECTORIES(${MathsChallenge_BINARY_DIR}/Shared)
+
+ADD_EXECUTABLE(Tests Main.cpp)
+TARGET_LINK_LIBRARIES(Tests Shared)
+

@@ -1,3 +1,5 @@
+// http://mathschallenge.net/index.php?section=project&ref=problems&id=19
+
 #include <iostream>
 #include <cassert>
 
