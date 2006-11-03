@@ -62,9 +62,11 @@ public class ClockSummary extends javax.swing.JPanel {
         setYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
         masterSetHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         masterSetMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        masterSetSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
         calendar.setTime(clock.getTimeOnMemberWhenSet());
         memberSetHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         memberSetMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        memberSetSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
 
         calendar.setTime(clock.getTimeOnMasterWhenOpened());
         openDayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
@@ -72,9 +74,11 @@ public class ClockSummary extends javax.swing.JPanel {
         openYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
         masterOpenHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         masterOpenMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        masterOpenSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
         calendar.setTime(clock.getTimeOnMemberWhenOpened());
         memberOpenHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         memberOpenMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        memberOpenSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
     }
     
     /** This method is called from within the constructor to
@@ -103,6 +107,10 @@ public class ClockSummary extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         setYearCombo = new javax.swing.JComboBox();
         jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        masterSetSecondCombo = new javax.swing.JComboBox();
+        memberSetSecondCombo = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -118,6 +126,10 @@ public class ClockSummary extends javax.swing.JPanel {
         memberOpenHourCombo = new javax.swing.JComboBox();
         jLabel11 = new javax.swing.JLabel();
         memberOpenMinuteCombo = new javax.swing.JComboBox();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        memberOpenSecondCombo = new javax.swing.JComboBox();
+        masterOpenSecondCombo = new javax.swing.JComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -141,6 +153,8 @@ public class ClockSummary extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Set Times"));
         jLabel2.setText("Clock Set Date");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel1.add(jLabel2, gridBagConstraints);
@@ -162,6 +176,8 @@ public class ClockSummary extends javax.swing.JPanel {
         jPanel1.add(jLabel4, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -251,6 +267,36 @@ public class ClockSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
         jPanel1.add(jLabel15, gridBagConstraints);
 
+        jLabel16.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
+        jPanel1.add(jLabel16, gridBagConstraints);
+
+        jLabel17.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
+        jPanel1.add(jLabel17, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        jPanel1.add(masterSetSecondCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        jPanel1.add(memberSetSecondCombo, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -263,6 +309,8 @@ public class ClockSummary extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Open Times"));
         jLabel5.setText("Clock Open Date");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel2.add(jLabel5, gridBagConstraints);
@@ -284,6 +332,8 @@ public class ClockSummary extends javax.swing.JPanel {
         jPanel2.add(jLabel7, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -309,6 +359,8 @@ public class ClockSummary extends javax.swing.JPanel {
         jLabel8.setText("/");
         jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
         jPanel2.add(jLabel8, gridBagConstraints);
 
@@ -371,6 +423,36 @@ public class ClockSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel2.add(memberOpenMinuteCombo, gridBagConstraints);
 
+        jLabel18.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
+        jPanel2.add(jLabel18, gridBagConstraints);
+
+        jLabel19.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 10);
+        jPanel2.add(jLabel19, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        jPanel2.add(memberOpenSecondCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        jPanel2.add(masterOpenSecondCombo, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -391,6 +473,10 @@ public class ClockSummary extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -403,13 +489,17 @@ public class ClockSummary extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JComboBox masterOpenHourCombo;
     private javax.swing.JComboBox masterOpenMinuteCombo;
+    private javax.swing.JComboBox masterOpenSecondCombo;
     private javax.swing.JComboBox masterSetHourCombo;
     private javax.swing.JComboBox masterSetMinuteCombo;
+    private javax.swing.JComboBox masterSetSecondCombo;
     private javax.swing.JComboBox memberCombo;
     private javax.swing.JComboBox memberOpenHourCombo;
     private javax.swing.JComboBox memberOpenMinuteCombo;
+    private javax.swing.JComboBox memberOpenSecondCombo;
     private javax.swing.JComboBox memberSetHourCombo;
     private javax.swing.JComboBox memberSetMinuteCombo;
+    private javax.swing.JComboBox memberSetSecondCombo;
     private javax.swing.JComboBox openDayCombo;
     private javax.swing.JComboBox openMonthCombo;
     private javax.swing.JComboBox openYearCombo;
@@ -467,6 +557,11 @@ public class ClockSummary extends javax.swing.JPanel {
             masterOpenMinuteCombo.addItem(str);
             memberSetMinuteCombo.addItem(str);
             memberOpenMinuteCombo.addItem(str);
+
+            masterSetSecondCombo.addItem(str);
+            masterOpenSecondCombo.addItem(str);
+            memberSetSecondCombo.addItem(str);
+            memberOpenSecondCombo.addItem(str);
         }
     }
     
@@ -479,7 +574,8 @@ public class ClockSummary extends javax.swing.JPanel {
                 new Integer(setMonthCombo.getSelectedItem().toString()) - 1,
                 new Integer(setDayCombo.getSelectedItem().toString()),
                 new Integer(masterSetHourCombo.getSelectedItem().toString()),
-                new Integer(masterSetMinuteCombo.getSelectedItem().toString())).getTime();
+                new Integer(masterSetMinuteCombo.getSelectedItem().toString()),
+                new Integer(masterSetSecondCombo.getSelectedItem().toString())).getTime();
         clock.setTimeOnMasterWhenSet(masterSetDate);
 
         Date memberSetDate = new GregorianCalendar(
@@ -487,7 +583,8 @@ public class ClockSummary extends javax.swing.JPanel {
                 new Integer(setMonthCombo.getSelectedItem().toString()) - 1,
                 new Integer(setDayCombo.getSelectedItem().toString()),
                 new Integer(memberSetHourCombo.getSelectedItem().toString()),
-                new Integer(memberSetMinuteCombo.getSelectedItem().toString())).getTime();
+                new Integer(memberSetMinuteCombo.getSelectedItem().toString()),
+                new Integer(memberSetSecondCombo.getSelectedItem().toString())).getTime();
         clock.setTimeOnMemberWhenSet(memberSetDate);
 
         Date masterOpenDate = new GregorianCalendar(
@@ -495,7 +592,8 @@ public class ClockSummary extends javax.swing.JPanel {
                 new Integer(openMonthCombo.getSelectedItem().toString()) - 1,
                 new Integer(openDayCombo.getSelectedItem().toString()),
                 new Integer(masterOpenHourCombo.getSelectedItem().toString()),
-                new Integer(masterOpenMinuteCombo.getSelectedItem().toString())).getTime();
+                new Integer(masterOpenMinuteCombo.getSelectedItem().toString()),
+                new Integer(masterOpenSecondCombo.getSelectedItem().toString())).getTime();
         clock.setTimeOnMasterWhenOpened(masterOpenDate);
 
         Date memberOpenDate = new GregorianCalendar(
@@ -503,7 +601,8 @@ public class ClockSummary extends javax.swing.JPanel {
                 new Integer(openMonthCombo.getSelectedItem().toString()) - 1,
                 new Integer(openDayCombo.getSelectedItem().toString()),
                 new Integer(memberOpenHourCombo.getSelectedItem().toString()),
-                new Integer(memberOpenMinuteCombo.getSelectedItem().toString())).getTime();
+                new Integer(memberOpenMinuteCombo.getSelectedItem().toString()),
+                new Integer(memberOpenSecondCombo.getSelectedItem().toString())).getTime();
         clock.setTimeOnMemberWhenOpened(memberOpenDate);
     }
 
