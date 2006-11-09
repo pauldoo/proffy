@@ -132,8 +132,8 @@ public class Race implements Serializable, Comparable<Race> {
         return clocks;
     }
     
-    public long clockingDayOffset()
+    public Date liberationDayOffset()
     {
-        return Utilities.beginningOfDay(getLiberationDate()).getTime() + ((getDaysCovered() - 1) * Constants.MILLISECONDS_PER_DAY);    
+        return Utilities.beginningOfDay(liberationDate);
     }
 }

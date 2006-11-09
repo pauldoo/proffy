@@ -21,11 +21,11 @@ package pigeon.view;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Clock;
-import pigeon.model.Race;
+import pigeon.model.Constants;
 import pigeon.model.Time;
+import pigeon.model.ValidationException;
 
 /**
  * Represents the times entered for a clock by listing the ring numbers and the time currently entered.
@@ -35,15 +35,15 @@ public class TimesTableModel extends AbstractTableModel
 {
     private static final long serialVersionUID = 42L;
     
-    private Clock clock;
-    private Race race;
-    private boolean editable;
+    private final Clock clock;
+    private final int daysInRace;
+    private final boolean editable;
 
     /** Creates a new instance of TimesTableModel */
-    public TimesTableModel(Clock clock/*, Race race*/, boolean editable)
+    public TimesTableModel(Clock clock, int daysInRace, boolean editable)
     {
         this.clock = clock;
-        //this.race = race;
+        this.daysInRace = daysInRace;
         this.editable = editable;
     }
     
@@ -52,7 +52,7 @@ public class TimesTableModel extends AbstractTableModel
     }
     
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
     
     private Time getEntry(int row) {
@@ -64,6 +64,8 @@ public class TimesTableModel extends AbstractTableModel
             case 0:
                 return String.class;
             case 1:
+                return Integer.class;
+            case 2:
                 return String.class;
             default:
                 throw new IllegalArgumentException();
@@ -77,7 +79,9 @@ public class TimesTableModel extends AbstractTableModel
             case 0:
                 return entry.getRingNumber();
             case 1:
-                return Utilities.TIME_FORMAT.format(new Date(entry.getMemberTime()));
+                return (entry.getMemberTime() / Constants.MILLISECONDS_PER_DAY) + 1;
+            case 2:
+                return Utilities.TIME_FORMAT.format(new Date(entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
             default:
                 throw new IllegalArgumentException();
         }
@@ -88,6 +92,8 @@ public class TimesTableModel extends AbstractTableModel
             case 0:
                 return "Ring Number";
             case 1:
+                return "Day";
+            case 2:
                 return "Clock Time";
             default:
                 throw new IllegalArgumentException();
@@ -99,6 +105,7 @@ public class TimesTableModel extends AbstractTableModel
             case 0:
                 return false;
             case 1:
+            case 2:
                 return true;
             default:
                 throw new IllegalArgumentException();
@@ -107,19 +114,31 @@ public class TimesTableModel extends AbstractTableModel
     
     public void setValueAt(Object value, int row, int column) {
         Time entry = getEntry(row);
-        switch (column) {
-            case 1: {
-                try {
-                    Date date = Utilities.TIME_FORMAT.parse((String)value);
-                    entry.setMemberTime(date.getTime());
+        try {
+            switch (column) {
+                case 1: {
+                    int day = ((Integer)value) - 1;
+                    long time = (entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY) + (day * Constants.MILLISECONDS_PER_DAY);
+                    entry.setMemberTime(time, daysInRace);
                     fireTableRowsUpdated(row, row);
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
                 break;
+                case 2: {
+                    try {
+                        Date date = Utilities.TIME_FORMAT.parse((String)value);
+                        long time = Utilities.startOfDay(entry.getMemberTime()) + date.getTime();
+                        entry.setMemberTime(time, daysInRace);
+                        fireTableRowsUpdated(row, row);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+                default:
+                    throw new IllegalArgumentException();
             }
-            default:
-                throw new IllegalArgumentException();
+        } catch (ValidationException e) {
+            e.displayErrorDialog(null);
         }
     }
 }

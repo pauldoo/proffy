@@ -141,7 +141,7 @@ public class RaceEditor extends javax.swing.JPanel {
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
     {
-        ClockEditor.editClockResults(this, clock);
+        ClockEditor.editClockResults(this, clock, race.getDaysCovered());
     }
    
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed

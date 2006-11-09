@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.Vector;
+import pigeon.model.Constants;
 
 /**
  * Public static methods for doing various things.
@@ -48,5 +49,9 @@ public class Utilities {
     
     public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {
         return new Vector<T>(new TreeSet<T>(collection));
+    }
+    
+    public static long startOfDay(long time) {
+        return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
     }
 }

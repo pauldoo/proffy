@@ -55,7 +55,7 @@ public class RaceTest extends TestCase {
         Race race = new Race();
         race.setLiberationDate(new Date(today + 1000000));
         race.setDaysCovered(2);
-        assertEquals(today + 1 * Constants.MILLISECONDS_PER_DAY, race.clockingDayOffset());
+        assertEquals(today, race.liberationDayOffset().getTime());
     }
 
     public void testEquality() throws ValidationException {

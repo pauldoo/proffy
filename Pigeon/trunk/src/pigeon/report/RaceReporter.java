@@ -97,6 +97,10 @@ public class RaceReporter {
                 double velocity = distance.getMetres() * 1000 / flyTime;
                 StringBuffer line = new StringBuffer();
                 line.append("<td>" + clock.getMember().toString() + "</td>");
+                if (race.getDaysCovered() > 1) {
+                    int days = (int)((correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
+                    line.append("<td>" + (days + 1) + "</td>");
+                }
                 line.append("<td>" + Utilities.TIME_FORMAT.format(correctedClockTime) + "</td>");
                 line.append("<td>" + distance.getMiles() + "</td>");
                 line.append("<td>"+ distance.getYardsRemainder() + "</td>");
@@ -112,7 +116,11 @@ public class RaceReporter {
         }
         out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
         out.println("<table>");
-        out.println("<tr><th>Position</th><th>Member</th><th>Timed</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>");
+        out.print("<tr><th>Position</th><th>Member</th>");
+        if (race.getDaysCovered() > 1) {
+            out.print("<th>Day</th>");
+        }
+        out.println("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>");
         int pos = 0;
         for (String line: results.values()) {
             pos ++;

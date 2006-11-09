@@ -33,10 +33,10 @@ public class Time implements Comparable<Time>, Serializable
     private int time;
     
     /** Creates a new instance of Time */
-    public Time(String ringNumber, long time) throws IllegalArgumentException
+    public Time(String ringNumber) throws ValidationException
     {
         this.setRingNumber(ringNumber);
-        this.setMemberTime(time);
+        this.setMemberTime(0, 1);
     }
     
     public String getRingNumber()
@@ -54,10 +54,10 @@ public class Time implements Comparable<Time>, Serializable
         return time;
     }
     
-    public void setMemberTime(long time) throws IllegalArgumentException
+    public void setMemberTime(long time, int daysInRace) throws ValidationException
     {
-        if (time < 0 || time >= Constants.MILLISECONDS_PER_DAY) {
-            throw new IllegalArgumentException("Times are supposed to be only in the range of one day");
+        if (time < 0 || time >= daysInRace * Constants.MILLISECONDS_PER_DAY) {
+            throw new ValidationException("Time is outwith the length of the race (" + daysInRace + " days)");
         }
         this.time = (int)time;
     }

@@ -21,13 +21,13 @@
 package pigeon.view;
 
 import java.awt.Component;
-import java.util.Date;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableCellEditor;
 import pigeon.model.Clock;
 import pigeon.model.Time;
+import pigeon.model.ValidationException;
 
 /**
  * Edits the list of times associated with a clock.  The ClockSummary class edits the basic info like open / close times.
@@ -38,12 +38,14 @@ public class ClockEditor extends javax.swing.JPanel
     
     private static final long serialVersionUID = 42L;
     
-    private Clock clock;
+    private final Clock clock;
+    private final int daysInRace;
     
     /** Creates new form ClockEditor */
-    public ClockEditor(Clock clock)
+    public ClockEditor(Clock clock, int daysInRace)
     {
         this.clock = clock;
+        this.daysInRace = daysInRace;
         initComponents();
         clockTimesPanel.setBorder(new javax.swing.border.TitledBorder("Clock Times For " + clock.getMember()));
         reloadTimesTable();
@@ -109,8 +111,12 @@ public class ClockEditor extends javax.swing.JPanel
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
         String ringNumber = JOptionPane.showInputDialog(this, "Please enter the ring number", "New time", JOptionPane.QUESTION_MESSAGE);
-        clock.addTime(new Time(ringNumber, 0));
-        reloadTimesTable();
+        try {
+            clock.addTime(new Time(ringNumber));
+            reloadTimesTable();
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
     
     
@@ -122,16 +128,16 @@ public class ClockEditor extends javax.swing.JPanel
     private javax.swing.JButton removeButton;
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
-    public static void editClockResults(Component parent, Clock clock)
+    public static void editClockResults(Component parent, Clock clock, int daysInRace)
     {
-        ClockEditor panel = new ClockEditor(clock);
+        ClockEditor panel = new ClockEditor(clock, daysInRace);
         Object[] options = {"Finished"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
     
     private void reloadTimesTable()
     {
-        timesTable.setModel(new TimesTableModel(clock, true));
+        timesTable.setModel(new TimesTableModel(clock, daysInRace, true));
         timesTable.setDefaultEditor(String.class, createTimeCellEditor());
     }
     

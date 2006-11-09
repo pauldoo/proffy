@@ -62,10 +62,10 @@ public class Clock implements Comparable<Clock>, Serializable
      */
     public Date convertMemberTimeToMasterTime(Date time, Race race)
     {
-        if (time.getTime() < 0 || time.getTime() >= Constants.MILLISECONDS_PER_DAY) {
-            throw new IllegalArgumentException("Member date is expected to be in the range of one day");
+        if (time.getTime() < 0 || time.getTime() >= race.getDaysCovered() * Constants.MILLISECONDS_PER_DAY) {
+            throw new IllegalArgumentException("Time is outwith the length of the race");
         }
-        time = new Date(time.getTime() + race.clockingDayOffset() - memberSet.getTime() + masterSet.getTime());
+        time = new Date(time.getTime() + race.liberationDayOffset().getTime() - memberSet.getTime() + masterSet.getTime());
         
         long raceDuration = masterOpen.getTime() - masterSet.getTime();
         long totalDrift = (memberOpen.getTime() - memberSet.getTime()) - raceDuration;
