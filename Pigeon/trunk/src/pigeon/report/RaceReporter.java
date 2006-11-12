@@ -92,9 +92,9 @@ public class RaceReporter {
             for (Time time: clock.getTimes()) {
                 birdCount ++;
                 Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
-                long flyTime = correctedClockTime.getTime() - race.getLiberationDate().getTime();
+                double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime()) / 1000.0;
                 Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
-                double velocity = distance.getMetres() * 1000 / flyTime;
+                double velocity = distance.getMetres() / flyTimeInSeconds;
                 StringBuffer line = new StringBuffer();
                 line.append("<td>" + clock.getMember().toString() + "</td>");
                 if (race.getDaysCovered() > 1) {

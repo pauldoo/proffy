@@ -19,6 +19,7 @@
 
 package pigeon.model;
 
+import junit.framework.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,22 +28,33 @@ import java.util.GregorianCalendar;
  *
  * @author pauldoo
  */
-public class Utilities
+public class UtilitiesTest extends TestCase
 {
-    /**
-     * Given a date returns the beggining of the day (using local timezone).
-     */
-    public static Date beginningOfDay(Date date) {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(date);
-        cal = new GregorianCalendar(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH));
-        return cal.getTime();
+    
+    public UtilitiesTest(String testName)
+    {
+        super(testName);
+    }
+
+    protected void setUp() throws Exception
+    {
+    }
+
+    protected void tearDown() throws Exception
+    {
+    }
+
+    public void testRoundToNearestSecond()
+    {
+        assertEquals(0, Utilities.roundToNearestSecond(0));
+        assertEquals(0, Utilities.roundToNearestSecond(499));
+        assertEquals(1000, Utilities.roundToNearestSecond(500));
+        assertEquals(1000, Utilities.roundToNearestSecond(501));
+
+        assertEquals(0, Utilities.roundToNearestSecond(-0));
+        assertEquals(0, Utilities.roundToNearestSecond(-499));
+        assertEquals(-1000, Utilities.roundToNearestSecond(-500));
+        assertEquals(-1000, Utilities.roundToNearestSecond(-501));
     }
     
-    public static long roundToNearestSecond(long time) {
-        return ((time + ((time >= 0) ? 500 : -500)) / 1000) * 1000;
-    }
 }

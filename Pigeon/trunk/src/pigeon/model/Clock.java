@@ -77,15 +77,16 @@ public class Clock implements Comparable<Clock>, Serializable
         } else {
             long shortRun = time.getTime() - masterSet.getTime();
             long longRun = memberOpen.getTime() - memberSet.getTime();
+            long correction;
             if (driftPerDay < (-3 * Constants.MILLISECONDS_PER_MINUTE)) {
                 // Clock is running slow by more than 3 mins per day, perform double correction
-                long correction = totalDrift * shortRun / longRun;
-                time = new Date(time.getTime() - 2*correction);
+                correction = 2 * totalDrift * shortRun / longRun;
             } else {
                 // Clock drift is within +/- 3 mins per day
-                long correction = totalDrift * shortRun / longRun;
-                time = new Date(time.getTime() - correction);
+                correction = totalDrift * shortRun / longRun;
             }
+            correction = Utilities.roundToNearestSecond(correction);
+            time = new Date(time.getTime() - correction);
         }
         return time;
     }
