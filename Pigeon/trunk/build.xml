@@ -66,4 +66,15 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <property name="svnversion.outputfile" value="BuildID.txt"/>
+
+    <target name="-post-compile" depends="BuildID">
+    </target>
+    
+    <target name="BuildID" description="Print svnversion as build id">
+        <exec executable="svnversion" spawn="false" output="${build.classes.dir}/${svnversion.outputfile}">
+            <arg line="."/>
+        </exec>
+    </target>    
 </project>

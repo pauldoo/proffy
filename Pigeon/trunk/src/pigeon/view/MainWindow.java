@@ -24,11 +24,14 @@ import java.awt.Component;
 import java.awt.Container;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -58,7 +61,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     
     private static final long serialVersionUID = 42L;
 
-    private static final String VERSION = "0.1";
+    private static final String VERSION = "0.1" + " (build " + getBuildId() + ")";
     private static final String LICENSE_MESSAGE =
             "Pigeon version " + VERSION + ", Copyright (C) 2005-2006 Paul Richards\n" +
             "Pigeon comes with ABSOLUTELY NO WARRANTY; for details\n" +
@@ -75,6 +78,22 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     public MainWindow() {
         initComponents();
         switchToCard("mainMenu");
+    }
+    
+    private static String getBuildId()
+    {
+        try {
+            InputStream in = ClassLoader.getSystemResourceAsStream("BuildID.txt");
+            if (in != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String buildId = reader.readLine();
+                if (buildId != null) {
+                    return buildId;
+                }
+            }
+        }  catch (IOException e) {
+        }
+        return "unknown";
     }
     
     /** This method is called from within the constructor to
@@ -417,6 +436,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         });
 
         aboutItem.setText("About");
+        aboutItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutItemActionPerformed(evt);
+            }
+        });
+
         helpMenu.add(aboutItem);
 
         menuBar.add(helpMenu);
@@ -425,6 +450,10 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void aboutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutItemActionPerformed
+        JOptionPane.showMessageDialog(this, LICENSE_MESSAGE + "\n\n" + CREDITS, TITLE, JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_aboutItemActionPerformed
 
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
         try {
