@@ -459,9 +459,11 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         try {
             int index = raceresultsTable.getSelectedRow();
             Race race = Utilities.sortCollection(season.getRaces()).get(index);
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(new File("/tmp/test.html")));
-            new RaceReporter(season.getClub(), race).write(out);
-            out.close();
+            File outputFile = File.createTempFile("result", ".html");
+            OutputStream stream = new BufferedOutputStream(new FileOutputStream(outputFile));
+            new RaceReporter(season.getClub(), race).write(stream);
+            stream.close();
+            com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURL().toString());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, e.toString());
         }
