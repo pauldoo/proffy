@@ -22,6 +22,7 @@ package pigeon.view;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Image;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -39,6 +40,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -77,7 +79,21 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     /** Creates new form MainWindow */
     public MainWindow() {
         initComponents();
+        setIconImage(getIcon());
         switchToCard("mainMenu");
+    }
+    
+    private static Image getIcon()
+    {
+        try {
+            InputStream in = ClassLoader.getSystemResourceAsStream("resources/Icon.png");
+            if (in != null) {
+                Image image = ImageIO.read(in);
+                return image;
+            }
+        } catch (IOException e) {
+        }
+        return null;
     }
     
     private static String getBuildId()
