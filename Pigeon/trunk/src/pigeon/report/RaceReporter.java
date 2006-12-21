@@ -66,7 +66,7 @@ public class RaceReporter {
         out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
         out.println("<head>");
         String raceDate = Utilities.DATE_FORMAT.format(race.getLiberationDate());
-        String raceTime = Utilities.TIME_FORMAT.format(race.getLiberationDate());
+        String raceTime = Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         out.println("<title>" + race.getRacepoint().toString() + " on " + raceDate + "</title>");
         out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
         out.println("<style>");
@@ -91,8 +91,12 @@ public class RaceReporter {
             memberCount ++;
             for (Time time: clock.getTimes()) {
                 birdCount ++;
+                //String debugBefore = new Date(time.getMemberTime() + race.liberationDayOffset().getTime()).toString();
                 Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
-                double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime()) / 1000.0;
+                //String debugAfter = correctedClockTime.toString();
+                int nightsSpentSleeping = (int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY);
+                long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
+                double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
                 Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
                 double velocity = distance.getMetres() / flyTimeInSeconds;
                 StringBuffer line = new StringBuffer();
@@ -101,7 +105,7 @@ public class RaceReporter {
                     int days = (int)((correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
                     line.append("<td>" + (days + 1) + "</td>");
                 }
-                line.append("<td>" + Utilities.TIME_FORMAT.format(correctedClockTime) + "</td>");
+                line.append("<td>" + Utilities.TIME_FORMAT_WITH_LOCALE.format(correctedClockTime) + "</td>");
                 line.append("<td>" + distance.getMiles() + "</td>");
                 line.append("<td>"+ distance.getYardsRemainder() + "</td>");
                 line.append("<td>" + time.getRingNumber() + "</td>");

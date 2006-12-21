@@ -23,9 +23,9 @@ import java.awt.Component;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import pigeon.model.Club;
+import pigeon.model.Constants;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
@@ -63,6 +63,14 @@ class RaceSummary extends javax.swing.JPanel {
         minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
         windDirectionText.setText(race.getWindDirection());
+        if (race.hasHoursOfDarkness()) {
+            darknessBeginsHour.setSelectedIndex((int)((race.getDarknessBegins() / Constants.MILLISECONDS_PER_HOUR) - 12));
+            darknessBeginsMinute.setSelectedIndex((int)((race.getDarknessBegins() / Constants.MILLISECONDS_PER_MINUTE) % 60));
+            darknessEndsHour.setSelectedIndex((int)(race.getDarknessEnds() / Constants.MILLISECONDS_PER_HOUR));
+            darknessEndsMinute.setSelectedIndex((int)((race.getDarknessEnds() / Constants.MILLISECONDS_PER_MINUTE) % 60));
+        }
+        
+        updateHoursOfDarknessEnabledStatus();
     }
     
     private void addComboOptions(Club club) {
@@ -100,6 +108,11 @@ class RaceSummary extends javax.swing.JPanel {
                 str = "0" + str;
             }
             hourCombo.addItem(str);
+            if (hour >= 12) {
+                darknessBeginsHour.addItem(str);
+            } else {
+                darknessEndsHour.addItem(str);
+            }
         }
         
         for (int minute = 0; minute <= 59; minute++) {
@@ -108,7 +121,28 @@ class RaceSummary extends javax.swing.JPanel {
                 str = "0" + str;
             }
             minuteCombo.addItem(str);
+            darknessBeginsMinute.addItem(str);
+            darknessEndsMinute.addItem(str);
         }
+    }
+    
+    private boolean hoursOfDarknessEnabled()
+    {
+        int daysCovered = new Integer(daysCoveredCombo.getSelectedItem().toString());
+        return daysCovered > 1;
+    }
+    
+    private void updateHoursOfDarknessEnabledStatus()
+    {
+        boolean enable = hoursOfDarknessEnabled();
+        darknessBeginsText.setEnabled(enable);
+        darknessBeginsHour.setEnabled(enable);
+        darknessBeginsSeperator.setEnabled(enable);
+        darknessBeginsMinute.setEnabled(enable);
+        darknessEndsText.setEnabled(enable);
+        darknessEndsHour.setEnabled(enable);
+        darknessEndsSeperator.setEnabled(enable);
+        darknessEndsMinute.setEnabled(enable);
     }
     
     /** This method is called from within the constructor to
@@ -137,6 +171,14 @@ class RaceSummary extends javax.swing.JPanel {
         windDirectionText = new javax.swing.JTextField();
         daysCoveredLabel = new javax.swing.JLabel();
         daysCoveredCombo = new javax.swing.JComboBox();
+        darknessBeginsText = new javax.swing.JLabel();
+        darknessBeginsHour = new javax.swing.JComboBox();
+        darknessEndsHour = new javax.swing.JComboBox();
+        darknessEndsText = new javax.swing.JLabel();
+        darknessEndsMinute = new javax.swing.JComboBox();
+        darknessBeginsMinute = new javax.swing.JComboBox();
+        darknessEndsSeperator = new javax.swing.JLabel();
+        darknessBeginsSeperator = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -235,7 +277,7 @@ class RaceSummary extends javax.swing.JPanel {
         windDirectionLabel.setText("Wind Direction");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(windDirectionLabel, gridBagConstraints);
@@ -243,7 +285,7 @@ class RaceSummary extends javax.swing.JPanel {
         windDirectionText.setColumns(20);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -257,6 +299,14 @@ class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(daysCoveredLabel, gridBagConstraints);
 
+        daysCoveredCombo.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                daysCoveredComboActionPerformed(evt);
+            }
+        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -265,10 +315,85 @@ class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(daysCoveredCombo, gridBagConstraints);
 
+        darknessBeginsText.setText("Darkness Begins");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessBeginsText, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessBeginsHour, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessEndsHour, gridBagConstraints);
+
+        darknessEndsText.setText("Darkness Ends");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessEndsText, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessEndsMinute, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(darknessBeginsMinute, gridBagConstraints);
+
+        darknessEndsSeperator.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(darknessEndsSeperator, gridBagConstraints);
+
+        darknessBeginsSeperator.setText(":");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
+        add(darknessBeginsSeperator, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
+
+    private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_daysCoveredComboActionPerformed
+    {//GEN-HEADEREND:event_daysCoveredComboActionPerformed
+        updateHoursOfDarknessEnabledStatus();
+    }//GEN-LAST:event_daysCoveredComboActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox darknessBeginsHour;
+    private javax.swing.JComboBox darknessBeginsMinute;
+    private javax.swing.JLabel darknessBeginsSeperator;
+    private javax.swing.JLabel darknessBeginsText;
+    private javax.swing.JComboBox darknessEndsHour;
+    private javax.swing.JComboBox darknessEndsMinute;
+    private javax.swing.JLabel darknessEndsSeperator;
+    private javax.swing.JLabel darknessEndsText;
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JLabel dayMonthSeperator;
     private javax.swing.JComboBox daysCoveredCombo;
@@ -298,6 +423,16 @@ class RaceSummary extends javax.swing.JPanel {
         race.setLiberationDate(liberationDate);
         race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
         race.setWindDirection(windDirectionText.getText());
+        
+        if (hoursOfDarknessEnabled()) {
+            long darknessBegins =
+                    (new Integer(darknessBeginsHour.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_HOUR +
+                    (new Integer(darknessBeginsMinute.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_MINUTE;
+            long darknessEnds =
+                    (new Integer(darknessEndsHour.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_HOUR +
+                    (new Integer(darknessEndsMinute.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_MINUTE;
+            race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
+        }
     }
         
     public static void editRace(Component parent, Race race, Club club, boolean newRace) throws UserCancelledException {

@@ -36,28 +36,32 @@ public class TimeTest extends TestCase {
         String ringNumberBar = "bar";
         final int days = 3;
         
-        Time result1 = new Time(ringNumberFoo);
+        Time result1 = new Time();
+        result1.setRingNumber(ringNumberFoo);
         result1.setMemberTime(1, days);
         
         {
-            Time result2 = new Time(ringNumberFoo);
+            Time result2 = new Time();
+            result2.setRingNumber(ringNumberFoo);
             result2.setMemberTime(1, days);
             assertEquals(result1, result2);
         }
         {
-            Time result2 = new Time(ringNumberFoo);
+            Time result2 = new Time();
+            result2.setRingNumber(ringNumberFoo);
             result2.setMemberTime(2, days);
             assertEquals(result1, result2);
         }
         
         {
-            Time result2 = new Time(ringNumberBar);
+            Time result2 = new Time();
+            result2.setRingNumber(ringNumberBar);
             result2.setMemberTime(1, days);
-
             assertFalse(result1.equals(result2));
         }
         {
-            Time result2 = new Time(ringNumberBar);
+            Time result2 = new Time();
+            result2.setRingNumber(ringNumberBar);
             result2.setMemberTime(2, days);
             assertFalse(result1.equals(result2));
         }

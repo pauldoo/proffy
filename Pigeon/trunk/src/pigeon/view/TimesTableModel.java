@@ -81,7 +81,7 @@ public class TimesTableModel extends AbstractTableModel
             case 1:
                 return (entry.getMemberTime() / Constants.MILLISECONDS_PER_DAY) + 1;
             case 2:
-                return Utilities.TIME_FORMAT.format(new Date(entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
+                return Utilities.TIME_FORMAT_WITHOUT_LOCALE.format(new Date(entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
             default:
                 throw new IllegalArgumentException();
         }
@@ -97,48 +97,6 @@ public class TimesTableModel extends AbstractTableModel
                 return "Clock Time";
             default:
                 throw new IllegalArgumentException();
-        }
-    }
-    
-    public boolean isCellEditable(int row, int column) {
-        switch (column) {
-            case 0:
-                return false;
-            case 1:
-            case 2:
-                return true;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-    
-    public void setValueAt(Object value, int row, int column) {
-        Time entry = getEntry(row);
-        try {
-            switch (column) {
-                case 1: {
-                    int day = ((Integer)value) - 1;
-                    long time = (entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY) + (day * Constants.MILLISECONDS_PER_DAY);
-                    entry.setMemberTime(time, daysInRace);
-                    fireTableRowsUpdated(row, row);
-                }
-                break;
-                case 2: {
-                    try {
-                        Date date = Utilities.TIME_FORMAT.parse((String)value);
-                        long time = Utilities.startOfDay(entry.getMemberTime()) + date.getTime();
-                        entry.setMemberTime(time, daysInRace);
-                        fireTableRowsUpdated(row, row);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-                default:
-                    throw new IllegalArgumentException();
-            }
-        } catch (ValidationException e) {
-            e.displayErrorDialog(null);
         }
     }
 }

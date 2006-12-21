@@ -29,14 +29,12 @@ public class Time implements Comparable<Time>, Serializable
 {
     private static final long serialVersionUID = 42L;
 
-    private String ringNumber;
-    private int time;
+    private String ringNumber = "";
+    private int time = 0;
     
     /** Creates a new instance of Time */
-    public Time(String ringNumber) throws ValidationException
+    public Time()
     {
-        this.setRingNumber(ringNumber);
-        this.setMemberTime(0, 1);
     }
     
     public String getRingNumber()
@@ -54,6 +52,9 @@ public class Time implements Comparable<Time>, Serializable
         return time;
     }
     
+    /**
+     * Member time is measured in ms since the midnight before liberation.
+     */
     public void setMemberTime(long time, int daysInRace) throws ValidationException
     {
         if (time < 0 || time >= daysInRace * Constants.MILLISECONDS_PER_DAY) {

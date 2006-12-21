@@ -34,17 +34,24 @@ public class Utilities {
 
     public static final int BASE_YEAR = 2000;
     
-    // DateFormat for storing times that span just a single day.
+    // DateFormat for formatting times that span just a single day.
     // Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
-    public static final DateFormat TIME_FORMAT;
+    public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE;
     static {
-        TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-        TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+        TIME_FORMAT_WITHOUT_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        TIME_FORMAT_WITHOUT_LOCALE.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
+
+    // DateFormat for formatting times that occur on a real calendar.
+    // Their 'long' representation is not confined to spanning just a single day.
+    public static final DateFormat TIME_FORMAT_WITH_LOCALE;
+    static {
+        TIME_FORMAT_WITH_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+    }
+            
     public static final DateFormat DATE_FORMAT;
     static {
         DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
     
     public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {

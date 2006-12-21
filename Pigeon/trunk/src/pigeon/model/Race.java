@@ -37,6 +37,8 @@ public class Race implements Serializable, Comparable<Race> {
     private Racepoint racepoint;
     private Date liberationDate;
     private int daysCovered = 1;
+    private int darknessBegins;
+    private int darknessEnds;
     private String windDirection;
     private Collection<Clock> clocks = new ArrayList<Clock>();
     
@@ -64,7 +66,50 @@ public class Race implements Serializable, Comparable<Race> {
     public void setLiberationDate(Date date) {
         this.liberationDate = date;
     }
+    
+    public boolean hasHoursOfDarkness()
+    {
+        if (daysCovered > 1 && darknessBegins == 0 && darknessEnds == 0) {
+            // PENDING: Remove this temporary fix for loading PCS files saved with <= b126
+            darknessBegins = (int)(18 * Constants.MILLISECONDS_PER_HOUR);
+            darknessEnds = (int)(6 * Constants.MILLISECONDS_PER_HOUR);
+        }
+        return daysCovered > 1;
+    }
+    
+    public void setHoursOfDarkness(int begins, int ends) throws ValidationException
+    {
+        if (!hasHoursOfDarkness()) {
+            throw new ValidationException("Hours of darkness not applicable for a 1 day race");
+        }
+        int NOON = (int)(12 * Constants.MILLISECONDS_PER_HOUR);
+        int MIDNIGHT = (int)(24 * Constants.MILLISECONDS_PER_HOUR);
+        if (begins < NOON || begins >= MIDNIGHT) {
+            throw new ValidationException("Darkness expected to begin between 12-noon and midnight");
+        }
+        if (ends < 0 || ends >= NOON) {
+            throw new ValidationException("Darkness expected to end between midnight and 12-noon");
+        }
+        this.darknessBegins = begins;
+        this.darknessEnds = ends;
+    }
 
+    public int getDarknessBegins()
+    {
+        if (!hasHoursOfDarkness()) {
+            throw new IllegalArgumentException("Race does not contain hours of darkness");
+        }
+        return darknessBegins;
+    }
+
+    public int getDarknessEnds()
+    {
+        if (!hasHoursOfDarkness()) {
+            throw new IllegalArgumentException("Race does not contain hours of darkness");
+        }
+        return darknessEnds;
+    }
+    
     public boolean equals(Object other) {
         return equals((Race)other);
     }
@@ -135,5 +180,10 @@ public class Race implements Serializable, Comparable<Race> {
     public Date liberationDayOffset()
     {
         return Utilities.beginningOfDay(liberationDate);
+    }
+    
+    public long getLengthOfDarknessEachNight()
+    {
+        return (Constants.MILLISECONDS_PER_DAY + darknessEnds) - darknessBegins;
     }
 }

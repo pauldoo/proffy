@@ -65,6 +65,7 @@ public class ClockEditor extends javax.swing.JPanel
         jPanel1 = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -99,23 +100,41 @@ public class ClockEditor extends javax.swing.JPanel
 
         jPanel1.add(addButton);
 
-        removeButton.setText("Rembove Ring Number");
+        removeButton.setText("Remove Ring Number");
+        removeButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
         jPanel1.add(removeButton);
 
         clockTimesPanel.add(jPanel1, java.awt.BorderLayout.SOUTH);
 
+        jLabel1.setText("Please enter details for all the birds timed in this clock.");
+        clockTimesPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
+
         add(clockTimesPanel, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_removeButtonActionPerformed
+    {//GEN-HEADEREND:event_removeButtonActionPerformed
+        int index = timesTable.getSelectedRow();
+        Time time = clock.getTimes().get(index);
+        clock.removeTime(time);
+        reloadTimesTable();        
+    }//GEN-LAST:event_removeButtonActionPerformed
     
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
-        String ringNumber = JOptionPane.showInputDialog(this, "Please enter the ring number", "New time", JOptionPane.QUESTION_MESSAGE);
         try {
-            clock.addTime(new Time(ringNumber));
+            Time time = RingTimeEditor.createEntry(this, daysInRace);
+            clock.addTime(time);
             reloadTimesTable();
-        } catch (ValidationException e) {
-            e.displayErrorDialog(this);
+        } catch (UserCancelledException e) {
         }
     }//GEN-LAST:event_addButtonActionPerformed
     
@@ -123,11 +142,13 @@ public class ClockEditor extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JPanel clockTimesPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton removeButton;
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
+    
     public static void editClockResults(Component parent, Clock clock, int daysInRace)
     {
         ClockEditor panel = new ClockEditor(clock, daysInRace);
@@ -138,12 +159,5 @@ public class ClockEditor extends javax.swing.JPanel
     private void reloadTimesTable()
     {
         timesTable.setModel(new TimesTableModel(clock, daysInRace, true));
-        timesTable.setDefaultEditor(String.class, createTimeCellEditor());
-    }
-    
-    private static TableCellEditor createTimeCellEditor()
-    {
-        JFormattedTextField formatter = new JFormattedTextField(Utilities.TIME_FORMAT);
-        return new DefaultCellEditor(formatter);
     }
 }
