@@ -823,7 +823,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            while (true) {
             Member member = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
             season.getOrganization().addMember( member );
             try {
