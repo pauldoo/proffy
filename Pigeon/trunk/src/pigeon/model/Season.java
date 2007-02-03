@@ -35,18 +35,18 @@ public class Season implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private String name;
-    private Organization club = new Organization();
+    private Organization organization = new Organization();
     private Collection<Race> races = new ArrayList<Race>();
 
     public Season() {
     }
 
-    public Organization getClub() {
-        return club;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setClub(Organization club) {
-        this.club = club;
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public String getName() {

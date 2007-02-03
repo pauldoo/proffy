@@ -21,10 +21,13 @@ package pigeon.view;
 
 import java.text.DateFormat;
 import java.util.Collection;
+import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.Vector;
 import pigeon.model.Constants;
+import pigeon.model.Member;
+import pigeon.model.Organization;
 
 /**
  * Public static methods for doing various things (mainly manipulating time).
@@ -59,5 +62,33 @@ public class Utilities {
 
     public static long startOfDay(long time) {
         return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
+    }
+    
+    /**
+     * Given an Organization, return a list of all the club names mentioned in member profiles.
+     */
+    public static SortedSet<String> findClubNames(Organization organization)
+    {
+        SortedSet<String> result = new TreeSet<String>();
+        for (Member m: organization.getMembers()) {
+            if (m.getClub() != null && !m.getClub().equals("")) {
+                result.add(m.getClub());
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Given an Organization, return a list of all the section names mentioned in member profiles.
+     */
+    public static SortedSet<String> findSectionNames(Organization organization)
+    {
+        SortedSet<String> result = new TreeSet<String>();
+        for (Member m: organization.getMembers()) {
+            if (m.getSection() != null && !m.getSection().equals("")) {
+                result.add(m.getSection());
+            }
+        }
+        return result;
     }
 }

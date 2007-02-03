@@ -134,7 +134,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         newSeasonButton = new javax.swing.JButton();
         setupClubPanel = new javax.swing.JPanel();
         finishedButton = new javax.swing.JButton();
-        clubPanel = new javax.swing.JPanel();
+        organizationPanel = new javax.swing.JPanel();
         clubNameLabel = new javax.swing.JLabel();
         clubNameText = new javax.swing.JTextField();
         membersPanel = new javax.swing.JPanel();
@@ -233,15 +233,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         setupClubPanel.add(finishedButton, gridBagConstraints);
 
-        clubPanel.setLayout(new java.awt.GridBagLayout());
+        organizationPanel.setLayout(new java.awt.GridBagLayout());
 
-        clubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Club Information"));
-        clubNameLabel.setText("Club Name");
+        organizationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Organisation Information"));
+        clubNameLabel.setText("Organisation Name");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        clubPanel.add(clubNameLabel, gridBagConstraints);
+        organizationPanel.add(clubNameLabel, gridBagConstraints);
 
         clubNameText.addFocusListener(new java.awt.event.FocusAdapter()
         {
@@ -257,11 +257,11 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        clubPanel.add(clubNameText, gridBagConstraints);
+        organizationPanel.add(clubNameText, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        setupClubPanel.add(clubPanel, gridBagConstraints);
+        setupClubPanel.add(organizationPanel, gridBagConstraints);
 
         membersPanel.setLayout(new java.awt.BorderLayout());
 
@@ -521,7 +521,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             Race race = Utilities.sortCollection(season.getRaces()).get(index);
             File outputFile = File.createTempFile("result", ".html");
             OutputStream stream = new BufferedOutputStream(new FileOutputStream(outputFile));
-            new RaceReporter(season.getClub(), race).write(stream);
+            new RaceReporter(season.getOrganization(), race).write(stream);
             stream.close();
             com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURL().toString());
         } catch (IOException e) {
@@ -532,7 +532,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
         try {
             String clubName = clubNameText.getText();
-            season.getClub().setName(clubName);
+            season.getOrganization().setName(clubName);
         } catch (ValidationException e) {
         }
     }//GEN-LAST:event_clubNameTextFocusLost
@@ -591,7 +591,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         int index = raceresultsTable.getSelectedRow();
         Race race = Utilities.sortCollection(season.getRaces()).get(index);
         try {
-            RaceSummary.editRace(this, race, season.getClub(), false);
+            RaceSummary.editRace(this, race, season.getOrganization(), false);
             editResultsForRace( race );
         } catch (UserCancelledException e) {
         }
@@ -600,7 +600,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race race = RaceSummary.createRace(this, season.getClub());
+            Race race = RaceSummary.createRace(this, season.getOrganization());
             season.addRace( race );
             try {
                 editResultsForRace( race );
@@ -617,7 +617,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void editResultsForRace(Race race) throws UserCancelledException {
         Component parent = this.getContentPane();
-        RaceEditor.editRaceResults(parent, race, season.getClub());
+        RaceEditor.editRaceResults(parent, race, season.getOrganization());
     }
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed
@@ -627,14 +627,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
         try {
             String clubName = clubNameText.getText();
-            season.getClub().setName(clubName);
+            season.getOrganization().setName(clubName);
 
-            int memberCount = season.getClub().getNumberOfMembers();
-            int racepointCount = season.getClub().getNumberOfRacepoints();
+            int memberCount = season.getOrganization().getNumberOfMembers();
+            int racepointCount = season.getOrganization().getNumberOfRacepoints();
             String message =
-                    "Have you finished adding all of the members (currently " + memberCount + ") " +
-                    "and racepoints (currently " + racepointCount + ") for the club \"" + season.getClub().getName() + "\"?";
-            int result = JOptionPane.showConfirmDialog(this, message, "Finishing club setup", JOptionPane.YES_NO_OPTION);
+                    "Have you finished adding all of the members (total of " + memberCount + ") " +
+                    "and racepoints (total of " + racepointCount + ") for the " + 
+                    "organisation \"" + season.getOrganization().getName() + "\"?";
+            int result = JOptionPane.showConfirmDialog(this, message, "Finishing organisation setup", JOptionPane.YES_NO_OPTION);
             switch (result) {
                 case JOptionPane.YES_OPTION:
                     promptSaveSeason();
@@ -748,7 +749,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            season.getClub().removeRacepoint( racepoint );
+            season.getOrganization().removeRacepoint( racepoint );
             reloadRacepointsList();
         }
     }//GEN-LAST:event_racepointDeleteButtonActionPerformed
@@ -757,14 +758,14 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Member member = (Member)membersList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + member + "' and all their distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            season.getClub().removeMember( member );
+            season.getOrganization().removeMember( member );
             reloadMembersList();
         }
     }//GEN-LAST:event_memberDeleteButtonActionPerformed
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
         int index = racepointsList.getSelectedIndex();
-        Racepoint racepoint = Utilities.sortCollection( season.getClub().getRacepoints() ).get(index);
+        Racepoint racepoint = Utilities.sortCollection( season.getOrganization().getRacepoints() ).get(index);
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()).toString();
         if (name != null) {
             try {
@@ -790,9 +791,9 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
-        Member member = Utilities.sortCollection(season.getClub().getMembers()).get(index);
+        Member member = Utilities.sortCollection(season.getOrganization().getMembers()).get(index);
         try {
-            MemberInfo.editMember(this, member, false, configuration.getMode());
+            MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
             editDistancesForMember( member );
         } catch (UserCancelledException e) {
         }
@@ -805,11 +806,11 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
              try {
                  Racepoint racepoint = new Racepoint();
                  racepoint.setName(name);
-                 season.getClub().addRacepoint( racepoint );
+                 season.getOrganization().addRacepoint( racepoint );
                  try {
                      editDistancesForRacepoint( racepoint );
                  } catch (UserCancelledException e) {
-                     season.getClub().removeRacepoint(racepoint);
+                     season.getOrganization().removeRacepoint(racepoint);
                      throw e;
                  }
              } catch (UserCancelledException e) {
@@ -822,12 +823,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            Member member = MemberInfo.createMember(this, configuration.getMode());
-            season.getClub().addMember( member );
+            while (true) {
+            Member member = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
+            season.getOrganization().addMember( member );
             try {
                 editDistancesForMember( member );
             } catch (UserCancelledException e) {
-                season.getClub().removeMember( member );
+                season.getOrganization().removeMember( member );
                 throw e;
             }
         } catch (UserCancelledException e) {
@@ -838,7 +840,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
     private void reloadControlData() {
-        clubNameText.setText(season.getClub().getName());
+        clubNameText.setText(season.getOrganization().getName());
         reloadMembersList();
         reloadRacepointsList();
         reloadRacesTable();
@@ -846,11 +848,11 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }
 
     private void reloadMembersList() {
-        membersList.setListData(Utilities.sortCollection(season.getClub().getMembers()));
+        membersList.setListData(Utilities.sortCollection(season.getOrganization().getMembers()));
     }
 
     private void reloadRacepointsList() {
-        racepointsList.setListData(Utilities.sortCollection(season.getClub().getRacepoints()));
+        racepointsList.setListData(Utilities.sortCollection(season.getOrganization().getRacepoints()));
     }
 
     private void reloadRacesTable() {
@@ -879,12 +881,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void editDistancesForMember(Member member) throws UserCancelledException {
         Component parent = this.getContentPane();
-        DistanceEditor.editMemberDistances(parent, member, season.getClub());
+        DistanceEditor.editMemberDistances(parent, member, season.getOrganization());
     }
 
     private void editDistancesForRacepoint(Racepoint racepoint) throws UserCancelledException {
         Component parent = this.getContentPane();
-        DistanceEditor.editRacepointDistances(parent, racepoint, season.getClub());
+        DistanceEditor.editRacepointDistances(parent, racepoint, season.getOrganization());
     }
 
     /**
@@ -957,7 +959,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JLabel clubNameLabel;
     private javax.swing.JTextField clubNameText;
-    private javax.swing.JPanel clubPanel;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
@@ -974,6 +975,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton newSeasonButton;
     private javax.swing.JMenuItem openItem;
+    private javax.swing.JPanel organizationPanel;
     private javax.swing.JButton racepointAddButton;
     private javax.swing.JPanel racepointButtonPanel;
     private javax.swing.JButton racepointDeleteButton;

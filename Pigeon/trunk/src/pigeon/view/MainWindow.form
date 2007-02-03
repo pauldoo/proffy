@@ -142,11 +142,11 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Container class="javax.swing.JPanel" name="clubPanel">
+        <Container class="javax.swing.JPanel" name="organizationPanel">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Club Information"/>
+                <TitledBorder title="Organisation Information"/>
               </Border>
             </Property>
           </Properties>
@@ -160,7 +160,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="clubNameLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Club Name"/>
+                <Property name="text" type="java.lang.String" value="Organisation Name"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

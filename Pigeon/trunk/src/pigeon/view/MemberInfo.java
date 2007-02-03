@@ -22,6 +22,7 @@ package pigeon.view;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import pigeon.model.Member;
+import pigeon.model.Organization;
 import pigeon.model.ValidationException;
 
 /**
@@ -32,10 +33,35 @@ class MemberInfo extends javax.swing.JPanel {
     private static final long serialVersionUID = 42L;
 
     private Member member;
+    private Organization organization;
 
-    public MemberInfo(Member member, boolean editable, Configuration.Mode applicationMode) {
+    public MemberInfo(Member member, Organization organization, boolean editable, Configuration.Mode applicationMode) {
         this.member = member;
+        this.organization = organization;
         initComponents();
+        switch (applicationMode) {
+            case FEDERATION:
+                for (String c: Utilities.findClubNames(organization)) {
+                    clubCombo.addItem(c);
+                }
+                clubCombo.setSelectedItem( member.getClub() );
+                clubCombo.setEditable( editable );
+
+                for (String s: Utilities.findSectionNames(organization)) {
+                    sectionCombo.addItem(s);
+                }
+                sectionCombo.setSelectedItem( member.getSection() );
+                sectionCombo.setEditable( editable );
+                break;
+                
+            case CLUB:
+                clubCombo.setSelectedItem( organization.getName() );
+                clubLabel.setEnabled( false );
+                clubCombo.setEnabled( false );
+                sectionLabel.setEnabled( false );
+                sectionCombo.setEnabled( false );
+                break;
+        }
         nameText.setText( member.getName() );
         nameText.setEditable( editable );
         addressText.setText( member.getAddress() );
@@ -46,7 +72,12 @@ class MemberInfo extends javax.swing.JPanel {
         SHUNumberText.setEditable( editable );
     }
 
-    private void updateMemberObject() throws ValidationException {
+    private void updateMemberObject() throws ValidationException
+    {
+        if (clubCombo.isEnabled()) {
+            member.setClub( clubCombo.getSelectedItem().toString() );
+            member.setSection( sectionCombo.getSelectedItem().toString() );
+        }
         member.setName( nameText.getText() );
         member.setAddress( addressText.getText() );
         member.setTelephone( telephoneText.getText() );
@@ -73,6 +104,10 @@ class MemberInfo extends javax.swing.JPanel {
         memberInformationLabel = new javax.swing.JLabel();
         SHUNumberLabel = new javax.swing.JLabel();
         SHUNumberText = new javax.swing.JTextField();
+        clubLabel = new javax.swing.JLabel();
+        sectionLabel = new javax.swing.JLabel();
+        clubCombo = new javax.swing.JComboBox();
+        sectionCombo = new javax.swing.JComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -80,7 +115,7 @@ class MemberInfo extends javax.swing.JPanel {
         nameLabel.setText("Member Name");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(nameLabel, gridBagConstraints);
@@ -88,17 +123,17 @@ class MemberInfo extends javax.swing.JPanel {
         nameText.setColumns(20);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(nameText, gridBagConstraints);
 
         addressLabel.setText("Contact Address");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(addressLabel, gridBagConstraints);
@@ -108,27 +143,27 @@ class MemberInfo extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(addressScrollPane, gridBagConstraints);
 
         telephoneLabel.setText("Telephone No.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(telephoneLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(telephoneText, gridBagConstraints);
 
@@ -136,7 +171,7 @@ class MemberInfo extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(memberInformationLabel, gridBagConstraints);
@@ -144,19 +179,55 @@ class MemberInfo extends javax.swing.JPanel {
         SHUNumberLabel.setText("SHU Registration No.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(SHUNumberLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(SHUNumberText, gridBagConstraints);
+
+        clubLabel.setText("Club");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(clubLabel, gridBagConstraints);
+
+        sectionLabel.setText("Section");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(sectionLabel, gridBagConstraints);
+
+        clubCombo.setEditable(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(clubCombo, gridBagConstraints);
+
+        sectionCombo.setEditable(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(sectionCombo, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
 
@@ -167,9 +238,13 @@ class MemberInfo extends javax.swing.JPanel {
     private javax.swing.JLabel addressLabel;
     private javax.swing.JScrollPane addressScrollPane;
     private javax.swing.JTextArea addressText;
+    private javax.swing.JComboBox clubCombo;
+    private javax.swing.JLabel clubLabel;
     private javax.swing.JLabel memberInformationLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameText;
+    private javax.swing.JComboBox sectionCombo;
+    private javax.swing.JLabel sectionLabel;
     private javax.swing.JLabel telephoneLabel;
     private javax.swing.JTextField telephoneText;
     // End of variables declaration//GEN-END:variables
@@ -177,11 +252,12 @@ class MemberInfo extends javax.swing.JPanel {
     public static void editMember(
         Component parent,
         Member member,
+        Organization organization,
         boolean newMember,
         Configuration.Mode applicationMode
     ) throws UserCancelledException
     {
-        MemberInfo panel = new MemberInfo(member, true, applicationMode);
+        MemberInfo panel = new MemberInfo(member, organization, true, applicationMode);
         while (true) {
             Object[] options = { (newMember ? "Add" : "Ok"), "Cancel" };
             int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -193,7 +269,7 @@ class MemberInfo extends javax.swing.JPanel {
                     e.displayErrorDialog(parent);
                 }
             } else {
-                result = JOptionPane.showConfirmDialog(parent, "Return to Club window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                result = JOptionPane.showConfirmDialog(parent, "Return to main window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
                     throw new UserCancelledException();
                 }
@@ -201,9 +277,14 @@ class MemberInfo extends javax.swing.JPanel {
         }
     }
 
-    public static Member createMember(Component parent, Configuration.Mode applicationMode) throws UserCancelledException {
+    public static Member createMember(
+        Component parent,
+        Organization organization,
+        Configuration.Mode applicationMode
+    ) throws UserCancelledException
+    {
         Member member = new Member();
-        editMember(parent, member, true, applicationMode);
+        editMember(parent, member, organization, true, applicationMode);
         return member;
     }
 }

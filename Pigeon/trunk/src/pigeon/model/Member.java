@@ -30,6 +30,11 @@ public class Member implements Serializable, Comparable<Member> {
 
     private static final long serialVersionUID = 42L;
 
+    // Only populated in FEDERATION mode
+    private String club;
+    // Only populated in FEDERATION mode
+    private String section;
+    
     private String name;
     private String address;
     private String telephone;
@@ -83,7 +88,7 @@ public class Member implements Serializable, Comparable<Member> {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.address = address.trim();
     }
 
     public String getTelephone() {
@@ -91,7 +96,7 @@ public class Member implements Serializable, Comparable<Member> {
     }
 
     public void setTelephone(String telephone) {
-        this.telephone = telephone;
+        this.telephone = telephone.trim();
     }
 
     public String getSHUNumber() {
@@ -99,6 +104,26 @@ public class Member implements Serializable, Comparable<Member> {
     }
 
     public void setSHUNumber(String SHUNumber) {
-        this.SHUNumber = SHUNumber;
+        this.SHUNumber = SHUNumber.trim();
+    }
+
+    public String getClub()
+    {
+        return club;
+    }
+
+    public void setClub(String club)
+    {
+        this.club = club.trim();
+    }
+
+    public String getSection()
+    {
+        return section;
+    }
+
+    public void setSection(String section)
+    {
+        this.section = section.trim();
     }
 }

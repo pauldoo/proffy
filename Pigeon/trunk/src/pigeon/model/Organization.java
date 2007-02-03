@@ -52,7 +52,7 @@ public class Organization implements Serializable
     public void setName(String name) throws ValidationException {
         name = name.trim();
         if (name.length() == 0) {
-            throw new ValidationException("Club name is empty");
+            throw new ValidationException("Organisation name is empty");
         }
         this.name = name;
     }
