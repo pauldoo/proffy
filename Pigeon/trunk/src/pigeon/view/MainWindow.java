@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -55,34 +55,35 @@ import pigeon.model.ValidationException;
 import pigeon.report.RaceReporter;
 
 /**
- * Entry point and top level window.
+ * Application entry point and top level window.
+ *
  * All top level windows exist in here and are switched between using the card layout.
- * @author  Paul
  */
 class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
-    
+
     private static final long serialVersionUID = 42L;
 
     private static final String VERSION = "0.1" + " (build " + getBuildId() + ")";
     private static final String LICENSE_MESSAGE =
-            "Pigeon version " + VERSION + ", Copyright (C) 2005-2006 Paul Richards\n" +
+            "Pigeon version " + VERSION + ", Copyright (C) 2005-2007 Paul Richards\n" +
             "Pigeon comes with ABSOLUTELY NO WARRANTY; for details\n" +
             "see the file COPYRIGHT.txt.  This is free software, and you are welcome\n" +
             "to redistribute it under certain conditions; see the file COPYRIGHT.txt\n" +
             "for details.";
-    private static final String TITLE = "Pigeon v" + VERSION;
+    public static final String TITLE = "Pigeon v" + VERSION;
     private static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>";
-    
+
+    private final Configuration configuration;
     private Season season;
     private File currentlyLoadedFile;
-    
-    /** Creates new form MainWindow */
-    public MainWindow() {
+
+    public MainWindow(Configuration configuration) {
+        this.configuration = configuration;
         initComponents();
         setIconImage(getIcon());
         switchToCard("mainMenu");
     }
-    
+
     private static Image getIcon()
     {
         try {
@@ -95,8 +96,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         }
         return null;
     }
-    
-    private static String getBuildId()
+
+    public static String getBuildId()
     {
         try {
             InputStream in = ClassLoader.getSystemResourceAsStream("BuildID.txt");
@@ -111,7 +112,13 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         }
         return "unknown";
     }
-    
+
+    private static Configuration loadConfiguration() throws IOException
+    {
+        InputStream in = ClassLoader.getSystemResourceAsStream("configuration.xml");
+        return new Configuration(in);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -587,20 +594,20 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             RaceSummary.editRace(this, race, season.getClub(), false);
             editResultsForRace( race );
         } catch (UserCancelledException e) {
-        }    
+        }
         reloadRacesTable();
     }//GEN-LAST:event_raceresultEditButtonActionPerformed
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race race = RaceSummary.createRace(this, season.getClub());  
+            Race race = RaceSummary.createRace(this, season.getClub());
             season.addRace( race );
             try {
                 editResultsForRace( race );
             } catch (UserCancelledException e) {
                 season.removeRace( race );
                 throw e;
-            }            
+            }
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
@@ -612,7 +619,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Component parent = this.getContentPane();
         RaceEditor.editRaceResults(parent, race, season.getClub());
     }
-    
+
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed
         promptLoadSeason();
     }//GEN-LAST:event_loadSeasonButtonActionPerformed
@@ -719,7 +726,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
                 throw new IllegalStateException();
         }
     }
-    
+
     private void writeSeasonToFile(File file) throws FileNotFoundException, IOException {
         ObjectOutput out = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file))));
         out.writeObject(season);
@@ -735,15 +742,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         setSeason( loaded );
         this.currentlyLoadedFile = file;
     }
-    
-    
+
+
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             season.getClub().removeRacepoint( racepoint );
             reloadRacepointsList();
-        }        
+        }
     }//GEN-LAST:event_racepointDeleteButtonActionPerformed
 
     private void memberDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberDeleteButtonActionPerformed
@@ -752,7 +759,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         if (result == JOptionPane.YES_OPTION) {
             season.getClub().removeMember( member );
             reloadMembersList();
-        }    
+        }
     }//GEN-LAST:event_memberDeleteButtonActionPerformed
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
@@ -780,15 +787,15 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     public void valueChanged(ListSelectionEvent event) {
         refreshButtons();
     }
-    
+
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
         Member member = Utilities.sortCollection(season.getClub().getMembers()).get(index);
         try {
-            MemberInfo.editMember(this, member, false);
+            MemberInfo.editMember(this, member, false, configuration.getMode());
             editDistancesForMember( member );
         } catch (UserCancelledException e) {
-        }    
+        }
         reloadMembersList();
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
@@ -815,7 +822,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            Member member = MemberInfo.createMember(this);  
+            Member member = MemberInfo.createMember(this, configuration.getMode());
             season.getClub().addMember( member );
             try {
                 editDistancesForMember( member );
@@ -841,22 +848,22 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private void reloadMembersList() {
         membersList.setListData(Utilities.sortCollection(season.getClub().getMembers()));
     }
-    
+
     private void reloadRacepointsList() {
         racepointsList.setListData(Utilities.sortCollection(season.getClub().getRacepoints()));
     }
-    
+
     private void reloadRacesTable() {
         raceresultsTable.setModel(new RacesTableModel(Utilities.sortCollection(season.getRaces())));
     }
-    
+
     private void refreshButtons() {
         memberEditButton.setEnabled( membersList.getSelectedIndex() != -1 );
         memberDeleteButton.setEnabled( membersList.getSelectedIndex() != -1 );
         racepointEditButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
     }
-    
+
     private void switchToCard(String cardName) {
         Container parent = this.getContentPane();
         ((CardLayout)parent.getLayout()).show(parent, cardName);
@@ -864,12 +871,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         saveItem.setEnabled(isSomethingLoaded);
         closeItem.setEnabled(isSomethingLoaded);
     }
-    
+
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
         setSeason( new Season() );
         switchToCard("setupClub");
     }//GEN-LAST:event_newSeasonButtonActionPerformed
-    
+
     private void editDistancesForMember(Member member) throws UserCancelledException {
         Component parent = this.getContentPane();
         DistanceEditor.editMemberDistances(parent, member, season.getClub());
@@ -879,11 +886,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         Component parent = this.getContentPane();
         DistanceEditor.editRacepointDistances(parent, racepoint, season.getClub());
     }
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException
+    {
         ExceptionHandler.register();
         checkAssertions();
         setSwingLAF();
@@ -893,25 +901,23 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         if (result != 0) {
             return;
         }
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MainWindow window = new MainWindow();
-                window.setLocationRelativeTo(null);
-                window.setVisible(true);
-            }
-        });
+
+        Configuration configuration = loadConfiguration();
+        Configuration.Mode m = configuration.getMode();
+        MainWindow window = new MainWindow(configuration);
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
     }
 
     public Season getSeason() {
         return season;
     }
-    
+
     public void setSeason(Season season) {
         this.season = season;
         reloadControlData();
     }
-    
+
     private static void checkAssertions() {
         boolean assertsEnabled = false;
         assert assertsEnabled = true; // Intentional side effect!!!
@@ -919,15 +925,16 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             System.err.println("WARNING: Assertions are not enabled.");
         }
     }
-    
+
     private static void setSwingLAF() {
         try {
             String name = UIManager.getSystemLookAndFeelClassName();
             //String name = UIManager.getCrossPlatformLookAndFeelClassName();
             UIManager.setLookAndFeel(name);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
     }
-    
+
     void closeFile() throws UserCancelledException {
         if (this.season != null) {
             int result = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_OPTION);
@@ -944,7 +951,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             this.currentlyLoadedFile = null;
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutItem;
     private javax.swing.JMenuItem closeItem;
@@ -986,5 +993,5 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
-    
+
 }

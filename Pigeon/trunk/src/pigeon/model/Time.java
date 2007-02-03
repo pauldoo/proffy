@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +22,7 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- *
- * @author pauldoo
+ * Represents the clocking time for a single ring number.
  */
 public class Time implements Comparable<Time>, Serializable
 {
@@ -31,27 +30,26 @@ public class Time implements Comparable<Time>, Serializable
 
     private String ringNumber = "";
     private int time = 0;
-    
-    /** Creates a new instance of Time */
+
     public Time()
     {
     }
-    
+
     public String getRingNumber()
     {
         return ringNumber;
     }
-    
+
     public void setRingNumber(String ringNumber)
     {
         this.ringNumber = ringNumber;
     }
-    
+
     public long getMemberTime()
     {
         return time;
     }
-    
+
     /**
      * Member time is measured in ms since the midnight before liberation.
      */
@@ -62,17 +60,17 @@ public class Time implements Comparable<Time>, Serializable
         }
         this.time = (int)time;
     }
-    
+
     public boolean equals(Object other)
     {
         return equals((Time)other);
     }
-    
+
     public boolean equals(Time other)
     {
         return this.getRingNumber().equals(other.getRingNumber());
     }
-    
+
     public int compareTo(Time other)
     {
         return this.getRingNumber().compareTo(other.getRingNumber());

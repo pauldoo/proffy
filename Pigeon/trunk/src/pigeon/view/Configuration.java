@@ -17,19 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package pigeon.model;
+package pigeon.view;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
- * Some simple constants used for conversions.
+ * Loads the application configuration from an XML file.
  */
-public class Constants
+public class Configuration
 {
-    public static final double METRES_PER_YARD = 0.9144;
-    public static final int YARDS_PER_MILE = 1760;
-    public static final double METRES_PER_SECOND_TO_YARDS_PER_MINUTE = 60 / METRES_PER_YARD;
+    public static enum Mode {
+        FEDERATION,
+        CLUB
+    }
 
-    public static final long MILLISECONDS_PER_SECOND = 1000;
-    public static final long MILLISECONDS_PER_MINUTE = 60 * MILLISECONDS_PER_SECOND;
-    public static final long MILLISECONDS_PER_HOUR = 60 * MILLISECONDS_PER_MINUTE;
-    public static final long MILLISECONDS_PER_DAY = 24 * MILLISECONDS_PER_HOUR;
+    public Configuration(InputStream input) throws IOException
+    {
+        properties.loadFromXML(input);
+    }
+
+    public Mode getMode()
+    {
+        return Mode.valueOf(properties.getProperty("Mode"));
+    }
+
+    private final Properties properties = new Properties();
 }

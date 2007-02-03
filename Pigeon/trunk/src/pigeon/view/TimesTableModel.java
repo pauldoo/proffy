@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,37 +28,35 @@ import pigeon.model.Time;
 import pigeon.model.ValidationException;
 
 /**
- * Represents the times entered for a clock by listing the ring numbers and the time currently entered.
- * @author pauldoo
+ * Shows the times entered for a clock by listing the ring numbers and times currently entered.
  */
 public class TimesTableModel extends AbstractTableModel
 {
     private static final long serialVersionUID = 42L;
-    
+
     private final Clock clock;
     private final int daysInRace;
     private final boolean editable;
 
-    /** Creates a new instance of TimesTableModel */
     public TimesTableModel(Clock clock, int daysInRace, boolean editable)
     {
         this.clock = clock;
         this.daysInRace = daysInRace;
         this.editable = editable;
     }
-    
+
     public int getRowCount() {
         return clock.getTimes().size();
     }
-    
+
     public int getColumnCount() {
         return 3;
     }
-    
+
     private Time getEntry(int row) {
         return clock.getTimes().get(row);
     }
-    
+
     public Class getColumnClass(int column) {
         switch (column) {
             case 0:
@@ -71,10 +69,10 @@ public class TimesTableModel extends AbstractTableModel
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public Object getValueAt(int row, int column) {
         Time entry = getEntry(row);
-        
+
         switch (column) {
             case 0:
                 return entry.getRingNumber();
@@ -86,7 +84,7 @@ public class TimesTableModel extends AbstractTableModel
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public String getColumnName(int column) {
         switch (column) {
             case 0:

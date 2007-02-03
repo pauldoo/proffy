@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -26,33 +26,33 @@ import javax.swing.table.AbstractTableModel;
 import pigeon.model.Distance;
 
 /**
- * Used by the DistanceEditor.
  * Generic class to edit distances associated with a list of objects (members or racepoints).
- * @author Paul
+ *
+ * Used by the DistanceEditor.
  */
 class DistancesTableModel<Target> extends AbstractTableModel {
 
     private static final long serialVersionUID = 42L;
-    
+
     private final String targetTitle;
     private final SortedMap<Target, Distance> distances;
     private final boolean editable;
-    
+
     /** Creates a new instance of DistancesTableModel */
     public DistancesTableModel(String targetTitle, SortedMap<Target, Distance> distances, boolean editable) {
         this.targetTitle = targetTitle;
         this.distances = distances;
         this.editable = editable;
     }
-    
+
     public int getRowCount() {
         return distances.size();
     }
-    
+
     public int getColumnCount() {
         return 3;
     }
-    
+
     private Map.Entry<Target, Distance> getEntry(int row) {
         Set<Map.Entry<Target, Distance>> entries = distances.entrySet();
         Iterator<Map.Entry<Target, Distance>> iter = entries.iterator();
@@ -61,7 +61,7 @@ class DistancesTableModel<Target> extends AbstractTableModel {
         }
         return iter.next();
     }
-    
+
     public Class getColumnClass(int column) {
         switch (column) {
             case 0:
@@ -74,10 +74,10 @@ class DistancesTableModel<Target> extends AbstractTableModel {
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public Object getValueAt(int row, int column) {
         Map.Entry<Target, Distance> entry = getEntry(row);
-        
+
         switch (column) {
             case 0:
                 return entry.getKey();
@@ -89,7 +89,7 @@ class DistancesTableModel<Target> extends AbstractTableModel {
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public String getColumnName(int column) {
         switch (column) {
             case 0:
@@ -102,7 +102,7 @@ class DistancesTableModel<Target> extends AbstractTableModel {
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public boolean isCellEditable(int row, int column) {
         switch (column) {
             case 0:
@@ -114,7 +114,7 @@ class DistancesTableModel<Target> extends AbstractTableModel {
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public void setValueAt(Object value, int row, int column) {
         Map.Entry<Target, Distance> entry = getEntry(row);
         switch (column) {
@@ -138,5 +138,5 @@ class DistancesTableModel<Target> extends AbstractTableModel {
                 throw new IllegalArgumentException();
         }
     }
-    
+
 }

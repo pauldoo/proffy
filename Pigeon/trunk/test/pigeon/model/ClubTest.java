@@ -55,7 +55,7 @@ public class ClubTest extends TestCase {
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException, ValidationException {
-        Club club = new Club();
+        Organization club = new Organization();
         {
             List<Member> members = new ArrayList<Member>();
             List<Racepoint> racepoints = new ArrayList<Racepoint>();
@@ -81,11 +81,11 @@ public class ClubTest extends TestCase {
         club = null;
         objOut.close();
 
-        // Club written out
+        // Organization written out
         
         InputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
         ObjectInput objIn = new ObjectInputStream(byteIn);
-        club = (Club)objIn.readObject();
+        club = (Organization)objIn.readObject();
         
         verifyReferences(club);
     }
@@ -95,7 +95,7 @@ public class ClubTest extends TestCase {
      * structure are the same instances that are present in the member/racepoint
      * lists.
      */
-    private void verifyReferences(Club club) {
+    private void verifyReferences(Organization club) {
         for (Member member: club.getMembers()) {
             for (Racepoint racepoint: club.getRacepoints()) {
                 DistanceEntry e = club.getDistanceEntry(member, racepoint);
@@ -106,7 +106,7 @@ public class ClubTest extends TestCase {
     }
     
     public void testClashes() throws ValidationException {
-        Club club = new Club();
+        Organization club = new Organization();
         {
             Member m = new Member();
             m.setName("foo");

@@ -68,12 +68,27 @@
     -->
     
     <target name="-post-compile" depends="BuildID"/>
-    <target name="-pre-jar" depends="Resources"/>
+    <target name="-pre-jar" depends="Configuration,Copyright,Resources"/>
 
     <target name="BuildID" description="Print svnversion as build id">
         <exec executable="svnversion" spawn="false" output="${build.classes.dir}/BuildID.txt">
             <arg line="."/>
         </exec>
+    </target>
+    
+    <target name="Configuration" description="Copy configuration.xml into jar">
+        <copy todir="${build.classes.dir}">
+            <fileset file="configuration.xml"/>
+        </copy>
+    </target>
+
+    <target name="Copyright" description="Copy COPYRIGHT.txt into jar and dist directory">
+        <copy todir="${build.classes.dir}">
+            <fileset file="COPYRIGHT.txt"/>
+        </copy>
+        <copy todir="${dist.dir}">
+            <fileset file="COPYRIGHT.txt"/>
+        </copy>
     </target>
     
     <target name="Resources" description="Copy resources directory into jar">

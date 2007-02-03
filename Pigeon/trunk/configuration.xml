@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>
+        This file contains configuration settings which cannot be access through the GUI.
+        
+        Mode:  Can be either "FEDERATION" or "CLUB".
+    </comment>
+    <entry key="Mode">FEDERATION</entry>
+</properties>

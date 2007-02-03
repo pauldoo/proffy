@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,18 +30,18 @@ import pigeon.model.Time;
 import pigeon.model.ValidationException;
 
 /**
- * Edits the list of times associated with a clock.  The ClockSummary class edits the basic info like open / close times.
- * @author  pauldoo
+ * Edits the list of times associated with a clock.
+ *
+ * The ClockSummary class edits the higher level info like open / close times.
  */
 public class ClockEditor extends javax.swing.JPanel
 {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private final Clock clock;
     private final int daysInRace;
-    
-    /** Creates new form ClockEditor */
+
     public ClockEditor(Clock clock, int daysInRace)
     {
         this.clock = clock;
@@ -50,7 +50,7 @@ public class ClockEditor extends javax.swing.JPanel
         clockTimesPanel.setBorder(new javax.swing.border.TitledBorder("Clock Times For " + clock.getMember()));
         reloadTimesTable();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -125,9 +125,9 @@ public class ClockEditor extends javax.swing.JPanel
         int index = timesTable.getSelectedRow();
         Time time = clock.getTimes().get(index);
         clock.removeTime(time);
-        reloadTimesTable();        
+        reloadTimesTable();
     }//GEN-LAST:event_removeButtonActionPerformed
-    
+
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
         try {
@@ -137,8 +137,8 @@ public class ClockEditor extends javax.swing.JPanel
         } catch (UserCancelledException e) {
         }
     }//GEN-LAST:event_addButtonActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JPanel clockTimesPanel;
@@ -148,14 +148,14 @@ public class ClockEditor extends javax.swing.JPanel
     private javax.swing.JButton removeButton;
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
-    
+
     public static void editClockResults(Component parent, Clock clock, int daysInRace)
     {
         ClockEditor panel = new ClockEditor(clock, daysInRace);
         Object[] options = {"Finished"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
-    
+
     private void reloadTimesTable()
     {
         timesTable.setModel(new TimesTableModel(clock, daysInRace, true));

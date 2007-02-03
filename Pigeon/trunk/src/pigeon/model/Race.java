@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -27,13 +27,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
+ * Stores information about a race.
  *
- * @author pauldoo
+ * Contains basic information like date, time, wind direction etc, along with a
+ * list of the Clock objects (one per member).
  */
 public class Race implements Serializable, Comparable<Race> {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private Racepoint racepoint;
     private Date liberationDate;
     private int daysCovered = 1;
@@ -41,7 +43,7 @@ public class Race implements Serializable, Comparable<Race> {
     private int darknessEnds;
     private String windDirection;
     private Collection<Clock> clocks = new ArrayList<Clock>();
-    
+
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
@@ -66,17 +68,12 @@ public class Race implements Serializable, Comparable<Race> {
     public void setLiberationDate(Date date) {
         this.liberationDate = date;
     }
-    
+
     public boolean hasHoursOfDarkness()
     {
-        if (daysCovered > 1 && darknessBegins == 0 && darknessEnds == 0) {
-            // PENDING: Remove this temporary fix for loading PCS files saved with <= b126
-            darknessBegins = (int)(18 * Constants.MILLISECONDS_PER_HOUR);
-            darknessEnds = (int)(6 * Constants.MILLISECONDS_PER_HOUR);
-        }
         return daysCovered > 1;
     }
-    
+
     public void setHoursOfDarkness(int begins, int ends) throws ValidationException
     {
         if (!hasHoursOfDarkness()) {
@@ -109,11 +106,11 @@ public class Race implements Serializable, Comparable<Race> {
         }
         return darknessEnds;
     }
-    
+
     public boolean equals(Object other) {
         return equals((Race)other);
     }
-    
+
     public boolean equals(Race other) {
         if (this == other) {
             return true;
@@ -122,7 +119,7 @@ public class Race implements Serializable, Comparable<Race> {
                 liberationDate.equals(other.liberationDate) &&
                 racepoint.equals(other.racepoint);
     }
-    
+
     public int compareTo(Race other) {
         if (this == other) {
             return 0;
@@ -152,36 +149,36 @@ public class Race implements Serializable, Comparable<Race> {
     public void setWindDirection(String windDirection) {
         this.windDirection = windDirection.trim();
     }
-    
+
     public String toString()
     {
         return racepoint + " (" + liberationDate + ")";
     }
-    
+
     public void addClock(Clock clock) throws ValidationException
     {
         if (clocks.contains( clock ) || !clocks.add( clock )) {
             throw new ValidationException("Member clock already exists");
         }
     }
-    
+
     public void removeClock(Clock clock) throws ValidationException
     {
         if (!clocks.contains( clock ) || !clocks.remove( clock )) {
             throw new ValidationException("Member clock does not exists");
         }
     }
-    
+
     public Collection<Clock> getClocks()
     {
         return clocks;
     }
-    
+
     public Date liberationDayOffset()
     {
         return Utilities.beginningOfDay(liberationDate);
     }
-    
+
     public long getLengthOfDarknessEachNight()
     {
         return (Constants.MILLISECONDS_PER_DAY + darknessEnds) - darknessBegins;

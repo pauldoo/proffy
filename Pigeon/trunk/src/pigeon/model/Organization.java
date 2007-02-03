@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -26,20 +26,23 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
+ * Stores top level information about a racing organization (be that a federation or club).
  *
- * @author Paul
+ * Maintains a list of members, racepoints, and distance entries.
+ *
+ * This class was once called "Club", and sadly many places in the codebase still refer to
+ * the old name.
  */
-public class Club implements Serializable
+public class Organization implements Serializable
 {
     private static final long serialVersionUID = 42L;
-    
+
     private String name;
     private Collection<Member> members = new ArrayList<Member>();
     private Collection<Racepoint> racepoints = new ArrayList<Racepoint>();
     private Collection<DistanceEntry> distances = new ArrayList<DistanceEntry>();
-    
-    /** Creates a new instance of Club */
-    public Club() {
+
+    public Organization() {
     }
 
     public String getName() {
@@ -65,7 +68,7 @@ public class Club implements Serializable
     public Collection<Racepoint> getRacepoints() {
         return racepoints;
     }
-    
+
     public void addMember(Member member) throws ValidationException {
         if (members.contains( member ) || !members.add( member )) {
             throw new ValidationException("Member already exists");
@@ -89,7 +92,7 @@ public class Club implements Serializable
             }
         }
     }
-    
+
     public void removeMember(Member member) {
         if (!members.contains( member ) || !members.remove( member )) {
             throw new IllegalArgumentException("Member doesn't exist");
@@ -101,7 +104,7 @@ public class Club implements Serializable
             }
         }
     }
-    
+
     public void removeRacepoint(Racepoint racepoint) {
         if (!racepoints.contains( racepoint ) || !racepoints.remove( racepoint )) {
             throw new IllegalArgumentException("Racepoint doesn't exist");
@@ -113,11 +116,11 @@ public class Club implements Serializable
             }
         }
     }
-    
+
     public int getNumberOfMembers() {
         return members.size();
     }
-    
+
     public int getNumberOfRacepoints() {
         return racepoints.size();
     }
@@ -131,15 +134,15 @@ public class Club implements Serializable
         }
         throw new IllegalArgumentException("Member / Racepoint doesn't exist");
     }
-    
+
     public Distance getDistance(Member member, Racepoint racepoint) {
         return getDistanceEntry(member, racepoint).getDistance();
     }
-    
+
     public void setDistance(Member member, Racepoint racepoint, Distance distance) {
         getDistanceEntry(member, racepoint).setDistance(distance);
     }
-    
+
     public SortedMap<Racepoint, Distance> getDistancesForMember(Member member) {
         SortedMap<Racepoint, Distance> retval = new TreeMap<Racepoint, Distance>();
         for (Racepoint racepoint: racepoints) {
@@ -147,7 +150,7 @@ public class Club implements Serializable
         }
         return retval;
     }
-    
+
     public SortedMap<Member, Distance> getDistancesForRacepoint(Racepoint racepoint) {
         SortedMap<Member, Distance> retval = new TreeMap<Member, Distance>();
         for (Member member: members) {
@@ -155,5 +158,5 @@ public class Club implements Serializable
         }
         return retval;
     }
-        
+
 }

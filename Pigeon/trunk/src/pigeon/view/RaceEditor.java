@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -24,24 +24,24 @@ import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import pigeon.model.Clock;
-import pigeon.model.Club;
+import pigeon.model.Organization;
 import pigeon.model.Member;
 import pigeon.model.Race;
 import pigeon.model.ValidationException;
 
 /**
- * Lists the clocks for a given race and lets the user add more clocks
- * or go on to edit the times associated with one of the clocks (using ClockEditor).
- * @author  pauldoo
+ * Lists the clocks for a given race.
+ *
+ * Lets the user add more clocks or go on to edit the times
+ * associated with one of the clocks (using ClockEditor).
  */
 public class RaceEditor extends javax.swing.JPanel {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private final Race race;
     Collection<Member> members;
-        
-    /** Creates new form RaceEditor */
+
     public RaceEditor(Race race, Collection<Member> members) {
         this.race = race;
         this.members = members;
@@ -49,7 +49,7 @@ public class RaceEditor extends javax.swing.JPanel {
         reloadClocksTable();
         ((TitledBorder)jPanel1.getBorder()).setTitle("Clocks for " + race.toString());
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -155,7 +155,7 @@ public class RaceEditor extends javax.swing.JPanel {
             ClockSummary.editClock(this, clock, members, false);
             editResultsForClock( clock );
         } catch (UserCancelledException e) {
-        }    
+        }
         reloadClocksTable();
     }//GEN-LAST:event_editClockButtonActionPerformed
 
@@ -163,24 +163,24 @@ public class RaceEditor extends javax.swing.JPanel {
     {
         ClockEditor.editClockResults(this, clock, race.getDaysCovered());
     }
-   
+
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
         try {
-            Clock clock = ClockSummary.createClock(this, members);  
+            Clock clock = ClockSummary.createClock(this, members);
             race.addClock(clock);
             try {
                 editResultsForClock( clock );
             } catch (UserCancelledException e) {
                 race.removeClock( clock );
                 throw e;
-            }            
+            }
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
         }
         reloadClocksTable();
     }//GEN-LAST:event_addClockButtonActionPerformed
-       
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addClockButton;
     private javax.swing.JTable clocksTable;
@@ -191,15 +191,15 @@ public class RaceEditor extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-    
-    static public void editRaceResults(Component parent, Race race, Club club) {
+
+    static public void editRaceResults(Component parent, Race race, Organization club) {
         RaceEditor panel = new RaceEditor(race, club.getMembers());
         Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
-    
+
     private void reloadClocksTable() {
         clocksTable.setModel(new ClocksTableModel(Utilities.sortCollection(race.getClocks())));
     }
-    
+
 }

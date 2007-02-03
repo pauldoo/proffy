@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
-import pigeon.model.Club;
+import pigeon.model.Organization;
 import pigeon.model.Constants;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
@@ -32,18 +32,14 @@ import pigeon.model.ValidationException;
 
 /**
  * Edits basic info regarding a race like the racepoint, date, time etc.
- * @author  Paul
  */
 class RaceSummary extends javax.swing.JPanel {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private final Race race;
-    
-    /**
-     * Creates new form RaceSummary
-     */
-    public RaceSummary(Race race, Club club, boolean editable) {
+
+    public RaceSummary(Race race, Organization club, boolean editable) {
         this.race = race;
         initComponents();
         addComboOptions(club);
@@ -53,7 +49,7 @@ class RaceSummary extends javax.swing.JPanel {
         } else {
             racepointCombo.setSelectedIndex(0);
         }
-        
+
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(race.getLiberationDate());
         dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
@@ -69,15 +65,15 @@ class RaceSummary extends javax.swing.JPanel {
             darknessEndsHour.setSelectedIndex((int)(race.getDarknessEnds() / Constants.MILLISECONDS_PER_HOUR));
             darknessEndsMinute.setSelectedIndex((int)((race.getDarknessEnds() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         }
-        
+
         updateHoursOfDarknessEnabledStatus();
     }
-    
-    private void addComboOptions(Club club) {
+
+    private void addComboOptions(Organization club) {
         for (Racepoint r: Utilities.sortCollection(club.getRacepoints())) {
             racepointCombo.addItem( r );
         }
-        
+
         for (int day = 1; day <= 31; day++) {
             String str = new Integer(day).toString();
             if (day < 10) {
@@ -85,7 +81,7 @@ class RaceSummary extends javax.swing.JPanel {
             }
             dayCombo.addItem(str);
         }
-        
+
         for (int month = 1; month <= 12; month++) {
             String str = new Integer(month).toString();
             if (month < 10) {
@@ -93,15 +89,15 @@ class RaceSummary extends javax.swing.JPanel {
             }
             monthCombo.addItem(str);
         }
-        
+
         for (int year = Utilities.BASE_YEAR; year <= Utilities.BASE_YEAR + 20; year++) {
             yearCombo.addItem(year);
         }
-        
+
         for (int day = 1; day <= 3; day++) {
             daysCoveredCombo.addItem(day);
         }
-        
+
         for (int hour = 0; hour <= 23; hour++) {
             String str = new Integer(hour).toString();
             if (hour < 10) {
@@ -114,7 +110,7 @@ class RaceSummary extends javax.swing.JPanel {
                 darknessEndsHour.addItem(str);
             }
         }
-        
+
         for (int minute = 0; minute <= 59; minute++) {
             String str = new Integer(minute).toString();
             if (minute < 10) {
@@ -125,13 +121,13 @@ class RaceSummary extends javax.swing.JPanel {
             darknessEndsMinute.addItem(str);
         }
     }
-    
+
     private boolean hoursOfDarknessEnabled()
     {
         int daysCovered = new Integer(daysCoveredCombo.getSelectedItem().toString());
         return daysCovered > 1;
     }
-    
+
     private void updateHoursOfDarknessEnabledStatus()
     {
         boolean enable = hoursOfDarknessEnabled();
@@ -144,7 +140,7 @@ class RaceSummary extends javax.swing.JPanel {
         darknessEndsSeperator.setEnabled(enable);
         darknessEndsMinute.setEnabled(enable);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -383,8 +379,8 @@ class RaceSummary extends javax.swing.JPanel {
     {//GEN-HEADEREND:event_daysCoveredComboActionPerformed
         updateHoursOfDarknessEnabledStatus();
     }//GEN-LAST:event_daysCoveredComboActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox darknessBeginsHour;
     private javax.swing.JComboBox darknessBeginsMinute;
@@ -423,7 +419,7 @@ class RaceSummary extends javax.swing.JPanel {
         race.setLiberationDate(liberationDate);
         race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
         race.setWindDirection(windDirectionText.getText());
-        
+
         if (hoursOfDarknessEnabled()) {
             long darknessBegins =
                     (new Integer(darknessBeginsHour.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_HOUR +
@@ -434,8 +430,8 @@ class RaceSummary extends javax.swing.JPanel {
             race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }
     }
-        
-    public static void editRace(Component parent, Race race, Club club, boolean newRace) throws UserCancelledException {
+
+    public static void editRace(Component parent, Race race, Organization club, boolean newRace) throws UserCancelledException {
         RaceSummary panel = new RaceSummary(race, club, true);
         while (true) {
             Object[] options = { (newRace ? "Add" : "Ok"), "Cancel" };
@@ -455,8 +451,8 @@ class RaceSummary extends javax.swing.JPanel {
             }
         }
     }
-    
-    public static Race createRace(Component parent, Club club) throws UserCancelledException {
+
+    public static Race createRace(Component parent, Organization club) throws UserCancelledException {
         Race race = new Race();
         editRace(parent, race, club, true);
         return race;

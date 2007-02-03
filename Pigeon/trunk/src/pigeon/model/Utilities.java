@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,8 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- *
- * @author pauldoo
+ * Utility functions for manipulating time.
  */
 public class Utilities
 {
@@ -41,7 +40,7 @@ public class Utilities
                 cal.get(Calendar.DAY_OF_MONTH));
         return cal.getTime();
     }
-    
+
     public static long roundToNearestSecond(long time) {
         return ((time + ((time >= 0) ? 500 : -500)) / 1000) * 1000;
     }

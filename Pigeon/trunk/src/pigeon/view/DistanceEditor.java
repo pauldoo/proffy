@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -24,23 +24,22 @@ import java.util.Map;
 import java.util.SortedMap;
 import javax.swing.JOptionPane;
 import pigeon.model.Distance;
-import pigeon.model.Club;
+import pigeon.model.Organization;
 import pigeon.model.Member;
 import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
 
 /**
- * Panel to let the user enter the distances (in the form of a table) for a given racepoint or member.
- * @author  pauldoo
+ * Panel to let the user enter the distances (in the form of a table) for a single racepoint or member.
  */
 class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private SortedMap<Target, Distance> distances;
     private DistancesTableModel<Target> distancesTableModel;
-    
-    public static void editMemberDistances(Component parent, Member member, Club club) throws UserCancelledException {
+
+    public static void editMemberDistances(Component parent, Member member, Organization club) throws UserCancelledException {
         SortedMap<Racepoint, Distance> distances = club.getDistancesForMember(member);
         if (distances.isEmpty()) return;
         DistanceEditor<Member, Racepoint> panel = new DistanceEditor<Member, Racepoint>(member, "Racepoint", distances);
@@ -61,7 +60,7 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
         }
     }
 
-    public static void editRacepointDistances(Component parent, Racepoint racepoint, Club club) throws UserCancelledException {
+    public static void editRacepointDistances(Component parent, Racepoint racepoint, Organization club) throws UserCancelledException {
         SortedMap<Member, Distance> distances = club.getDistancesForRacepoint(racepoint);
         if (distances.isEmpty()) return;
         DistanceEditor<Racepoint, Member> panel = new DistanceEditor<Racepoint, Member>(racepoint, "Member", distances);
@@ -81,21 +80,18 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
             }
         }
     }
-    
-    /**
-     * Creates new form DistanceEditor 
-     */
+
     public DistanceEditor(Subject subject, String targetTitle, SortedMap<Target, Distance> distances) {
         this.distances = distances;
         this.distancesTableModel = new DistancesTableModel<Target>(targetTitle, distances, true);
         initComponents();
         distancesPanel.setBorder(new javax.swing.border.TitledBorder("Distances For " + subject));
     }
-    
+
     private void updateDistancesMap() {
-        
+
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -122,12 +118,12 @@ class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
 
     }
     // </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel distancesPanel;
     private javax.swing.JTable distancesTable;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
-    
+
 }

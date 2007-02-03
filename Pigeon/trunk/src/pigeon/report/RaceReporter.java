@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import pigeon.model.Clock;
-import pigeon.model.Club;
+import pigeon.model.Organization;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
 import pigeon.model.Race;
@@ -36,20 +36,19 @@ import pigeon.model.Time;
 import pigeon.view.Utilities;
 
 /**
- *
- * @author pauldoo
+ * Generates a race report for a single race.
  */
 public class RaceReporter {
-    
-    private Club club;
+
+    private Organization club;
     private Race race;
-    
+
     /** Creates a new instance of RaceReporter */
-    public RaceReporter(Club club, Race race) {
+    public RaceReporter(Organization club, Race race) {
         this.club = club;
         this.race = race;
     }
-    
+
     private String StringPrintf(String format, Object... args) {
             StringWriter buffer = new StringWriter();
             PrintWriter writer = new PrintWriter(buffer);
@@ -57,7 +56,7 @@ public class RaceReporter {
             writer.flush();
             return buffer.toString();
     }
-        
+
     public void write(OutputStream stream) throws IOException {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
         out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");

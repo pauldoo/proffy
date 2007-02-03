@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,23 +27,24 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
+ * Represents a single member's results for a race.
  *
- * @author pauldoo
+ * Stores the master and member set and open times along
+ * with a list of all the ring numbers clocked and their times.
  */
 public class Clock implements Comparable<Clock>, Serializable
 {
     private static final long serialVersionUID = 42L;
 
     private Member member;
-    
+
     private Date masterSet;
     private Date masterOpen;
     private Date memberSet;
     private Date memberOpen;
-    
+
     private List<Time> times = new ArrayList<Time>();
-    
-    /** Creates a new instance of Clock */
+
     public Clock()
     {
         GregorianCalendar cal = new GregorianCalendar();
@@ -56,7 +57,7 @@ public class Clock implements Comparable<Clock>, Serializable
         setTimeOnMemberWhenSet(cal.getTime());
         setTimeOnMemberWhenOpened(cal.getTime());
     }
-    
+
     /**
      * Convert a 24hr time for the clocking day, to a full Date object with correction applied.
      */
@@ -66,7 +67,7 @@ public class Clock implements Comparable<Clock>, Serializable
             throw new IllegalArgumentException("Time is outwith the length of the race");
         }
         time = new Date(time.getTime() + race.liberationDayOffset().getTime() - memberSet.getTime() + masterSet.getTime());
-        
+
         long raceDuration = masterOpen.getTime() - masterSet.getTime();
         long totalDrift = (memberOpen.getTime() - memberSet.getTime()) - raceDuration;
         long driftPerDay = Constants.MILLISECONDS_PER_DAY * totalDrift / raceDuration;
@@ -90,82 +91,82 @@ public class Clock implements Comparable<Clock>, Serializable
         }
         return time;
     }
-    
+
     public Date getTimeOnMasterWhenSet()
     {
         return masterSet;
     }
-    
+
     public void setTimeOnMasterWhenSet(Date timeOnMasterClockWhenSet)
     {
         this.masterSet = timeOnMasterClockWhenSet;
     }
-    
+
     public Date getTimeOnMemberWhenSet()
     {
         return memberSet;
     }
-    
+
     public void setTimeOnMemberWhenSet(Date timeOnMemberClockWhenSet)
     {
         this.memberSet = timeOnMemberClockWhenSet;
     }
-    
+
     public Date getTimeOnMasterWhenOpened()
     {
         return masterOpen;
     }
-    
+
     public void setTimeOnMasterWhenOpened(Date timeOnMasterClockWhenOpened)
     {
         this.masterOpen = timeOnMasterClockWhenOpened;
     }
-    
+
     public Date getTimeOnMemberWhenOpened()
     {
         return memberOpen;
     }
-    
+
     public void setTimeOnMemberWhenOpened(Date timeOnMemberClockWhenOpened)
     {
         this.memberOpen = timeOnMemberClockWhenOpened;
     }
-    
+
     public void addTime(Time time)
     {
         this.times.add(time);
     }
-    
+
     public void removeTime(Time time)
     {
         this.times.remove(time);
     }
-    
+
     public List<Time> getTimes()
     {
         return times;
     }
-    
+
     public Member getMember()
     {
         return member;
     }
-    
+
     public void setMember(Member member)
     {
         this.member = member;
     }
-    
+
     public boolean equals(Object other)
     {
         return equals((Clock)other);
     }
-    
+
     public boolean equals(Clock other)
     {
         return this.member.equals(other.getMember());
     }
-    
+
     public int compareTo(Clock other)
     {
         return this.member.compareTo(other.getMember());

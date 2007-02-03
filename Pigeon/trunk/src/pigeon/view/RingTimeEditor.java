@@ -1,6 +1,6 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
+ * Copyright (C) 2005-2007  Paul Richards
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,31 +26,29 @@ import pigeon.model.Time;
 import pigeon.model.ValidationException;
 
 /**
- *
- * @author  pauldoo
+ * Form to let the user enter a single ring number and clocking time.
  */
 public class RingTimeEditor extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 42L;
-    
+
     private final Time time;
     private final int numberOfDaysCovered;
-    
-    /** Creates new form RingTimeEditor */
+
     public RingTimeEditor(Time time, int numberOfDaysCovered)
     {
         this.time = time;
         this.numberOfDaysCovered = numberOfDaysCovered;
         initComponents();
         addComboOptions();
-        
+
         ringNumberText.setText(time.getRingNumber());
         dayCombo.setSelectedIndex((int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY + 1));
         hourCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_HOUR) % 24));
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
     }
-    
+
     private void updateTimeObject() throws ValidationException
     {
         time.setRingNumber(ringNumberText.getText());
@@ -61,7 +59,7 @@ public class RingTimeEditor extends javax.swing.JPanel
                 (new Integer(secondCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_SECOND);
         time.setMemberTime(memberTime, numberOfDaysCovered);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -163,8 +161,8 @@ public class RingTimeEditor extends javax.swing.JPanel
         add(dayCombo, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JComboBox hourCombo;
@@ -177,7 +175,7 @@ public class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JTextField ringNumberText;
     private javax.swing.JComboBox secondCombo;
     // End of variables declaration//GEN-END:variables
-    
+
     public static void editEntry(Component parent, Time time, int numberOfDaysCovered, boolean newTime) throws UserCancelledException
     {
         RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered);
@@ -207,14 +205,14 @@ public class RingTimeEditor extends javax.swing.JPanel
             }
         }
     }
-    
+
     public static Time createEntry(Component parent, int numberOfDaysCovered) throws UserCancelledException
     {
         Time time = new Time();
         editEntry(parent, time, numberOfDaysCovered, true);
         return time;
     }
-    
+
     private void addComboOptions()
     {
         for (int day = 1; day <= numberOfDaysCovered; day++)
@@ -222,8 +220,8 @@ public class RingTimeEditor extends javax.swing.JPanel
             String str = new Integer(day).toString();
             dayCombo.addItem(str);
         }
-        
-        
+
+
         for (int hour = 0; hour <= 23; hour++)
         {
             String str = new Integer(hour).toString();
@@ -233,7 +231,7 @@ public class RingTimeEditor extends javax.swing.JPanel
             }
             hourCombo.addItem(str);
         }
-        
+
         for (int minute = 0; minute <= 59; minute++)
         {
             String str = new Integer(minute).toString();

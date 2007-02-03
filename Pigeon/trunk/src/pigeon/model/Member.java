@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -22,21 +22,19 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
+ * Represents a single member within the organization.
+ *
  * Equality and hashing are based only on the member's name.
- * @author Paul
  */
 public class Member implements Serializable, Comparable<Member> {
-    
+
     private static final long serialVersionUID = 42L;
-    
+
     private String name;
     private String address;
     private String telephone;
-    private String ringNumberFrom;
-    private String ringNumberTo;
     private String SHUNumber;
-    
-    /** Creates a new instance of Member */
+
     public Member() {
     }
 
@@ -51,7 +49,7 @@ public class Member implements Serializable, Comparable<Member> {
         }
         this.name = name;
     }
-    
+
     public String toString() {
         return getName();
     }
@@ -59,11 +57,11 @@ public class Member implements Serializable, Comparable<Member> {
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     public boolean equals(Object other) {
         return equals((Member)other);
     }
-    
+
     public boolean equals(Member other) {
         if (this == other) {
             return true;
@@ -71,7 +69,7 @@ public class Member implements Serializable, Comparable<Member> {
             return name.equals(other.name);
         }
     }
-    
+
     public int compareTo(Member other) {
         if (this == other) {
             return 0;
@@ -94,22 +92,6 @@ public class Member implements Serializable, Comparable<Member> {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getRingNumberFrom() {
-        return ringNumberFrom;
-    }
-
-    public void setRingNumberFrom(String ringNumberFrom) {
-        this.ringNumberFrom = ringNumberFrom;
-    }
-
-    public String getRingNumberTo() {
-        return ringNumberTo;
-    }
-
-    public void setRingNumberTo(String ringNumberTo) {
-        this.ringNumberTo = ringNumberTo;
     }
 
     public String getSHUNumber() {

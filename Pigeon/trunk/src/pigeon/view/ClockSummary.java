@@ -1,17 +1,17 @@
 /*
  * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2006  Paul Richards
- * 
+ * Copyright (C) 2005-2007  Paul Richards
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -32,17 +32,16 @@ import pigeon.model.ValidationException;
 
 /**
  * Creates / edits the basic info about a clock, ie master/member open/close times.
+ *
  * The ClockEditor class edits the list of times.
- * @author  pauldoo
  */
 public class ClockSummary extends javax.swing.JPanel {
-    
+
     private static final long serialVersionUID = 42L;
 
     private Clock clock;
     private Collection<Member> members;
-    
-    /** Creates new form ClockSummary */
+
     public ClockSummary(Clock clock, Collection<Member> members, boolean editable) {
         this.clock = clock;
         this.members = members;
@@ -54,7 +53,7 @@ public class ClockSummary extends javax.swing.JPanel {
         } else {
             memberCombo.setSelectedIndex(0);
         }
-        
+
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(clock.getTimeOnMasterWhenSet());
         setDayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
@@ -80,7 +79,7 @@ public class ClockSummary extends javax.swing.JPanel {
         memberOpenMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         memberOpenSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -463,8 +462,8 @@ public class ClockSummary extends javax.swing.JPanel {
         add(jPanel2, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -513,7 +512,7 @@ public class ClockSummary extends javax.swing.JPanel {
         for (Member m: Utilities.sortCollection(members)) {
             memberCombo.addItem( m );
         }
-        
+
         for (int day = 1; day <= 31; day++) {
             String str = new Integer(day).toString();
             if (day < 10) {
@@ -522,7 +521,7 @@ public class ClockSummary extends javax.swing.JPanel {
             setDayCombo.addItem(str);
             openDayCombo.addItem(str);
         }
-        
+
         for (int month = 1; month <= 12; month++) {
             String str = new Integer(month).toString();
             if (month < 10) {
@@ -531,12 +530,12 @@ public class ClockSummary extends javax.swing.JPanel {
             setMonthCombo.addItem(str);
             openMonthCombo.addItem(str);
         }
-        
+
         for (int year = Utilities.BASE_YEAR; year <= Utilities.BASE_YEAR + 20; year++) {
             setYearCombo.addItem(year);
             openYearCombo.addItem(year);
         }
-        
+
         for (int hour = 0; hour <= 23; hour++) {
             String str = new Integer(hour).toString();
             if (hour < 10) {
@@ -547,7 +546,7 @@ public class ClockSummary extends javax.swing.JPanel {
             memberSetHourCombo.addItem(str);
             memberOpenHourCombo.addItem(str);
         }
-        
+
         for (int minute = 0; minute <= 59; minute++) {
             String str = new Integer(minute).toString();
             if (minute < 10) {
@@ -564,11 +563,11 @@ public class ClockSummary extends javax.swing.JPanel {
             memberOpenSecondCombo.addItem(str);
         }
     }
-    
+
     private void updateClockObject() throws ValidationException
     {
         clock.setMember((Member)memberCombo.getSelectedItem());
-        
+
         Date masterSetDate = new GregorianCalendar(
                 new Integer(setYearCombo.getSelectedItem().toString()),
                 new Integer(setMonthCombo.getSelectedItem().toString()) - 1,
@@ -626,7 +625,7 @@ public class ClockSummary extends javax.swing.JPanel {
             }
         }
     }
-    
+
     public static Clock createClock(Component parent, Collection<Member> members) throws UserCancelledException
     {
         Clock clock = new Clock();
