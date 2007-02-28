@@ -30,9 +30,9 @@ public class Member implements Serializable, Comparable<Member> {
 
     private static final long serialVersionUID = 42L;
 
-    // Only populated in FEDERATION mode
+    // Only populated in FEDERATION mode, null otherwise
     private String club;
-    // Only populated in FEDERATION mode
+    // Only populated in FEDERATION mode, null otherwise
     private String section;
     
     private String name;
