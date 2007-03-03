@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -48,8 +48,8 @@ import junit.framework.*;
  *
  * @author Paul
  */
-public class ClubTest extends TestCase {
-    
+public final class ClubTest extends TestCase {
+
     public ClubTest(String testName) {
         super(testName);
     }
@@ -61,8 +61,8 @@ public class ClubTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(ClubTest.class);
-        
+        TestSuite suite = new TestSuite(ClubTest.final class);
+
         return suite;
     }
 
@@ -84,9 +84,9 @@ public class ClubTest extends TestCase {
                 club.addRacepoint( r );
             }
         }
-        
+
         verifyReferences(club);
-        
+
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         ObjectOutput objOut = new ObjectOutputStream(byteOut);
         objOut.writeObject( club );
@@ -94,14 +94,14 @@ public class ClubTest extends TestCase {
         objOut.close();
 
         // Organization written out
-        
+
         InputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
         ObjectInput objIn = new ObjectInputStream(byteIn);
         club = (Organization)objIn.readObject();
-        
+
         verifyReferences(club);
     }
-    
+
     /**
      * Verifies that the object instances used as keys within the distances
      * structure are the same instances that are present in the member/racepoint
@@ -116,7 +116,7 @@ public class ClubTest extends TestCase {
             }
         }
     }
-    
+
     public void testClashes() throws ValidationException {
         Organization club = new Organization();
         {
@@ -140,5 +140,5 @@ public class ClubTest extends TestCase {
             }
         }
     }
-    
+
 }

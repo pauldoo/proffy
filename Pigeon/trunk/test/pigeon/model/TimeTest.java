@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -37,8 +37,8 @@ import junit.framework.*;
  *
  * @author pauldoo
  */
-public class TimeTest extends TestCase {
-    
+public final class TimeTest extends TestCase {
+
     public TimeTest(String testName) {
         super(testName);
     }
@@ -50,8 +50,8 @@ public class TimeTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(TimeTest.class);
-        
+        TestSuite suite = new TestSuite(TimeTest.final class);
+
         return suite;
     }
 
@@ -59,11 +59,11 @@ public class TimeTest extends TestCase {
         String ringNumberFoo = "foo";
         String ringNumberBar = "bar";
         final int days = 3;
-        
+
         Time result1 = new Time();
         result1.setRingNumber(ringNumberFoo);
         result1.setMemberTime(1, days);
-        
+
         {
             Time result2 = new Time();
             result2.setRingNumber(ringNumberFoo);
@@ -76,7 +76,7 @@ public class TimeTest extends TestCase {
             result2.setMemberTime(2, days);
             assertEquals(result1, result2);
         }
-        
+
         {
             Time result2 = new Time();
             result2.setRingNumber(ringNumberBar);
@@ -89,5 +89,5 @@ public class TimeTest extends TestCase {
             result2.setMemberTime(2, days);
             assertFalse(result1.equals(result2));
         }
-    }    
+    }
 }

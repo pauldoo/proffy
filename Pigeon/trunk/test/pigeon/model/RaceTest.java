@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -43,8 +43,8 @@ import java.util.GregorianCalendar;
  *
  * @author Paul
  */
-public class RaceTest extends TestCase {
-    
+public final class RaceTest extends TestCase {
+
     public RaceTest(String testName) {
         super(testName);
     }
@@ -56,11 +56,11 @@ public class RaceTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(RaceTest.class);
-        
+        TestSuite suite = new TestSuite(RaceTest.final class);
+
         return suite;
     }
-    
+
     public void testClockOpenOffset() throws ValidationException {
         final long today = Utilities.beginningOfDay(new Date()).getTime();
 
@@ -77,11 +77,11 @@ public class RaceTest extends TestCase {
         racepointFoo.setName("Foo");
         Racepoint racepointBar = new Racepoint();
         racepointBar.setName("Bar");
-        
+
         Race race1 = new Race();
         race1.setLiberationDate(dateFoo);
         race1.setRacepoint(racepointFoo);
-        
+
         {
             Race race2 = new Race();
             race2.setLiberationDate(dateFoo);
@@ -93,13 +93,13 @@ public class RaceTest extends TestCase {
             race2.setLiberationDate(dateFoo);
             race2.setRacepoint(racepointBar);
             assertFalse(race1.equals(race2));
-        }        
+        }
         {
             Race race2 = new Race();
             race2.setLiberationDate(dateBar);
             race2.setRacepoint(racepointFoo);
             assertFalse(race1.equals(race2));
-        }        
+        }
     }
-    
+
 }

@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -44,7 +44,7 @@ import pigeon.model.Organization;
 /**
  * Public static methods for doing various things (mainly manipulating time).
  */
-public class Utilities {
+public final class Utilities {
 
     public static final int BASE_YEAR = 2000;
 
@@ -75,7 +75,7 @@ public class Utilities {
     public static long startOfDay(long time) {
         return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
     }
-    
+
     /**
      * Given an Organization, return a list of all the club names mentioned in member profiles.
      */
@@ -89,7 +89,7 @@ public class Utilities {
         }
         return result;
     }
-    
+
     /**
      * Given an Organization, return a list of all the section names mentioned in member profiles.
      */

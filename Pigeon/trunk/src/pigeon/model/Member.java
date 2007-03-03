@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -38,7 +38,7 @@ import java.io.Serializable;
  *
  * Equality and hashing are based only on the member's name.
  */
-public class Member implements Serializable, Comparable<Member> {
+public final class Member implements Serializable, Comparable<Member> {
 
     private static final long serialVersionUID = 42L;
 
@@ -46,7 +46,7 @@ public class Member implements Serializable, Comparable<Member> {
     private String club;
     // Only populated in FEDERATION mode, null otherwise
     private String section;
-    
+
     private String name;
     private String address;
     private String telephone;

@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -44,9 +44,9 @@ import pigeon.model.ValidationException;
 /**
  * Edits the list of times associated with a clock.
  *
- * The ClockSummary class edits the higher level info like open / close times.
+ * The ClockSummary final class edits the higher level info like open / close times.
  */
-public class ClockEditor extends javax.swing.JPanel
+public final class ClockEditor extends javax.swing.JPanel
 {
 
     private static final long serialVersionUID = 42L;

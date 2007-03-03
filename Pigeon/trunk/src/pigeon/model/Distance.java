@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -37,7 +37,7 @@ import java.io.Serializable;
  * Stores a single distance (stored in metres) and provides accessors
  * to return the distance in imperial units.
  */
-public class Distance implements Serializable, Comparable<Distance> {
+public final class Distance implements Serializable, Comparable<Distance> {
 
     private static final long serialVersionUID = 42L;
 

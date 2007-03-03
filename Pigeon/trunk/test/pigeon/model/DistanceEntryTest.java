@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -37,8 +37,8 @@ import junit.framework.*;
  *
  * @author Paul
  */
-public class DistanceEntryTest extends TestCase {
-    
+public final class DistanceEntryTest extends TestCase {
+
     public DistanceEntryTest(String testName) {
         super(testName);
     }
@@ -50,8 +50,8 @@ public class DistanceEntryTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(DistanceEntryTest.class);
-        
+        TestSuite suite = new TestSuite(DistanceEntryTest.final class);
+
         return suite;
     }
 
@@ -60,16 +60,16 @@ public class DistanceEntryTest extends TestCase {
         memberFoo.setName("foo");
         Member memberBar = new Member();
         memberBar.setName("bar");
-        
+
         Racepoint racepointFoo = new Racepoint();
         racepointFoo.setName("foo");
         Racepoint racepointBar = new Racepoint();
         racepointBar.setName("bar");
-        
+
         Distance distanceFoo = Distance.createFromMetric(1);
         Distance distanceBar = Distance.createFromMetric(2);
         DistanceEntry entry1 = new DistanceEntry(memberFoo, racepointFoo, distanceFoo);
-        
+
         {
             DistanceEntry entry2 = new DistanceEntry(memberFoo, racepointFoo, distanceFoo);
             assertEquals(entry1, entry2);
@@ -106,5 +106,5 @@ public class DistanceEntryTest extends TestCase {
             assertFalse(entry1.equals(entry2));
         }
     }
-    
+
 }

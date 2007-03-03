@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -37,8 +37,8 @@ import junit.framework.*;
  *
  * @author Paul
  */
-public class MemberTest extends TestCase {
-    
+public final class MemberTest extends TestCase {
+
     public MemberTest(String testName) {
         super(testName);
     }
@@ -50,11 +50,11 @@ public class MemberTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(MemberTest.class);
-        
+        TestSuite suite = new TestSuite(MemberTest.final class);
+
         return suite;
     }
-    
+
     public void testEquality() throws ValidationException {
         Member foo = new Member();
         foo.setName("Foo");
@@ -62,7 +62,7 @@ public class MemberTest extends TestCase {
         foo2.setName("Foo");
         Member bar = new Member();
         bar.setName("Bar");
-        
+
         assertEquals(foo, foo);
         assertEquals(foo, foo2);
         assertFalse(foo.equals(bar));

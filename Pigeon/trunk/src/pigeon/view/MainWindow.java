@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -37,7 +37,6 @@ import java.awt.Container;
 import java.awt.Image;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,6 +61,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import pigeon.About;
 import pigeon.model.Member;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
@@ -74,13 +74,9 @@ import pigeon.report.RaceReporter;
  *
  * All top level windows exist in here and are switched between using the card layout.
  */
-class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
+final class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
     private static final long serialVersionUID = 42L;
-
-    private static final String VERSION = "0.1" + " (build " + getBuildId() + ")";
-    public static final String TITLE = "Pigeon v" + VERSION + ".";
-    private static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
 
     private final Configuration configuration;
     private Season season;
@@ -104,22 +100,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         } catch (IOException e) {
         }
         return null;
-    }
-
-    public static String getBuildId()
-    {
-        try {
-            InputStream in = ClassLoader.getSystemResourceAsStream("BuildID.txt");
-            if (in != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                String buildId = reader.readLine();
-                if (buildId != null) {
-                    return buildId;
-                }
-            }
-        }  catch (IOException e) {
-        }
-        return "unknown";
     }
 
     private static Configuration loadConfiguration() throws IOException
@@ -521,12 +501,12 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void aboutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutItemActionPerformed
-        JTextArea widget = new JTextArea(TITLE + "\n\n" + getLicense() + "\n\n" + CREDITS, 10, 80);
+        JTextArea widget = new JTextArea(About.TITLE + ".\n\n" + About.getLicense() + "\n\n" + About.CREDITS);
         widget.setEditable(false);
         JOptionPane.showMessageDialog(
             this,
             new JScrollPane(widget),
-            TITLE,
+            About.TITLE,
             JOptionPane.INFORMATION_MESSAGE
         );
     }//GEN-LAST:event_aboutItemActionPerformed
@@ -649,7 +629,7 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
             int racepointCount = season.getOrganization().getNumberOfRacepoints();
             String message =
                     "Have you finished adding all of the members (total of " + memberCount + ") " +
-                    "and racepoints (total of " + racepointCount + ") for the " + 
+                    "and racepoints (total of " + racepointCount + ") for the " +
                     "organisation \"" + season.getOrganization().getName() + "\"?";
             int result = JOptionPane.showConfirmDialog(this, message, "Finishing organisation setup", JOptionPane.YES_NO_OPTION);
             switch (result) {
@@ -745,19 +725,35 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }
 
     private void writeSeasonToFile(File file) throws FileNotFoundException, IOException {
-        ObjectOutput out = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file))));
-        out.writeObject(season);
-        out.close();
-        currentlyLoadedFile = file;
-        JOptionPane.showMessageDialog(this, "Saved to " + file.toString());
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream(file);
+            ObjectOutput objectOut = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(fileOut)));
+            objectOut.writeObject(season);
+            objectOut.close();
+            currentlyLoadedFile = file;
+            JOptionPane.showMessageDialog(this, "Saved to " + file.toString());
+        } finally {
+            if (fileOut != null) {
+                fileOut.close();
+            }
+        }
     }
 
     private void loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        ObjectInput in = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(file))));
-        Season loaded = (Season)in.readObject();
-        in.close();
-        setSeason( loaded );
-        this.currentlyLoadedFile = file;
+        FileInputStream fileIn = null;
+        try {
+            fileIn = new FileInputStream(file);
+            ObjectInput objectIn = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(fileIn)));
+            Season loaded = (Season)objectIn.readObject();
+            objectIn.close();
+            setSeason( loaded );
+            currentlyLoadedFile = file;
+        } finally {
+            if (fileIn != null) {
+                fileIn.close();
+            }
+        }
     }
 
 
@@ -904,24 +900,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         DistanceEditor.editRacepointDistances(parent, racepoint, season.getOrganization());
     }
 
-    private static String getLicense()
-    {
-        try {
-            Reader in = new InputStreamReader(ClassLoader.getSystemResourceAsStream("LICENSE.txt"));
-            StringBuffer buf = new StringBuffer();
-            while (true) {
-                int ch = in.read();
-                if (ch == -1) {
-                    break;
-                }
-                buf.append((char)ch);
-            }
-            return buf.toString();
-        } catch (IOException e) {
-            return "Please see LICENSE.txt";
-        }
-    }
-    
     /**
      * @param args the command line arguments
      */

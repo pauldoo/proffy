@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -38,8 +38,8 @@ import junit.framework.*;
  *
  * @author pauldoo
  */
-public class ClockTest extends TestCase {
-    
+public final class ClockTest extends TestCase {
+
     public ClockTest(String testName) {
         super(testName);
     }
@@ -51,23 +51,23 @@ public class ClockTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(ClockTest.class);
-        
+        TestSuite suite = new TestSuite(ClockTest.final class);
+
         return suite;
     }
 
     /**
-     * Test of ConvertMemberTimeToMasterTime method, of class pigeon.model.Clock.
+     * Test of ConvertMemberTimeToMasterTime method, of final class pigeon.model.Clock.
      */
     public void testConvertMemberTimeToMasterTime() throws ValidationException {
         final long today = Utilities.beginningOfDay(new Date()).getTime();
-        
+
         Clock clock = new Clock();
         clock.setTimeOnMasterWhenSet(new Date(today + 200));
         clock.setTimeOnMasterWhenOpened(new Date(today + 10000600));
         clock.setTimeOnMemberWhenSet(new Date(today + 3000));
         clock.setTimeOnMemberWhenOpened(new Date(today + 10007000));
-        
+
         assertEquals(today + 200, clock.getTimeOnMasterWhenSet().getTime());
         assertEquals(today + 10000600, clock.getTimeOnMasterWhenOpened().getTime());
         assertEquals(today + 3000, clock.getTimeOnMemberWhenSet().getTime());
@@ -76,18 +76,18 @@ public class ClockTest extends TestCase {
         Race race = new Race();
         race.setLiberationDate(new Date(today));
         race.setDaysCovered(1);
-        
+
         assertEquals(today + 200, clock.convertMemberTimeToMasterTime(new Date(3000), race).getTime());
         assertEquals(today + 5000200, clock.convertMemberTimeToMasterTime(new Date(5005000), race).getTime());
         assertEquals(today + 10000200, clock.convertMemberTimeToMasterTime(new Date(10007000), race).getTime());
     }
-    
+
     /**
      * Test clock variation example in rulebook.
      */
     public void testClockVariationCalculationExample() throws ValidationException {
         final long today = Utilities.beginningOfDay(new Date()).getTime();
-        
+
         {
             // Member clock gains 2m 40s
             Clock clock = new Clock();
@@ -169,7 +169,7 @@ public class ClockTest extends TestCase {
             assertEquals(0, correctedTime - birdTime);
         }
     }
-    
+
     private static long toMs(int days, int hours, int minutes, int seconds) {
         if (hours < 0 || hours >= 24) {
             throw new IllegalArgumentException("Hours outwith one day");

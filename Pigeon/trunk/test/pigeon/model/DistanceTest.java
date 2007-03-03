@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -38,8 +38,8 @@ import java.io.Serializable;
  *
  * @author Paul
  */
-public class DistanceTest extends TestCase {
-    
+public final class DistanceTest extends TestCase {
+
     public DistanceTest(String testName) {
         super(testName);
     }
@@ -51,21 +51,21 @@ public class DistanceTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(DistanceTest.class);
-        
+        TestSuite suite = new TestSuite(DistanceTest.final class);
+
         return suite;
     }
 
     /**
-     * Test of createFromImperial method, of class pigeon.model.Distance.
+     * Test of createFromImperial method, of final class pigeon.model.Distance.
      */
     public void testImperial() {
         final int YARDS_PER_MILE = 1760;
-        // Test that the Distance class is accurate to the nearest yard for distances up to 3000 miles
+        // Test that the Distance final class is accurate to the nearest yard for distances up to 3000 miles
         for (int yards = 0; yards < 3000 * YARDS_PER_MILE; yards++) {
             Distance d = Distance.createFromImperial(0, yards);
             assertEquals(yards, Math.round(d.getYards()));
         }
     }
-    
+
 }

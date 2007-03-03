@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -44,7 +44,7 @@ import pigeon.model.ValidationException;
 /**
  * Panel to let the user enter the distances (in the form of a table) for a single racepoint or member.
  */
-class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
+final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 42L;
 

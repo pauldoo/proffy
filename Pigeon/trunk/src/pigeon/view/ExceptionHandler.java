@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -38,11 +38,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.JTextComponent;
+import pigeon.About;
 
 /**
  * Handles uncaught exceptions and presents a "friendly" crash dialog.
  */
-public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+public final class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     static public void register() {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
@@ -60,7 +61,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread t, Throwable e) {
         StringWriter message = new StringWriter();
         PrintWriter writer = new PrintWriter(message);
-        writer.println(MainWindow.TITLE);
+        writer.println(About.TITLE);
         writer.println();
         e.printStackTrace(writer);
         writer.flush();

@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -38,8 +38,8 @@ import junit.framework.*;
  *
  * @author Paul
  */
-public class SeasonTest extends TestCase {
-    
+public final class SeasonTest extends TestCase {
+
     public SeasonTest(String testName) {
         super(testName);
     }
@@ -51,8 +51,8 @@ public class SeasonTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(SeasonTest.class);
-        
+        TestSuite suite = new TestSuite(SeasonTest.final class);
+
         return suite;
     }
 
@@ -60,30 +60,30 @@ public class SeasonTest extends TestCase {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
         Season season = new Season();
-        
+
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
         race1.setLiberationDate(liberationDate);
-        
+
         assertEquals(season.getRaces().size(), 0);
         season.addRace(race1);
         assertEquals(season.getRaces().size(), 1);
         season.removeRace(race1);
         assertEquals(season.getRaces().size(), 0);
     }
-    
+
     public void testClashes() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
         Season season = new Season();
-        
+
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
         race1.setLiberationDate(liberationDate);
         Race race2 = new Race();
         race2.setRacepoint(racepoint);
         race2.setLiberationDate(liberationDate);
-        
+
         season.addRace(race1);
         try {
             season.addRace(race2);
@@ -92,5 +92,5 @@ public class SeasonTest extends TestCase {
             assertEquals("Race already exists", ex.toString());
         }
     }
-    
+
 }

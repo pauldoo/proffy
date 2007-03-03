@@ -7,11 +7,11 @@
 
         * Redistributions of source code must retain the above copyright notice,
         this list of conditions and the following disclaimer.
-    
+
         * Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
-    
+
         * Neither the name of Paul Richards nor the names of contributors may be
         used to endorse or promote products derived from this software without
         specific prior written permission.
@@ -53,10 +53,10 @@ import pigeon.view.Utilities;
 
 /**
  * Generates an HTML report for a single race.
- * 
+ *
  * Federation and section results are generated on the same page.
  */
-public class RaceReporter {
+public final class RaceReporter {
 
     private Organization club;
     private Race race;
@@ -90,22 +90,22 @@ public class RaceReporter {
         }
         return new LinkedList<String>(result);
     }
-    
+
     public void write(OutputStream stream, boolean listClubNames) throws IOException {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
         String raceDate = Utilities.DATE_FORMAT.format(race.getLiberationDate());
         String raceTime = Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         writeHtmlHeader(out, raceDate);
-        
+
         List<String> sections = participatingSections();
         // Push the null section to the front to guarantee we do the whole lot.
         sections.add(0, null);
-        
+
         for (String section: sections) {
             if (section != sections.get(sections.size() - 1)) {
-                out.println("<div class=\"outer\">");
+                out.println("<div final class=\"outer\">");
             } else {
-                out.println("<div class=\"outer last\">");
+                out.println("<div final class=\"outer last\">");
             }
 
             out.println("<h1>" + club.getName() + "</h1>");
@@ -173,7 +173,7 @@ public class RaceReporter {
             out.println("</table>");
             out.println("</div>");
         }
-        
+
         out.println("</body>");
         out.println("</html>");
         if (out.checkError()) {
