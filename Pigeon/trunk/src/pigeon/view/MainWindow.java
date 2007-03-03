@@ -1,21 +1,33 @@
 /*
- * Pigeon: A pigeon club race result management program.
- * Copyright (C) 2005-2007  Paul Richards
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+    Copyright (c) 2005-2007, Paul Richards
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright notice,
+        this list of conditions and the following disclaimer.
+    
+        * Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+    
+        * Neither the name of Paul Richards nor the names of contributors may be
+        used to endorse or promote products derived from this software without
+        specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 
 package pigeon.view;
 
@@ -38,11 +50,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -64,14 +79,8 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     private static final long serialVersionUID = 42L;
 
     private static final String VERSION = "0.1" + " (build " + getBuildId() + ")";
-    private static final String LICENSE_MESSAGE =
-            "Pigeon version " + VERSION + ", Copyright (C) 2005-2007 Paul Richards\n" +
-            "Pigeon comes with ABSOLUTELY NO WARRANTY; for details\n" +
-            "see the file COPYRIGHT.txt.  This is free software, and you are welcome\n" +
-            "to redistribute it under certain conditions; see the file COPYRIGHT.txt\n" +
-            "for details.";
-    public static final String TITLE = "Pigeon v" + VERSION;
-    private static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>";
+    public static final String TITLE = "Pigeon v" + VERSION + ".";
+    private static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
 
     private final Configuration configuration;
     private Season season;
@@ -512,7 +521,14 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void aboutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutItemActionPerformed
-        JOptionPane.showMessageDialog(this, LICENSE_MESSAGE + "\n\n" + CREDITS, TITLE, JOptionPane.INFORMATION_MESSAGE);
+        JTextArea widget = new JTextArea(TITLE + "\n\n" + getLicense() + "\n\n" + CREDITS, 10, 80);
+        widget.setEditable(false);
+        JOptionPane.showMessageDialog(
+            this,
+            new JScrollPane(widget),
+            TITLE,
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }//GEN-LAST:event_aboutItemActionPerformed
 
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
@@ -888,6 +904,24 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         DistanceEditor.editRacepointDistances(parent, racepoint, season.getOrganization());
     }
 
+    private static String getLicense()
+    {
+        try {
+            Reader in = new InputStreamReader(ClassLoader.getSystemResourceAsStream("LICENSE.txt"));
+            StringBuffer buf = new StringBuffer();
+            while (true) {
+                int ch = in.read();
+                if (ch == -1) {
+                    break;
+                }
+                buf.append((char)ch);
+            }
+            return buf.toString();
+        } catch (IOException e) {
+            return "Please see LICENSE.txt";
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -896,12 +930,6 @@ class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
         ExceptionHandler.register();
         checkAssertions();
         setSwingLAF();
-
-        Object[] options = { "Agree", "Cancel" };
-        int result = JOptionPane.showOptionDialog(null, LICENSE_MESSAGE, "License", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        if (result != 0) {
-            return;
-        }
 
         Configuration configuration = loadConfiguration();
         Configuration.Mode m = configuration.getMode();

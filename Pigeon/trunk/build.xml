@@ -69,7 +69,7 @@
     
     <target name="-post-compile" depends="BuildID">
         <copy todir="${build.classes.dir}">
-            <fileset file="COPYRIGHT.txt"/>
+            <fileset file="LICENSE.txt"/>
             <fileset file="configuration.xml"/>
         </copy>
         <copy todir="${build.classes.dir}/resources">
@@ -79,7 +79,7 @@
 
     <target name="-post-jar">
         <copy todir="${dist.dir}">
-            <fileset file="COPYRIGHT.txt"/>
+            <fileset file="LICENSE.txt"/>
         </copy>
     </target>
 
