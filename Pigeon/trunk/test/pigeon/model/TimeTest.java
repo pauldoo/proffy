@@ -50,7 +50,7 @@ public final class TimeTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(TimeTest.final class);
+        TestSuite suite = new TestSuite(TimeTest.class);
 
         return suite;
     }

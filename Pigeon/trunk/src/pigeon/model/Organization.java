@@ -34,7 +34,9 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.SortedMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -47,11 +49,11 @@ import java.util.TreeMap;
  */
 public final class Organization implements Serializable
 {
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 5358293332608930714L;
 
     private String name;
-    private Collection<Member> members = new ArrayList<Member>();
-    private Collection<Racepoint> racepoints = new ArrayList<Racepoint>();
+    private List<Member> members = new ArrayList<Member>();
+    private List<Racepoint> racepoints = new ArrayList<Racepoint>();
     private Collection<DistanceEntry> distances = new ArrayList<DistanceEntry>();
 
     public Organization() {
@@ -73,12 +75,12 @@ public final class Organization implements Serializable
         return getName();
     }
 
-    public Collection<Member> getMembers() {
-        return members;
+    public List<Member> getMembers() {
+        return Utilities.unmodifiableSortedList(members);
     }
 
-    public Collection<Racepoint> getRacepoints() {
-        return racepoints;
+    public List<Racepoint> getRacepoints() {
+        return Utilities.unmodifiableSortedList(racepoints);
     }
 
     public void addMember(Member member) throws ValidationException {
@@ -155,16 +157,16 @@ public final class Organization implements Serializable
         getDistanceEntry(member, racepoint).setDistance(distance);
     }
 
-    public SortedMap<Racepoint, Distance> getDistancesForMember(Member member) {
-        SortedMap<Racepoint, Distance> retval = new TreeMap<Racepoint, Distance>();
+    public Map<Racepoint, Distance> getDistancesForMember(Member member) {
+        Map<Racepoint, Distance> retval = new TreeMap<Racepoint, Distance>();
         for (Racepoint racepoint: racepoints) {
             retval.put(racepoint, getDistance(member, racepoint));
         }
         return retval;
     }
 
-    public SortedMap<Member, Distance> getDistancesForRacepoint(Racepoint racepoint) {
-        SortedMap<Member, Distance> retval = new TreeMap<Member, Distance>();
+    public Map<Member, Distance> getDistancesForRacepoint(Racepoint racepoint) {
+        Map<Member, Distance> retval = new TreeMap<Member, Distance>();
         for (Member member: members) {
             retval.put(member, getDistance(member, racepoint));
         }

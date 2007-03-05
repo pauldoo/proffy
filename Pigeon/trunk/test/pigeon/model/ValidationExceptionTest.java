@@ -52,7 +52,7 @@ public final class ValidationExceptionTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(ValidationExceptionTest.final class);
+        TestSuite suite = new TestSuite(ValidationExceptionTest.class);
 
         return suite;
     }

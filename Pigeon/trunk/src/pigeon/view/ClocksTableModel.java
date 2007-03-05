@@ -31,7 +31,7 @@
 
 package pigeon.view;
 
-import java.util.Vector;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Clock;
 import pigeon.model.Member;
@@ -41,13 +41,13 @@ import pigeon.model.Member;
  *
  * Displays the associated member and the number of rings entered.
  */
-public final class ClocksTableModel extends AbstractTableModel {
+final class ClocksTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 6245142229764744394L;
 
-    private final Vector<Clock> clocks;
+    private final List<Clock> clocks;
 
-    public ClocksTableModel(Vector<Clock> clocks)
+    public ClocksTableModel(List<Clock> clocks)
     {
         this.clocks = clocks;
     }

@@ -43,7 +43,7 @@ import pigeon.About;
 /**
  * Handles uncaught exceptions and presents a "friendly" crash dialog.
  */
-public final class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+final class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     static public void register() {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());

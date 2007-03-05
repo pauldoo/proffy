@@ -43,13 +43,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.imageio.ImageIO;
@@ -76,7 +74,7 @@ import pigeon.report.RaceReporter;
  */
 final class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 8988408906488593901L;
 
     private final Configuration configuration;
     private Season season;
@@ -514,7 +512,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
         try {
             int index = raceresultsTable.getSelectedRow();
-            Race race = Utilities.sortCollection(season.getRaces()).get(index);
+            Race race = season.getRaces().get(index);
             File outputFile = File.createTempFile("result", ".html");
             OutputStream stream = new BufferedOutputStream(new FileOutputStream(outputFile));
             new RaceReporter(season.getOrganization(), race).write(stream, configuration.getMode() == Configuration.Mode.FEDERATION);
@@ -578,14 +576,14 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
     private void raceresultDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultDeleteButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
-        Race race = Utilities.sortCollection(season.getRaces()).get(index);
+        Race race = season.getRaces().get(index);
         season.removeRace(race);
         reloadRacesTable();
     }//GEN-LAST:event_raceresultDeleteButtonActionPerformed
 
     private void raceresultEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultEditButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
-        Race race = Utilities.sortCollection(season.getRaces()).get(index);
+        Race race = season.getRaces().get(index);
         try {
             RaceSummary.editRace(this, race, season.getOrganization(), false);
             editResultsForRace( race );
@@ -777,7 +775,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
         int index = racepointsList.getSelectedIndex();
-        Racepoint racepoint = Utilities.sortCollection( season.getOrganization().getRacepoints() ).get(index);
+        Racepoint racepoint = season.getOrganization().getRacepoints().get(index);
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()).toString();
         if (name != null) {
             try {
@@ -803,7 +801,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
-        Member member = Utilities.sortCollection(season.getOrganization().getMembers()).get(index);
+        Member member = season.getOrganization().getMembers().get(index);
         try {
             MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
             editDistancesForMember( member );
@@ -859,15 +857,15 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     }
 
     private void reloadMembersList() {
-        membersList.setListData(Utilities.sortCollection(season.getOrganization().getMembers()));
+        membersList.setListData(season.getOrganization().getMembers().toArray());
     }
 
     private void reloadRacepointsList() {
-        racepointsList.setListData(Utilities.sortCollection(season.getOrganization().getRacepoints()));
+        racepointsList.setListData(season.getOrganization().getRacepoints().toArray());
     }
 
     private void reloadRacesTable() {
-        raceresultsTable.setModel(new RacesTableModel(Utilities.sortCollection(season.getRaces())));
+        raceresultsTable.setModel(new RacesTableModel(season.getRaces()));
     }
 
     private void refreshButtons() {

@@ -56,7 +56,7 @@ public final class RaceTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(RaceTest.final class);
+        TestSuite suite = new TestSuite(RaceTest.class);
 
         return suite;
     }

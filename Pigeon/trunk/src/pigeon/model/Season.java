@@ -34,6 +34,8 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Stores information for a single season.
@@ -44,11 +46,11 @@ import java.util.Collection;
  */
 public final class Season implements Serializable {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 2185370002566545845L;
 
     private String name;
     private Organization organization = new Organization();
-    private Collection<Race> races = new ArrayList<Race>();
+    private List<Race> races = new ArrayList<Race>();
 
     public Season() {
     }
@@ -79,8 +81,8 @@ public final class Season implements Serializable {
         races.remove(race);
     }
 
-    public Collection<Race> getRaces() {
-        return races;
+    public List<Race> getRaces() {
+        return Utilities.unmodifiableSortedList(races);
     }
 
 }

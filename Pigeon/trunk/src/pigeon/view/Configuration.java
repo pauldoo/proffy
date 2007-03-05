@@ -38,7 +38,7 @@ import java.util.Properties;
 /**
  * Loads the application configuration from an XML file.
  */
-public final class Configuration
+final class Configuration
 {
     public static enum Mode {
         FEDERATION,

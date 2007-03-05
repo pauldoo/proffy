@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 public final class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 8618199323315444879L;
 
     private final Member member;
     private final Racepoint racepoint;

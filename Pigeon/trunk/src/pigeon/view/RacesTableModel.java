@@ -32,7 +32,7 @@
 package pigeon.view;
 
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
@@ -42,11 +42,11 @@ import pigeon.model.Racepoint;
  */
 final class RacesTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 6868265813681434543L;
 
-    private final Vector<Race> races;
+    private final List<Race> races;
 
-    public RacesTableModel(Vector<Race> races) {
+    public RacesTableModel(List<Race> races) {
         this.races = races;
     }
 

@@ -33,7 +33,6 @@ package pigeon.view;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Distance;
 
@@ -44,14 +43,14 @@ import pigeon.model.Distance;
  */
 final class DistancesTableModel<Target> extends AbstractTableModel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 3953261892856570881L;
 
     private final String targetTitle;
-    private final SortedMap<Target, Distance> distances;
+    private final Map<Target, Distance> distances;
     private final boolean editable;
 
     /** Creates a new instance of DistancesTableModel */
-    public DistancesTableModel(String targetTitle, SortedMap<Target, Distance> distances, boolean editable) {
+    public DistancesTableModel(String targetTitle, Map<Target, Distance> distances, boolean editable) {
         this.targetTitle = targetTitle;
         this.distances = distances;
         this.editable = editable;

@@ -46,10 +46,10 @@ import pigeon.model.ValidationException;
  *
  * The ClockSummary final class edits the higher level info like open / close times.
  */
-public final class ClockEditor extends javax.swing.JPanel
+final class ClockEditor extends javax.swing.JPanel
 {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 7677569341121266746L;
 
     private final Clock clock;
     private final int daysInRace;

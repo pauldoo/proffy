@@ -46,18 +46,29 @@ import pigeon.model.Organization;
  */
 public final class Utilities {
 
+    // Non-Creatable
+    private Utilities()
+    {
+    }
+    
     public static final int BASE_YEAR = 2000;
 
-    // DateFormat for formatting times that span just a single day.
-    // Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
+    /**
+        DateFormat for formatting times that span just a single day.
+    
+        Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
+    */
     public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE;
     static {
         TIME_FORMAT_WITHOUT_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
         TIME_FORMAT_WITHOUT_LOCALE.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    // DateFormat for formatting times that occur on a real calendar.
-    // Their 'long' representation is not confined to spanning just a single day.
+    /**
+        DateFormat for formatting times that occur on a real calendar.
+    
+        Their 'long' representation is not confined to spanning just a single day.
+    */
     public static final DateFormat TIME_FORMAT_WITH_LOCALE;
     static {
         TIME_FORMAT_WITH_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
@@ -68,17 +79,13 @@ public final class Utilities {
         DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
     }
 
-    public static <T extends Comparable<T>> Vector<T> sortCollection(Collection<T> collection) {
-        return new Vector<T>(new TreeSet<T>(collection));
-    }
-
     public static long startOfDay(long time) {
         return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
     }
 
     /**
-     * Given an Organization, return a list of all the club names mentioned in member profiles.
-     */
+        Given an Organization, return a list of all the club names mentioned in member profiles.
+    */
     public static SortedSet<String> findClubNames(Organization organization)
     {
         SortedSet<String> result = new TreeSet<String>();
@@ -91,8 +98,8 @@ public final class Utilities {
     }
 
     /**
-     * Given an Organization, return a list of all the section names mentioned in member profiles.
-     */
+        Given an Organization, return a list of all the section names mentioned in member profiles.
+    */
     public static SortedSet<String> findSectionNames(Organization organization)
     {
         SortedSet<String> result = new TreeSet<String>();

@@ -61,7 +61,7 @@ public final class ClubTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(ClubTest.final class);
+        TestSuite suite = new TestSuite(ClubTest.class);
 
         return suite;
     }

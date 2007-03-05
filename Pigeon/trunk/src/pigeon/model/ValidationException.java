@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  */
 public final class ValidationException extends Exception {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 1525226081739583319L;
 
     private final String cause;
 

@@ -50,7 +50,7 @@ public final class MemberTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(MemberTest.final class);
+        TestSuite suite = new TestSuite(MemberTest.class);
 
         return suite;
     }

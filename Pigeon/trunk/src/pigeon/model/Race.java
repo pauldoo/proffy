@@ -34,9 +34,10 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Stores information about a race.
@@ -46,7 +47,7 @@ import java.util.GregorianCalendar;
  */
 public final class Race implements Serializable, Comparable<Race> {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 4311510053131167930L;
 
     private Racepoint racepoint;
     private Date liberationDate;
@@ -54,7 +55,7 @@ public final class Race implements Serializable, Comparable<Race> {
     private int darknessBegins;
     private int darknessEnds;
     private String windDirection;
-    private Collection<Clock> clocks = new ArrayList<Clock>();
+    private List<Clock> clocks = new ArrayList<Clock>();
 
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
@@ -181,9 +182,9 @@ public final class Race implements Serializable, Comparable<Race> {
         }
     }
 
-    public Collection<Clock> getClocks()
+    public List<Clock> getClocks()
     {
-        return clocks;
+        return Utilities.unmodifiableSortedList(clocks);
     }
 
     public Date liberationDayOffset()

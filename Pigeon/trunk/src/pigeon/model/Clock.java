@@ -34,6 +34,7 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -46,7 +47,7 @@ import java.util.List;
  */
 public final class Clock implements Comparable<Clock>, Serializable
 {
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 7133528350681374891L;
 
     private Member member;
 
@@ -156,7 +157,7 @@ public final class Clock implements Comparable<Clock>, Serializable
 
     public List<Time> getTimes()
     {
-        return times;
+        return Utilities.unmodifiableSortedList(times);
     }
 
     public Member getMember()

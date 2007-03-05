@@ -47,9 +47,9 @@ import pigeon.model.ValidationException;
  *
  * The ClockEditor final class edits the list of times.
  */
-public final class ClockSummary extends javax.swing.JPanel {
+final class ClockSummary extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 2610008291157171060L;
 
     private Clock clock;
     private Collection<Member> members;
@@ -521,7 +521,7 @@ public final class ClockSummary extends javax.swing.JPanel {
 
     private void addComboOptions()
     {
-        for (Member m: Utilities.sortCollection(members)) {
+        for (Member m: members) {
             memberCombo.addItem( m );
         }
 

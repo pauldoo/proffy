@@ -51,7 +51,7 @@ public final class SeasonTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(SeasonTest.final class);
+        TestSuite suite = new TestSuite(SeasonTest.class);
 
         return suite;
     }

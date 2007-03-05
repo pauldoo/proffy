@@ -51,7 +51,7 @@ public final class ClockTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(ClockTest.final class);
+        TestSuite suite = new TestSuite(ClockTest.class);
 
         return suite;
     }

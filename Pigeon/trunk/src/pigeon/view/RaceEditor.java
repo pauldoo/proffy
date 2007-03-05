@@ -47,9 +47,9 @@ import pigeon.model.ValidationException;
  * Lets the user add more clocks or go on to edit the times
  * associated with one of the clocks (using ClockEditor).
  */
-public final class RaceEditor extends javax.swing.JPanel {
+final class RaceEditor extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 2521382654389072851L;
 
     private final Race race;
     Collection<Member> members;
@@ -151,7 +151,7 @@ public final class RaceEditor extends javax.swing.JPanel {
 
     private void deleteClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteClockButtonActionPerformed
         int index = clocksTable.getSelectedRow();
-        Clock clock = Utilities.sortCollection(race.getClocks()).get(index);
+        Clock clock = race.getClocks().get(index);
         try {
             race.removeClock(clock);
         } catch (ValidationException e) {
@@ -162,7 +162,7 @@ public final class RaceEditor extends javax.swing.JPanel {
 
     private void editClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editClockButtonActionPerformed
         int index = clocksTable.getSelectedRow();
-        Clock clock = Utilities.sortCollection(race.getClocks()).get(index);
+        Clock clock = race.getClocks().get(index);
         try {
             ClockSummary.editClock(this, clock, members, false);
             editResultsForClock( clock );
@@ -211,7 +211,7 @@ public final class RaceEditor extends javax.swing.JPanel {
     }
 
     private void reloadClocksTable() {
-        clocksTable.setModel(new ClocksTableModel(Utilities.sortCollection(race.getClocks())));
+        clocksTable.setModel(new ClocksTableModel(race.getClocks()));
     }
 
 }

@@ -39,7 +39,7 @@ import java.io.Serializable;
  */
 public final class Distance implements Serializable, Comparable<Distance> {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 7289132359169706543L;
 
     private final double distanceInMetres;
 
@@ -86,5 +86,4 @@ public final class Distance implements Serializable, Comparable<Distance> {
     public int compareTo(Distance other) {
         return Double.compare(this.distanceInMetres, other.distanceInMetres);
     }
-
 }

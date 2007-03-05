@@ -51,7 +51,7 @@ public final class DistanceTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(DistanceTest.final class);
+        TestSuite suite = new TestSuite(DistanceTest.class);
 
         return suite;
     }

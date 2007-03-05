@@ -42,7 +42,7 @@ import pigeon.model.ValidationException;
  */
 final class MemberInfo extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 8280472583918302972L;
 
     private Member member;
     private Organization organization;

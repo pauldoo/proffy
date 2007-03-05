@@ -42,9 +42,9 @@ import pigeon.model.ValidationException;
 /**
  * Shows the times entered for a clock by listing the ring numbers and times currently entered.
  */
-public final class TimesTableModel extends AbstractTableModel
+final class TimesTableModel extends AbstractTableModel
 {
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 2820658767004438666L;
 
     private final Clock clock;
     private final int daysInRace;

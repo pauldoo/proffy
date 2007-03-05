@@ -47,7 +47,7 @@ import pigeon.model.ValidationException;
  */
 final class RaceSummary extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 5181019751737997744L;
 
     private final Race race;
 
@@ -82,7 +82,7 @@ final class RaceSummary extends javax.swing.JPanel {
     }
 
     private void addComboOptions(Organization club) {
-        for (Racepoint r: Utilities.sortCollection(club.getRacepoints())) {
+        for (Racepoint r: club.getRacepoints()) {
             racepointCombo.addItem( r );
         }
 

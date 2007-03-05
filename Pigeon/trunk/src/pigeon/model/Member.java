@@ -40,7 +40,7 @@ import java.io.Serializable;
  */
 public final class Member implements Serializable, Comparable<Member> {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 3235931567494968807L;
 
     // Only populated in FEDERATION mode, null otherwise
     private String club;

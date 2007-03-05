@@ -46,13 +46,13 @@ import pigeon.model.ValidationException;
  */
 final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 8017955650652536256L;
 
-    private SortedMap<Target, Distance> distances;
+    private Map<Target, Distance> distances;
     private DistancesTableModel<Target> distancesTableModel;
 
     public static void editMemberDistances(Component parent, Member member, Organization club) throws UserCancelledException {
-        SortedMap<Racepoint, Distance> distances = club.getDistancesForMember(member);
+        Map<Racepoint, Distance> distances = club.getDistancesForMember(member);
         if (distances.isEmpty()) return;
         DistanceEditor<Member, Racepoint> panel = new DistanceEditor<Member, Racepoint>(member, "Racepoint", distances);
         while (true) {
@@ -73,7 +73,7 @@ final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
     }
 
     public static void editRacepointDistances(Component parent, Racepoint racepoint, Organization club) throws UserCancelledException {
-        SortedMap<Member, Distance> distances = club.getDistancesForRacepoint(racepoint);
+        Map<Member, Distance> distances = club.getDistancesForRacepoint(racepoint);
         if (distances.isEmpty()) return;
         DistanceEditor<Racepoint, Member> panel = new DistanceEditor<Racepoint, Member>(racepoint, "Member", distances);
         while (true) {
@@ -93,7 +93,7 @@ final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
         }
     }
 
-    public DistanceEditor(Subject subject, String targetTitle, SortedMap<Target, Distance> distances) {
+    public DistanceEditor(Subject subject, String targetTitle, Map<Target, Distance> distances) {
         this.distances = distances;
         this.distancesTableModel = new DistancesTableModel<Target>(targetTitle, distances, true);
         initComponents();

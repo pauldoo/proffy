@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 public final class Racepoint implements Serializable, Comparable<Racepoint> {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 5881572526657587494L;
 
     private String name;
 

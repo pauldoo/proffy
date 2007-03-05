@@ -38,7 +38,7 @@ import java.io.Serializable;
  */
 public final class Time implements Comparable<Time>, Serializable
 {
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 5746826265321182248L;
 
     private String ringNumber = "";
     private int time = 0;

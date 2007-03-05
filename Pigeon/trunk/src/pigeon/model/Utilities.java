@@ -32,14 +32,21 @@
 package pigeon.model;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Utility functions for manipulating time.
  */
 public final class Utilities
 {
+    // Non-Creatable
+    private Utilities()
+    {
+    }
+    
     /**
      * Given a date returns the beggining of the day (using local timezone).
      */
@@ -55,5 +62,15 @@ public final class Utilities
 
     public static long roundToNearestSecond(long time) {
         return ((time + ((time >= 0) ? 500 : -500)) / 1000) * 1000;
+    }
+    
+    /**
+        Sorts the given list (modifies in place), and then returns an unmodifiable copy.
+     */
+    public static <T extends Comparable<? super T>>
+    List<T> unmodifiableSortedList(List<T> items)
+    {
+        Collections.sort(items);
+        return Collections.unmodifiableList(items);
     }
 }

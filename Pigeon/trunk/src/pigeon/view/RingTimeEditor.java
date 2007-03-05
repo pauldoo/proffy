@@ -40,9 +40,9 @@ import pigeon.model.ValidationException;
 /**
  * Form to let the user enter a single ring number and clocking time.
  */
-public final class RingTimeEditor extends javax.swing.JPanel
+final class RingTimeEditor extends javax.swing.JPanel
 {
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 1436323402423205110L;
 
     private final Time time;
     private final int numberOfDaysCovered;

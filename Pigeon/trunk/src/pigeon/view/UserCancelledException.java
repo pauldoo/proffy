@@ -36,7 +36,7 @@ package pigeon.view;
  */
 final class UserCancelledException extends Exception {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 1798682657697282679L;
 
     public UserCancelledException() {
     }
