@@ -49,22 +49,23 @@ import pigeon.model.Constants;
 import pigeon.model.Distance;
 import pigeon.model.Race;
 import pigeon.model.Time;
-import pigeon.view.Utilities;
 
 /**
- * Generates an HTML report for a single race.
- *
- * Federation and section results are generated on the same page.
- */
-public final class RaceReporter {
+    Generates an HTML report for a single race.
 
-    private Organization club;
-    private Race race;
+    Federation and section results are generated on the same page.
+*/
+public final class RaceReporter implements Reporter {
+
+    private final Organization club;
+    private final Race race;
+    private final boolean listClubNames;
 
     /** Creates a new instance of RaceReporter */
-    public RaceReporter(Organization club, Race race) {
+    public RaceReporter(Organization club, Race race, boolean listClubNames) {
         this.club = club;
         this.race = race;
+        this.listClubNames = listClubNames;
     }
 
     private String StringPrintf(String format, Object... args) {
@@ -91,11 +92,10 @@ public final class RaceReporter {
         return new LinkedList<String>(result);
     }
 
-    public void write(OutputStream stream, boolean listClubNames) throws IOException {
-        PrintStream out = new PrintStream(stream, false, "UTF-8");
-        String raceDate = Utilities.DATE_FORMAT.format(race.getLiberationDate());
-        String raceTime = Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
-        writeHtmlHeader(out, raceDate);
+    public void write(OutputStream stream) throws IOException {
+        String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
+        String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
+        PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
 
         List<String> sections = participatingSections();
         // Push the null section to the front to guarantee we do the whole lot.
@@ -141,7 +141,7 @@ public final class RaceReporter {
                         int days = (int)((correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
                         line.append("<td>" + (days + 1) + "</td>");
                     }
-                    line.append("<td>" + Utilities.TIME_FORMAT_WITH_LOCALE.format(correctedClockTime) + "</td>");
+                    line.append("<td>" + pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(correctedClockTime) + "</td>");
                     line.append("<td>" + distance.getMiles() + "</td>");
                     line.append("<td>" + distance.getYardsRemainder() + "</td>");
                     line.append("<td>" + time.getRingNumber() + "</td>");
@@ -174,34 +174,6 @@ public final class RaceReporter {
             out.println("</div>");
         }
 
-        out.println("</body>");
-        out.println("</html>");
-        if (out.checkError()) {
-            throw new IOException();
-        }
-    }
-
-    private void writeHtmlHeader(PrintStream out, String raceDate)
-    {
-        out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
-        out.println("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-        out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
-        out.println("<head>");
-        out.println("<title>" + race.getRacepoint().toString() + " on " + raceDate + "</title>");
-        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
-        out.println("<style type=\"text/css\">");
-        out.println(".outer { text-align:center; page-break-after: always; }");
-        out.println(".outer.last { page-break-after: auto; }");
-        out.println("h1 { margin-bottom:10px; font-size:18pt; }");
-        out.println("h2 { font-size:16pt; }");
-        out.println("h3 { font-size:14pt; }");
-        out.println("h2, h3 { margin-top:0; margin-bottom:5px; }");
-        out.println("table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }");
-        out.println("th { border-bottom:3px solid #000000; text-align: left; }");
-        out.println("td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }");
-        out.println("</style>");
-        out.println("</head>");
-        out.println("<body>");
+        Utilities.writeHtmlFooter(out);
     }
 }

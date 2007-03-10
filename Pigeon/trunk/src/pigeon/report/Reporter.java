@@ -29,61 +29,15 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-package pigeon.model;
+package pigeon.report;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Stores a single distance (stored in metres) and provides accessors
- * to return the distance in imperial units.
- */
-public final class Distance implements Serializable, Comparable<Distance> {
-
-    private static final long serialVersionUID = 7289132359169706543L;
-
-    private final double distanceInMetres;
-
-    private Distance(double metres) {
-        this.distanceInMetres = metres;
-    }
-
-    public static Distance createFromMetric(double metres) {
-        return new Distance(metres);
-    }
-
-    public static Distance createFromImperial(int miles, int yards) {
-        return createFromMetric((miles * Constants.YARDS_PER_MILE + yards) * Constants.METRES_PER_YARD);
-    }
-
-    // Return distance in metres
-    public double getMetres() {
-        return distanceInMetres;
-    }
-
-    // Return distance in yards
-    public double getYards() {
-        return distanceInMetres / Constants.METRES_PER_YARD;
-    }
-
-    public int getMiles() {
-        return (int)Math.round(getYards()) / Constants.YARDS_PER_MILE;
-    }
-
-    public int getYardsRemainder() {
-        return (int)Math.round(getYards()) % Constants.YARDS_PER_MILE;
-    }
-
-    public String toString() {
-        int miles = getMiles();
-        int yards = getYardsRemainder();
-        return miles + " miles " + yards + " yards";
-    }
-
-    public int hashCode() {
-        return new Double(distanceInMetres).hashCode();
-    }
-
-    public int compareTo(Distance other) {
-        return Double.compare(this.distanceInMetres, other.distanceInMetres);
-    }
+    Interface implemented by all the HTML reporters.
+*/
+public interface Reporter
+{
+    public void write(OutputStream stream) throws IOException;
 }

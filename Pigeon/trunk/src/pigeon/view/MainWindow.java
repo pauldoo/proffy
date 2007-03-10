@@ -51,6 +51,7 @@ import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.imageio.ImageIO;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -65,14 +66,16 @@ import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
+import pigeon.report.DistanceReporter;
 import pigeon.report.RaceReporter;
+import pigeon.report.Reporter;
 
 /**
  * Application entry point and top level window.
  *
  * All top level windows exist in here and are switched between using the card layout.
  */
-final class MainWindow extends javax.swing.JFrame implements ListSelectionListener {
+final class MainWindow extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 8988408906488593901L;
 
@@ -153,6 +156,9 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
         closeItem = new javax.swing.JMenuItem();
         saveItem = new javax.swing.JMenuItem();
         exitItem = new javax.swing.JMenuItem();
+        dataMenu = new javax.swing.JMenu();
+        viewMemberDistancesItem = new javax.swing.JMenuItem();
+        viewRacepointDistancesItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutItem = new javax.swing.JMenuItem();
 
@@ -254,7 +260,14 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
         membersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Information"));
         membersList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        membersList.addListSelectionListener(this);
+        membersList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
+        {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt)
+            {
+                membersListValueChanged(evt);
+            }
+        });
+
         memberListScrollPane.setViewportView(membersList);
 
         membersPanel.add(memberListScrollPane, java.awt.BorderLayout.CENTER);
@@ -306,7 +319,14 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
         racepointsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Racepoint Information"));
         racepointsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        racepointsList.addListSelectionListener(this);
+        racepointsList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
+        {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt)
+            {
+                racepointsListValueChanged(evt);
+            }
+        });
+
         racepointListScrollPane.setViewportView(racepointsList);
 
         racepointsPanel.add(racepointListScrollPane, java.awt.BorderLayout.CENTER);
@@ -432,7 +452,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
         getContentPane().add(viewingSeason, "viewingSeason");
 
-        fileMenu.setText("Menu");
+        fileMenu.setText("File");
         openItem.setText("Open");
         openItem.addActionListener(new java.awt.event.ActionListener()
         {
@@ -479,6 +499,31 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
 
         menuBar.add(fileMenu);
 
+        dataMenu.setText("Data");
+        viewMemberDistancesItem.setText("View Distances for a Member");
+        viewMemberDistancesItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                viewMemberDistancesItemActionPerformed(evt);
+            }
+        });
+
+        dataMenu.add(viewMemberDistancesItem);
+
+        viewRacepointDistancesItem.setText("View Distances for a Racepoint");
+        viewRacepointDistancesItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                viewRacepointDistancesItemActionPerformed(evt);
+            }
+        });
+
+        dataMenu.add(viewRacepointDistancesItem);
+
+        menuBar.add(dataMenu);
+
         helpMenu.setText("Help");
         aboutItem.setText("About");
         aboutItem.addActionListener(new java.awt.event.ActionListener()
@@ -498,6 +543,79 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void racepointsListValueChanged(javax.swing.event.ListSelectionEvent evt)//GEN-FIRST:event_racepointsListValueChanged
+    {//GEN-HEADEREND:event_racepointsListValueChanged
+        refreshButtons();
+    }//GEN-LAST:event_racepointsListValueChanged
+
+    private void membersListValueChanged(javax.swing.event.ListSelectionEvent evt)//GEN-FIRST:event_membersListValueChanged
+    {//GEN-HEADEREND:event_membersListValueChanged
+        refreshButtons();
+    }//GEN-LAST:event_membersListValueChanged
+
+    private void writeReport(String type, Reporter reporter)
+    {
+        try {
+            File outputFile = File.createTempFile(type, ".html");
+            FileOutputStream fileOut = null;
+            try {
+                fileOut = new FileOutputStream(outputFile);
+                OutputStream stream = new BufferedOutputStream(fileOut);
+                reporter.write(stream);
+                stream.close();
+            } finally {
+                if (fileOut != null) {
+                    fileOut.close();
+                }
+            }
+            com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(getContentPane(), e.toString());
+        }
+    }
+    
+    private void viewRacepointDistancesItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_viewRacepointDistancesItemActionPerformed
+    {//GEN-HEADEREND:event_viewRacepointDistancesItemActionPerformed
+        JComboBox racepointList = new JComboBox();
+        racepointList.setEditable(false);
+        for (Racepoint r: season.getOrganization().getRacepoints()) {
+            racepointList.addItem(r);
+        }
+        int choice = JOptionPane.showConfirmDialog(getContentPane(), racepointList, "Select a racepoint", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (choice == JOptionPane.OK_OPTION) {
+            Racepoint racepoint = (Racepoint)racepointList.getSelectedItem();
+            DistanceReporter<Member> reporter = new DistanceReporter<Member>(
+                season.getOrganization().toString(),
+                racepoint.toString(),
+                "Member",
+                season.getOrganization().getDistancesForRacepoint(racepoint)
+            );
+
+            writeReport("RacepointDistances", reporter);
+        }
+    }//GEN-LAST:event_viewRacepointDistancesItemActionPerformed
+
+    private void viewMemberDistancesItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_viewMemberDistancesItemActionPerformed
+    {//GEN-HEADEREND:event_viewMemberDistancesItemActionPerformed
+        JComboBox memberList = new JComboBox();
+        memberList.setEditable(false);
+        for (Member m: season.getOrganization().getMembers()) {
+            memberList.addItem(m);
+        }
+        int choice = JOptionPane.showConfirmDialog(getContentPane(), memberList, "Select a member", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (choice == JOptionPane.OK_OPTION) {
+            Member member = (Member)memberList.getSelectedItem();
+            DistanceReporter<Racepoint> reporter = new DistanceReporter<Racepoint>(
+                season.getOrganization().toString(),
+                member.toString(),
+                "Racepoint",
+                season.getOrganization().getDistancesForMember(member)
+            );
+
+            writeReport("MemberDistances", reporter);
+        }
+    }//GEN-LAST:event_viewMemberDistancesItemActionPerformed
+
     private void aboutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutItemActionPerformed
         JTextArea widget = new JTextArea(About.TITLE + ".\n\n" + About.getLicense() + "\n\n" + About.CREDITS);
         widget.setEditable(false);
@@ -510,17 +628,10 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     }//GEN-LAST:event_aboutItemActionPerformed
 
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
-        try {
-            int index = raceresultsTable.getSelectedRow();
-            Race race = season.getRaces().get(index);
-            File outputFile = File.createTempFile("result", ".html");
-            OutputStream stream = new BufferedOutputStream(new FileOutputStream(outputFile));
-            new RaceReporter(season.getOrganization(), race).write(stream, configuration.getMode() == Configuration.Mode.FEDERATION);
-            stream.close();
-            com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, e.toString());
-        }
+        int index = raceresultsTable.getSelectedRow();
+        Race race = season.getRaces().get(index);
+        boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
+        writeReport("RaceResult", new RaceReporter(season.getOrganization(), race, listClubNames));
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
@@ -700,11 +811,12 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
             case JFileChooser.APPROVE_OPTION:
                 File file = chooser.getSelectedFile();
                 try {
-                    loadSeasonFromFile(file);
-                    if (season.getRaces().isEmpty()) {
-                        switchToCard("setupClub");
+                    Season loaded = loadSeasonFromFile(file);
+                    currentlyLoadedFile = file;
+                    if (loaded.getRaces().isEmpty()) {
+                        setSeason(loaded, "setupClub");
                     } else {
-                        switchToCard("viewingSeason");
+                        setSeason(loaded, "viewingSeason");
                     }
                 } catch (FileNotFoundException e) {
                     JOptionPane.showMessageDialog(this, e.toString());
@@ -730,7 +842,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
             objectOut.writeObject(season);
             objectOut.close();
             currentlyLoadedFile = file;
-            JOptionPane.showMessageDialog(this, "Saved to " + file.toString());
+            JOptionPane.showMessageDialog(getContentPane(), "Saved to " + file.toString());
         } finally {
             if (fileOut != null) {
                 fileOut.close();
@@ -738,15 +850,14 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
         }
     }
 
-    private void loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fileIn = null;
         try {
             fileIn = new FileInputStream(file);
             ObjectInput objectIn = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(fileIn)));
             Season loaded = (Season)objectIn.readObject();
             objectIn.close();
-            setSeason( loaded );
-            currentlyLoadedFile = file;
+            return loaded;
         } finally {
             if (fileIn != null) {
                 fileIn.close();
@@ -794,10 +905,6 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
             reloadRacepointsList();
         }
     }//GEN-LAST:event_racepointEditButtonActionPerformed
-
-    public void valueChanged(ListSelectionEvent event) {
-        refreshButtons();
-    }
 
     private void memberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberEditButtonActionPerformed
         int index = membersList.getSelectedIndex();
@@ -849,11 +956,14 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
     private void reloadControlData() {
-        clubNameText.setText(season.getOrganization().getName());
-        reloadMembersList();
-        reloadRacepointsList();
-        reloadRacesTable();
+        if (season != null) {
+            clubNameText.setText(season.getOrganization().getName());
+            reloadMembersList();
+            reloadRacepointsList();
+            reloadRacesTable();
+        }
         refreshButtons();
+        refreshMenus();
     }
 
     private void reloadMembersList() {
@@ -874,18 +984,21 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
         racepointEditButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
     }
+    
+    private void refreshMenus() {
+        saveItem.setEnabled(season != null);
+        closeItem.setEnabled(season != null);
+        dataMenu.setEnabled(season != null);
+    }
 
     private void switchToCard(String cardName) {
         Container parent = this.getContentPane();
         ((CardLayout)parent.getLayout()).show(parent, cardName);
-        boolean isSomethingLoaded = cardName != "mainMenu";
-        saveItem.setEnabled(isSomethingLoaded);
-        closeItem.setEnabled(isSomethingLoaded);
+        reloadControlData();
     }
 
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
-        setSeason( new Season() );
-        switchToCard("setupClub");
+        setSeason(new Season(), "setupClub");
     }//GEN-LAST:event_newSeasonButtonActionPerformed
 
     private void editDistancesForMember(Member member) throws UserCancelledException {
@@ -914,13 +1027,12 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
         window.setVisible(true);
     }
 
-    public Season getSeason() {
-        return season;
-    }
-
-    public void setSeason(Season season) {
+    /**
+        Switches to a new Season object, and move to the specified screen.
+    */
+    private void setSeason(Season season, String cardName) {
         this.season = season;
-        reloadControlData();
+        switchToCard(cardName);
     }
 
     private static void checkAssertions() {
@@ -962,6 +1074,7 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JLabel clubNameLabel;
     private javax.swing.JTextField clubNameText;
+    private javax.swing.JMenu dataMenu;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
@@ -996,6 +1109,8 @@ final class MainWindow extends javax.swing.JFrame implements ListSelectionListen
     private javax.swing.JTable raceresultsTable;
     private javax.swing.JMenuItem saveItem;
     private javax.swing.JPanel setupClubPanel;
+    private javax.swing.JMenuItem viewMemberDistancesItem;
+    private javax.swing.JMenuItem viewRacepointDistancesItem;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
 

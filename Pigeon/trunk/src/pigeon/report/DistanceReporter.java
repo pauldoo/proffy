@@ -29,61 +29,46 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-package pigeon.model;
+package pigeon.report;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
+import pigeon.model.Distance;
 
 /**
- * Stores a single distance (stored in metres) and provides accessors
- * to return the distance in imperial units.
- */
-public final class Distance implements Serializable, Comparable<Distance> {
-
-    private static final long serialVersionUID = 7289132359169706543L;
-
-    private final double distanceInMetres;
-
-    private Distance(double metres) {
-        this.distanceInMetres = metres;
+    Produces an HTML report of the distances for a member or racepoint.
+*/
+public final class DistanceReporter<Target> implements Reporter
+{
+    final String organization;
+    final String source;
+    final String targetTypeName;
+    final Map<Target, Distance> distances;
+    
+    public DistanceReporter(String organization, String source, String targetTypeName, Map<Target, Distance> distances)
+    {
+        this.organization = organization;
+        this.source = source;
+        this.targetTypeName = targetTypeName;
+        this.distances = distances;
     }
+        
+    public void write(OutputStream stream) throws IOException
+    {
+        PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source);
+        out.println("<div class='outer'>");
+        out.println("<h1>" + organization + "</h1>");
+        out.println("<h2>Distances for " + source + "</h2>");
 
-    public static Distance createFromMetric(double metres) {
-        return new Distance(metres);
-    }
-
-    public static Distance createFromImperial(int miles, int yards) {
-        return createFromMetric((miles * Constants.YARDS_PER_MILE + yards) * Constants.METRES_PER_YARD);
-    }
-
-    // Return distance in metres
-    public double getMetres() {
-        return distanceInMetres;
-    }
-
-    // Return distance in yards
-    public double getYards() {
-        return distanceInMetres / Constants.METRES_PER_YARD;
-    }
-
-    public int getMiles() {
-        return (int)Math.round(getYards()) / Constants.YARDS_PER_MILE;
-    }
-
-    public int getYardsRemainder() {
-        return (int)Math.round(getYards()) % Constants.YARDS_PER_MILE;
-    }
-
-    public String toString() {
-        int miles = getMiles();
-        int yards = getYardsRemainder();
-        return miles + " miles " + yards + " yards";
-    }
-
-    public int hashCode() {
-        return new Double(distanceInMetres).hashCode();
-    }
-
-    public int compareTo(Distance other) {
-        return Double.compare(this.distanceInMetres, other.distanceInMetres);
+        out.println("<table>");
+        out.println("<tr><th>" + targetTypeName + "</th><th>Distance</th></tr>");
+        for (Map.Entry<Target, Distance> entry: distances.entrySet()) {
+            out.println("<tr><td>" + entry.getKey().toString() + "</td><td>" + entry.getValue().toString() + "</td></tr>");
+        }
+        out.println("</table>");
+        out.println("</div>");
+        Utilities.writeHtmlFooter(out);
     }
 }
