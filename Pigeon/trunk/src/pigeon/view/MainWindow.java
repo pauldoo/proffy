@@ -155,6 +155,7 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultEditButton = new javax.swing.JButton();
         raceresultDeleteButton = new javax.swing.JButton();
         raceresultCalculateResultsButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
@@ -403,6 +404,8 @@ final class MainWindow extends javax.swing.JFrame {
 
         raceresultPanel.add(raceresultListScrollPane, java.awt.BorderLayout.CENTER);
 
+        raceresultButtonPanel.setLayout(new java.awt.GridBagLayout());
+
         raceresultAddButton.setText("Add Race");
         raceresultAddButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -412,7 +415,10 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        raceresultButtonPanel.add(raceresultAddButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        raceresultButtonPanel.add(raceresultAddButton, gridBagConstraints);
 
         raceresultEditButton.setText("Edit Race");
         raceresultEditButton.addActionListener(new java.awt.event.ActionListener()
@@ -423,7 +429,12 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        raceresultButtonPanel.add(raceresultEditButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        raceresultButtonPanel.add(raceresultEditButton, gridBagConstraints);
 
         raceresultDeleteButton.setText("Delete Race");
         raceresultDeleteButton.addActionListener(new java.awt.event.ActionListener()
@@ -434,7 +445,12 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        raceresultButtonPanel.add(raceresultDeleteButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        raceresultButtonPanel.add(raceresultDeleteButton, gridBagConstraints);
 
         raceresultCalculateResultsButton.setText("Calculate Results");
         raceresultCalculateResultsButton.addActionListener(new java.awt.event.ActionListener()
@@ -445,9 +461,18 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        raceresultButtonPanel.add(raceresultCalculateResultsButton);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 1.0;
+        raceresultButtonPanel.add(raceresultCalculateResultsButton, gridBagConstraints);
 
-        raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.SOUTH);
+        raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.EAST);
+
+        jLabel1.setText("Add races to the season below.");
+        raceresultPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -504,7 +529,7 @@ final class MainWindow extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        dataMenu.setText("Data");
+        dataMenu.setText("Distances");
         viewMemberDistancesItem.setText("View Distances for a Member");
         viewMemberDistancesItem.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1090,6 +1115,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JButton memberAddButton;
