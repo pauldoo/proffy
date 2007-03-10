@@ -86,6 +86,11 @@ final class MainWindow extends javax.swing.JFrame {
     public MainWindow(Configuration configuration) {
         this.configuration = configuration;
         initComponents();
+        raceresultsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent e) {
+                refreshButtons();
+            }
+        });     
         setIconImage(getIcon());
         switchToCard("mainMenu");
     }
@@ -975,14 +980,20 @@ final class MainWindow extends javax.swing.JFrame {
     }
 
     private void reloadRacesTable() {
-        raceresultsTable.setModel(new RacesTableModel(season.getRaces()));
+        RacesTableModel model = new RacesTableModel(season.getRaces());
+        raceresultsTable.setModel(model);
     }
 
     private void refreshButtons() {
         memberEditButton.setEnabled( membersList.getSelectedIndex() != -1 );
         memberDeleteButton.setEnabled( membersList.getSelectedIndex() != -1 );
+        
         racepointEditButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
+        
+        raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
+        raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
+        raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
     }
     
     private void refreshMenus() {

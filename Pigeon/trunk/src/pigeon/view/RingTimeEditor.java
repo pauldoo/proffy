@@ -55,7 +55,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         addComboOptions();
 
         ringNumberText.setText(time.getRingNumber());
-        dayCombo.setSelectedIndex((int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY + 1));
+        dayCombo.setSelectedIndex((int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY));
         hourCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_HOUR) % 24));
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
@@ -188,7 +188,7 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JComboBox secondCombo;
     // End of variables declaration//GEN-END:variables
 
-    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, boolean newTime) throws UserCancelledException
+    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, boolean newTime) throws UserCancelledException
     {
         RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered);
         while (true)

@@ -33,13 +33,11 @@
 package pigeon.view;
 
 import java.awt.Component;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableCellEditor;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import pigeon.model.Clock;
 import pigeon.model.Time;
-import pigeon.model.ValidationException;
 
 /**
  * Edits the list of times associated with a clock.
@@ -59,6 +57,11 @@ final class ClockEditor extends javax.swing.JPanel
         this.clock = clock;
         this.daysInRace = daysInRace;
         initComponents();
+        timesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent e) {
+                refreshButtons();
+            }
+        });     
         clockTimesPanel.setBorder(new javax.swing.border.TitledBorder("Clock Times For " + clock.getMember()));
         reloadTimesTable();
     }
@@ -171,5 +174,11 @@ final class ClockEditor extends javax.swing.JPanel
     private void reloadTimesTable()
     {
         timesTable.setModel(new TimesTableModel(clock, daysInRace, true));
+        refreshButtons();
+    }
+    
+    private void refreshButtons()
+    {
+        removeButton.setEnabled( timesTable.getSelectedRow() != -1 );
     }
 }

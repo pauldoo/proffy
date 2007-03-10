@@ -35,6 +35,8 @@ import java.awt.Component;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import pigeon.model.Clock;
 import pigeon.model.Organization;
 import pigeon.model.Member;
@@ -58,6 +60,11 @@ final class RaceEditor extends javax.swing.JPanel {
         this.race = race;
         this.members = members;
         initComponents();
+        clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent e) {
+                refreshButtons();
+            }
+        });     
         reloadClocksTable();
         ((TitledBorder)jPanel1.getBorder()).setTitle("Clocks for " + race.toString());
     }
@@ -212,6 +219,12 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private void reloadClocksTable() {
         clocksTable.setModel(new ClocksTableModel(race.getClocks()));
+        refreshButtons();
     }
 
+    private void refreshButtons()
+    {
+        deleteClockButton.setEnabled( clocksTable.getSelectedRow() != -1 );
+        editClockButton.setEnabled( clocksTable.getSelectedRow() != -1 );
+    }
 }
