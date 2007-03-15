@@ -33,13 +33,22 @@ package pigeon.view;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
+import pigeon.competitions.Competition;
+import pigeon.competitions.Nomination;
+import pigeon.competitions.Pool;
 
 /**
  * Loads the application configuration from an XML file.
  */
 final class Configuration
 {
+    private final Properties properties = new Properties();
+
     public static enum Mode {
         FEDERATION,
         CLUB
@@ -48,6 +57,9 @@ final class Configuration
     public Configuration(InputStream input) throws IOException
     {
         properties.loadFromXML(input);
+        // Check validity by parsing out mode and pools.
+        getMode();
+        getCompetitions();
     }
 
     public Mode getMode()
@@ -55,5 +67,39 @@ final class Configuration
         return Mode.valueOf(properties.getProperty("Mode"));
     }
 
-    private final Properties properties = new Properties();
+    public List<Competition> getCompetitions() throws IOException
+    {
+        /**
+            This code is a bit messy, not sure what the ideal
+            method should be for doing this.
+        */
+        final int count = Integer.parseInt(properties.getProperty("Competition.Count"));
+        List<Competition> result = new ArrayList<Competition>();
+        for (int i = 1; i <= count; ++i) {
+            final String competitionPrefix = "Competition." + i;
+            final String name = properties.getProperty(competitionPrefix + ".Name");
+            final String type = properties.getProperty(competitionPrefix + ".Type");
+            final double cost = Double.parseDouble(properties.getProperty(competitionPrefix + ".Cost"));
+            final double clubTake = Double.parseDouble(properties.getProperty(competitionPrefix + ".ClubTake"));
+
+            if ("Pool".equals(type)) {
+                // Parse out Pool specific fields
+                final int payoutPeriod = Integer.parseInt(properties.getProperty(competitionPrefix + ".PayoutPeriod"));
+                result.add(new Pool(name, cost, clubTake, payoutPeriod));
+            } else if ("Nomination".equals(type)) {
+                // Parse out Nomination specific fields
+                final String payoutRatios = properties.getProperty(competitionPrefix + ".PayoutRatios");
+                final StringTokenizer tokenizer = new StringTokenizer(payoutRatios, ":");
+                final int payoutCount = tokenizer.countTokens();
+                final double[] payouts = new double[payoutCount];
+                for (int j = 0; j < payoutCount; ++j) {
+                    payouts[j] = Double.parseDouble(tokenizer.nextToken());
+                }
+                result.add(new Nomination(name, cost, clubTake, payouts));
+            } else {
+                throw new IOException("Unknown competiion type: '" + type + "'");
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
 }

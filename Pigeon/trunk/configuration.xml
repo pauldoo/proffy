@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <!--
-        This file contains configuration settings which cannot be access through the GUI.
-    -->
     <comment>
-        Mode:  Can be either "FEDERATION" or "CLUB".
+        This file contains configuration settings which cannot be access through the GUI.
     </comment>
+    
+    <!--
+        Mode: Can be either "FEDERATION" or "CLUB".
+    -->
     <entry key="Mode">FEDERATION</entry>
+    
+    <!--
+        The number of configured competitions.
+    -->
+    <entry key="Competition.Count">3</entry>
+
+    <!--
+        For each competition a number of keys are defined.
+        
+        Name: Textual name given to the pool or nomination.
+        Type: Can be either "POOL" or "NOMINATION"
+        Cost: Entry cost in pounds
+        ClubTake: Fraction of the total prize fund kept by the club
+        PayoutPeriod: (pools only), how often prizes are paid out
+        PayoutRatios: (nominations only), the distributions of the top prizes
+    -->
+    <entry key="Competition.1.Name">A</entry>
+    <entry key="Competition.1.Type">Pool</entry>
+    <entry key="Competition.1.Cost">0.50</entry>
+    <entry key="Competition.1.ClubTake">0.05</entry>
+    <entry key="Competition.1.PayoutPeriod">20</entry>
+    
+    <entry key="Competition.2.Name">B</entry>
+    <entry key="Competition.2.Type">Pool</entry>
+    <entry key="Competition.2.Cost">0.20</entry>
+    <entry key="Competition.2.ClubTake">0.05</entry>
+    <entry key="Competition.2.PayoutPeriod">20</entry>
+    
+    <entry key="Competition.3.Name">Nomination</entry>
+    <entry key="Competition.3.Type">Nomination</entry>
+    <entry key="Competition.3.Cost">1.00</entry>
+    <entry key="Competition.3.ClubTake">0.05</entry>
+    <entry key="Competition.3.PayoutRatios">0.50:0.30:0.20</entry>
 </properties>
