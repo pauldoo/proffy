@@ -32,16 +32,23 @@
 package pigeon.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * Represents the clocking time for a single ring number.
- */
+    Represents the clocking time for a single ring number.
+    
+    TODO: Rename, to maybe RingTime, PigeonEntry, ...
+*/
 public final class Time implements Comparable<Time>, Serializable
 {
     private static final long serialVersionUID = 5746826265321182248L;
 
     private String ringNumber = "";
     private int time = 0;
+    private final Set<String> competitionsEntered = new TreeSet<String>();
 
     public Time()
     {
@@ -86,5 +93,18 @@ public final class Time implements Comparable<Time>, Serializable
     public int compareTo(Time other)
     {
         return this.getRingNumber().compareTo(other.getRingNumber());
+    }
+    
+    public Collection<String> getCompetitionsEntered()
+    {
+        return Collections.unmodifiableCollection(competitionsEntered);
+    }
+    
+    public void setCompetitionsEntered(Collection<String> competitions)
+    {
+        competitionsEntered.clear();
+        for (String name: competitions) {
+            competitionsEntered.addAll(competitions);
+        }
     }
 }

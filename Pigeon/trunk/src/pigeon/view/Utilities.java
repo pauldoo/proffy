@@ -32,18 +32,27 @@
 package pigeon.view;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.Vector;
+import pigeon.competitions.Competition;
+import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Member;
 import pigeon.model.Organization;
+import pigeon.model.Race;
+import pigeon.model.Season;
+import pigeon.model.Time;
+import pigeon.model.ValidationException;
 
 /**
- * Public static methods for doing various things (mainly manipulating time).
- */
+    Public static methods that don't have a natural home in any
+    of the view classes.
+*/
 public final class Utilities {
 
     // Non-Creatable
@@ -51,12 +60,21 @@ public final class Utilities {
     {
     }
     
-    public static final int BASE_YEAR = 2000;
+    /**
+        The start range for year drop down combo boxes.
+    */
+    public static final int YEAR_DISPLAY_START = 2005;
+
+    /**
+        The end range for year drop down combo boxes.
+    */
+    public static final int YEAR_DISPLAY_END = YEAR_DISPLAY_START + 10;
 
     /**
         DateFormat for formatting times that span just a single day.
     
         Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
+        The resulting string will be in 24hr time (hopefully).
     */
     public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE;
     static {
@@ -68,17 +86,30 @@ public final class Utilities {
         DateFormat for formatting times that occur on a real calendar.
     
         Their 'long' representation is not confined to spanning just a single day.
+        The local time zone is taken into account.
     */
     public static final DateFormat TIME_FORMAT_WITH_LOCALE;
     static {
         TIME_FORMAT_WITH_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
     }
 
+    /**
+        DateFormat for formatting dates that occur on a real calendar.
+    
+        Their 'long' representation is not confined to spanning just a single day.
+        The local time zone is taken into account.
+    */
     public static final DateFormat DATE_FORMAT;
     static {
         DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
     }
 
+    /**
+        Given a long value representing a time, returns the beginning of that day.
+    
+        Does not take into account timezones or locale information, so should only
+        be used for times that are relative and span only a few days.
+    */
     public static long startOfDay(long time) {
         return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
     }
@@ -86,7 +117,7 @@ public final class Utilities {
     /**
         Given an Organization, return a list of all the club names mentioned in member profiles.
     */
-    public static SortedSet<String> findClubNames(Organization organization)
+    public static Collection<String> findClubNames(Organization organization)
     {
         SortedSet<String> result = new TreeSet<String>();
         for (Member m: organization.getMembers()) {
@@ -94,13 +125,13 @@ public final class Utilities {
                 result.add(m.getClub());
             }
         }
-        return result;
+        return Collections.unmodifiableCollection(result);
     }
 
     /**
         Given an Organization, return a list of all the section names mentioned in member profiles.
     */
-    public static SortedSet<String> findSectionNames(Organization organization)
+    public static Collection<String> findSectionNames(Organization organization)
     {
         SortedSet<String> result = new TreeSet<String>();
         for (Member m: organization.getMembers()) {
@@ -108,6 +139,62 @@ public final class Utilities {
                 result.add(m.getSection());
             }
         }
-        return result;
+        return Collections.unmodifiableCollection(result);
+    }
+    
+    /**
+        Checks all the times entered in a season and returns all the competitions
+        mentioned in the pigeon time entries.
+        
+        Used when loading a season to verify that all of the competitions used when
+        saving the season are still present in the configuration file.
+    */
+    private static Collection<String>  getCompetitionNames(Season season)
+    {
+        // Use a Set here to ensure that duplicates are removed.
+        Set<String> result = new TreeSet<String>();
+        for (Race r: season.getRaces()) {
+            for (Clock c: r.getClocks()) {
+                for (Time t: c.getTimes()) {
+                    // addAll() doesn't work if the argument is a non-modifiable
+                    // collection (don't know why, seems stupid).
+                    result.addAll(t.getCompetitionsEntered());
+                }
+            }
+        }
+        return Collections.unmodifiableCollection(result);
+    }
+    
+    /**
+        Returns a list of all the competition names in a configuration.
+    */
+    public static Collection<String>  getCompetitionNames(Collection<Competition> competitions)
+    {
+        // Don't expect duplicate names in the configuration, so we can use
+        // any kind of collection.
+        Collection<String> result = new ArrayList<String>();
+        for (Competition c: competitions) {
+            result.add(c.getName());
+        }
+        return Collections.unmodifiableCollection(result);
+    }
+    
+    /**
+        Verifies that a season is valid with respect to the current
+        application version and configuration.
+    
+        Checks (for example) that the competition names mentioned
+        in the loaded file are still present in the application configuration
+        file.
+    */
+    public static void validateSeason(Season season, Configuration configuration) throws ValidationException
+    {
+        Collection<String> competitionsMentionedInFile = getCompetitionNames(season);
+        Collection<String> competitionsConfigured = getCompetitionNames(configuration.getCompetitions());
+        if (!competitionsConfigured.containsAll(competitionsMentionedInFile)) {
+            // The application configuration does not mention all the competitions mentioned
+            // in the season, so we shouldn't load it.
+            throw new ValidationException("The season cannot be loaded.\nThe application is not configured with the pools used in this season.");
+        }
     }
 }

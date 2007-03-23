@@ -33,9 +33,12 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.Collection;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import pigeon.competitions.Competition;
 import pigeon.model.Clock;
 import pigeon.model.Time;
 
@@ -51,11 +54,13 @@ final class ClockEditor extends javax.swing.JPanel
 
     private final Clock clock;
     private final int daysInRace;
+    private final Collection<Competition> competitions;
 
-    public ClockEditor(Clock clock, int daysInRace)
+    public ClockEditor(Clock clock, int daysInRace, Collection<Competition> competitions)
     {
         this.clock = clock;
         this.daysInRace = daysInRace;
+        this.competitions = competitions;
         initComponents();
         timesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e) {
@@ -79,6 +84,7 @@ final class ClockEditor extends javax.swing.JPanel
         timesTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -115,6 +121,17 @@ final class ClockEditor extends javax.swing.JPanel
 
         jPanel1.add(addButton);
 
+        editButton.setText("Edit Ring Number");
+        editButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        jPanel1.add(editButton);
+
         removeButton.setText("Remove Ring Number");
         removeButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -135,6 +152,17 @@ final class ClockEditor extends javax.swing.JPanel
 
     }// </editor-fold>//GEN-END:initComponents
 
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editButtonActionPerformed
+    {//GEN-HEADEREND:event_editButtonActionPerformed
+        try {
+            int index = timesTable.getSelectedRow();
+            Time time = clock.getTimes().get(index);
+            RingTimeEditor.editEntry(this, time, daysInRace, competitions);
+            reloadTimesTable();
+        } catch (UserCancelledException e) {
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_removeButtonActionPerformed
     {//GEN-HEADEREND:event_removeButtonActionPerformed
         int index = timesTable.getSelectedRow();
@@ -146,7 +174,7 @@ final class ClockEditor extends javax.swing.JPanel
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
         try {
-            Time time = RingTimeEditor.createEntry(this, daysInRace);
+            Time time = RingTimeEditor.createEntry(this, daysInRace, competitions);
             clock.addTime(time);
             reloadTimesTable();
         } catch (UserCancelledException e) {
@@ -157,6 +185,7 @@ final class ClockEditor extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JPanel clockTimesPanel;
+    private javax.swing.JButton editButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -164,9 +193,9 @@ final class ClockEditor extends javax.swing.JPanel
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
 
-    public static void editClockResults(Component parent, Clock clock, int daysInRace)
+    public static void editClockResults(Component parent, Clock clock, int daysInRace, Collection<Competition> competitions)
     {
-        ClockEditor panel = new ClockEditor(clock, daysInRace);
+        ClockEditor panel = new ClockEditor(clock, daysInRace, competitions);
         Object[] options = {"Finished"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }

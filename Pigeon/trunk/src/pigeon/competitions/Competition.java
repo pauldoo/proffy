@@ -56,4 +56,9 @@ public abstract class Competition
         this.entryCost = entryCost;
         this.clubTake = clubTake;
     }
+    
+    public String getName()
+    {
+        return name;
+    }
 }

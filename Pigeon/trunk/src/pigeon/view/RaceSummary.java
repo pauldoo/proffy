@@ -66,7 +66,7 @@ final class RaceSummary extends javax.swing.JPanel {
         calendar.setTime(race.getLiberationDate());
         dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
         monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
+        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.YEAR_DISPLAY_START);
         hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
@@ -102,7 +102,7 @@ final class RaceSummary extends javax.swing.JPanel {
             monthCombo.addItem(str);
         }
 
-        for (int year = Utilities.BASE_YEAR; year <= Utilities.BASE_YEAR + 20; year++) {
+        for (int year = Utilities.YEAR_DISPLAY_START; year <= Utilities.YEAR_DISPLAY_END; year++) {
             yearCombo.addItem(year);
         }
 

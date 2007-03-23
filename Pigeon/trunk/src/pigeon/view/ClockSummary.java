@@ -70,7 +70,7 @@ final class ClockSummary extends javax.swing.JPanel {
         calendar.setTime(clock.getTimeOnMasterWhenSet());
         setDayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
         setMonthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        setYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
+        setYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.YEAR_DISPLAY_START);
         masterSetHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         masterSetMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         masterSetSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
@@ -82,7 +82,7 @@ final class ClockSummary extends javax.swing.JPanel {
         calendar.setTime(clock.getTimeOnMasterWhenOpened());
         openDayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
         openMonthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        openYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.BASE_YEAR);
+        openYearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.YEAR_DISPLAY_START);
         masterOpenHourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
         masterOpenMinuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
         masterOpenSecondCombo.setSelectedIndex(calendar.get(Calendar.SECOND));
@@ -543,7 +543,7 @@ final class ClockSummary extends javax.swing.JPanel {
             openMonthCombo.addItem(str);
         }
 
-        for (int year = Utilities.BASE_YEAR; year <= Utilities.BASE_YEAR + 20; year++) {
+        for (int year = Utilities.YEAR_DISPLAY_START; year <= Utilities.YEAR_DISPLAY_END; year++) {
             setYearCombo.addItem(year);
             openYearCombo.addItem(year);
         }

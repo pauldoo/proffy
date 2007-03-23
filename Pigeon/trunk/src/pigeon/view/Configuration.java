@@ -34,6 +34,7 @@ package pigeon.view;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -47,8 +48,9 @@ import pigeon.competitions.Pool;
  */
 final class Configuration
 {
-    private final Properties properties = new Properties();
-
+    private final Mode mode;
+    private final Collection<Competition> competitions;
+    
     public static enum Mode {
         FEDERATION,
         CLUB
@@ -56,18 +58,19 @@ final class Configuration
 
     public Configuration(InputStream input) throws IOException
     {
+        final Properties properties = new Properties();
         properties.loadFromXML(input);
-        // Check validity by parsing out mode and pools.
-        getMode();
-        getCompetitions();
+        
+        this.mode = loadMode(properties);
+        this.competitions = loadCompetitions(properties);
     }
 
-    public Mode getMode()
+    private static Mode loadMode(Properties properties)
     {
         return Mode.valueOf(properties.getProperty("Mode"));
     }
 
-    public List<Competition> getCompetitions() throws IOException
+    private static Collection<Competition> loadCompetitions(Properties properties) throws IOException
     {
         /**
             This code is a bit messy, not sure what the ideal
@@ -100,6 +103,16 @@ final class Configuration
                 throw new IOException("Unknown competiion type: '" + type + "'");
             }
         }
-        return Collections.unmodifiableList(result);
+        return Collections.unmodifiableCollection(result);
+    }
+    
+    public Mode getMode()
+    {
+        return this.mode;
+    }
+    
+    public Collection<Competition> getCompetitions()
+    {
+        return this.competitions;
     }
 }

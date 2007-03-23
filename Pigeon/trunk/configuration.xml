@@ -13,7 +13,7 @@
     <!--
         The number of configured competitions.
     -->
-    <entry key="Competition.Count">3</entry>
+    <entry key="Competition.Count">10</entry>
 
     <!--
         For each competition a number of keys are defined.
@@ -36,10 +36,52 @@
     <entry key="Competition.2.Cost">0.20</entry>
     <entry key="Competition.2.ClubTake">0.05</entry>
     <entry key="Competition.2.PayoutPeriod">20</entry>
-    
-    <entry key="Competition.3.Name">Nomination</entry>
-    <entry key="Competition.3.Type">Nomination</entry>
-    <entry key="Competition.3.Cost">1.00</entry>
+
+    <entry key="Competition.3.Name">C</entry>
+    <entry key="Competition.3.Type">Pool</entry>
+    <entry key="Competition.3.Cost">0.20</entry>
     <entry key="Competition.3.ClubTake">0.05</entry>
-    <entry key="Competition.3.PayoutRatios">0.50:0.30:0.20</entry>
+    <entry key="Competition.3.PayoutPeriod">20</entry>
+
+    <entry key="Competition.4.Name">D</entry>
+    <entry key="Competition.4.Type">Pool</entry>
+    <entry key="Competition.4.Cost">0.50</entry>
+    <entry key="Competition.4.ClubTake">0.05</entry>
+    <entry key="Competition.4.PayoutPeriod">20</entry>
+    
+    <entry key="Competition.5.Name">E</entry>
+    <entry key="Competition.5.Type">Pool</entry>
+    <entry key="Competition.5.Cost">0.20</entry>
+    <entry key="Competition.5.ClubTake">0.05</entry>
+    <entry key="Competition.5.PayoutPeriod">20</entry>
+
+    <entry key="Competition.6.Name">F</entry>
+    <entry key="Competition.6.Type">Pool</entry>
+    <entry key="Competition.6.Cost">0.20</entry>
+    <entry key="Competition.6.ClubTake">0.05</entry>
+    <entry key="Competition.6.PayoutPeriod">20</entry>
+    
+    <entry key="Competition.7.Name">G</entry>
+    <entry key="Competition.7.Type">Pool</entry>
+    <entry key="Competition.7.Cost">0.50</entry>
+    <entry key="Competition.7.ClubTake">0.05</entry>
+    <entry key="Competition.7.PayoutPeriod">20</entry>
+    
+    <entry key="Competition.8.Name">H</entry>
+    <entry key="Competition.8.Type">Pool</entry>
+    <entry key="Competition.8.Cost">0.20</entry>
+    <entry key="Competition.8.ClubTake">0.05</entry>
+    <entry key="Competition.8.PayoutPeriod">20</entry>
+
+    <entry key="Competition.9.Name">I</entry>
+    <entry key="Competition.9.Type">Pool</entry>
+    <entry key="Competition.9.Cost">0.20</entry>
+    <entry key="Competition.9.ClubTake">0.05</entry>
+    <entry key="Competition.9.PayoutPeriod">20</entry>
+
+    <entry key="Competition.10.Name">Nomination</entry>
+    <entry key="Competition.10.Type">Nomination</entry>
+    <entry key="Competition.10.Cost">1.00</entry>
+    <entry key="Competition.10.ClubTake">0.05</entry>
+    <entry key="Competition.10.PayoutRatios">0.50:0.30:0.20</entry>
 </properties>

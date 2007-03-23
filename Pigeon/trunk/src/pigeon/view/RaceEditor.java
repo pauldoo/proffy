@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import pigeon.competitions.Competition;
 import pigeon.model.Clock;
 import pigeon.model.Organization;
 import pigeon.model.Member;
@@ -55,10 +56,12 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private final Race race;
     Collection<Member> members;
+    Collection<Competition> competitions;
 
-    public RaceEditor(Race race, Collection<Member> members) {
+    public RaceEditor(Race race, Collection<Member> members, Collection<Competition> competitions) {
         this.race = race;
         this.members = members;
+        this.competitions = competitions;
         initComponents();
         clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e) {
@@ -180,7 +183,7 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
     {
-        ClockEditor.editClockResults(this, clock, race.getDaysCovered());
+        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), competitions);
     }
 
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
@@ -211,8 +214,8 @@ final class RaceEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    static public void editRaceResults(Component parent, Race race, Organization club) {
-        RaceEditor panel = new RaceEditor(race, club.getMembers());
+    static public void editRaceResults(Component parent, Race race, Organization club, Collection<Competition> competitions) {
+        RaceEditor panel = new RaceEditor(race, club.getMembers(), competitions);
         Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }

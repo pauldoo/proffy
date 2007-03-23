@@ -92,7 +92,7 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });     
         setIconImage(getIcon());
-        switchToCard("mainMenu");
+        setSeason(null, "mainMenu");
     }
 
     private static Image getIcon()
@@ -752,7 +752,7 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void editResultsForRace(Race race) throws UserCancelledException {
         Component parent = this.getContentPane();
-        RaceEditor.editRaceResults(parent, race, season.getOrganization());
+        RaceEditor.editRaceResults(parent, race, season.getOrganization(), configuration.getCompetitions());
     }
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed
@@ -1066,9 +1066,18 @@ final class MainWindow extends javax.swing.JFrame {
     /**
         Switches to a new Season object, and move to the specified screen.
     */
-    private void setSeason(Season season, String cardName) {
-        this.season = season;
-        switchToCard(cardName);
+    private void setSeason(Season season, String cardName)
+    {
+        try {
+            if (season != null) {
+                Utilities.validateSeason(season, configuration);
+            }
+            this.season = season;
+            switchToCard(cardName);
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this.getContentPane());
+            setSeason(null, "mainMenu");
+        }
     }
 
     private static void checkAssertions() {
@@ -1100,7 +1109,7 @@ final class MainWindow extends javax.swing.JFrame {
                 default:
                     throw new IllegalStateException();
             }
-            this.season = null;
+            setSeason(null, "mainMenu");
             this.currentlyLoadedFile = null;
         }
     }

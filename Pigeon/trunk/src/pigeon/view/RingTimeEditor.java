@@ -32,7 +32,13 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import pigeon.competitions.Competition;
 import pigeon.model.Constants;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
@@ -46,19 +52,30 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private final Time time;
     private final int numberOfDaysCovered;
+    private final Map<String, JCheckBox> competitionCheckboxes = new TreeMap<String, JCheckBox>();
 
-    public RingTimeEditor(Time time, int numberOfDaysCovered)
+    public RingTimeEditor(Time time, int numberOfDaysCovered, Collection<Competition> competitions)
     {
         this.time = time;
         this.numberOfDaysCovered = numberOfDaysCovered;
         initComponents();
         addComboOptions();
+        addCompetitions(competitions);
 
+        updateGui();
+    }
+    
+    private void updateGui()
+    {
         ringNumberText.setText(time.getRingNumber());
         dayCombo.setSelectedIndex((int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY));
         hourCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_HOUR) % 24));
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
+    
+        for (String name: time.getCompetitionsEntered()) {
+            competitionCheckboxes.get(name).setSelected(true);
+        }
     }
 
     private void updateTimeObject() throws ValidationException
@@ -70,6 +87,14 @@ final class RingTimeEditor extends javax.swing.JPanel
                 (new Integer(minuteCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_MINUTE) +
                 (new Integer(secondCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_SECOND);
         time.setMemberTime(memberTime, numberOfDaysCovered);
+        
+        Collection<String> selectedCompetitions = new TreeSet<String>();
+        for (Map.Entry<String, JCheckBox> entry: competitionCheckboxes.entrySet()) {
+            if (entry.getValue().isSelected()) {
+                selectedCompetitions.add(entry.getKey());
+            }
+        }
+        time.setCompetitionsEntered(selectedCompetitions);
     }
 
     /** This method is called from within the constructor to
@@ -92,6 +117,8 @@ final class RingTimeEditor extends javax.swing.JPanel
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dayCombo = new javax.swing.JComboBox();
+        competitionsPanel = new javax.swing.JPanel();
+        poolsLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -172,10 +199,29 @@ final class RingTimeEditor extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(dayCombo, gridBagConstraints);
 
+        competitionsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(competitionsPanel, gridBagConstraints);
+
+        poolsLabel.setText("Pools");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(poolsLabel, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel competitionsPanel;
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel jLabel1;
@@ -184,13 +230,14 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JComboBox minuteCombo;
+    private javax.swing.JLabel poolsLabel;
     private javax.swing.JTextField ringNumberText;
     private javax.swing.JComboBox secondCombo;
     // End of variables declaration//GEN-END:variables
 
-    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, boolean newTime) throws UserCancelledException
+    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Collection<Competition> competitions, boolean newTime) throws UserCancelledException
     {
-        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered);
+        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, competitions);
         while (true)
         {
             Object[] options = { (newTime ? "Add" : "Ok"), "Cancel" };
@@ -218,13 +265,27 @@ final class RingTimeEditor extends javax.swing.JPanel
         }
     }
 
-    public static Time createEntry(Component parent, int numberOfDaysCovered) throws UserCancelledException
+    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Collection<Competition> competitions) throws UserCancelledException
+    {
+        editEntry(parent, time, numberOfDaysCovered, competitions, false);
+    }
+
+    public static Time createEntry(Component parent, int numberOfDaysCovered, Collection<Competition> competitions) throws UserCancelledException
     {
         Time time = new Time();
-        editEntry(parent, time, numberOfDaysCovered, true);
+        editEntry(parent, time, numberOfDaysCovered, competitions, true);
         return time;
     }
 
+    private void addCompetitions(Collection<Competition> competitions)
+    {
+        for (String name: Utilities.getCompetitionNames(competitions)) {
+            JCheckBox checkBox = new JCheckBox(name);
+            competitionCheckboxes.put(name, checkBox);
+            competitionsPanel.add(checkBox);
+        }
+    }
+    
     private void addComboOptions()
     {
         for (int day = 1; day <= numberOfDaysCovered; day++)
