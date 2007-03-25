@@ -48,7 +48,11 @@ public final class Time implements Comparable<Time>, Serializable
 
     private String ringNumber = "";
     private int time = 0;
-    private final Set<String> competitionsEntered = new TreeSet<String>();
+    
+    /// In CLUB mode, this list stores the club competitions.
+    private Set<String> openCompetitionsEntered = new TreeSet<String>();
+    /// Only populated in FEDERATION mode, empty in CLUB mode.
+    private Set<String> sectionCompetitionsEntered = new TreeSet<String>();
 
     public Time()
     {
@@ -70,8 +74,8 @@ public final class Time implements Comparable<Time>, Serializable
     }
 
     /**
-     * Member time is measured in ms since the midnight before liberation.
-     */
+        Member time is measured in ms since the midnight before liberation.
+    */
     public void setMemberTime(long time, int daysInRace) throws ValidationException
     {
         if (time < 0 || time >= daysInRace * Constants.MILLISECONDS_PER_DAY) {
@@ -95,16 +99,23 @@ public final class Time implements Comparable<Time>, Serializable
         return this.getRingNumber().compareTo(other.getRingNumber());
     }
     
-    public Collection<String> getCompetitionsEntered()
+    public Collection<String> getOpenCompetitionsEntered()
     {
-        return Collections.unmodifiableCollection(competitionsEntered);
+        return Collections.unmodifiableCollection(openCompetitionsEntered);
     }
     
-    public void setCompetitionsEntered(Collection<String> competitions)
+    public void setOpenCompetitionsEntered(Collection<String> competitions)
     {
-        competitionsEntered.clear();
-        for (String name: competitions) {
-            competitionsEntered.addAll(competitions);
-        }
+        openCompetitionsEntered = new TreeSet<String>(competitions);
+    }
+
+    public Collection<String> getSectionCompetitionsEntered()
+    {
+        return Collections.unmodifiableCollection(sectionCompetitionsEntered);
+    }
+    
+    public void setSectionCompetitionsEntered(Collection<String> competitions)
+    {
+        sectionCompetitionsEntered = new TreeSet<String>(competitions);
     }
 }

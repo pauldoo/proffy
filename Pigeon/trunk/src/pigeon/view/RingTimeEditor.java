@@ -52,15 +52,18 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private final Time time;
     private final int numberOfDaysCovered;
-    private final Map<String, JCheckBox> competitionCheckboxes = new TreeMap<String, JCheckBox>();
-
-    public RingTimeEditor(Time time, int numberOfDaysCovered, Collection<Competition> competitions)
+    private final Configuration configuration;
+    private final Map<String, JCheckBox> openCompetitionCheckboxes = new TreeMap<String, JCheckBox>();
+    private final Map<String, JCheckBox> sectionCompetitionCheckboxes = new TreeMap<String, JCheckBox>();
+    
+    public RingTimeEditor(Time time, int numberOfDaysCovered, Configuration configuration)
     {
         this.time = time;
         this.numberOfDaysCovered = numberOfDaysCovered;
+        this.configuration = configuration;
         initComponents();
         addComboOptions();
-        addCompetitions(competitions);
+        addCompetitions();
 
         updateGui();
     }
@@ -72,12 +75,51 @@ final class RingTimeEditor extends javax.swing.JPanel
         hourCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_HOUR) % 24));
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
-    
-        for (String name: time.getCompetitionsEntered()) {
-            competitionCheckboxes.get(name).setSelected(true);
+
+        switch (configuration.getMode()) {
+            case FEDERATION:
+                for (String name: time.getOpenCompetitionsEntered()) {
+                    openCompetitionCheckboxes.get(name).setSelected(true);
+                }
+                for (String name: time.getSectionCompetitionsEntered()) {
+                    sectionCompetitionCheckboxes.get(name).setSelected(true);
+                }
+                break;
+                
+            case CLUB:
+                openPoolsLabel.setText("Pools");
+                sectionPoolsLabel.setEnabled(false);
+                sectionPoolsPanel.setEnabled(false);
+                for (JCheckBox checkBox: sectionCompetitionCheckboxes.values()) {
+                    checkBox.setEnabled(false);
+                }
+                this.remove(sectionPoolsLabel);
+                this.remove(sectionPoolsPanel);
+                
+                for (String name: time.getOpenCompetitionsEntered()) {
+                    openCompetitionCheckboxes.get(name).setSelected(true);
+                }
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Unexpected application mode: " + configuration.getMode());
         }
     }
 
+    /**
+        Finds the names of all the checkboxes that have been ticked.
+    */
+    private Collection<String> findSelectedBoxes(Map<String, JCheckBox> checkboxes)
+    {
+        Collection<String> result = new TreeSet<String>();
+        for (Map.Entry<String, JCheckBox> entry: checkboxes.entrySet()) {
+            if (entry.getValue().isSelected()) {
+                result.add(entry.getKey());
+            }
+        }
+        return result;
+    }
+    
     private void updateTimeObject() throws ValidationException
     {
         time.setRingNumber(ringNumberText.getText());
@@ -88,13 +130,18 @@ final class RingTimeEditor extends javax.swing.JPanel
                 (new Integer(secondCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_SECOND);
         time.setMemberTime(memberTime, numberOfDaysCovered);
         
-        Collection<String> selectedCompetitions = new TreeSet<String>();
-        for (Map.Entry<String, JCheckBox> entry: competitionCheckboxes.entrySet()) {
-            if (entry.getValue().isSelected()) {
-                selectedCompetitions.add(entry.getKey());
-            }
-        }
-        time.setCompetitionsEntered(selectedCompetitions);
+        switch (configuration.getMode()) {
+            case FEDERATION:
+                time.setOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
+                time.setSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
+                break;
+            case CLUB:
+                time.setOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Unexpected application mode: " + configuration.getMode());
+        }                
     }
 
     /** This method is called from within the constructor to
@@ -117,8 +164,10 @@ final class RingTimeEditor extends javax.swing.JPanel
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dayCombo = new javax.swing.JComboBox();
-        competitionsPanel = new javax.swing.JPanel();
-        poolsLabel = new javax.swing.JLabel();
+        openPoolsLabel = new javax.swing.JLabel();
+        openPoolsPanel = new javax.swing.JPanel();
+        sectionPoolsLabel = new javax.swing.JLabel();
+        sectionPoolsPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -199,7 +248,15 @@ final class RingTimeEditor extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(dayCombo, gridBagConstraints);
 
-        competitionsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
+        openPoolsLabel.setText("Open Pools");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(openPoolsLabel, gridBagConstraints);
+
+        openPoolsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -207,21 +264,26 @@ final class RingTimeEditor extends javax.swing.JPanel
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(competitionsPanel, gridBagConstraints);
+        add(openPoolsPanel, gridBagConstraints);
 
-        poolsLabel.setText("Pools");
+        sectionPoolsLabel.setText("Section Pools");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(poolsLabel, gridBagConstraints);
+        add(sectionPoolsLabel, gridBagConstraints);
+
+        sectionPoolsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(sectionPoolsPanel, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel competitionsPanel;
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel jLabel1;
@@ -230,14 +292,17 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JComboBox minuteCombo;
-    private javax.swing.JLabel poolsLabel;
+    private javax.swing.JLabel openPoolsLabel;
+    private javax.swing.JPanel openPoolsPanel;
     private javax.swing.JTextField ringNumberText;
     private javax.swing.JComboBox secondCombo;
+    private javax.swing.JLabel sectionPoolsLabel;
+    private javax.swing.JPanel sectionPoolsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Collection<Competition> competitions, boolean newTime) throws UserCancelledException
+    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Configuration configuration, boolean newTime) throws UserCancelledException
     {
-        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, competitions);
+        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, configuration);
         while (true)
         {
             Object[] options = { (newTime ? "Add" : "Ok"), "Cancel" };
@@ -265,24 +330,29 @@ final class RingTimeEditor extends javax.swing.JPanel
         }
     }
 
-    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Collection<Competition> competitions) throws UserCancelledException
+    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Configuration configuration) throws UserCancelledException
     {
-        editEntry(parent, time, numberOfDaysCovered, competitions, false);
+        editEntry(parent, time, numberOfDaysCovered, configuration, false);
     }
 
-    public static Time createEntry(Component parent, int numberOfDaysCovered, Collection<Competition> competitions) throws UserCancelledException
+    public static Time createEntry(Component parent, int numberOfDaysCovered, Configuration configuration) throws UserCancelledException
     {
         Time time = new Time();
-        editEntry(parent, time, numberOfDaysCovered, competitions, true);
+        editEntry(parent, time, numberOfDaysCovered, configuration, true);
         return time;
     }
 
-    private void addCompetitions(Collection<Competition> competitions)
+    private void addCompetitions()
     {
-        for (String name: Utilities.getCompetitionNames(competitions)) {
+        for (String name: Utilities.getCompetitionNames(configuration.getCompetitions())) {
             JCheckBox checkBox = new JCheckBox(name);
-            competitionCheckboxes.put(name, checkBox);
-            competitionsPanel.add(checkBox);
+            openCompetitionCheckboxes.put(name, checkBox);
+            openPoolsPanel.add(checkBox);
+        }
+        for (String name: Utilities.getCompetitionNames(configuration.getCompetitions())) {
+            JCheckBox checkBox = new JCheckBox(name);
+            sectionCompetitionCheckboxes.put(name, checkBox);
+            sectionPoolsPanel.add(checkBox);
         }
     }
     

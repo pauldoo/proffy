@@ -750,9 +750,10 @@ final class MainWindow extends javax.swing.JFrame {
         reloadRacesTable();
     }//GEN-LAST:event_raceresultAddButtonActionPerformed
 
-    private void editResultsForRace(Race race) throws UserCancelledException {
+    private void editResultsForRace(Race race) throws UserCancelledException
+    {
         Component parent = this.getContentPane();
-        RaceEditor.editRaceResults(parent, race, season.getOrganization(), configuration.getCompetitions());
+        RaceEditor.editRaceResults(parent, race, season.getOrganization(), configuration);
     }
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed

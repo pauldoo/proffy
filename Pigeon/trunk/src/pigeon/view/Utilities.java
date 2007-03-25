@@ -156,9 +156,8 @@ public final class Utilities {
         for (Race r: season.getRaces()) {
             for (Clock c: r.getClocks()) {
                 for (Time t: c.getTimes()) {
-                    // addAll() doesn't work if the argument is a non-modifiable
-                    // collection (don't know why, seems stupid).
-                    result.addAll(t.getCompetitionsEntered());
+                    result.addAll(t.getOpenCompetitionsEntered());
+                    result.addAll(t.getSectionCompetitionsEntered());
                 }
             }
         }

@@ -45,10 +45,10 @@ import pigeon.model.Race;
 import pigeon.model.ValidationException;
 
 /**
- * Lists the clocks for a given race.
- *
- * Lets the user add more clocks or go on to edit the times
- * associated with one of the clocks (using ClockEditor).
+    Lists the clocks for a given race.
+
+    Lets the user add more clocks or go on to edit the times
+    associated with one of the clocks (using ClockEditor).
  */
 final class RaceEditor extends javax.swing.JPanel {
 
@@ -56,12 +56,12 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private final Race race;
     Collection<Member> members;
-    Collection<Competition> competitions;
+    Configuration configuration;
 
-    public RaceEditor(Race race, Collection<Member> members, Collection<Competition> competitions) {
+    public RaceEditor(Race race, Collection<Member> members, Configuration configuration) {
         this.race = race;
         this.members = members;
-        this.competitions = competitions;
+        this.configuration = configuration;
         initComponents();
         clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e) {
@@ -183,7 +183,7 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
     {
-        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), competitions);
+        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), configuration);
     }
 
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
@@ -214,8 +214,8 @@ final class RaceEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    static public void editRaceResults(Component parent, Race race, Organization club, Collection<Competition> competitions) {
-        RaceEditor panel = new RaceEditor(race, club.getMembers(), competitions);
+    static public void editRaceResults(Component parent, Race race, Organization club, Configuration configuration) {
+        RaceEditor panel = new RaceEditor(race, club.getMembers(), configuration);
         Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
