@@ -35,9 +35,15 @@ public final class Pool extends Competition
 {
     private final int payoutPeriod;
     
-    public Pool(String name, double cost, double clubTake, int payoutPeriod)
+    public Pool(String name, double entryCost, double clubTake, int payoutPeriod)
     {
-        super(name, cost, clubTake);
+        super(name, entryCost, clubTake);
         this.payoutPeriod = payoutPeriod;
+    }
+    
+    public int maximumNumberOfWinners(int entrants)
+    {
+        double winners = ((1.0 - clubTake) * entrants)  / payoutPeriod;
+        return (int)Math.ceil(winners);
     }
 }

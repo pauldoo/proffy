@@ -54,4 +54,9 @@ public final class Nomination extends Competition
             throw new IllegalArgumentException("Payouts should total 1.0");
         }
     }
+    
+    public int maximumNumberOfWinners(int entrants)
+    {
+        return Math.min(entrants, payouts.length);
+    }
 }

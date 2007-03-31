@@ -34,17 +34,25 @@ package pigeon.report;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import pigeon.model.Clock;
+import pigeon.model.Race;
 
 /**
     Shared HTML bits.
 */
-final class Utilities
+public final class Utilities
 {
     // Non-Creatable
     private Utilities()
     {
     }
-    
+        
     public static PrintStream writeHtmlHeader(OutputStream stream, String title) throws IOException
     {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
@@ -57,6 +65,7 @@ final class Utilities
         out.println("  <title>" + title + "</title>");
         out.println("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
         out.println("  <style type=\"text/css\">");
+        out.println("    body { font-family: Verdana, sans-serif; }");
         out.println("    .outer { text-align:center; page-break-after: always; }");
         out.println("    .outer.last { page-break-after: auto; }");
         out.println("    h1 { margin-bottom:10px; font-size:18pt; }");
@@ -84,5 +93,29 @@ final class Utilities
         if (out.checkError()) {
             throw new IOException();
         }
+    }
+    
+    /**
+        Returns a list of the sections that were involved in a race,
+        or an empty collection if no section information is available.
+    */
+    public static List<String> participatingSections(Race race)
+    {
+        Set<String> result = new TreeSet<String>();
+        for (Clock clock: race.getClocks()) {
+            String section = clock.getMember().getSection();
+            if (section != null) {
+                result.add(section);
+            }
+        }
+        return new ArrayList<String>(result);
+    }    
+    
+    public static String StringPrintf(String format, Object... args) {
+            StringWriter buffer = new StringWriter();
+            PrintWriter writer = new PrintWriter(buffer);
+            writer.printf(format, args);
+            writer.flush();
+            return buffer.toString();
     }
 }

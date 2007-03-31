@@ -34,7 +34,10 @@ package pigeon.view;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,24 +51,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import pigeon.About;
+import pigeon.competitions.Competition;
 import pigeon.model.Member;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
+import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.RaceReporter;
 import pigeon.report.Reporter;
@@ -661,8 +676,110 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
-        writeReport("RaceResult", new RaceReporter(season.getOrganization(), race, listClubNames));
+        
+        JCheckBox raceReport = new JCheckBox("Race results", true);
+        JCheckBox poolsReport = new JCheckBox("Pool results", true);
+        JPanel options = new JPanel();
+        options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
+        options.add(raceReport);
+        options.add(poolsReport);
+        
+        int result = JOptionPane.showConfirmDialog(
+            this,
+            options,
+            "Results",
+            JOptionPane.OK_CANCEL_OPTION);
+        
+        if (result == JOptionPane.OK_OPTION) {
+            if (raceReport.isSelected()) {
+                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
+            }
+            if (poolsReport.isSelected()) {
+                Map<String, Map<String, JTextField>> textFieldMap = new TreeMap<String, Map<String, JTextField>>();
+                JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, race);
+                
+                int dialogResult = JOptionPane.showConfirmDialog(
+                    this,
+                    panel,
+                    "Entrants",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+                
+                if (dialogResult == JOptionPane.OK_OPTION) {
+                    Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
+                    for (Map.Entry<String, Map<String, JTextField>> i: textFieldMap.entrySet()) {
+                        entrantsCount.put(i.getKey(), new TreeMap<String, Integer>());
+                        for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
+                            entrantsCount.get(i.getKey()).put(j.getKey(), Integer.parseInt(j.getValue().getText()));
+                        }
+                    }
+                    writeReport("PoolResults", new CompetitionReporter(
+                        season.getOrganization(),
+                        race,
+                        listClubNames,
+                        configuration.getCompetitions(),
+                        entrantsCount));
+                }
+            }
+        }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
+
+    private JPanel constructCompetitionEntrantCountPanel(Map<String, Map<String, JTextField>> textFieldMap, Race race) throws IllegalArgumentException
+    {
+        JPanel panel = new JPanel();
+        GridBagLayout gridbag = new GridBagLayout();
+        panel.setLayout(gridbag);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+        
+        List<String> sections = pigeon.report.Utilities.participatingSections(race);
+        if (sections.contains("Open")) {
+            throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
+        }
+        sections.add(0, "Open");
+        
+        for (String section: sections) {
+            textFieldMap.put(section, new TreeMap<String, JTextField>());
+            
+            constraints.anchor = GridBagConstraints.CENTER;
+            constraints.fill = GridBagConstraints.NONE;
+            constraints.weightx = 1.0;
+            constraints.gridwidth = 2;
+            if (section == sections.get(sections.size() - 1)) {
+                constraints.gridwidth = GridBagConstraints.REMAINDER;
+            }
+            JLabel label = new JLabel(section);
+            gridbag.setConstraints(label, constraints);
+            panel.add(label);
+        }
+        
+        for (Competition c: configuration.getCompetitions()) {
+            for (String section: sections) {
+                constraints.anchor = GridBagConstraints.EAST;
+                constraints.fill = GridBagConstraints.NONE;
+                constraints.weightx = 0.0;
+                constraints.gridwidth = 1;
+                JLabel label = new JLabel(c.getName());
+                gridbag.setConstraints(label, constraints);
+                panel.add(label);
+
+                constraints.anchor = GridBagConstraints.WEST;
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.weightx = 1.0;
+                constraints.gridwidth = 1;
+                if (section == sections.get(sections.size() - 1)) {
+                    constraints.gridwidth = GridBagConstraints.REMAINDER;
+                }
+                JTextField field = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                field.setColumns(4);
+                gridbag.setConstraints(field, constraints);
+                panel.add(field);
+                
+                textFieldMap.get(section).put(c.getName(), field);
+            }
+        }
+        return panel;
+    }
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
         try {

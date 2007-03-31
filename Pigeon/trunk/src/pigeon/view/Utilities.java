@@ -35,6 +35,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TimeZone;
@@ -167,15 +168,15 @@ public final class Utilities {
     /**
         Returns a list of all the competition names in a configuration.
     */
-    public static Collection<String>  getCompetitionNames(Collection<Competition> competitions)
+    public static List<String>  getCompetitionNames(List<Competition> competitions)
     {
         // Don't expect duplicate names in the configuration, so we can use
         // any kind of collection.
-        Collection<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<String>();
         for (Competition c: competitions) {
             result.add(c.getName());
         }
-        return Collections.unmodifiableCollection(result);
+        return Collections.unmodifiableList(result);
     }
     
     /**

@@ -37,18 +37,18 @@ public abstract class Competition
         The textual name of the competition as it
         appears on reports etc.
     */
-    private final String name;
+    protected final String name;
     
     /**
         The cost per bird to enter.
     */
-    private final double entryCost;
+    protected final double entryCost;
     
     /**
         The fraction of the total prize fund that is kept by the
         club before prizes are calculated.
     */
-    private final double clubTake;
+    protected final double clubTake;
     
     public Competition(String name, double entryCost, double clubTake)
     {
@@ -61,4 +61,12 @@ public abstract class Competition
     {
         return name;
     }
+    
+    /**
+        Given the number of entrants for this competition,
+        calculate the maximum number of winners there could
+        be.  The actual number of winners may be smaller if
+        not enough birds complete the race.
+    */
+    public abstract int maximumNumberOfWinners(int entrants);
 }

@@ -34,41 +34,91 @@ package pigeon.report;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import pigeon.competitions.Competition;
 import pigeon.model.Clock;
-import pigeon.model.Organization;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
+import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Time;
 
 /**
-    Generates an HTML report for a single race.
+    Generates an HTML report for the pools on a single race.
 
     Federation and section results are generated on the same page.
 */
-public final class RaceReporter implements Reporter {
-
+public class CompetitionReporter implements Reporter
+{
     private final Organization club;
     private final Race race;
     private final boolean listClubNames;
-
-    /** Creates a new instance of RaceReporter */
-    public RaceReporter(Organization club, Race race, boolean listClubNames) {
+    private final List<Competition> competitions;
+    private final Map<String, Map<String, Integer>> entrantsCount;
+    
+    /**
+        Creates a new instance of CompetitionReporter.
+    */
+    public CompetitionReporter(
+        Organization club,
+        Race race,
+        boolean listClubNames,
+        List<Competition> competitions,
+        Map<String, Map<String, Integer>> entrantsCount
+    )
+    {
         this.club = club;
         this.race = race;
         this.listClubNames = listClubNames;
+        this.competitions = competitions;
+        this.entrantsCount = entrantsCount;
     }
-
-    public void write(OutputStream stream) throws IOException {
+    
+    private static final class Row implements Comparable<Row>
+    {
+        public final double velocity;
+        public final Time time;
+        public final StringBuffer html = new StringBuffer();
+        
+        public Row(double velocity, Time time)
+        {
+            this.velocity = velocity;
+            this.time = time;
+        }
+        
+        public boolean equals(Object rhs)
+        {
+            return equals((Row)rhs);
+        }
+        
+        public boolean equals(Row rhs)
+        {
+            return compareTo(rhs) == 0;
+        }
+        
+        public int compareTo(Row rhs)
+        {
+            final Row lhs = this;
+            if (lhs == rhs) {
+                return 0;
+            }
+            
+            int result = -Double.compare(lhs.velocity, rhs.velocity);
+            if (result == 0) {
+                result = lhs.time.compareTo(rhs.time);
+            }
+            return result;
+        }
+    }
+    
+    public void write(OutputStream stream) throws IOException
+    {
         String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
@@ -87,12 +137,15 @@ public final class RaceReporter implements Reporter {
             out.println("<h1>" + club.getName() + "</h1>");
             if (section != null) {
                 out.println("<h2>Section: " + section + "</h2>");
+            } else {
+                out.println("<h2>Open</h2>");
             }
             out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
             out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
             int memberCount = 0;
             int birdCount = 0;
-            SortedMap<Double, String> results = new TreeMap<Double, String>();
+            SortedSet<Row> results = new TreeSet<Row>();
+            
             for (Clock clock: race.getClocks()) {
                 if (section != null && !clock.getMember().getSection().equals(section)) {
                     continue;
@@ -108,43 +161,68 @@ public final class RaceReporter implements Reporter {
                     double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
                     Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
                     double velocity = distance.getMetres() / flyTimeInSeconds;
-                    StringBuffer line = new StringBuffer();
-                    line.append("<td>" + clock.getMember().toString() + "</td>");
+                    
+                    Row row = new Row(velocity, time);
+                    row.html.append("<td>" + clock.getMember().toString() + "</td>");
                     if (listClubNames) {
-                        line.append("<td>" + clock.getMember().getClub() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                     }
-                    if (race.getDaysCovered() > 1) {
-                        int days = (int)((correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
-                        line.append("<td>" + (days + 1) + "</td>");
-                    }
-                    line.append("<td>" + pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(correctedClockTime) + "</td>");
-                    line.append("<td>" + distance.getMiles() + "</td>");
-                    line.append("<td>" + distance.getYardsRemainder() + "</td>");
-                    line.append("<td>" + time.getRingNumber() + "</td>");
-                    line.append("<td>Purple</td>");
-                    line.append("<td>H</td>");
-                    line.append("<td></td>");
-                    line.append("<td></td>");
-                    line.append("<td>" + Utilities.StringPrintf("%.3f", velocity * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
-                    results.put(-velocity, line.toString());
+                    row.html.append("<td>" + time.getRingNumber() + "</td>");
+                    results.add(row);
                 }
             }
             out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
             out.println("<table>");
-            out.print("<tr><th>Position</th><th>Member</th>");
+            out.print("<tr><th>Member</th>");
             if (listClubNames) {
                 out.print("<th>Club</th>");
             }
-            if (race.getDaysCovered() > 1) {
-                out.print("<th>Day</th>");
+            out.print("<th>Ring Number</th>");
+            for (Competition c: competitions) {
+                out.print("<th>" + c.getName() + "</th>");
             }
-            out.println("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>");
-            int pos = 0;
-            for (String line: results.values()) {
-                pos ++;
-                out.print("<tr><td>" + pos + "</td>");
-                out.print(line);
-                out.println("</tr>");
+            out.println("</tr>");
+                        
+            // For each competition name keep a track of how many of the winners we have found.
+            Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
+            for (Competition c: competitions) {
+                competitionPositions.put(c.getName(), 0);
+            }
+
+            // For each competition within this section, calculate the number of winners
+            Map<String, Integer> numberOfWinners = new TreeMap<String, Integer>();
+            for (Competition c: competitions) {
+                int entrants = entrantsCount.get(section == null ? "Open" : section).get(c.getName());
+                numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
+            }
+            
+            // Iterate each of the birds, in order they would appear in the race result.
+            for (Row row: results) {
+                boolean birdHasWonSomething = false;
+                Collection<String> competitionsEnteredByThisBird = null;
+                if (section == null) {
+                    competitionsEnteredByThisBird = row.time.getOpenCompetitionsEntered();
+                } else {
+                    competitionsEnteredByThisBird = row.time.getSectionCompetitionsEntered();
+                }
+                for (Competition c: competitions) {
+                    if (competitionsEnteredByThisBird.contains(c.getName())) {
+                        int position = competitionPositions.get(c.getName()) + 1;
+                        if (position <= numberOfWinners.get(c.getName())) {
+                            birdHasWonSomething = true;
+                            row.html.append("<td>" + position + "</td>");
+                            competitionPositions.put(c.getName(), position);
+                            continue;
+                        }
+                    }
+                    row.html.append("<td/>");
+                }
+                if (birdHasWonSomething) {
+                    // If this member has taken a place in any competition, print their line.
+                    out.println("<tr>");
+                    out.print(row.html.toString());
+                    out.println("</tr>");
+                }
             }
             out.println("</table>");
             out.println("</div>");
@@ -152,4 +230,5 @@ public final class RaceReporter implements Reporter {
 
         Utilities.writeHtmlFooter(out);
     }
+    
 }

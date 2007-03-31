@@ -49,7 +49,7 @@ import pigeon.competitions.Pool;
 final class Configuration
 {
     private final Mode mode;
-    private final Collection<Competition> competitions;
+    private final List<Competition> competitions;
     
     public static enum Mode {
         FEDERATION,
@@ -70,7 +70,7 @@ final class Configuration
         return Mode.valueOf(properties.getProperty("Mode"));
     }
 
-    private static Collection<Competition> loadCompetitions(Properties properties) throws IOException
+    private static List<Competition> loadCompetitions(Properties properties) throws IOException
     {
         /**
             This code is a bit messy, not sure what the ideal
@@ -103,7 +103,7 @@ final class Configuration
                 throw new IOException("Unknown competiion type: '" + type + "'");
             }
         }
-        return Collections.unmodifiableCollection(result);
+        return Collections.unmodifiableList(result);
     }
     
     public Mode getMode()
@@ -111,7 +111,7 @@ final class Configuration
         return this.mode;
     }
     
-    public Collection<Competition> getCompetitions()
+    public List<Competition> getCompetitions()
     {
         return this.competitions;
     }
