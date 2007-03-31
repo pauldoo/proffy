@@ -86,10 +86,10 @@ import pigeon.report.RaceReporter;
 import pigeon.report.Reporter;
 
 /**
- * Application entry point and top level window.
- *
- * All top level windows exist in here and are switched between using the card layout.
- */
+    Application entry point and top level window.
+
+    All top level windows exist in here and are switched between using the card layout.
+*/
 final class MainWindow extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 8988408906488593901L;
