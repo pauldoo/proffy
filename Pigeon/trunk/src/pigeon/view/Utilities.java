@@ -32,6 +32,7 @@
 package pigeon.view;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public final class Utilities {
     */
     public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE;
     static {
-        TIME_FORMAT_WITHOUT_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        TIME_FORMAT_WITHOUT_LOCALE = new SimpleDateFormat("HH:mm:ss");
         TIME_FORMAT_WITHOUT_LOCALE.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
@@ -91,7 +92,7 @@ public final class Utilities {
     */
     public static final DateFormat TIME_FORMAT_WITH_LOCALE;
     static {
-        TIME_FORMAT_WITH_LOCALE = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        TIME_FORMAT_WITH_LOCALE = new SimpleDateFormat("HH:mm:ss");
     }
 
     /**
@@ -102,7 +103,7 @@ public final class Utilities {
     */
     public static final DateFormat DATE_FORMAT;
     static {
-        DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
+        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
     }
 
     /**

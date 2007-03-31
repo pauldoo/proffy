@@ -56,6 +56,7 @@ import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
+import pigeon.report.DistanceReporter;
 import pigeon.report.RaceReporter;
 import pigeon.view.Utilities;
 
@@ -235,6 +236,40 @@ public final class ExtendedTest extends TestCase
         final byte[] savedAgain = out.toByteArray();
         
         assertTrue("Resaving should not break anything", Arrays.equals(savedOnce, savedAgain));
+    }
+    
+    public void testMemberDistanceReports() throws IOException
+    {
+        for (Member member: season.getOrganization().getMembers()) {
+            DistanceReporter<Racepoint> reporter = new DistanceReporter<Racepoint>(
+                season.getOrganization().getName(),
+                member.toString(), 
+                "Racepoint",
+                season.getOrganization().getDistancesForMember(member));
+            
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            reporter.write(out);
+            out.close();
+            
+            checkRegression(out.toByteArray(), "Distance_" + member.toString());
+        }
+    }
+
+    public void testRacepointDistanceReports() throws IOException
+    {
+        for (Racepoint racepoint: season.getOrganization().getRacepoints()) {
+            DistanceReporter<Member> reporter = new DistanceReporter<Member>(
+                season.getOrganization().getName(),
+                racepoint.toString(), 
+                "Member",
+                season.getOrganization().getDistancesForRacepoint(racepoint));
+            
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            reporter.write(out);
+            out.close();
+            
+            checkRegression(out.toByteArray(), "Distance_" + racepoint.toString());
+        }
     }
     
     public void testRaceReports() throws IOException

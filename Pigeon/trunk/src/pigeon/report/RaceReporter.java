@@ -79,17 +79,17 @@ public final class RaceReporter implements Reporter {
 
         for (String section: sections) {
             if (section != sections.get(sections.size() - 1)) {
-                out.println("<div final class=\"outer\">");
+                out.print("<div final class=\"outer\">\n");
             } else {
-                out.println("<div final class=\"outer last\">");
+                out.print("<div final class=\"outer last\">\n");
             }
 
-            out.println("<h1>" + club.getName() + "</h1>");
+            out.print("<h1>" + club.getName() + "</h1>\n");
             if (section != null) {
-                out.println("<h2>Section: " + section + "</h2>");
+                out.print("<h2>Section: " + section + "</h2>\n");
             }
-            out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
-            out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
+            out.print("<h2>Race from " + race.getRacepoint().toString() + "</h2>\n");
+            out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
             int memberCount = 0;
             int birdCount = 0;
             SortedMap<Double, String> results = new TreeMap<Double, String>();
@@ -129,8 +129,8 @@ public final class RaceReporter implements Reporter {
                     results.put(-velocity, line.toString());
                 }
             }
-            out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
-            out.println("<table>");
+            out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
+            out.print("<table>\n");
             out.print("<tr><th>Position</th><th>Member</th>");
             if (listClubNames) {
                 out.print("<th>Club</th>");
@@ -138,16 +138,16 @@ public final class RaceReporter implements Reporter {
             if (race.getDaysCovered() > 1) {
                 out.print("<th>Day</th>");
             }
-            out.println("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>");
+            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
             int pos = 0;
             for (String line: results.values()) {
                 pos ++;
                 out.print("<tr><td>" + pos + "</td>");
                 out.print(line);
-                out.println("</tr>");
+                out.print("</tr>\n");
             }
-            out.println("</table>");
-            out.println("</div>");
+            out.print("</table>\n");
+            out.print("</div>\n");
         }
 
         Utilities.writeHtmlFooter(out);

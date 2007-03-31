@@ -129,19 +129,19 @@ public class CompetitionReporter implements Reporter
 
         for (String section: sections) {
             if (section != sections.get(sections.size() - 1)) {
-                out.println("<div final class=\"outer\">");
+                out.print("<div final class=\"outer\">\n");
             } else {
-                out.println("<div final class=\"outer last\">");
+                out.print("<div final class=\"outer last\">\n");
             }
 
-            out.println("<h1>" + club.getName() + "</h1>");
+            out.print("<h1>" + club.getName() + "</h1>\n");
             if (section != null) {
-                out.println("<h2>Section: " + section + "</h2>");
+                out.print("<h2>Section: " + section + "</h2>\n");
             } else {
-                out.println("<h2>Open</h2>");
+                out.print("<h2>Open</h2>\n");
             }
-            out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
-            out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
+            out.print("<h2>Race from " + race.getRacepoint().toString() + "</h2>\n");
+            out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
             int memberCount = 0;
             int birdCount = 0;
             SortedSet<Row> results = new TreeSet<Row>();
@@ -171,8 +171,8 @@ public class CompetitionReporter implements Reporter
                     results.add(row);
                 }
             }
-            out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
-            out.println("<table>");
+            out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
+            out.print("<table>\n");
             out.print("<tr><th>Member</th>");
             if (listClubNames) {
                 out.print("<th>Club</th>");
@@ -181,7 +181,7 @@ public class CompetitionReporter implements Reporter
             for (Competition c: competitions) {
                 out.print("<th>" + c.getName() + "</th>");
             }
-            out.println("</tr>");
+            out.print("</tr>\n");
                         
             // For each competition name keep a track of how many of the winners we have found.
             Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
@@ -219,13 +219,13 @@ public class CompetitionReporter implements Reporter
                 }
                 if (birdHasWonSomething) {
                     // If this member has taken a place in any competition, print their line.
-                    out.println("<tr>");
+                    out.print("<tr>\n");
                     out.print(row.html.toString());
-                    out.println("</tr>");
+                    out.print("</tr>\n");
                 }
             }
-            out.println("</table>");
-            out.println("</div>");
+            out.print("</table>\n");
+            out.print("</div>\n");
         }
 
         Utilities.writeHtmlFooter(out);

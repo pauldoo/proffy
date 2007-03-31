@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Distances for Racepoint #6</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    body { font-family: Verdana, sans-serif; }
+    .outer { text-align:center; page-break-after: always; }
+    .outer.last { page-break-after: auto; }
+    h1 { margin-bottom:10px; font-size:18pt; }
+    h2 { font-size:16pt; }
+    h3 { font-size:14pt; }
+    h2, h3 { margin-top:0; margin-bottom:5px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    th { border-bottom:3px solid #000000; text-align: left; }
+    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
+  </style>
+</head>
+<body>
+<div class='outer'>
+<h1>Test fed</h1>
+<h2>Distances for Racepoint #6</h2>
+<table>
+<tr><th>Member</th><th>Distance</th></tr>
+<tr><td>Member #0</td><td>743 miles 627 yards</td></tr>
+<tr><td>Member #1</td><td>705 miles 512 yards</td></tr>
+<tr><td>Member #10</td><td>730 miles 1525 yards</td></tr>
+<tr><td>Member #11</td><td>725 miles 582 yards</td></tr>
+<tr><td>Member #12</td><td>708 miles 1749 yards</td></tr>
+<tr><td>Member #13</td><td>660 miles 1653 yards</td></tr>
+<tr><td>Member #14</td><td>789 miles 1142 yards</td></tr>
+<tr><td>Member #15</td><td>746 miles 1182 yards</td></tr>
+<tr><td>Member #16</td><td>723 miles 212 yards</td></tr>
+<tr><td>Member #17</td><td>626 miles 712 yards</td></tr>
+<tr><td>Member #18</td><td>636 miles 1415 yards</td></tr>
+<tr><td>Member #19</td><td>721 miles 961 yards</td></tr>
+<tr><td>Member #2</td><td>698 miles 1377 yards</td></tr>
+<tr><td>Member #20</td><td>688 miles 1651 yards</td></tr>
+<tr><td>Member #21</td><td>661 miles 1717 yards</td></tr>
+<tr><td>Member #22</td><td>799 miles 754 yards</td></tr>
+<tr><td>Member #3</td><td>602 miles 213 yards</td></tr>
+<tr><td>Member #4</td><td>789 miles 719 yards</td></tr>
+<tr><td>Member #5</td><td>617 miles 1111 yards</td></tr>
+<tr><td>Member #6</td><td>668 miles 940 yards</td></tr>
+<tr><td>Member #7</td><td>733 miles 340 yards</td></tr>
+<tr><td>Member #8</td><td>778 miles 1611 yards</td></tr>
+<tr><td>Member #9</td><td>636 miles 46 yards</td></tr>
+</table>
+</div>
+</body>
+</html>

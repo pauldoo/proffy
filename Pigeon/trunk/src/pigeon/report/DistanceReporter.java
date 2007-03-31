@@ -58,17 +58,17 @@ public final class DistanceReporter<Target> implements Reporter
     public void write(OutputStream stream) throws IOException
     {
         PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source);
-        out.println("<div class='outer'>");
-        out.println("<h1>" + organization + "</h1>");
-        out.println("<h2>Distances for " + source + "</h2>");
+        out.print("<div class='outer'>\n");
+        out.print("<h1>" + organization + "</h1>\n");
+        out.print("<h2>Distances for " + source + "</h2>\n");
 
-        out.println("<table>");
-        out.println("<tr><th>" + targetTypeName + "</th><th>Distance</th></tr>");
+        out.print("<table>\n");
+        out.print("<tr><th>" + targetTypeName + "</th><th>Distance</th></tr>\n");
         for (Map.Entry<Target, Distance> entry: distances.entrySet()) {
-            out.println("<tr><td>" + entry.getKey().toString() + "</td><td>" + entry.getValue().toString() + "</td></tr>");
+            out.print("<tr><td>" + entry.getKey().toString() + "</td><td>" + entry.getValue().toString() + "</td></tr>\n");
         }
-        out.println("</table>");
-        out.println("</div>");
+        out.print("</table>\n");
+        out.print("</div>\n");
         Utilities.writeHtmlFooter(out);
     }
 }
