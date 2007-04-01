@@ -46,7 +46,7 @@ import pigeon.competitions.Pool;
 /**
  * Loads the application configuration from an XML file.
  */
-final class Configuration
+public final class Configuration
 {
     private final Mode mode;
     private final List<Competition> competitions;

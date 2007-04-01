@@ -31,6 +31,7 @@
 
 package pigeon;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,13 +40,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import pigeon.competitions.Competition;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
@@ -56,8 +62,10 @@ import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
+import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.RaceReporter;
+import pigeon.view.Configuration;
 import pigeon.view.Utilities;
 
 /**
@@ -66,6 +74,7 @@ import pigeon.view.Utilities;
 public final class ExtendedTest extends TestCase
 {
     final Random random = new Random(0);
+    Configuration configuration;
     Season season;
 
     static final int RACEPOINT_COUNT = 13;
@@ -84,8 +93,18 @@ public final class ExtendedTest extends TestCase
         return suite;
     }
     
-    protected void setUp() throws ValidationException
+    protected void setUp() throws ValidationException, IOException
     {
+        BufferedInputStream configIn = null;
+        try {
+            configIn = new BufferedInputStream(new FileInputStream("regression/configuration.xml"));
+            configuration = new Configuration(configIn);
+        } finally {
+            if (configIn != null) {
+                configIn.close();
+            }
+        }
+        
         season = new Season();
         season.setOrganization(createOraganization());
         addRaces();
@@ -139,6 +158,20 @@ public final class ExtendedTest extends TestCase
                         (random.nextDouble() * 6 + 9) * Constants.MILLISECONDS_PER_HOUR);
                     assert(setTime + clockInTime <= masterOpenTime);
                     t.setMemberTime(clockInTime, daysCovered);
+                    
+                    for (Competition c: configuration.getCompetitions()) {
+                        if (random.nextBoolean()) {
+                            Collection<String> set = new ArrayList<String>(t.getOpenCompetitionsEntered());
+                            set.add(c.getName());
+                            t.setOpenCompetitionsEntered(set);
+                        }
+                        if (random.nextBoolean()) {
+                            Collection<String> set = new ArrayList<String>(t.getSectionCompetitionsEntered());
+                            set.add(c.getName());
+                            t.setSectionCompetitionsEntered(set);
+                        }
+                    }
+                    
                     clock.addTime(t);
                 }
                 race.addClock(clock);
@@ -281,6 +314,28 @@ public final class ExtendedTest extends TestCase
             out.close();
             
             checkRegression(out.toByteArray(), "Race_" + race.getRacepoint());
+        }
+    }
+    
+    public void testPoolReports() throws IOException
+    {
+        for (Race race: season.getRaces()) {
+            // Need to randomly decide how many birds entered each pool.
+            Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
+            String[] sections = new String[]{"Open", "East", "West"};
+            for (String section: sections) {
+                entrantsCount.put(section, new TreeMap<String, Integer>());
+                for (Competition pool: configuration.getCompetitions()) {
+                    entrantsCount.get(section).put(pool.getName(), (int)((random.nextDouble()) * MEMBER_COUNT * BIRDS_PER_MEMBER));
+                }
+            }
+            
+            CompetitionReporter reporter = new CompetitionReporter(season.getOrganization(), race, true, configuration.getCompetitions(), entrantsCount);            
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            reporter.write(out);
+            out.close();
+            
+            checkRegression(out.toByteArray(), "Pools_" + race.getRacepoint());
         }
     }
 }

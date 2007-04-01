@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Racepoint #9 on 16/08/07</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    body { font-family: Verdana, sans-serif; }
+    .outer { text-align:center; page-break-after: always; }
+    .outer.last { page-break-after: auto; }
+    h1 { margin-bottom:10px; font-size:18pt; }
+    h2 { font-size:16pt; }
+    h3 { font-size:14pt; }
+    h2, h3 { margin-top:0; margin-bottom:5px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    th { border-bottom:3px solid #000000; text-align: left; }
+    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
+  </style>
+</head>
+<body>
+<div final class="outer">
+<h1>Test fed</h1>
+<h2>Open</h2>
+<h2>Race from Racepoint #9</h2>
+<h3>Liberated at 09:57:00 on 16/08/07 in a null wind</h3>
+<h3>23 members sent in a total of 437 birds</h3>
+<table>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th></tr>
+<tr>
+<td>Member #21</td><td>Club #1</td><td>M14B9</td><td>1</td><td>1</td><td/><td>1</td><td/></tr>
+<tr>
+<td>Member #21</td><td>Club #1</td><td>M14B14</td><td>2</td><td/><td>1</td><td>2</td><td>1</td></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B16</td><td>3</td><td/><td>2</td><td/><td/></tr>
+<tr>
+<td>Member #0</td><td>Club #6</td><td>M0B8</td><td/><td/><td>3</td><td/><td>2</td></tr>
+<tr>
+<td>Member #2</td><td>Club #6</td><td>M12B18</td><td>4</td><td/><td/><td/><td>3</td></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B15</td><td/><td/><td/><td>3</td><td/></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B9</td><td/><td/><td>4</td><td/><td/></tr>
+<tr>
+<td>Member #3</td><td>Club #13</td><td>M16B2</td><td>5</td><td/><td>5</td><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B2</td><td>6</td><td>2</td><td/><td/><td/></tr>
+<tr>
+<td>Member #19</td><td>Club #15</td><td>M11B7</td><td>7</td><td/><td>6</td><td>4</td><td/></tr>
+<tr>
+<td>Member #10</td><td>Club #9</td><td>M2B2</td><td/><td/><td>7</td><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B1</td><td/><td/><td/><td>5</td><td/></tr>
+<tr>
+<td>Member #18</td><td>Club #3</td><td>M10B9</td><td/><td>3</td><td/><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B13</td><td>8</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B2</td><td/><td/><td>8</td><td/><td/></tr>
+<tr>
+<td>Member #4</td><td>Club #13</td><td>M17B0</td><td/><td>4</td><td/><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B3</td><td>9</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #3</td><td>Club #13</td><td>M16B8</td><td/><td>5</td><td>9</td><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B14</td><td>10</td><td>6</td><td/><td/><td/></tr>
+<tr>
+<td>Member #8</td><td>Club #15</td><td>M21B4</td><td>11</td><td>7</td><td/><td/><td/></tr>
+<tr>
+<td>Member #17</td><td>Club #4</td><td>M9B8</td><td>12</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #10</td><td>Club #9</td><td>M2B10</td><td>13</td><td>8</td><td/><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B4</td><td>14</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #1</td><td>Club #3</td><td>M1B14</td><td/><td>9</td><td/><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B16</td><td/><td>10</td><td/><td/><td/></tr>
+<tr>
+<td>Member #22</td><td>Club #9</td><td>M15B1</td><td>15</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #12</td><td>Club #4</td><td>M4B13</td><td>16</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B8</td><td>17</td><td>11</td><td/><td/><td/></tr>
+<tr>
+<td>Member #6</td><td>Club #16</td><td>M19B10</td><td/><td>12</td><td/><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B8</td><td/><td>13</td><td/><td/><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B12</td><td/><td>14</td><td/><td/><td/></tr>
+</table>
+</div>
+<div final class="outer">
+<h1>Test fed</h1>
+<h2>Section: East</h2>
+<h2>Race from Racepoint #9</h2>
+<h3>Liberated at 09:57:00 on 16/08/07 in a null wind</h3>
+<h3>17 members sent in a total of 323 birds</h3>
+<table>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th></tr>
+<tr>
+<td>Member #21</td><td>Club #1</td><td>M14B9</td><td/><td/><td>1</td><td/><td/></tr>
+<tr>
+<td>Member #21</td><td>Club #1</td><td>M14B14</td><td/><td>1</td><td/><td>1</td><td>1</td></tr>
+<tr>
+<td>Member #0</td><td>Club #6</td><td>M0B8</td><td>1</td><td>2</td><td>2</td><td/><td/></tr>
+<tr>
+<td>Member #2</td><td>Club #6</td><td>M12B18</td><td/><td>3</td><td>3</td><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B15</td><td>2</td><td/><td>4</td><td>2</td><td>2</td></tr>
+<tr>
+<td>Member #3</td><td>Club #13</td><td>M16B2</td><td>3</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B2</td><td/><td>4</td><td>5</td><td/><td>3</td></tr>
+<tr>
+<td>Member #19</td><td>Club #15</td><td>M11B7</td><td>4</td><td/><td/><td>3</td><td/></tr>
+<tr>
+<td>Member #10</td><td>Club #9</td><td>M2B2</td><td>5</td><td>5</td><td/><td>4</td><td/></tr>
+<tr>
+<td>Member #18</td><td>Club #3</td><td>M10B9</td><td>6</td><td/><td>6</td><td/><td/></tr>
+<tr>
+<td>Member #1</td><td>Club #3</td><td>M1B9</td><td/><td>6</td><td/><td/><td/></tr>
+<tr>
+<td>Member #3</td><td>Club #13</td><td>M16B8</td><td>7</td><td>7</td><td/><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B14</td><td/><td>8</td><td/><td>5</td><td/></tr>
+<tr>
+<td>Member #8</td><td>Club #15</td><td>M21B4</td><td/><td/><td>7</td><td>6</td><td/></tr>
+<tr>
+<td>Member #17</td><td>Club #4</td><td>M9B8</td><td>8</td><td/><td>8</td><td>7</td><td/></tr>
+<tr>
+<td>Member #10</td><td>Club #9</td><td>M2B10</td><td>9</td><td/><td>9</td><td/><td/></tr>
+<tr>
+<td>Member #10</td><td>Club #9</td><td>M2B4</td><td/><td>9</td><td>10</td><td>8</td><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B4</td><td>10</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #1</td><td>Club #3</td><td>M1B14</td><td/><td/><td>11</td><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B16</td><td/><td>10</td><td/><td/><td/></tr>
+<tr>
+<td>Member #4</td><td>Club #13</td><td>M17B10</td><td>11</td><td>11</td><td/><td/><td/></tr>
+<tr>
+<td>Member #22</td><td>Club #9</td><td>M15B1</td><td>12</td><td>12</td><td/><td/><td/></tr>
+<tr>
+<td>Member #18</td><td>Club #3</td><td>M10B12</td><td/><td/><td>12</td><td/><td/></tr>
+<tr>
+<td>Member #12</td><td>Club #4</td><td>M4B13</td><td>13</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #19</td><td>Club #15</td><td>M11B11</td><td/><td>13</td><td/><td/><td/></tr>
+<tr>
+<td>Member #7</td><td>Club #3</td><td>M20B7</td><td/><td>14</td><td/><td/><td/></tr>
+<tr>
+<td>Member #19</td><td>Club #15</td><td>M11B4</td><td/><td>15</td><td/><td/><td/></tr>
+<tr>
+<td>Member #6</td><td>Club #16</td><td>M19B9</td><td/><td>16</td><td/><td/><td/></tr>
+<tr>
+<td>Member #5</td><td>Club #1</td><td>M18B6</td><td/><td>17</td><td/><td/><td/></tr>
+<tr>
+<td>Member #8</td><td>Club #15</td><td>M21B9</td><td/><td>18</td><td/><td/><td/></tr>
+<tr>
+<td>Member #2</td><td>Club #6</td><td>M12B8</td><td/><td>19</td><td/><td/><td/></tr>
+<tr>
+<td>Member #18</td><td>Club #3</td><td>M10B3</td><td/><td>20</td><td/><td/><td/></tr>
+</table>
+</div>
+<div final class="outer last">
+<h1>Test fed</h1>
+<h2>Section: West</h2>
+<h2>Race from Racepoint #9</h2>
+<h3>Liberated at 09:57:00 on 16/08/07 in a null wind</h3>
+<h3>6 members sent in a total of 114 birds</h3>
+<table>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B16</td><td/><td/><td/><td/><td>1</td></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B9</td><td/><td/><td>1</td><td/><td>2</td></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B1</td><td/><td>1</td><td>2</td><td/><td>3</td></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B13</td><td>1</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B2</td><td>2</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B3</td><td>3</td><td/><td>3</td><td>1</td><td/></tr>
+<tr>
+<td>Member #20</td><td>Club #11</td><td>M13B13</td><td>4</td><td>2</td><td/><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B8</td><td>5</td><td>3</td><td/><td>2</td><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B12</td><td/><td/><td>4</td><td>3</td><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B2</td><td/><td>4</td><td/><td>4</td><td/></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B17</td><td/><td>5</td><td/><td/><td/></tr>
+<tr>
+<td>Member #20</td><td>Club #11</td><td>M13B15</td><td/><td/><td>5</td><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B5</td><td/><td>6</td><td>6</td><td>5</td><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B17</td><td>6</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B0</td><td/><td>7</td><td/><td/><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B6</td><td/><td/><td>7</td><td/><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B14</td><td>7</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B4</td><td/><td/><td>8</td><td/><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B3</td><td>8</td><td/><td>9</td><td>6</td><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B4</td><td>9</td><td/><td/><td>7</td><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B13</td><td>10</td><td/><td/><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B1</td><td>11</td><td/><td>10</td><td>8</td><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B4</td><td>12</td><td/><td>11</td><td>9</td><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B4</td><td/><td/><td>12</td><td/><td/></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B3</td><td>13</td><td/><td>13</td><td/><td/></tr>
+<tr>
+<td>Member #16</td><td>Club #5</td><td>M8B2</td><td>14</td><td/><td>14</td><td/><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B18</td><td/><td/><td/><td>10</td><td/></tr>
+<tr>
+<td>Member #13</td><td>Club #10</td><td>M5B6</td><td/><td/><td>15</td><td/><td/></tr>
+<tr>
+<td>Member #11</td><td>Club #2</td><td>M3B18</td><td/><td/><td/><td>11</td><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B17</td><td/><td/><td>16</td><td/><td/></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B12</td><td/><td/><td>17</td><td/><td/></tr>
+<tr>
+<td>Member #15</td><td>Club #10</td><td>M7B9</td><td/><td/><td/><td>12</td><td/></tr>
+</table>
+</div>
+</body>
+</html>
