@@ -31,6 +31,8 @@
 
 package pigeon.competitions;
 
+import javax.naming.OperationNotSupportedException;
+
 public final class Nomination extends Competition
 {
     private final double[] payouts;
@@ -58,5 +60,11 @@ public final class Nomination extends Competition
     public int maximumNumberOfWinners(int entrants)
     {
         return Math.min(entrants, payouts.length);
+    }
+    
+    public double prize(int place, int entrants)
+    {
+        checkPlaceIsInRange(place, entrants);
+        return payouts[place - 1] * entrants * entryCost * (1.0 - clubTake);
     }
 }

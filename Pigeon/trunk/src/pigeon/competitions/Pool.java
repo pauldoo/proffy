@@ -46,4 +46,11 @@ public final class Pool extends Competition
         double winners = ((1.0 - clubTake) * entrants)  / payoutPeriod;
         return (int)Math.ceil(winners);
     }
+
+    public double prize(int place, int entrants)
+    {
+        checkPlaceIsInRange(place, entrants);
+        final double prize = Math.min(1.0, ((1.0 - clubTake) * entrants / payoutPeriod) - (place - 1)) * entryCost * payoutPeriod;
+        return prize;
+    }
 }

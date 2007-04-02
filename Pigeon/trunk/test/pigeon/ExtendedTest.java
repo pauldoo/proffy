@@ -32,6 +32,7 @@
 package pigeon;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,6 +50,7 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.zip.GZIPOutputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -73,6 +76,8 @@ import pigeon.view.Utilities;
 */
 public final class ExtendedTest extends TestCase
 {
+    private static final boolean UPDATE_OK_FILES = false;
+    
     final Random random = new Random(0);
     Configuration configuration;
     Season season;
@@ -225,7 +230,7 @@ public final class ExtendedTest extends TestCase
 
     private void checkRegression(final byte[] tmpData, String name) throws IOException
     {
-        final File tmpFile = new File("regression/" + name + ".tmp");
+        final File tmpFile = new File("regression/" + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
         final File okFile = new File("regression/" + name + ".ok");
         
         FileOutputStream tmpOut = new FileOutputStream(tmpFile);
@@ -255,6 +260,16 @@ public final class ExtendedTest extends TestCase
         
         final byte[] savedOnce = out.toByteArray();
         checkRegression(savedOnce, "Serialization");
+        
+        OutputStream pcsOut = null;
+        try {
+            pcsOut = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream("regression/Serialization.pcs")));
+            pcsOut.write(savedOnce);
+        } finally {
+            if (pcsOut != null) {
+                pcsOut.close();
+            }
+        }
         
         ByteArrayInputStream in = new ByteArrayInputStream(savedOnce);
         ObjectInputStream objectIn = new ObjectInputStream(in);

@@ -62,6 +62,13 @@ public abstract class Competition
         return name;
     }
     
+    protected void checkPlaceIsInRange(int place, int entrants) throws IllegalArgumentException
+    {
+        if (place < 1 || place > maximumNumberOfWinners(entrants)) {
+            throw new IllegalArgumentException("Place expected to be within the range [1, maximumNumberOfWinners(entrants)].");
+        }
+    }
+    
     /**
         Given the number of entrants for this competition,
         calculate the maximum number of winners there could
@@ -69,4 +76,12 @@ public abstract class Competition
         not enough birds complete the race.
     */
     public abstract int maximumNumberOfWinners(int entrants);
+    
+    /**
+        Given the position that a bird has come in the competition
+        and the total number of entrants, calculate the prize.
+     
+        @param place Must be in the range [1, maximumNumberOfWinners(entrants)].
+    */
+    public abstract double prize(int place, int entrants);
 }

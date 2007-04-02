@@ -205,12 +205,16 @@ public class CompetitionReporter implements Reporter
                 } else {
                     competitionsEnteredByThisBird = row.time.getSectionCompetitionsEntered();
                 }
+
+                // Check the competitions that this bird entered
                 for (Competition c: competitions) {
                     if (competitionsEnteredByThisBird.contains(c.getName())) {
                         int position = competitionPositions.get(c.getName()) + 1;
                         if (position <= numberOfWinners.get(c.getName())) {
                             birdHasWonSomething = true;
-                            row.html.append("<td>" + position + "</td>");
+                            int entrants = entrantsCount.get(section == null ? "Open" : section).get(c.getName());
+                            double prize = c.prize(position, entrants);
+                            row.html.append("<td>" + Utilities.StringPrintf("%.2f", prize) + "</td>");
                             competitionPositions.put(c.getName(), position);
                             continue;
                         }
