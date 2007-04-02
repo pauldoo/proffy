@@ -181,6 +181,7 @@ public class CompetitionReporter implements Reporter
             for (Competition c: competitions) {
                 out.print("<th>" + c.getName() + "</th>");
             }
+            out.print("<th>Total</th>");
             out.print("</tr>\n");
                         
             // For each competition name keep a track of how many of the winners we have found.
@@ -198,7 +199,8 @@ public class CompetitionReporter implements Reporter
             
             // Iterate each of the birds, in order they would appear in the race result.
             for (Row row: results) {
-                boolean birdHasWonSomething = false;
+                double totalPrizeWonByThisBird = 0.0;
+                
                 Collection<String> competitionsEnteredByThisBird = null;
                 if (section == null) {
                     competitionsEnteredByThisBird = row.time.getOpenCompetitionsEntered();
@@ -211,20 +213,21 @@ public class CompetitionReporter implements Reporter
                     if (competitionsEnteredByThisBird.contains(c.getName())) {
                         int position = competitionPositions.get(c.getName()) + 1;
                         if (position <= numberOfWinners.get(c.getName())) {
-                            birdHasWonSomething = true;
                             int entrants = entrantsCount.get(section == null ? "Open" : section).get(c.getName());
                             double prize = c.prize(position, entrants);
                             row.html.append("<td>" + Utilities.StringPrintf("%.2f", prize) + "</td>");
+                            totalPrizeWonByThisBird += prize;
                             competitionPositions.put(c.getName(), position);
                             continue;
                         }
                     }
                     row.html.append("<td/>");
                 }
-                if (birdHasWonSomething) {
+                if (totalPrizeWonByThisBird > 0) {
                     // If this member has taken a place in any competition, print their line.
                     out.print("<tr>\n");
                     out.print(row.html.toString());
+                    out.print("<td>" + Utilities.StringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
                     out.print("</tr>\n");
                 }
             }
