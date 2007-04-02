@@ -52,6 +52,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -690,37 +691,42 @@ final class MainWindow extends javax.swing.JFrame {
             "Results",
             JOptionPane.OK_CANCEL_OPTION);
         
-        if (result == JOptionPane.OK_OPTION) {
-            if (raceReport.isSelected()) {
-                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
-            }
-            if (poolsReport.isSelected()) {
-                Map<String, Map<String, JTextField>> textFieldMap = new TreeMap<String, Map<String, JTextField>>();
-                JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, race);
-                
-                int dialogResult = JOptionPane.showConfirmDialog(
-                    this,
-                    panel,
-                    "Entrants",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-                
-                if (dialogResult == JOptionPane.OK_OPTION) {
-                    Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
-                    for (Map.Entry<String, Map<String, JTextField>> i: textFieldMap.entrySet()) {
-                        entrantsCount.put(i.getKey(), new TreeMap<String, Integer>());
-                        for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
-                            entrantsCount.get(i.getKey()).put(j.getKey(), Integer.parseInt(j.getValue().getText()));
+        try {
+            if (result == JOptionPane.OK_OPTION) {
+                if (raceReport.isSelected()) {
+                    writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
+                }
+                if (poolsReport.isSelected()) {
+                    Map<String, Map<String, JTextField>> textFieldMap = new TreeMap<String, Map<String, JTextField>>();
+                    JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, race);
+
+                    int dialogResult = JOptionPane.showConfirmDialog(
+                        this,
+                        panel,
+                        "Entrants",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                    if (dialogResult == JOptionPane.OK_OPTION) {
+                        Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
+                        for (Map.Entry<String, Map<String, JTextField>> i: textFieldMap.entrySet()) {
+                            entrantsCount.put(i.getKey(), new TreeMap<String, Integer>());
+                            for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
+                                int entrants = NumberFormat.getIntegerInstance().parse(j.getValue().getText()).intValue();
+                                entrantsCount.get(i.getKey()).put(j.getKey(), entrants);
+                            }
                         }
+                        writeReport("PoolResults", new CompetitionReporter(
+                            season.getOrganization(),
+                            race,
+                            listClubNames,
+                            configuration.getCompetitions(),
+                            entrantsCount));
                     }
-                    writeReport("PoolResults", new CompetitionReporter(
-                        season.getOrganization(),
-                        race,
-                        listClubNames,
-                        configuration.getCompetitions(),
-                        entrantsCount));
                 }
             }
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(getContentPane(), e.toString());            
         }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 

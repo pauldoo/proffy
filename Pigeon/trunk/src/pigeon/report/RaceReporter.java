@@ -79,9 +79,9 @@ public final class RaceReporter implements Reporter {
 
         for (String section: sections) {
             if (section != sections.get(sections.size() - 1)) {
-                out.print("<div final class=\"outer\">\n");
+                out.print("<div class=\"outer\">\n");
             } else {
-                out.print("<div final class=\"outer last\">\n");
+                out.print("<div class=\"outer last\">\n");
             }
 
             out.print("<h1>" + club.getName() + "</h1>\n");

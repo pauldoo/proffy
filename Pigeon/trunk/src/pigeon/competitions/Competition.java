@@ -84,4 +84,14 @@ public abstract class Competition
         @param place Must be in the range [1, maximumNumberOfWinners(entrants)].
     */
     public abstract double prize(int place, int entrants);
+    
+    public double totalPoolMoney(int entrants)
+    {
+        return entrants * entryCost;
+    }
+    
+    public double totalClubTake(int entrants)
+    {
+        return totalPoolMoney(entrants) * clubTake;
+    }
 }

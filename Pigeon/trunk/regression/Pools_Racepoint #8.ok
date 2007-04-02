@@ -19,12 +19,11 @@
   </style>
 </head>
 <body>
-<div final class="outer">
+<div class="outer">
 <h1>Test fed</h1>
 <h2>Open</h2>
 <h2>Race from Racepoint #8</h2>
 <h3>Liberated at 07:01:00 on 16/05/06 in a null wind</h3>
-<h3>23 members sent in a total of 437 birds</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th><th>Total</th></tr>
 <tr>
@@ -81,14 +80,17 @@
 <td>Member #19</td><td>Club #15</td><td>M11B1</td><td>10.00</td><td/><td/><td/><td/><td>10.00</td></tr>
 <tr>
 <td>Member #4</td><td>Club #13</td><td>M17B13</td><td>3.77</td><td/><td/><td/><td/><td>3.77</td></tr>
+<tr><td/><td/><td>Total</td><td>203.77</td><td>23.94</td><td>14.82</td><td>8.79</td><td>195.70</td><td>447.02</td></tr>
+<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td/><td/><td>Club take</td><td>10.73</td><td>1.26</td><td>0.78</td><td>0.46</td><td>10.30</td><td>23.53</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>214.50</td><td>25.20</td><td>15.60</td><td>9.25</td><td>206.00</td><td>470.55</td></tr>
 </table>
 </div>
-<div final class="outer">
+<div class="outer">
 <h1>Test fed</h1>
 <h2>Section: East</h2>
 <h2>Race from Racepoint #8</h2>
 <h3>Liberated at 07:01:00 on 16/05/06 in a null wind</h3>
-<h3>17 members sent in a total of 323 birds</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th><th>Total</th></tr>
 <tr>
@@ -149,14 +151,17 @@
 <td>Member #21</td><td>Club #1</td><td>M14B11</td><td/><td/><td/><td>1.00</td><td/><td>1.00</td></tr>
 <tr>
 <td>Member #0</td><td>Club #6</td><td>M0B18</td><td/><td/><td/><td>0.30</td><td/><td>0.30</td></tr>
+<tr><td/><td/><td>Total</td><td>147.73</td><td>66.31</td><td>1.23</td><td>12.30</td><td>247.00</td><td>474.57</td></tr>
+<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td/><td/><td>Club take</td><td>7.78</td><td>3.49</td><td>0.07</td><td>0.65</td><td>13.00</td><td>24.98</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>155.50</td><td>69.80</td><td>1.30</td><td>12.95</td><td>260.00</td><td>499.55</td></tr>
 </table>
 </div>
-<div final class="outer last">
+<div class="outer last">
 <h1>Test fed</h1>
 <h2>Section: West</h2>
 <h2>Race from Racepoint #8</h2>
 <h3>Liberated at 07:01:00 on 16/05/06 in a null wind</h3>
-<h3>6 members sent in a total of 114 birds</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Nomination</th><th>Total</th></tr>
 <tr>
@@ -209,6 +214,10 @@
 <td>Member #14</td><td>Club #12</td><td>M6B16</td><td/><td/><td>2.00</td><td/><td/><td>2.00</td></tr>
 <tr>
 <td>Member #11</td><td>Club #2</td><td>M3B7</td><td/><td/><td>1.06</td><td/><td/><td>1.06</td></tr>
+<tr><td/><td/><td>Total</td><td>66.02</td><td>41.99</td><td>31.06</td><td>1.66</td><td>65.55</td><td>206.29</td></tr>
+<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td/><td/><td>Club take</td><td>3.48</td><td>2.21</td><td>1.64</td><td>0.09</td><td>3.45</td><td>10.86</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>69.50</td><td>44.20</td><td>32.70</td><td>1.75</td><td>69.00</td><td>217.15</td></tr>
 </table>
 </div>
 </body>

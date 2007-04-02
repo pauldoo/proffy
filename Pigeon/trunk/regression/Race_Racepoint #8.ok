@@ -19,7 +19,7 @@
   </style>
 </head>
 <body>
-<div final class="outer">
+<div class="outer">
 <h1>Test fed</h1>
 <h2>Race from Racepoint #8</h2>
 <h3>Liberated at 07:01:00 on 16/05/06 in a null wind</h3>
@@ -465,7 +465,7 @@
 <tr><td>437</td><td>Member #8</td><td>Club #15</td><td>2</td><td>14:57:14</td><td>610</td><td>147</td><td>M21B4</td><td>Purple</td><td>H</td><td></td><td></td><td>1021.074</td></tr>
 </table>
 </div>
-<div final class="outer">
+<div class="outer">
 <h1>Test fed</h1>
 <h2>Section: East</h2>
 <h2>Race from Racepoint #8</h2>
@@ -798,7 +798,7 @@
 <tr><td>323</td><td>Member #8</td><td>Club #15</td><td>2</td><td>14:57:14</td><td>610</td><td>147</td><td>M21B4</td><td>Purple</td><td>H</td><td></td><td></td><td>1021.074</td></tr>
 </table>
 </div>
-<div final class="outer last">
+<div class="outer last">
 <h1>Test fed</h1>
 <h2>Section: West</h2>
 <h2>Race from Racepoint #8</h2>
