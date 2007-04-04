@@ -1185,7 +1185,7 @@ final class MainWindow extends javax.swing.JFrame {
         Configuration.Mode m = configuration.getMode();
         MainWindow window = new MainWindow(configuration);
         window.setLocationRelativeTo(null);
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         window.setVisible(true);
     }
 
