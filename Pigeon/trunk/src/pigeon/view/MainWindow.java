@@ -108,6 +108,7 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });     
         setIconImage(getIcon());
+        setTitle(About.TITLE);
         setSeason(null, "mainMenu");
     }
 
