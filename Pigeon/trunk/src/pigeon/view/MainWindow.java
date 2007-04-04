@@ -1175,7 +1175,7 @@ final class MainWindow extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws IOException
+    public static void main(String args[]) throws IOException, InterruptedException
     {
         ExceptionHandler.register();
         checkAssertions();
@@ -1185,6 +1185,7 @@ final class MainWindow extends javax.swing.JFrame {
         Configuration.Mode m = configuration.getMode();
         MainWindow window = new MainWindow(configuration);
         window.setLocationRelativeTo(null);
+        Thread.sleep(2000);
         window.setVisible(true);
     }
 
