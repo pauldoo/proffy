@@ -1172,6 +1172,16 @@ final class MainWindow extends javax.swing.JFrame {
         DistanceEditor.editRacepointDistances(parent, racepoint, season.getOrganization());
     }
 
+    private static void delayForSplashScreen() throws InterruptedException
+    {
+        // The splash screen defined in the Jar manifest file is only
+        // present when we have Java 6 or better
+        final String javaVersion = System.getProperty("java.version");
+        if (javaVersion.compareTo("1.6") >= 0) {
+            Thread.sleep(3000);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -1185,7 +1195,7 @@ final class MainWindow extends javax.swing.JFrame {
         Configuration.Mode m = configuration.getMode();
         MainWindow window = new MainWindow(configuration);
         window.setLocationRelativeTo(null);
-        Thread.sleep(3000);
+        delayForSplashScreen();
         window.setVisible(true);
     }
 
