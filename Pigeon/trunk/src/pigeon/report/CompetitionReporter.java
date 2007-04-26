@@ -80,43 +80,6 @@ public class CompetitionReporter implements Reporter
         this.entrantsCount = entrantsCount;
     }
     
-    private static final class Row implements Comparable<Row>
-    {
-        public final double velocity;
-        public final Time time;
-        public final StringBuffer html = new StringBuffer();
-        
-        public Row(double velocity, Time time)
-        {
-            this.velocity = velocity;
-            this.time = time;
-        }
-        
-        public boolean equals(Object rhs)
-        {
-            return equals((Row)rhs);
-        }
-        
-        public boolean equals(Row rhs)
-        {
-            return compareTo(rhs) == 0;
-        }
-        
-        public int compareTo(Row rhs)
-        {
-            final Row lhs = this;
-            if (lhs == rhs) {
-                return 0;
-            }
-            
-            int result = -Double.compare(lhs.velocity, rhs.velocity);
-            if (result == 0) {
-                result = lhs.time.compareTo(rhs.time);
-            }
-            return result;
-        }
-    }
-    
     public void write(OutputStream stream) throws IOException
     {
         String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
@@ -146,7 +109,7 @@ public class CompetitionReporter implements Reporter
             out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
             int memberCount = 0;
             int birdCount = 0;
-            SortedSet<Row> results = new TreeSet<Row>();
+            SortedSet<BirdResult> results = new TreeSet<BirdResult>();
             
             for (Clock clock: race.getClocks()) {
                 if (section != null && !clock.getMember().getSection().equals(section)) {
@@ -155,16 +118,8 @@ public class CompetitionReporter implements Reporter
                 memberCount ++;
                 for (Time time: clock.getTimes()) {
                     birdCount ++;
-                    //String debugBefore = new Date(time.getMemberTime() + race.liberationDayOffset().getTime()).toString();
-                    Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
-                    //String debugAfter = correctedClockTime.toString();
-                    int nightsSpentSleeping = (int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY);
-                    long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
-                    double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
-                    Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
-                    double velocity = distance.getMetres() / flyTimeInSeconds;
-                    
-                    Row row = new Row(velocity, time);
+                    BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
+
                     row.html.append("<td>" + clock.getMember().toString() + "</td>");
                     if (listClubNames) {
                         row.html.append("<td>" + clock.getMember().getClub() + "</td>");
@@ -200,7 +155,7 @@ public class CompetitionReporter implements Reporter
             }
             
             // Iterate each of the birds, in order they would appear in the race result.
-            for (Row row: results) {
+            for (BirdResult row: results) {
                 double totalPrizeWonByThisBird = 0.0;
                 
                 Collection<String> competitionsEnteredByThisBird = null;
@@ -217,7 +172,7 @@ public class CompetitionReporter implements Reporter
                         if (position <= numberOfWinners.get(c.getName())) {
                             int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                             double prize = c.prize(position, entrants);
-                            row.html.append("<td>" + Utilities.StringPrintf("%.2f", prize) + "</td>");
+                            row.html.append("<td>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
                             totalPrizeWonByThisBird += prize;
                             competitionPositions.put(c.getName(), position);
                             continue;
@@ -229,7 +184,7 @@ public class CompetitionReporter implements Reporter
                     // If this member has taken a place in any competition, print their line.
                     out.print("<tr>\n");
                     out.print(row.html.toString());
-                    out.print("<td>" + Utilities.StringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
+                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
                     out.print("</tr>\n");
                 }
             }
@@ -247,9 +202,9 @@ public class CompetitionReporter implements Reporter
                     }
                     totalForCompetition.put(c.getName(), totalPrizeGivenForThisCompetition);
                     totalPrizeGivenToEveryone += totalPrizeGivenForThisCompetition;
-                    out.print("<td>" + Utilities.StringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
+                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
                 }
-                out.print("<td>" + Utilities.StringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
+                out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
                 out.print("</tr>\n");
             }
             
@@ -261,9 +216,9 @@ public class CompetitionReporter implements Reporter
                     int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                     double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
                     totalUnclaimed += unclaimed;
-                    out.print("<td>" + Utilities.StringPrintf("%.2f", unclaimed) + "</td>");
+                    out.print("<td>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
                 }
-                out.print("<td>" + Utilities.StringPrintf("%.2f", totalUnclaimed) + "</td>");
+                out.print("<td>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
                 out.print("</tr>\n");
             }
 
@@ -275,9 +230,9 @@ public class CompetitionReporter implements Reporter
                     int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                     double clubTake = c.totalClubTake(entrants);
                     totalClubTake += clubTake;
-                    out.print("<td>" + Utilities.StringPrintf("%.2f", clubTake) + "</td>");
+                    out.print("<td>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
                 }
-                out.print("<td>" + Utilities.StringPrintf("%.2f", totalClubTake) + "</td>");
+                out.print("<td>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
                 out.print("</tr>\n");
             }
 
@@ -289,9 +244,9 @@ public class CompetitionReporter implements Reporter
                     int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                     double poolMoney = c.totalPoolMoney(entrants);
                     totalPoolMoney += poolMoney;
-                    out.print("<td>" + Utilities.StringPrintf("%.2f", poolMoney) + "</td>");
+                    out.print("<td>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
                 }
-                out.print("<td>" + Utilities.StringPrintf("%.2f", totalPoolMoney) + "</td>");
+                out.print("<td>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
                 out.print("</tr>\n");
             }
             

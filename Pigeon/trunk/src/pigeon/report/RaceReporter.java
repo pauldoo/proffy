@@ -34,14 +34,9 @@ package pigeon.report;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import pigeon.model.Clock;
 import pigeon.model.Organization;
@@ -92,7 +87,8 @@ public final class RaceReporter implements Reporter {
             out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
             int memberCount = 0;
             int birdCount = 0;
-            SortedMap<Double, String> results = new TreeMap<Double, String>();
+            SortedSet<BirdResult> results = new TreeSet<BirdResult>();
+            
             for (Clock clock: race.getClocks()) {
                 if (section != null && !clock.getMember().getSection().equals(section)) {
                     continue;
@@ -100,33 +96,26 @@ public final class RaceReporter implements Reporter {
                 memberCount ++;
                 for (Time time: clock.getTimes()) {
                     birdCount ++;
-                    //String debugBefore = new Date(time.getMemberTime() + race.liberationDayOffset().getTime()).toString();
-                    Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
-                    //String debugAfter = correctedClockTime.toString();
-                    int nightsSpentSleeping = (int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY);
-                    long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
-                    double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
-                    Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
-                    double velocity = distance.getMetres() / flyTimeInSeconds;
-                    StringBuffer line = new StringBuffer();
-                    line.append("<td>" + clock.getMember().toString() + "</td>");
+                    BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
+                    
+                    row.html.append("<td>" + clock.getMember().toString() + "</td>");
                     if (listClubNames) {
-                        line.append("<td>" + clock.getMember().getClub() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                     }
                     if (race.getDaysCovered() > 1) {
-                        int days = (int)((correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
-                        line.append("<td>" + (days + 1) + "</td>");
+                        int days = (int)((row.correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
+                        row.html.append("<td>" + (days + 1) + "</td>");
                     }
-                    line.append("<td>" + pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(correctedClockTime) + "</td>");
-                    line.append("<td>" + distance.getMiles() + "</td>");
-                    line.append("<td>" + distance.getYardsRemainder() + "</td>");
-                    line.append("<td>" + time.getRingNumber() + "</td>");
-                    line.append("<td>Purple</td>");
-                    line.append("<td>H</td>");
-                    line.append("<td></td>");
-                    line.append("<td></td>");
-                    line.append("<td>" + Utilities.StringPrintf("%.3f", velocity * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
-                    results.put(-velocity, line.toString());
+                    row.html.append("<td>" + pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(row.correctedClockTime) + "</td>");
+                    row.html.append("<td>" + row.distance.getMiles() + "</td>");
+                    row.html.append("<td>" + row.distance.getYardsRemainder() + "</td>");
+                    row.html.append("<td>" + time.getRingNumber() + "</td>");
+                    row.html.append("<td>Purple</td>");
+                    row.html.append("<td>H</td>");
+                    row.html.append("<td></td>");
+                    row.html.append("<td></td>");
+                    row.html.append("<td>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
+                    results.add(row);
                 }
             }
             out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
@@ -140,10 +129,10 @@ public final class RaceReporter implements Reporter {
             }
             out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
             int pos = 0;
-            for (String line: results.values()) {
+            for (BirdResult row: results) {
                 pos ++;
                 out.print("<tr><td>" + pos + "</td>");
-                out.print(line);
+                out.print(row.html.toString());
                 out.print("</tr>\n");
             }
             out.print("</table>\n");

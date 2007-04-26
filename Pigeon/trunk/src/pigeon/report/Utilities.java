@@ -37,11 +37,16 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import pigeon.model.Clock;
+import pigeon.model.Constants;
+import pigeon.model.Distance;
+import pigeon.model.Organization;
 import pigeon.model.Race;
+import pigeon.model.Time;
 
 /**
     Shared HTML bits.
@@ -111,11 +116,23 @@ public final class Utilities
         return new ArrayList<String>(result);
     }    
     
-    public static String StringPrintf(String format, Object... args) {
+    public static String stringPrintf(String format, Object... args) {
             StringWriter buffer = new StringWriter();
             PrintWriter writer = new PrintWriter(buffer);
             writer.printf(format, args);
             writer.flush();
             return buffer.toString();
+    }
+    
+    public static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
+    {
+        Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
+        int nightsSpentSleeping = (int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY);
+        long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
+        double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
+        Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
+        double velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;        
+        
+        return new BirdResult(velocityInMetresPerSecond, time, correctedClockTime, distance);
     }
 }
