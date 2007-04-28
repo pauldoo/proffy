@@ -7,7 +7,7 @@ import java.util.zip.*;
 
 public final class Player
 {
-    final java.util.List<Image> images = new LinkedList<Image>();
+    final java.util.List<Image> images = new ArrayList<Image>();
 
     private Player(InputStream in) throws Exception
     {
@@ -31,20 +31,28 @@ public final class Player
             Rectangle bounds = frame.getBounds();
             frame.createBufferStrategy(2);
             BufferStrategy bufferStrategy = frame.getBufferStrategy();
+
+            Image lastImage = null;
             while (true) {
-                for (Image image: images) {
-                    Graphics g = bufferStrategy.getDrawGraphics();
-                    if (!bufferStrategy.contentsLost()) {
-                        g.drawImage(
-                            image,
-                            (bounds.width - image.getWidth(null)) / 2,
-                            (bounds.height - image.getHeight(null)) / 2,
-                            null);
-                        bufferStrategy.show();
-                        g.dispose();
+                final Point mouse = frame.getMousePosition(true);
+                if (mouse != null) {
+                    final Image image = images.get(images.size() * (mouse.x - bounds.x) / bounds.width);
+                    if (image != lastImage) {
+                        Graphics g = bufferStrategy.getDrawGraphics();
+                        if (!bufferStrategy.contentsLost()) {
+                            g.drawImage(
+                                image,
+                                (bounds.width - image.getWidth(null)) / 2,
+                                (bounds.height - image.getHeight(null)) / 2,
+                                null);
+
+                            bufferStrategy.show();
+                            g.dispose();
+                        }
                     }
-                    Thread.yield();
+                    lastImage = image;
                 }
+                Thread.yield();
             }
         } finally {
             device.setFullScreenWindow(null);
