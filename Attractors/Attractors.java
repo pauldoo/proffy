@@ -7,7 +7,6 @@ import java.util.zip.*;
 public final class Attractors
 {
     private static final int STEPS = 250;
-    private static final double DISTANCE = 15;
     private static final double XSCALE = 1;
     private static final double YSCALE = 1;
     private static final double ZSCALE = 1;
@@ -18,6 +17,7 @@ public final class Attractors
     private final int LAYERS;
     private final int ITERATIONS;
     private final double EXPOSURE;
+    private final double DISTANCE;
 
     private final int image[];
 
@@ -27,7 +27,8 @@ public final class Attractors
         final int height,
         final int layers,
         final int iterations,
-        final double exposure
+        final double exposure,
+        final double distance
     )
     {
         this.FRAME = frame;
@@ -36,6 +37,7 @@ public final class Attractors
         this.LAYERS = layers;
         this.ITERATIONS = iterations;
         this.EXPOSURE = exposure;
+        this.DISTANCE = distance;
         this.image = new int[WIDTH * HEIGHT];
     }
 
@@ -68,13 +70,14 @@ public final class Attractors
         final int layers = Integer.parseInt(args[4]);
         final int iterations = Integer.parseInt(args[5]);
         final double exposure = Double.parseDouble(args[6]);
+        final double distance = Double.parseDouble(args[7]);
 
         ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(System.out));
 
         for (int frame = frameFirst; frame <= frameLast; ++frame) {
             final String filename = stringPrintf("frame_%05d.bmp", frame);
             zos.putNextEntry(new ZipEntry(filename));
-            new Attractors(frame, width, height, layers, iterations, exposure).go(zos);
+            new Attractors(frame, width, height, layers, iterations, exposure, distance).go(zos);
             zos.closeEntry();
         }
 
@@ -90,6 +93,7 @@ public final class Attractors
         System.err.println("Layers: " + LAYERS);
         System.err.println("Iterations: " + ITERATIONS);
         System.err.println("Exposure: " + EXPOSURE);
+        System.err.println("Distance: " + DISTANCE);
 
         final double angle = (Math.PI * 2 * FRAME) / STEPS;
         final double ca = Math.cos(angle);

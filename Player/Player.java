@@ -52,7 +52,7 @@ public final class Player
                     }
                     lastImage = image;
                 }
-                Thread.yield();
+                Thread.sleep(30);
             }
         } finally {
             device.setFullScreenWindow(null);
