@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import java.io.*;
+import java.util.zip.*;
 
 public final class Attractors
 {
@@ -60,14 +61,24 @@ public final class Attractors
 
     public static void main(String[] args) throws IOException
     {
-        final int frame = Integer.parseInt(args[0]);
-        final int width = Integer.parseInt(args[1]);
-        final int height = Integer.parseInt(args[2]);
-        final int layers = Integer.parseInt(args[3]);
-        final int iterations = Integer.parseInt(args[4]);
-        final double exposure = Double.parseDouble(args[5]);
+        final int frameFirst = Integer.parseInt(args[0]);
+        final int frameLast = Integer.parseInt(args[1]);
+        final int width = Integer.parseInt(args[2]);
+        final int height = Integer.parseInt(args[3]);
+        final int layers = Integer.parseInt(args[4]);
+        final int iterations = Integer.parseInt(args[5]);
+        final double exposure = Double.parseDouble(args[6]);
 
-        new Attractors(frame, width, height, layers, iterations, exposure).go(System.out);
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(System.out));
+
+        for (int frame = frameFirst; frame <= frameLast; ++frame) {
+            final String filename = stringPrintf("frame_%05d.bmp", frame);
+            zos.putNextEntry(new ZipEntry(filename));
+            new Attractors(frame, width, height, layers, iterations, exposure).go(zos);
+            zos.closeEntry();
+        }
+
+        zos.close();
     }
 
 
@@ -115,7 +126,15 @@ public final class Attractors
                 output.setRGB(x, y, (b << 16) | (b << 8) | b);
             }
         }
-        ImageIO.write(output, "png", System.out);
+        ImageIO.write(output, "bmp", out);
+    }
+
+    private static String stringPrintf(String format, Object... args) {
+            StringWriter buffer = new StringWriter();
+            PrintWriter writer = new PrintWriter(buffer);
+            writer.printf(format, args);
+            writer.flush();
+            return buffer.toString();
     }
 }
 
