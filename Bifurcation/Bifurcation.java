@@ -85,8 +85,9 @@ public final class Bifurcation
                 final int b = (int)(brown[2] + (green[2] - brown[2]) * v);
                 image.setRGB(x, y, (r << 16) | (g << 8) | b);
             }
+            System.err.print("\r" + (x+1));
         }
-
+        System.err.println("\nSaving.");
         ImageIO.write(image, "bmp", out);
     }
 }
