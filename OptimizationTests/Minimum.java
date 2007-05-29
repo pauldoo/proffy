@@ -5,12 +5,10 @@ final class Minimum {
     private static short minimum(final short[] values)
     {
         short result = Short.MAX_VALUE;
-        //result = Collections.min(values);
         for (final short v: values) {
             if (v < result) {
                 result = v;
             }
-            //result = Math.min(result, v);
         }
         return result;
     }
