@@ -74,7 +74,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import pigeon.About;
 import pigeon.competitions.Competition;
 import pigeon.model.Member;
@@ -87,7 +86,6 @@ import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
 import pigeon.report.Reporter;
-import pigeon.view.laf.BigFontTheme;
 
 /**
     Application entry point and top level window.
@@ -1257,8 +1255,8 @@ final class MainWindow extends javax.swing.JFrame {
 
     private static void setSwingLAF() {
         try {
-            MetalLookAndFeel.setCurrentTheme(new BigFontTheme(1.22f));
-            UIManager.setLookAndFeel(new MetalLookAndFeel());
+            String name = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(name);
         } catch (Exception e) {
             e.printStackTrace();
         }
