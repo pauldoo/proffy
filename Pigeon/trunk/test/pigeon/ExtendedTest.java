@@ -67,6 +67,7 @@ import pigeon.model.Time;
 import pigeon.model.ValidationException;
 import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
+import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
 import pigeon.view.Configuration;
 import pigeon.view.Utilities;
@@ -200,6 +201,12 @@ public final class ExtendedTest extends TestCase
         for (int i = 0; i < MEMBER_COUNT; i++) {
             Member m = new Member();
             m.setName("Member #" + i);
+            StringBuffer address = new StringBuffer();
+            address.append("Line 1" + "\n");
+            address.append("Line 2" + "\n");
+            m.setAddress(address.toString());
+            m.setSHUNumber("SHU" + (i * 7));
+            m.setTelephone("" + (i * 11));
             int clubIndex = random.nextInt(clubs.length);
             m.setClub(clubs[clubIndex][0]);
             m.setSection(clubs[clubIndex][1]);
@@ -352,5 +359,19 @@ public final class ExtendedTest extends TestCase
             
             checkRegression(out.toByteArray(), "Pools_" + race.getRacepoint());
         }
+    }
+    
+    public void testMembersReport() throws IOException
+    {
+        MembersReporter reporter = new MembersReporter(
+            season.getOrganization().getName(),
+            season.getOrganization().getMembers(),
+            configuration.getMode()
+        );
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        reporter.write(out);
+        out.close();
+
+        checkRegression(out.toByteArray(), "Members");
     }
 }

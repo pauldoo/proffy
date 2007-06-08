@@ -83,6 +83,7 @@ import pigeon.model.Season;
 import pigeon.model.ValidationException;
 import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
+import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
 import pigeon.report.Reporter;
 
@@ -179,7 +180,9 @@ final class MainWindow extends javax.swing.JFrame {
         closeItem = new javax.swing.JMenuItem();
         saveItem = new javax.swing.JMenuItem();
         exitItem = new javax.swing.JMenuItem();
-        dataMenu = new javax.swing.JMenu();
+        reportsMenu = new javax.swing.JMenu();
+        viewMembersItem = new javax.swing.JMenuItem();
+        menuSeparator1 = new javax.swing.JSeparator();
         viewMemberDistancesItem = new javax.swing.JMenuItem();
         viewRacepointDistancesItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -283,6 +286,7 @@ final class MainWindow extends javax.swing.JFrame {
 
         membersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Information"));
         membersList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        membersList.setVisibleRowCount(12);
         membersList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
         {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt)
@@ -335,13 +339,14 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.weighty = 2.0;
         setupClubPanel.add(membersPanel, gridBagConstraints);
 
         racepointsPanel.setLayout(new java.awt.BorderLayout());
 
         racepointsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Racepoint Information"));
         racepointsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        racepointsList.setVisibleRowCount(6);
         racepointsList.addListSelectionListener(new javax.swing.event.ListSelectionListener()
         {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt)
@@ -546,7 +551,20 @@ final class MainWindow extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        dataMenu.setText("Distances");
+        reportsMenu.setText("Reports");
+        viewMembersItem.setText("View Members");
+        viewMembersItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                viewMembersItemActionPerformed(evt);
+            }
+        });
+
+        reportsMenu.add(viewMembersItem);
+
+        reportsMenu.add(menuSeparator1);
+
         viewMemberDistancesItem.setText("View Distances for a Member");
         viewMemberDistancesItem.addActionListener(new java.awt.event.ActionListener()
         {
@@ -556,7 +574,7 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        dataMenu.add(viewMemberDistancesItem);
+        reportsMenu.add(viewMemberDistancesItem);
 
         viewRacepointDistancesItem.setText("View Distances for a Racepoint");
         viewRacepointDistancesItem.addActionListener(new java.awt.event.ActionListener()
@@ -567,9 +585,9 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        dataMenu.add(viewRacepointDistancesItem);
+        reportsMenu.add(viewRacepointDistancesItem);
 
-        menuBar.add(dataMenu);
+        menuBar.add(reportsMenu);
 
         helpMenu.setText("Help");
         aboutItem.setText("About");
@@ -589,6 +607,17 @@ final class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewMembersItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_viewMembersItemActionPerformed
+    {//GEN-HEADEREND:event_viewMembersItemActionPerformed
+        MembersReporter reporter = new MembersReporter(
+            season.getOrganization().toString(),
+            season.getOrganization().getMembers(),
+            configuration.getMode()
+        );
+
+        writeReport("Members", reporter);
+    }//GEN-LAST:event_viewMembersItemActionPerformed
 
     private void racepointsListValueChanged(javax.swing.event.ListSelectionEvent evt)//GEN-FIRST:event_racepointsListValueChanged
     {//GEN-HEADEREND:event_racepointsListValueChanged
@@ -1149,7 +1178,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void refreshMenus() {
         saveItem.setEnabled(season != null);
         closeItem.setEnabled(season != null);
-        dataMenu.setEnabled(season != null);
+        reportsMenu.setEnabled(season != null);
     }
 
     private void switchToCard(String cardName) {
@@ -1227,9 +1256,9 @@ final class MainWindow extends javax.swing.JFrame {
     private static void setSwingLAF() {
         try {
             String name = UIManager.getSystemLookAndFeelClassName();
-            //String name = UIManager.getCrossPlatformLookAndFeelClassName();
             UIManager.setLookAndFeel(name);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1255,7 +1284,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JLabel clubNameLabel;
     private javax.swing.JTextField clubNameText;
-    private javax.swing.JMenu dataMenu;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
@@ -1271,6 +1299,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JList membersList;
     private javax.swing.JPanel membersPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JSeparator menuSeparator1;
     private javax.swing.JButton newSeasonButton;
     private javax.swing.JMenuItem openItem;
     private javax.swing.JPanel organizationPanel;
@@ -1289,9 +1318,11 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane raceresultListScrollPane;
     private javax.swing.JPanel raceresultPanel;
     private javax.swing.JTable raceresultsTable;
+    private javax.swing.JMenu reportsMenu;
     private javax.swing.JMenuItem saveItem;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JMenuItem viewMemberDistancesItem;
+    private javax.swing.JMenuItem viewMembersItem;
     private javax.swing.JMenuItem viewRacepointDistancesItem;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables

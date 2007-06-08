@@ -96,7 +96,11 @@ public final class Member implements Serializable, Comparable<Member> {
     }
 
     public String getAddress() {
-        return address;
+        if (address != null) {
+            return address;
+        } else {
+            return "";
+        }
     }
 
     public void setAddress(String address) {

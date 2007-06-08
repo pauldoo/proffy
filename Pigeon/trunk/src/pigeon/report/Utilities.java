@@ -31,10 +31,12 @@
 
 package pigeon.report;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -134,5 +136,30 @@ public final class Utilities
         double velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;        
         
         return new BirdResult(velocityInMetresPerSecond, time, correctedClockTime, distance);
+    }
+
+    /**
+        Takes a multi-line string and makes it ready for HTML output by
+        inserting the required "br" tags.
+    */
+    public static String insertBrTags(final String lines)
+    {
+        try {
+            BufferedReader reader = new BufferedReader(new StringReader(lines));
+            StringBuffer result = new StringBuffer();
+
+            boolean firstLine = true;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!firstLine) {
+                    result.append("<br/>");
+                }
+                result.append(line);
+                firstLine = false;
+            }
+            return result.toString();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Not expecting any IOExceptions");
+        }
     }
 }
