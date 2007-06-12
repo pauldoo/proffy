@@ -150,6 +150,7 @@ final class MainWindow extends javax.swing.JFrame {
         organizationPanel = new javax.swing.JPanel();
         clubNameLabel = new javax.swing.JLabel();
         clubNameText = new javax.swing.JTextField();
+        membersRacepointsSplitPane = new javax.swing.JSplitPane();
         membersPanel = new javax.swing.JPanel();
         memberListScrollPane = new javax.swing.JScrollPane();
         membersList = new javax.swing.JList();
@@ -248,7 +249,7 @@ final class MainWindow extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         setupClubPanel.add(finishedButton, gridBagConstraints);
 
@@ -282,6 +283,10 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         setupClubPanel.add(organizationPanel, gridBagConstraints);
 
+        membersRacepointsSplitPane.setBorder(null);
+        membersRacepointsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        membersRacepointsSplitPane.setResizeWeight(0.66666);
+        membersRacepointsSplitPane.setContinuousLayout(true);
         membersPanel.setLayout(new java.awt.BorderLayout());
 
         membersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Information"));
@@ -334,13 +339,7 @@ final class MainWindow extends javax.swing.JFrame {
 
         membersPanel.add(memberButtonPanel, java.awt.BorderLayout.SOUTH);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 2.0;
-        setupClubPanel.add(membersPanel, gridBagConstraints);
+        membersRacepointsSplitPane.setLeftComponent(membersPanel);
 
         racepointsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -394,13 +393,15 @@ final class MainWindow extends javax.swing.JFrame {
 
         racepointsPanel.add(racepointButtonPanel, java.awt.BorderLayout.SOUTH);
 
+        membersRacepointsSplitPane.setRightComponent(racepointsPanel);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        setupClubPanel.add(racepointsPanel, gridBagConstraints);
+        setupClubPanel.add(membersRacepointsSplitPane, gridBagConstraints);
 
         getContentPane().add(setupClubPanel, "setupClub");
 
@@ -1298,6 +1299,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane memberListScrollPane;
     private javax.swing.JList membersList;
     private javax.swing.JPanel membersPanel;
+    private javax.swing.JSplitPane membersRacepointsSplitPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JSeparator menuSeparator1;
     private javax.swing.JButton newSeasonButton;
