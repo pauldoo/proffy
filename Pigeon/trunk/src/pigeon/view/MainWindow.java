@@ -38,26 +38,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -945,8 +937,9 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void promptSaveSeason() throws UserCancelledException {
         if (currentlyLoadedFile != null) {
-             try {
-                writeSeasonToFile(currentlyLoadedFile);
+            try {
+                Utilities.writeSeasonToFile(season, currentlyLoadedFile);
+                JOptionPane.showMessageDialog(getContentPane(), "Saved to " + currentlyLoadedFile.toString());
             } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(this, e.toString());
             } catch (IOException e) {
@@ -965,9 +958,10 @@ final class MainWindow extends javax.swing.JFrame {
                             File file = chooser.getSelectedFile();
                             if (!file.getName().endsWith(".pcs")) {
                                 file = new File(file.getParentFile(), file.getName() + ".pcs");
-                            }
-                            try {
-                                writeSeasonToFile(file);
+                            } try {
+                                Utilities.writeSeasonToFile(season, file);
+                                currentlyLoadedFile = file;
+                                JOptionPane.showMessageDialog(getContentPane(), "Saved to " + file.toString());
                             } catch (FileNotFoundException e) {
                                 JOptionPane.showMessageDialog(this, e.toString());
                             } catch (IOException e) {
@@ -986,17 +980,15 @@ final class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    private void promptLoadSeason() {
-        JFileChooser chooser = new JFileChooser();
-        FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
-        chooser.addChoosableFileFilter(filter);
-        chooser.setAcceptAllFileFilterUsed(false);
+    private void promptLoadSeason()
+    {
+        JFileChooser chooser = Utilities.createFileChooser();
         int result = chooser.showOpenDialog(this);
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 File file = chooser.getSelectedFile();
                 try {
-                    Season loaded = loadSeasonFromFile(file);
+                    Season loaded = Utilities.loadSeasonFromFile(file);
                     currentlyLoadedFile = file;
                     if (loaded.getRaces().isEmpty()) {
                         setSeason(loaded, "setupClub");
@@ -1007,8 +999,6 @@ final class MainWindow extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, e.toString());
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this, e.toString());
-                } catch (ClassNotFoundException e) {
-                    JOptionPane.showMessageDialog(this, e.toString());
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -1018,39 +1008,7 @@ final class MainWindow extends javax.swing.JFrame {
                 throw new IllegalStateException();
         }
     }
-
-    private void writeSeasonToFile(File file) throws FileNotFoundException, IOException {
-        FileOutputStream fileOut = null;
-        try {
-            fileOut = new FileOutputStream(file);
-            ObjectOutput objectOut = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(fileOut)));
-            objectOut.writeObject(season);
-            objectOut.close();
-            currentlyLoadedFile = file;
-            JOptionPane.showMessageDialog(getContentPane(), "Saved to " + file.toString());
-        } finally {
-            if (fileOut != null) {
-                fileOut.close();
-            }
-        }
-    }
-
-    private static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream fileIn = null;
-        try {
-            fileIn = new FileInputStream(file);
-            ObjectInput objectIn = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(fileIn)));
-            Season loaded = (Season)objectIn.readObject();
-            objectIn.close();
-            return loaded;
-        } finally {
-            if (fileIn != null) {
-                fileIn.close();
-            }
-        }
-    }
-
-
+        
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1103,24 +1061,24 @@ final class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_memberEditButtonActionPerformed
 
     private void racepointAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointAddButtonActionPerformed
-         String name = JOptionPane.showInputDialog(this, "Please enter a name", "New racepoint", JOptionPane.QUESTION_MESSAGE);
-         if (name != null) {
-             try {
-                 Racepoint racepoint = new Racepoint();
-                 racepoint.setName(name);
-                 season.getOrganization().addRacepoint( racepoint );
-                 try {
-                     editDistancesForRacepoint( racepoint );
-                 } catch (UserCancelledException e) {
-                     season.getOrganization().removeRacepoint(racepoint);
-                     throw e;
-                 }
-             } catch (UserCancelledException e) {
-             } catch (ValidationException e) {
-                 e.displayErrorDialog(this);
-             }
-             reloadRacepointsList();
-         }
+        String name = JOptionPane.showInputDialog(this, "Please enter a name", "New racepoint", JOptionPane.QUESTION_MESSAGE);
+        if (name != null) {
+            try {
+                Racepoint racepoint = new Racepoint();
+                racepoint.setName(name);
+                season.getOrganization().addRacepoint( racepoint );
+                try {
+                    editDistancesForRacepoint( racepoint );
+                } catch (UserCancelledException e) {
+                    season.getOrganization().removeRacepoint(racepoint);
+                    throw e;
+                }
+            } catch (UserCancelledException e) {
+            } catch (ValidationException e) {
+                e.displayErrorDialog(this);
+            }
+            reloadRacepointsList();
+        }
     }//GEN-LAST:event_racepointAddButtonActionPerformed
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
@@ -1189,7 +1147,15 @@ final class MainWindow extends javax.swing.JFrame {
     }
 
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
-        setSeason(new Season(), "setupClub");
+        try {
+            Season season = NewSeasonDialog.createNewSeason(this);
+            setSeason(season, "setupClub");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        } catch (UserCancelledException e) {
+        }
     }//GEN-LAST:event_newSeasonButtonActionPerformed
 
     private void editDistancesForMember(Member member) throws UserCancelledException {
@@ -1208,7 +1174,7 @@ final class MainWindow extends javax.swing.JFrame {
         // present when we have Java 6 or better
         final String javaVersion = System.getProperty("java.version");
         if (javaVersion.compareTo("1.6") >= 0) {
-            Thread.sleep(3000);
+            Thread.sleep(2500);
         }
     }
     

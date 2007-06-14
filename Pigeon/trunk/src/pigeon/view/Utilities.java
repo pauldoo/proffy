@@ -31,6 +31,17 @@
 
 package pigeon.view;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +52,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeSet;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import pigeon.competitions.Competition;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
@@ -198,4 +213,46 @@ public final class Utilities {
             throw new ValidationException("The season cannot be loaded.\nThe application is not configured with the pools used in this season.");
         }
     }
+    
+    public static JFileChooser createFileChooser()
+    {
+        JFileChooser chooser = new JFileChooser();
+        FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
+        chooser.addChoosableFileFilter(filter);
+        chooser.setAcceptAllFileFilterUsed(false);
+        return chooser;
+    }
+    
+    public static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException
+    {
+        FileInputStream fileIn = null;
+        try {
+            fileIn = new FileInputStream(file);
+            ObjectInput objectIn = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(fileIn)));
+            Season loaded = (Season)objectIn.readObject();
+            objectIn.close();
+            return loaded;
+        } catch (ClassNotFoundException e) {
+            throw new IOException(e);
+        } finally {
+            if (fileIn != null) {
+                fileIn.close();
+            }
+        }
+    }
+
+    public static void writeSeasonToFile(Season season, File file) throws FileNotFoundException, IOException
+    {
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream(file);
+            ObjectOutput objectOut = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(fileOut)));
+            objectOut.writeObject(season);
+            objectOut.close();
+        } finally {
+            if (fileOut != null) {
+                fileOut.close();
+            }
+        }
+    }    
 }
