@@ -42,7 +42,7 @@ import java.io.Reader;
 */
 public final class About
 {
-    public static final String VERSION = "0.1" + " (build " + getBuildId() + ")";
+    public static final String VERSION = "0.2" + " (build " + getBuildId() + ")";
     public static final String TITLE = "RacePoint v" + VERSION;
     public static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
     
