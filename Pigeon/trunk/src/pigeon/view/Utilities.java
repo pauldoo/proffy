@@ -223,7 +223,7 @@ public final class Utilities {
         return chooser;
     }
     
-    public static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException
+    public static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         FileInputStream fileIn = null;
         try {
@@ -232,8 +232,6 @@ public final class Utilities {
             Season loaded = (Season)objectIn.readObject();
             objectIn.close();
             return loaded;
-        } catch (ClassNotFoundException e) {
-            throw new IOException(e);
         } finally {
             if (fileIn != null) {
                 fileIn.close();

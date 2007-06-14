@@ -999,6 +999,8 @@ final class MainWindow extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, e.toString());
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this, e.toString());
+                } catch (ClassNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.toString());
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -1153,6 +1155,8 @@ final class MainWindow extends javax.swing.JFrame {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, e.toString());
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        } catch (ClassNotFoundException e) {
             JOptionPane.showMessageDialog(this, e.toString());
         } catch (UserCancelledException e) {
         }

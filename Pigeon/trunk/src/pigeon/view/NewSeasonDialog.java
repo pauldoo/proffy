@@ -192,7 +192,8 @@ final class NewSeasonDialog extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     
     
-    public static Season createNewSeason(Component parent) throws UserCancelledException, FileNotFoundException, IOException {
+    public static Season createNewSeason(Component parent) throws UserCancelledException, FileNotFoundException, IOException, ClassNotFoundException
+    {
         NewSeasonDialog panel = new NewSeasonDialog();
         int result = JOptionPane.showOptionDialog(parent, panel, "New Season", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
         Season season = new Season();
