@@ -24,7 +24,7 @@ public final class Cactus
         final int iterations = Integer.parseInt(args[argumentIndex++]);
 
         ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(System.out));
-        zos.putNextEntry(new ZipEntry("ship.bmp"));
+        zos.putNextEntry(new ZipEntry("cactus.bmp"));
         new Cactus(width, height, supersample, iterations).go(zos);
         zos.closeEntry();
         zos.close();
@@ -40,6 +40,63 @@ public final class Cactus
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
     }
 
+    private static final class Imag
+    {
+        public final double real;
+        public final double imag;
+
+        public static final Imag ONE = new Imag(1.0);
+
+        public Imag(final double r)
+        {
+            this(r, 0);
+        }
+
+        public Imag(final double r, final double i)
+        {
+            this.real = r;
+            this.imag = i;
+        }
+
+        public static Imag multiply(final Imag lhs, final Imag rhs)
+        {
+            return new Imag(
+                lhs.real * rhs.real - lhs.imag * rhs.imag,
+                lhs.real * rhs.imag + lhs.imag * rhs.real);
+        }
+
+        public Imag power(final int p)
+        {
+            Imag result = new Imag(1.0);
+            for (int i = 1; i <= p; ++i) {
+                result = multiply(result, this);
+            }
+            return result;
+        }
+
+        public static Imag add(final Imag lhs, final Imag rhs)
+        {
+            return new Imag(
+                lhs.real + rhs.real,
+                lhs.imag + rhs.imag);
+        }
+
+        public Imag negate()
+        {
+            return new Imag(-real, -imag);
+        }
+
+        public static Imag subtract(final Imag lhs, final Imag rhs)
+        {
+            return add(lhs, rhs.negate());
+        }
+
+        public double magnitude2()
+        {
+            return real * real + imag * imag;
+        }
+    }
+
     private void go(OutputStream out) throws IOException
     {
         System.err.println("Width: " + width);
@@ -52,16 +109,18 @@ public final class Cactus
                 int memberCount = 0;
                 for (int xs = 0; xs < supersample; ++xs) {
                     for (int ys = 0; ys < supersample; ++ys) {
-                        final double cx = (x * supersample + xs) * 3.0 / (width * supersample) - 1.0;
-                        final double cy = (y * supersample + ys) * 3.0 / (height * supersample) - 1.0;
-                        double xn = 0;
-                        double yn = 0;
+                        /*
+                        final Imag z0 = new Imag(
+                            (x * supersample + xs) * 0.05 / (width * supersample) - 0.025,
+                            (y * supersample + ys) * 0.05 / (height * supersample) - 0.2875);
+                        */
+                        final Imag z0 = new Imag(
+                            (x * supersample + xs) * 0.02121 / (width * supersample) - 0.0155,
+                            (y * supersample + ys) * 0.03000 / (height * supersample) - 0.2795);
                         int count = 0;
-                        while (count < iterations && (xn*xn + yn*yn) < 100) {
-                            final double xt = xn*xn - yn*yn - cx;
-                            final double yt = 2 * Math.abs(xn * yn) - cy;
-                            xn = xt;
-                            yn = yt;
+                        Imag z = z0;
+                        while (count < iterations && z.magnitude2() < 100) {
+                            z = Imag.subtract(Imag.add(z.power(3), Imag.multiply(Imag.subtract(z0, Imag.ONE), z)), z0);
                             count++;
                         }
                         if (count >= iterations) {
