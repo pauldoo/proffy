@@ -58,13 +58,6 @@ public final class Cactus
             this.imag = i;
         }
 
-        public static Imag multiply(final Imag lhs, final Imag rhs)
-        {
-            return new Imag(
-                lhs.real * rhs.real - lhs.imag * rhs.imag,
-                lhs.real * rhs.imag + lhs.imag * rhs.real);
-        }
-
         public Imag power(final int p)
         {
             Imag result = new Imag(1.0);
@@ -74,6 +67,39 @@ public final class Cactus
             return result;
         }
 
+        public Imag negate()
+        {
+            return new Imag(-real, -imag);
+        }
+
+        public Imag reciprocal()
+        {
+            final double mag2 = magnitude2();
+            return new Imag(real / mag2, -imag / mag2);
+        }
+
+        public double magnitude2()
+        {
+            return real * real + imag * imag;
+        }
+
+        public double magnitude()
+        {
+            return Math.sqrt(magnitude2());
+        }
+
+        public static Imag multiply(final Imag lhs, final Imag rhs)
+        {
+            return new Imag(
+                lhs.real * rhs.real - lhs.imag * rhs.imag,
+                lhs.real * rhs.imag + lhs.imag * rhs.real);
+        }
+
+        public static Imag divide(final Imag lhs, final Imag rhs)
+        {
+            return multiply(lhs, rhs.reciprocal());
+        }
+
         public static Imag add(final Imag lhs, final Imag rhs)
         {
             return new Imag(
@@ -81,20 +107,20 @@ public final class Cactus
                 lhs.imag + rhs.imag);
         }
 
-        public Imag negate()
-        {
-            return new Imag(-real, -imag);
-        }
-
         public static Imag subtract(final Imag lhs, final Imag rhs)
         {
             return add(lhs, rhs.negate());
         }
+    }
 
-        public double magnitude2()
-        {
-            return real * real + imag * imag;
-        }
+    private static final double f(final double r)
+    {
+        return (r * (1 + 2*r + r*r) * (r*r - 1)) / ((1 + r*r*r) * (1 + r*r*r));
+    }
+
+    private static final double g(final double r)
+    {
+        return (r * (1 - 2*r + r*r) * (r*r - 1)) / ((1 + r*r*r) * (1 + r*r*r));
     }
 
     private void go(OutputStream out) throws IOException
@@ -104,31 +130,47 @@ public final class Cactus
         System.err.println("Supersample: " + supersample);
         System.err.println("Iterations: " + iterations);
 
+        final double xmin = -2;
+        final double xmax = 2;
+        final double ymin = -2;
+        final double ymax = 2;
+        final int m = 4;
+
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 int memberCount = 0;
                 for (int xs = 0; xs < supersample; ++xs) {
                     for (int ys = 0; ys < supersample; ++ys) {
-                        /*
                         final Imag z0 = new Imag(
-                            (x * supersample + xs) * 0.05 / (width * supersample) - 0.025,
-                            (y * supersample + ys) * 0.05 / (height * supersample) - 0.2875);
-                        */
-                        final Imag z0 = new Imag(
-                            (x * supersample + xs) * 0.02121 / (width * supersample) - 0.0155,
-                            (y * supersample + ys) * 0.03000 / (height * supersample) - 0.2795);
+                            (x * supersample + xs) * (xmax - xmin) / (width * supersample) + xmin,
+                            (y * supersample + ys) * (ymax - ymin) / (height * supersample) + ymin).reciprocal();
                         int count = 0;
                         Imag z = z0;
                         while (count < iterations && z.magnitude2() < 100) {
-                            z = Imag.subtract(Imag.add(z.power(3), Imag.multiply(Imag.subtract(z0, Imag.ONE), z)), z0);
+                            //z = Imag.subtract(Imag.add(z.power(3), Imag.multiply(Imag.subtract(z0, Imag.ONE), z)), z0);
+                            //z = Imag.divide(Imag.add(z.power(2), z), Imag.add(Imag.multiply(new Imag(2), z.power(m)), z0));
+                            //z = Imag.add(z.power(2), z0);
+                            /*
+                            z = Imag.divide(
+                                Imag.add(Imag.add(z.power(m), z.power(2)), Imag.ONE),
+                                Imag.add(Imag.add(Imag.multiply(new Imag(2), z.power(m-1)), z0.negate()), Imag.ONE)
+                            );
+                            */
+                            z = Imag.add(
+                                z.power(2),
+                                new Imag(
+                                    f(z.magnitude()),
+                                    g(z.magnitude())
+                                )
+                            );
                             count++;
                         }
-                        if (count >= iterations) {
+                        if (count == iterations || (count % 2) == 0) {
                             memberCount++;
                         }
                     }
                 }
-                final double v = memberCount * 1.0 / (supersample * supersample);
+                final double v = 1.0 - (memberCount * 1.0 / (supersample * supersample));
                 final int r = (int)(brown[0] + (green[0] - brown[0]) * v);
                 final int g = (int)(brown[1] + (green[1] - brown[1]) * v);
                 final int b = (int)(brown[2] + (green[2] - brown[2]) * v);
