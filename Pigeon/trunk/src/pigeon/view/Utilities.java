@@ -191,7 +191,7 @@ public final class Utilities {
             for (Clock c: r.getClocks()) {
                 for (Time t: c.getTimes()) {
                     final String color = t.getColor();
-                    if (!color.isEmpty()) {
+                    if (color.length() != 0) {
                         result.add(color);
                     }
                 }
@@ -206,7 +206,7 @@ public final class Utilities {
     */
     public static String guessBirdColor(final Season season, final String ringNumber)
     {
-        if (!ringNumber.isEmpty()) {
+        if (ringNumber.length() != 0) {
             for (Race r: season.getRaces()) {
                 for (Clock c: r.getClocks()) {
                     for (Time t: c.getTimes()) {
@@ -292,4 +292,11 @@ public final class Utilities {
             }
         }
     }    
+    
+    public static boolean isMacOsX()
+    {
+        String lcOSName = System.getProperty("os.name").toLowerCase();
+        boolean MAC_OS_X = lcOSName.startsWith("mac os x");
+        return MAC_OS_X;
+    }
 }

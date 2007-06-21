@@ -319,7 +319,7 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private void ringNumberTextActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ringNumberTextActionPerformed
     {//GEN-HEADEREND:event_ringNumberTextActionPerformed
-        if (((String)birdColorCombo.getSelectedItem()).trim().isEmpty()) {
+        if (((String)birdColorCombo.getSelectedItem()).trim().length() == 0) {
             String ringNumber = ringNumberText.getText().trim();
             String guessedColor = Utilities.guessBirdColor(season, ringNumber);
             if (guessedColor != null) {
