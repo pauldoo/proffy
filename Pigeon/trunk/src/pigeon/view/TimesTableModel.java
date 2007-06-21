@@ -62,7 +62,7 @@ final class TimesTableModel extends AbstractTableModel
     }
 
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     private Time getEntry(int row) {
@@ -76,6 +76,8 @@ final class TimesTableModel extends AbstractTableModel
             case 1:
                 return Integer.class;
             case 2:
+                return String.class;
+            case 3:
                 return String.class;
             default:
                 throw new IllegalArgumentException();
@@ -92,6 +94,8 @@ final class TimesTableModel extends AbstractTableModel
                 return (entry.getMemberTime() / Constants.MILLISECONDS_PER_DAY) + 1;
             case 2:
                 return Utilities.TIME_FORMAT_WITHOUT_LOCALE.format(new Date(entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
+            case 3:
+                return entry.getColor();
             default:
                 throw new IllegalArgumentException();
         }
@@ -105,6 +109,8 @@ final class TimesTableModel extends AbstractTableModel
                 return "Day";
             case 2:
                 return "Clock Time";
+            case 3:
+                return "Bird Color";
             default:
                 throw new IllegalArgumentException();
         }

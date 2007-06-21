@@ -38,8 +38,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import pigeon.competitions.Competition;
 import pigeon.model.Constants;
+import pigeon.model.Season;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
 
@@ -52,14 +52,16 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private final Time time;
     private final int numberOfDaysCovered;
+    private final Season season;
     private final Configuration configuration;
     private final Map<String, JCheckBox> openCompetitionCheckboxes = new TreeMap<String, JCheckBox>();
     private final Map<String, JCheckBox> sectionCompetitionCheckboxes = new TreeMap<String, JCheckBox>();
     
-    public RingTimeEditor(Time time, int numberOfDaysCovered, Configuration configuration)
+    public RingTimeEditor(Time time, int numberOfDaysCovered, Season season, Configuration configuration)
     {
         this.time = time;
         this.numberOfDaysCovered = numberOfDaysCovered;
+        this.season = season;
         this.configuration = configuration;
         initComponents();
         addComboOptions();
@@ -75,6 +77,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         hourCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_HOUR) % 24));
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
+        birdColorCombo.setSelectedItem(time.getColor());
 
         switch (configuration.getMode()) {
             case FEDERATION:
@@ -129,6 +132,7 @@ final class RingTimeEditor extends javax.swing.JPanel
                 (new Integer(minuteCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_MINUTE) +
                 (new Integer(secondCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_SECOND);
         time.setMemberTime(memberTime, numberOfDaysCovered);
+        time.setColor(((String)birdColorCombo.getSelectedItem()).trim());
         
         switch (configuration.getMode()) {
             case FEDERATION:
@@ -168,6 +172,8 @@ final class RingTimeEditor extends javax.swing.JPanel
         openPoolsPanel = new javax.swing.JPanel();
         sectionPoolsLabel = new javax.swing.JLabel();
         sectionPoolsPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        birdColorCombo = new javax.swing.JComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -176,6 +182,14 @@ final class RingTimeEditor extends javax.swing.JPanel
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(jLabel1, gridBagConstraints);
+
+        ringNumberText.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                ringNumberTextActionPerformed(evt);
+            }
+        });
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -251,7 +265,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         openPoolsLabel.setText("Open Pools");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(openPoolsLabel, gridBagConstraints);
@@ -260,7 +274,7 @@ final class RingTimeEditor extends javax.swing.JPanel
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -268,6 +282,8 @@ final class RingTimeEditor extends javax.swing.JPanel
 
         sectionPoolsLabel.setText("Section Pools");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(sectionPoolsLabel, gridBagConstraints);
@@ -275,15 +291,46 @@ final class RingTimeEditor extends javax.swing.JPanel
         sectionPoolsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(sectionPoolsPanel, gridBagConstraints);
 
+        jLabel6.setText("Bird Colour");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(jLabel6, gridBagConstraints);
+
+        birdColorCombo.setEditable(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(birdColorCombo, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ringNumberTextActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ringNumberTextActionPerformed
+    {//GEN-HEADEREND:event_ringNumberTextActionPerformed
+        if (((String)birdColorCombo.getSelectedItem()).trim().isEmpty()) {
+            String ringNumber = ringNumberText.getText().trim();
+            String guessedColor = Utilities.guessBirdColor(season, ringNumber);
+            if (guessedColor != null) {
+                birdColorCombo.setSelectedItem(guessedColor);
+            }
+        }
+    }//GEN-LAST:event_ringNumberTextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox birdColorCombo;
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel jLabel1;
@@ -291,6 +338,7 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JComboBox minuteCombo;
     private javax.swing.JLabel openPoolsLabel;
     private javax.swing.JPanel openPoolsPanel;
@@ -300,9 +348,9 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JPanel sectionPoolsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Configuration configuration, boolean newTime) throws UserCancelledException
+    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration, boolean newTime) throws UserCancelledException
     {
-        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, configuration);
+        RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, season, configuration);
         while (true)
         {
             Object[] options = { (newTime ? "Add" : "Ok"), "Cancel" };
@@ -330,15 +378,15 @@ final class RingTimeEditor extends javax.swing.JPanel
         }
     }
 
-    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Configuration configuration) throws UserCancelledException
+    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration) throws UserCancelledException
     {
-        editEntry(parent, time, numberOfDaysCovered, configuration, false);
+        editEntry(parent, time, numberOfDaysCovered, season, configuration, false);
     }
 
-    public static Time createEntry(Component parent, int numberOfDaysCovered, Configuration configuration) throws UserCancelledException
+    public static Time createEntry(Component parent, int numberOfDaysCovered, Season season, Configuration configuration) throws UserCancelledException
     {
         Time time = new Time();
-        editEntry(parent, time, numberOfDaysCovered, configuration, true);
+        editEntry(parent, time, numberOfDaysCovered, season, configuration, true);
         return time;
     }
 
@@ -385,5 +433,9 @@ final class RingTimeEditor extends javax.swing.JPanel
             minuteCombo.addItem(str);
             secondCombo.addItem(str);
         }
+        
+        for (String color: Utilities.getBirdColors(season)) {
+            birdColorCombo.addItem(color);
+        }    
     }
 }

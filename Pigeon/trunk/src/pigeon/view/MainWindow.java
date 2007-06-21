@@ -899,7 +899,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void editResultsForRace(Race race) throws UserCancelledException
     {
         Component parent = this.getContentPane();
-        RaceEditor.editRaceResults(parent, race, season.getOrganization(), configuration);
+        RaceEditor.editRaceResults(parent, race, season, configuration);
     }
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed

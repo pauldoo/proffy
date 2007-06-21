@@ -47,6 +47,7 @@ public final class Time implements Comparable<Time>, Serializable
     private static final long serialVersionUID = 5746826265321182248L;
 
     private String ringNumber = "";
+    private String color = "";
     private int time = 0;
     
     /// In CLUB mode, this list stores the club competitions.
@@ -65,7 +66,7 @@ public final class Time implements Comparable<Time>, Serializable
 
     public void setRingNumber(String ringNumber)
     {
-        this.ringNumber = ringNumber;
+        this.ringNumber = ringNumber.trim();
     }
 
     public long getMemberTime()
@@ -117,5 +118,18 @@ public final class Time implements Comparable<Time>, Serializable
     public void setSectionCompetitionsEntered(Collection<String> competitions)
     {
         sectionCompetitionsEntered = new TreeSet<String>(competitions);
+    }
+
+    public String getColor()
+    {
+        if (color == null) {
+            setColor("");
+        }
+        return color;
+    }
+
+    public void setColor(String color)
+    {
+        this.color = color.trim();
     }
 }

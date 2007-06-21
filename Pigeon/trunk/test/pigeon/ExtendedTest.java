@@ -164,6 +164,30 @@ public final class ExtendedTest extends TestCase
                         (random.nextDouble() * 6 + 9) * Constants.MILLISECONDS_PER_HOUR);
                     assert(setTime + clockInTime <= masterOpenTime);
                     t.setMemberTime(clockInTime, daysCovered);
+                    String color = Utilities.guessBirdColor(season, ringNumber);
+                    if (color == null) {
+                        int colorCode = Math.abs(ringNumber.hashCode()) % 5;
+                        switch (colorCode) {
+                            case 0:
+                                color = "Pink";
+                                break;
+                            case 1:
+                                color = "Purple";
+                                break;
+                            case 2:
+                                color = "Green";
+                                break;
+                            case 3:
+                                color = "Blue";
+                                break;
+                            case 4:
+                                color = "Brown";
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Bug in test: " + colorCode);
+                        }
+                    }
+                    t.setColor(color);
                     
                     for (Competition c: configuration.getCompetitions()) {
                         if (random.nextBoolean()) {

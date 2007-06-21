@@ -182,6 +182,45 @@ public final class Utilities {
     }
     
     /**
+        Checks all the birds in a season and returns all of the colours mentioned.
+    */
+    public static Collection<String>  getBirdColors(Season season)
+    {
+        Set<String> result = new TreeSet<String>();
+        for (Race r: season.getRaces()) {
+            for (Clock c: r.getClocks()) {
+                for (Time t: c.getTimes()) {
+                    final String color = t.getColor();
+                    if (!color.isEmpty()) {
+                        result.add(color);
+                    }
+                }
+            }
+        }
+        return Collections.unmodifiableCollection(result);
+    }
+    
+    /**
+        Checks through a season looking for a given ring number so that
+        the bird colour can be guessed from a previous race.
+    */
+    public static String guessBirdColor(final Season season, final String ringNumber)
+    {
+        if (!ringNumber.isEmpty()) {
+            for (Race r: season.getRaces()) {
+                for (Clock c: r.getClocks()) {
+                    for (Time t: c.getTimes()) {
+                        if (ringNumber.equals(t.getRingNumber())) {
+                            return t.getColor();
+                        }
+                    }
+                }
+            }        
+        }
+        return null;
+    }
+    
+    /**
         Returns a list of all the competition names in a configuration.
     */
     public static List<String>  getCompetitionNames(List<Competition> competitions)

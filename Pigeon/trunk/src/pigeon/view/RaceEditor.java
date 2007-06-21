@@ -37,11 +37,10 @@ import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import pigeon.competitions.Competition;
 import pigeon.model.Clock;
-import pigeon.model.Organization;
 import pigeon.model.Member;
 import pigeon.model.Race;
+import pigeon.model.Season;
 import pigeon.model.ValidationException;
 
 /**
@@ -56,11 +55,13 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private final Race race;
     Collection<Member> members;
-    Configuration configuration;
+    private final Season season;
+    private final Configuration configuration;
 
-    public RaceEditor(Race race, Collection<Member> members, Configuration configuration) {
+    public RaceEditor(Race race, Season season, Configuration configuration) {
         this.race = race;
-        this.members = members;
+        this.members = season.getOrganization().getMembers();
+        this.season = season;
         this.configuration = configuration;
         initComponents();
         clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
@@ -183,7 +184,7 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private void editResultsForClock(Clock clock) throws UserCancelledException
     {
-        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), configuration);
+        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), season, configuration);
     }
 
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
@@ -214,8 +215,8 @@ final class RaceEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    static public void editRaceResults(Component parent, Race race, Organization club, Configuration configuration) {
-        RaceEditor panel = new RaceEditor(race, club.getMembers(), configuration);
+    static public void editRaceResults(Component parent, Race race, Season season, Configuration configuration) {
+        RaceEditor panel = new RaceEditor(race, season, configuration);
         Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }

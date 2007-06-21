@@ -110,7 +110,7 @@ public final class RaceReporter implements Reporter {
                     row.html.append("<td>" + row.distance.getMiles() + "</td>");
                     row.html.append("<td>" + row.distance.getYardsRemainder() + "</td>");
                     row.html.append("<td>" + time.getRingNumber() + "</td>");
-                    row.html.append("<td>Purple</td>");
+                    row.html.append("<td>" + time.getColor() + "</td>");
                     row.html.append("<td>H</td>");
                     row.html.append("<td></td>");
                     row.html.append("<td></td>");

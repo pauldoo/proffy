@@ -33,12 +33,11 @@
 package pigeon.view;
 
 import java.awt.Component;
-import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import pigeon.competitions.Competition;
 import pigeon.model.Clock;
+import pigeon.model.Season;
 import pigeon.model.Time;
 
 /**
@@ -53,12 +52,14 @@ final class ClockEditor extends javax.swing.JPanel
 
     private final Clock clock;
     private final int daysInRace;
+    private final Season season;
     private final Configuration configuration;
 
-    public ClockEditor(Clock clock, int daysInRace, Configuration configuration)
+    public ClockEditor(Clock clock, int daysInRace, Season season, Configuration configuration)
     {
         this.clock = clock;
         this.daysInRace = daysInRace;
+        this.season = season;
         this.configuration = configuration;
         initComponents();
         timesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
@@ -156,7 +157,7 @@ final class ClockEditor extends javax.swing.JPanel
         try {
             int index = timesTable.getSelectedRow();
             Time time = clock.getTimes().get(index);
-            RingTimeEditor.editEntry(this, time, daysInRace, configuration);
+            RingTimeEditor.editEntry(this, time, daysInRace, season, configuration);
             reloadTimesTable();
         } catch (UserCancelledException e) {
         }
@@ -173,7 +174,7 @@ final class ClockEditor extends javax.swing.JPanel
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
         try {
-            Time time = RingTimeEditor.createEntry(this, daysInRace, configuration);
+            Time time = RingTimeEditor.createEntry(this, daysInRace, season, configuration);
             clock.addTime(time);
             reloadTimesTable();
         } catch (UserCancelledException e) {
@@ -192,9 +193,9 @@ final class ClockEditor extends javax.swing.JPanel
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
 
-    public static void editClockResults(Component parent, Clock clock, int daysInRace, Configuration configuration)
+    public static void editClockResults(Component parent, Clock clock, int daysInRace, Season season, Configuration configuration)
     {
-        ClockEditor panel = new ClockEditor(clock, daysInRace, configuration);
+        ClockEditor panel = new ClockEditor(clock, daysInRace, season, configuration);
         Object[] options = {"Finished"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
