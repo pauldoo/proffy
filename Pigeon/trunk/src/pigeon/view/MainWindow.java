@@ -637,7 +637,7 @@ final class MainWindow extends javax.swing.JFrame {
                     fileOut.close();
                 }
             }
-            com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
+            com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.getAbsolutePath());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(getContentPane(), e.toString());
         }
