@@ -1,32 +1,18 @@
 /*
-    Copyright (c) 2005-2007, Paul Richards
-    All rights reserved.
+    Copyright (C) 2005, 2006, 2007  Paul Richards.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-        * Redistributions of source code must retain the above copyright notice,
-        this list of conditions and the following disclaimer.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-        * Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-        * Neither the name of Paul Richards nor the names of contributors may be
-        used to endorse or promote products derived from this software without
-        specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package pigeon.report;
@@ -59,11 +45,11 @@ public final class Utilities
     private Utilities()
     {
     }
-        
+
     public static PrintStream writeHtmlHeader(OutputStream stream, String title) throws IOException
     {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
-        
+
         out.print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         out.print("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n");
         out.print("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
@@ -88,7 +74,7 @@ public final class Utilities
         if (out.checkError()) {
             throw new IOException();
         }
-        
+
         return out;
     }
 
@@ -101,7 +87,7 @@ public final class Utilities
             throw new IOException();
         }
     }
-    
+
     /**
         Returns a list of the sections that were involved in a race,
         or an empty collection if no section information is available.
@@ -116,8 +102,8 @@ public final class Utilities
             }
         }
         return new ArrayList<String>(result);
-    }    
-    
+    }
+
     public static String stringPrintf(String format, Object... args) {
             StringWriter buffer = new StringWriter();
             PrintWriter writer = new PrintWriter(buffer);
@@ -125,7 +111,7 @@ public final class Utilities
             writer.flush();
             return buffer.toString();
     }
-    
+
     public static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
     {
         Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
@@ -133,8 +119,8 @@ public final class Utilities
         long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
         double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
         Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
-        double velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;        
-        
+        double velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;
+
         return new BirdResult(velocityInMetresPerSecond, time, correctedClockTime, distance);
     }
 

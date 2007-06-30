@@ -1,32 +1,18 @@
 /*
-    Copyright (c) 2005-2007, Paul Richards
-    All rights reserved.
+    Copyright (C) 2005, 2006, 2007  Paul Richards.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-        * Redistributions of source code must retain the above copyright notice,
-        this list of conditions and the following disclaimer.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-        * Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-        * Neither the name of Paul Richards nor the names of contributors may be
-        used to endorse or promote products derived from this software without
-        specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package pigeon.view;
@@ -43,15 +29,15 @@ import pigeon.model.Season;
     Presents options for copying member and racepoint details from a previous season.
 */
 final class NewSeasonDialog extends javax.swing.JPanel {
-    
+
     private static final long serialVersionUID = 5040073490144704442L;
-    
+
     /** Creates new form NewSeasonDialog */
     public NewSeasonDialog() {
         initComponents();
         updateComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -148,7 +134,7 @@ final class NewSeasonDialog extends javax.swing.JPanel {
         add(jPanel1, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_browseButtonActionPerformed
     {//GEN-HEADEREND:event_browseButtonActionPerformed
         JFileChooser chooser = Utilities.createFileChooser();
@@ -169,18 +155,18 @@ final class NewSeasonDialog extends javax.swing.JPanel {
                 throw new IllegalStateException();
         }
     }//GEN-LAST:event_browseButtonActionPerformed
-    
+
     private void copyExistingRadioStateChanged(javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_copyExistingRadioStateChanged
     {//GEN-HEADEREND:event_copyExistingRadioStateChanged
         updateComponents();
     }//GEN-LAST:event_copyExistingRadioStateChanged
-    
+
     private void updateComponents() {
         final boolean enabled = copyExistingRadio.isSelected();
         previousFileName.setEnabled(enabled);
         browseButton.setEnabled(enabled);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -190,14 +176,14 @@ final class NewSeasonDialog extends javax.swing.JPanel {
     private javax.swing.JTextField previousFileName;
     private javax.swing.JRadioButton startFromScratchRadio;
     // End of variables declaration//GEN-END:variables
-    
-    
+
+
     public static Season createNewSeason(Component parent) throws UserCancelledException, FileNotFoundException, IOException, ClassNotFoundException
     {
         NewSeasonDialog panel = new NewSeasonDialog();
         int result = JOptionPane.showOptionDialog(parent, panel, "New Season", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
         Season season = new Season();
-        
+
         switch (result) {
             case JOptionPane.OK_OPTION:
                 if (panel.copyExistingRadio.isSelected()) {
@@ -210,7 +196,7 @@ final class NewSeasonDialog extends javax.swing.JPanel {
             default:
                 throw new IllegalArgumentException();
         }
-        
+
         return season;
     }
 }

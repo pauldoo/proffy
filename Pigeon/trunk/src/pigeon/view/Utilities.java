@@ -1,32 +1,18 @@
 /*
-    Copyright (c) 2005-2007, Paul Richards
-    All rights reserved.
+    Copyright (C) 2005, 2006, 2007  Paul Richards.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-        * Redistributions of source code must retain the above copyright notice,
-        this list of conditions and the following disclaimer.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-        * Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-        * Neither the name of Paul Richards nor the names of contributors may be
-        used to endorse or promote products derived from this software without
-        specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package pigeon.view;
@@ -76,7 +62,7 @@ public final class Utilities {
     private Utilities()
     {
     }
-    
+
     /**
         The start range for year drop down combo boxes.
     */
@@ -89,7 +75,7 @@ public final class Utilities {
 
     /**
         DateFormat for formatting times that span just a single day.
-    
+
         Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
         The resulting string will be in 24hr time (hopefully).
     */
@@ -101,7 +87,7 @@ public final class Utilities {
 
     /**
         DateFormat for formatting times that occur on a real calendar.
-    
+
         Their 'long' representation is not confined to spanning just a single day.
         The local time zone is taken into account.
     */
@@ -112,7 +98,7 @@ public final class Utilities {
 
     /**
         DateFormat for formatting dates that occur on a real calendar.
-    
+
         Their 'long' representation is not confined to spanning just a single day.
         The local time zone is taken into account.
     */
@@ -123,7 +109,7 @@ public final class Utilities {
 
     /**
         Given a long value representing a time, returns the beginning of that day.
-    
+
         Does not take into account timezones or locale information, so should only
         be used for times that are relative and span only a few days.
     */
@@ -158,11 +144,11 @@ public final class Utilities {
         }
         return Collections.unmodifiableCollection(result);
     }
-    
+
     /**
         Checks all the times entered in a season and returns all the competitions
         mentioned in the pigeon time entries.
-        
+
         Used when loading a season to verify that all of the competitions used when
         saving the season are still present in the configuration file.
     */
@@ -180,7 +166,7 @@ public final class Utilities {
         }
         return Collections.unmodifiableCollection(result);
     }
-    
+
     /**
         Checks all the birds in a season and returns all of the colours mentioned.
     */
@@ -199,7 +185,7 @@ public final class Utilities {
         }
         return Collections.unmodifiableCollection(result);
     }
-    
+
     /**
         Checks through a season looking for a given ring number so that
         the bird colour can be guessed from a previous race.
@@ -215,11 +201,11 @@ public final class Utilities {
                         }
                     }
                 }
-            }        
+            }
         }
         return null;
     }
-    
+
     /**
         Returns a list of all the competition names in a configuration.
     */
@@ -233,11 +219,11 @@ public final class Utilities {
         }
         return Collections.unmodifiableList(result);
     }
-    
+
     /**
         Verifies that a season is valid with respect to the current
         application version and configuration.
-    
+
         Checks (for example) that the competition names mentioned
         in the loaded file are still present in the application configuration
         file.
@@ -252,7 +238,7 @@ public final class Utilities {
             throw new ValidationException("The season cannot be loaded.\nThe application is not configured with the pools used in this season.");
         }
     }
-    
+
     public static JFileChooser createFileChooser()
     {
         JFileChooser chooser = new JFileChooser();
@@ -261,7 +247,7 @@ public final class Utilities {
         chooser.setAcceptAllFileFilterUsed(false);
         return chooser;
     }
-    
+
     public static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         FileInputStream fileIn = null;
@@ -291,8 +277,8 @@ public final class Utilities {
                 fileOut.close();
             }
         }
-    }    
-    
+    }
+
     public static boolean isMacOsX()
     {
         String lcOSName = System.getProperty("os.name").toLowerCase();

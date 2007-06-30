@@ -1,32 +1,18 @@
 /*
-    Copyright (c) 2005-2007, Paul Richards
-    All rights reserved.
+    Copyright (C) 2005, 2006, 2007  Paul Richards.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-        * Redistributions of source code must retain the above copyright notice,
-        this list of conditions and the following disclaimer.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-        * Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-        * Neither the name of Paul Richards nor the names of contributors may be
-        used to endorse or promote products derived from this software without
-        specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package pigeon.view;
@@ -99,7 +85,7 @@ final class MainWindow extends javax.swing.JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 refreshButtons();
             }
-        });     
+        });
         setIconImage(getIcon());
         setTitle(About.TITLE);
         setSeason(null, "mainMenu");
@@ -646,7 +632,7 @@ final class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), e.toString());
         }
     }
-    
+
     private void viewRacepointDistancesItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_viewRacepointDistancesItemActionPerformed
     {//GEN-HEADEREND:event_viewRacepointDistancesItemActionPerformed
         JComboBox racepointList = new JComboBox();
@@ -704,20 +690,20 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
-        
+
         JCheckBox raceReport = new JCheckBox("Race results", true);
         JCheckBox poolsReport = new JCheckBox("Pool results", true);
         JPanel options = new JPanel();
         options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
         options.add(raceReport);
         options.add(poolsReport);
-        
+
         int result = JOptionPane.showConfirmDialog(
             this,
             options,
             "Results",
             JOptionPane.OK_CANCEL_OPTION);
-        
+
         try {
             if (result == JOptionPane.OK_OPTION) {
                 if (raceReport.isSelected()) {
@@ -753,7 +739,7 @@ final class MainWindow extends javax.swing.JFrame {
                 }
             }
         } catch (ParseException e) {
-            JOptionPane.showMessageDialog(getContentPane(), e.toString());            
+            JOptionPane.showMessageDialog(getContentPane(), e.toString());
         }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
@@ -764,16 +750,16 @@ final class MainWindow extends javax.swing.JFrame {
         panel.setLayout(gridbag);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
-        
+
         List<String> sections = pigeon.report.Utilities.participatingSections(race);
         if (sections.contains("Open")) {
             throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
         }
         sections.add(0, "Open");
-        
+
         for (String section: sections) {
             textFieldMap.put(section, new TreeMap<String, JTextField>());
-            
+
             constraints.anchor = GridBagConstraints.CENTER;
             constraints.fill = GridBagConstraints.NONE;
             constraints.weightx = 1.0;
@@ -785,7 +771,7 @@ final class MainWindow extends javax.swing.JFrame {
             gridbag.setConstraints(label, constraints);
             panel.add(label);
         }
-        
+
         for (Competition c: configuration.getCompetitions()) {
             for (String section: sections) {
                 constraints.anchor = GridBagConstraints.EAST;
@@ -807,7 +793,7 @@ final class MainWindow extends javax.swing.JFrame {
                 field.setColumns(4);
                 gridbag.setConstraints(field, constraints);
                 panel.add(field);
-                
+
                 textFieldMap.get(section).put(c.getName(), field);
             }
         }
@@ -1014,7 +1000,7 @@ final class MainWindow extends javax.swing.JFrame {
                 throw new IllegalStateException();
         }
     }
-        
+
     private void racepointDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointDeleteButtonActionPerformed
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1131,15 +1117,15 @@ final class MainWindow extends javax.swing.JFrame {
     private void refreshButtons() {
         memberEditButton.setEnabled( membersList.getSelectedIndex() != -1 );
         memberDeleteButton.setEnabled( membersList.getSelectedIndex() != -1 );
-        
+
         racepointEditButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
-        
+
         raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
     }
-    
+
     private void refreshMenus() {
         saveItem.setEnabled(season != null);
         closeItem.setEnabled(season != null);
@@ -1185,7 +1171,7 @@ final class MainWindow extends javax.swing.JFrame {
             Thread.sleep(2500);
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
