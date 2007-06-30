@@ -6,14 +6,14 @@
   <title>Racepoint #12 on 13/06/05</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
-    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }
+    body { font-family: Verdana, sans-serif; white-space: nowrap; }
     .outer { text-align:center; page-break-after: always; }
     .outer.last { page-break-after: auto; }
     h1 { margin-bottom:10px; font-size:18pt; }
     h2 { font-size:16pt; }
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
-    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
   </style>
@@ -25,7 +25,7 @@
 <h3>Liberated at 07:28:00 on 13/06/05 in a null wind</h3>
 <h3>23 members sent in a total of 437 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #20</td><td>Club #11</td><td>1</td><td>09:03:49</td><td>761</td><td>542</td><td>M13B1</td><td>Green</td><td>H</td><td></td><td></td><td>13983.821</td></tr>
 <tr><td>2</td><td>Member #11</td><td>Club #2</td><td>1</td><td>09:07:54</td><td>784</td><td>842</td><td>M3B6</td><td>Blue</td><td>H</td><td></td><td></td><td>13820.106</td></tr>
 <tr><td>3</td><td>Member #1</td><td>Club #3</td><td>1</td><td>09:01:13</td><td>726</td><td>580</td><td>M1B14</td><td>Blue</td><td>H</td><td></td><td></td><td>13712.769</td></tr>
@@ -472,7 +472,7 @@
 <h3>Liberated at 07:28:00 on 13/06/05 in a null wind</h3>
 <h3>17 members sent in a total of 323 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #1</td><td>Club #3</td><td>1</td><td>09:01:13</td><td>726</td><td>580</td><td>M1B14</td><td>Blue</td><td>H</td><td></td><td></td><td>13712.769</td></tr>
 <tr><td>2</td><td>Member #7</td><td>Club #3</td><td>1</td><td>09:02:42</td><td>712</td><td>182</td><td>M20B13</td><td>Pink</td><td>H</td><td></td><td></td><td>13232.652</td></tr>
 <tr><td>3</td><td>Member #0</td><td>Club #6</td><td>1</td><td>09:03:44</td><td>712</td><td>302</td><td>M0B6</td><td>Pink</td><td>H</td><td></td><td></td><td>13091.180</td></tr>
@@ -805,7 +805,7 @@
 <h3>Liberated at 07:28:00 on 13/06/05 in a null wind</h3>
 <h3>6 members sent in a total of 114 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #20</td><td>Club #11</td><td>1</td><td>09:03:49</td><td>761</td><td>542</td><td>M13B1</td><td>Green</td><td>H</td><td></td><td></td><td>13983.821</td></tr>
 <tr><td>2</td><td>Member #11</td><td>Club #2</td><td>1</td><td>09:07:54</td><td>784</td><td>842</td><td>M3B6</td><td>Blue</td><td>H</td><td></td><td></td><td>13820.106</td></tr>
 <tr><td>3</td><td>Member #16</td><td>Club #5</td><td>1</td><td>09:02:16</td><td>728</td><td>1415</td><td>M8B3</td><td>Pink</td><td>H</td><td></td><td></td><td>13606.582</td></tr>

@@ -6,14 +6,14 @@
   <title>Racepoint #5 on 05/02/10</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
-    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }
+    body { font-family: Verdana, sans-serif; white-space: nowrap; }
     .outer { text-align:center; page-break-after: always; }
     .outer.last { page-break-after: auto; }
     h1 { margin-bottom:10px; font-size:18pt; }
     h2 { font-size:16pt; }
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
-    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
   </style>
@@ -25,7 +25,7 @@
 <h3>Liberated at 07:35:00 on 05/02/10 in a null wind</h3>
 <h3>23 members sent in a total of 437 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #5</td><td>Club #1</td><td>1</td><td>09:01:06</td><td>678</td><td>399</td><td>M18B14</td><td>Green</td><td>H</td><td></td><td></td><td>13863.390</td></tr>
 <tr><td>2</td><td>Member #15</td><td>Club #10</td><td>1</td><td>09:01:50</td><td>677</td><td>760</td><td>M7B16</td><td>Purple</td><td>H</td><td></td><td></td><td>13729.323</td></tr>
 <tr><td>3</td><td>Member #11</td><td>Club #2</td><td>1</td><td>09:15:56</td><td>741</td><td>1230</td><td>M3B4</td><td>Purple</td><td>H</td><td></td><td></td><td>12933.051</td></tr>
@@ -472,7 +472,7 @@
 <h3>Liberated at 07:35:00 on 05/02/10 in a null wind</h3>
 <h3>17 members sent in a total of 323 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #5</td><td>Club #1</td><td>1</td><td>09:01:06</td><td>678</td><td>399</td><td>M18B14</td><td>Green</td><td>H</td><td></td><td></td><td>13863.390</td></tr>
 <tr><td>2</td><td>Member #7</td><td>Club #3</td><td>1</td><td>09:06:32</td><td>660</td><td>67</td><td>M20B0</td><td>Brown</td><td>H</td><td></td><td></td><td>12688.890</td></tr>
 <tr><td>3</td><td>Member #8</td><td>Club #15</td><td>1</td><td>09:16:13</td><td>708</td><td>978</td><td>M21B8</td><td>Blue</td><td>H</td><td></td><td></td><td>12318.741</td></tr>
@@ -805,7 +805,7 @@
 <h3>Liberated at 07:35:00 on 05/02/10 in a null wind</h3>
 <h3>6 members sent in a total of 114 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #15</td><td>Club #10</td><td>1</td><td>09:01:50</td><td>677</td><td>760</td><td>M7B16</td><td>Purple</td><td>H</td><td></td><td></td><td>13729.323</td></tr>
 <tr><td>2</td><td>Member #11</td><td>Club #2</td><td>1</td><td>09:15:56</td><td>741</td><td>1230</td><td>M3B4</td><td>Purple</td><td>H</td><td></td><td></td><td>12933.051</td></tr>
 <tr><td>3</td><td>Member #15</td><td>Club #10</td><td>1</td><td>09:28:39</td><td>677</td><td>760</td><td>M7B15</td><td>Pink</td><td>H</td><td></td><td></td><td>10489.979</td></tr>

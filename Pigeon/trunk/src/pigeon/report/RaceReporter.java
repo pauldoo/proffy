@@ -106,14 +106,14 @@ public final class RaceReporter implements Reporter {
             }
             out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
             out.print("<table>\n");
-            out.print("<tr><th>Position</th><th>Member</th>");
+            out.print("<tr><th>Pos.</th><th>Member</th>");
             if (listClubNames) {
                 out.print("<th>Club</th>");
             }
             if (race.getDaysCovered() > 1) {
                 out.print("<th>Day</th>");
             }
-            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
+            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
             int pos = 0;
             for (BirdResult row: results) {
                 pos ++;

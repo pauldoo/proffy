@@ -6,14 +6,14 @@
   <title>Racepoint #4 on 05/07/14</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
-    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }
+    body { font-family: Verdana, sans-serif; white-space: nowrap; }
     .outer { text-align:center; page-break-after: always; }
     .outer.last { page-break-after: auto; }
     h1 { margin-bottom:10px; font-size:18pt; }
     h2 { font-size:16pt; }
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
-    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
   </style>
@@ -25,7 +25,7 @@
 <h3>Liberated at 06:25:00 on 05/07/14 in a null wind</h3>
 <h3>23 members sent in a total of 437 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #17</td><td>Club #4</td><td>09:00:19</td><td>786</td><td>518</td><td>M9B13</td><td>Pink</td><td>H</td><td></td><td></td><td>8909.186</td></tr>
 <tr><td>2</td><td>Member #2</td><td>Club #6</td><td>09:00:11</td><td>780</td><td>773</td><td>M12B7</td><td>Green</td><td>H</td><td></td><td></td><td>8850.446</td></tr>
 <tr><td>3</td><td>Member #13</td><td>Club #10</td><td>09:01:11</td><td>784</td><td>1723</td><td>M5B14</td><td>Green</td><td>H</td><td></td><td></td><td>8845.688</td></tr>
@@ -472,7 +472,7 @@
 <h3>Liberated at 06:25:00 on 05/07/14 in a null wind</h3>
 <h3>17 members sent in a total of 323 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #17</td><td>Club #4</td><td>09:00:19</td><td>786</td><td>518</td><td>M9B13</td><td>Pink</td><td>H</td><td></td><td></td><td>8909.186</td></tr>
 <tr><td>2</td><td>Member #2</td><td>Club #6</td><td>09:00:11</td><td>780</td><td>773</td><td>M12B7</td><td>Green</td><td>H</td><td></td><td></td><td>8850.446</td></tr>
 <tr><td>3</td><td>Member #17</td><td>Club #4</td><td>09:04:36</td><td>786</td><td>518</td><td>M9B8</td><td>Purple</td><td>H</td><td></td><td></td><td>8670.324</td></tr>
@@ -805,7 +805,7 @@
 <h3>Liberated at 06:25:00 on 05/07/14 in a null wind</h3>
 <h3>6 members sent in a total of 114 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #13</td><td>Club #10</td><td>09:01:11</td><td>784</td><td>1723</td><td>M5B14</td><td>Green</td><td>H</td><td></td><td></td><td>8845.688</td></tr>
 <tr><td>2</td><td>Member #13</td><td>Club #10</td><td>09:06:29</td><td>784</td><td>1723</td><td>M5B12</td><td>Pink</td><td>H</td><td></td><td></td><td>8554.770</td></tr>
 <tr><td>3</td><td>Member #20</td><td>Club #11</td><td>09:07:49</td><td>786</td><td>1282</td><td>M13B11</td><td>Pink</td><td>H</td><td></td><td></td><td>8503.449</td></tr>

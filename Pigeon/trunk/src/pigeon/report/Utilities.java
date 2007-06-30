@@ -58,14 +58,14 @@ public final class Utilities
         out.print("  <title>" + title + "</title>\n");
         out.print("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n");
         out.print("  <style type=\"text/css\">\n");
-        out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }\n");
+        out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; }\n");
         out.print("    .outer { text-align:center; page-break-after: always; }\n");
         out.print("    .outer.last { page-break-after: auto; }\n");
         out.print("    h1 { margin-bottom:10px; font-size:18pt; }\n");
         out.print("    h2 { font-size:16pt; }\n");
         out.print("    h3 { font-size:14pt; }\n");
         out.print("    h2, h3 { margin-top:0; margin-bottom:5px; }\n");
-        out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }\n");
+        out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }\n");
         out.print("    th { border-bottom:3px solid #000000; text-align: left; }\n");
         out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }\n");
         out.print("  </style>\n");

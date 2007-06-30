@@ -6,14 +6,14 @@
   <title>Racepoint #7 on 14/01/14</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
-    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }
+    body { font-family: Verdana, sans-serif; white-space: nowrap; }
     .outer { text-align:center; page-break-after: always; }
     .outer.last { page-break-after: auto; }
     h1 { margin-bottom:10px; font-size:18pt; }
     h2 { font-size:16pt; }
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
-    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:10pt; margin-top:20px; }
+    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
   </style>
@@ -25,7 +25,7 @@
 <h3>Liberated at 06:03:00 on 14/01/14 in a null wind</h3>
 <h3>23 members sent in a total of 437 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #0</td><td>Club #6</td><td>1</td><td>09:07:46</td><td>787</td><td>468</td><td>M0B11</td><td>Brown</td><td>H</td><td></td><td></td><td>7499.054</td></tr>
 <tr><td>2</td><td>Member #12</td><td>Club #4</td><td>1</td><td>09:02:44</td><td>715</td><td>1115</td><td>M4B2</td><td>Pink</td><td>H</td><td></td><td></td><td>7007.252</td></tr>
 <tr><td>3</td><td>Member #14</td><td>Club #12</td><td>1</td><td>09:14:16</td><td>759</td><td>434</td><td>M6B10</td><td>Brown</td><td>H</td><td></td><td></td><td>6986.101</td></tr>
@@ -472,7 +472,7 @@
 <h3>Liberated at 06:03:00 on 14/01/14 in a null wind</h3>
 <h3>17 members sent in a total of 323 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #0</td><td>Club #6</td><td>1</td><td>09:07:46</td><td>787</td><td>468</td><td>M0B11</td><td>Brown</td><td>H</td><td></td><td></td><td>7499.054</td></tr>
 <tr><td>2</td><td>Member #12</td><td>Club #4</td><td>1</td><td>09:02:44</td><td>715</td><td>1115</td><td>M4B2</td><td>Pink</td><td>H</td><td></td><td></td><td>7007.252</td></tr>
 <tr><td>3</td><td>Member #12</td><td>Club #4</td><td>1</td><td>09:03:48</td><td>715</td><td>1115</td><td>M4B3</td><td>Purple</td><td>H</td><td></td><td></td><td>6965.983</td></tr>
@@ -805,7 +805,7 @@
 <h3>Liberated at 06:03:00 on 14/01/14 in a null wind</h3>
 <h3>6 members sent in a total of 114 birds</h3>
 <table>
-<tr><th>Position</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring Number</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>
 <tr><td>1</td><td>Member #14</td><td>Club #12</td><td>1</td><td>09:14:16</td><td>759</td><td>434</td><td>M6B10</td><td>Brown</td><td>H</td><td></td><td></td><td>6986.101</td></tr>
 <tr><td>2</td><td>Member #15</td><td>Club #10</td><td>1</td><td>09:28:15</td><td>785</td><td>506</td><td>M7B5</td><td>Purple</td><td>H</td><td></td><td></td><td>6733.597</td></tr>
 <tr><td>3</td><td>Member #16</td><td>Club #5</td><td>1</td><td>09:32:34</td><td>786</td><td>254</td><td>M8B12</td><td>Blue</td><td>H</td><td></td><td></td><td>6602.238</td></tr>
