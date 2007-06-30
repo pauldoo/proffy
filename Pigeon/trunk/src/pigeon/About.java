@@ -21,7 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
     Provides access to the public information about the program.
@@ -70,21 +71,23 @@ public final class About
     */
     public static String getLicense()
     {
-        StringBuffer result = new StringBuffer();
-        result.println("Copyright (C) 2005, 2006, 2007  Paul Richards.");
-        result.println();
-        result.println("This program is free software: you can redistribute it and/or modify");
-        result.println("it under the terms of the GNU General Public License as published by");
-        result.println("the Free Software Foundation, either version 3 of the License, or");
-        result.println("(at your option) any later version.");
-        result.println();
-        result.println("This program is distributed in the hope that it will be useful,");
-        result.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-        result.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-        result.println("GNU General Public License for more details.");
-        result.println();
-        result.println("You should have received a copy of the GNU General Public License");
-        result.println("along with this program.  If not, see <http://www.gnu.org/licenses/>.");
-        return result.toString();
+        StringWriter string = new StringWriter();
+        PrintWriter writer = new PrintWriter(string);
+        writer.println("Copyright (C) 2005, 2006, 2007  Paul Richards.");
+        writer.println();
+        writer.println("This program is free software: you can redistribute it and/or modify");
+        writer.println("it under the terms of the GNU General Public License as published by");
+        writer.println("the Free Software Foundation, either version 3 of the License, or");
+        writer.println("(at your option) any later version.");
+        writer.println();
+        writer.println("This program is distributed in the hope that it will be useful,");
+        writer.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+        writer.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
+        writer.println("GNU General Public License for more details.");
+        writer.println();
+        writer.println("You should have received a copy of the GNU General Public License");
+        writer.println("along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+        writer.close();
+        return string.toString();
     }    
 }
