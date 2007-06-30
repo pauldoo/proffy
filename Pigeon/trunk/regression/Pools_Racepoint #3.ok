@@ -6,7 +6,7 @@
   <title>Racepoint #3 on 11/09/10</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
-    body { font-family: Verdana, sans-serif; }
+    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }
     .outer { text-align:center; page-break-after: always; }
     .outer.last { page-break-after: auto; }
     h1 { margin-bottom:10px; font-size:18pt; }

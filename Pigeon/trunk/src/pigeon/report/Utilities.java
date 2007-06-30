@@ -58,7 +58,7 @@ public final class Utilities
         out.print("  <title>" + title + "</title>\n");
         out.print("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n");
         out.print("  <style type=\"text/css\">\n");
-        out.print("    body { font-family: Verdana, sans-serif; }\n");
+        out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: 8pt; }\n");
         out.print("    .outer { text-align:center; page-break-after: always; }\n");
         out.print("    .outer.last { page-break-after: auto; }\n");
         out.print("    h1 { margin-bottom:10px; font-size:18pt; }\n");
