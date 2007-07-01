@@ -72,7 +72,7 @@ public class CompetitionReporter implements Reporter
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
 
-        List<String> sections = Utilities.participatingSections(race);
+        List<String> sections = Utilities.participatingSections(club);
         // Push the null section to the front to guarantee we do the whole lot.
         sections.add(0, null);
 

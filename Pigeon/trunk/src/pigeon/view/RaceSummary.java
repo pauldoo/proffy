@@ -18,10 +18,21 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import pigeon.model.Organization;
 import pigeon.model.Constants;
 import pigeon.model.Race;
@@ -36,6 +47,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private static final long serialVersionUID = 5181019751737997744L;
 
     private final Race race;
+    private final Map<String, JTextField[]> entrantsCountFields = new TreeMap<String, JTextField[]>();
 
     public RaceSummary(Race race, Organization club, boolean editable) {
         this.race = race;
@@ -62,6 +74,20 @@ final class RaceSummary extends javax.swing.JPanel {
             darknessBeginsMinute.setSelectedIndex((int)((race.getDarknessBegins() / Constants.MILLISECONDS_PER_MINUTE) % 60));
             darknessEndsHour.setSelectedIndex((int)(race.getDarknessEnds() / Constants.MILLISECONDS_PER_HOUR));
             darknessEndsMinute.setSelectedIndex((int)((race.getDarknessEnds() / Constants.MILLISECONDS_PER_MINUTE) % 60));
+        }
+        Map<String, Integer> membersEntered = race.getMembersEntered();
+        Map<String, Integer> birdsEntered = race.getBirdsEntered();
+        for (Map.Entry<String, JTextField[]> entry: entrantsCountFields.entrySet()) {
+            Integer members = membersEntered.get(entry.getKey());
+            Integer birds = birdsEntered.get(entry.getKey());
+            if (members == null) {
+                members = new Integer(0);
+            }
+            if (birds == null) {
+                birds = new Integer(0);
+            }
+            entry.getValue()[0].setText(members.toString());
+            entry.getValue()[1].setText(birds.toString());
         }
 
         updateHoursOfDarknessEnabledStatus();
@@ -118,6 +144,8 @@ final class RaceSummary extends javax.swing.JPanel {
             darknessBeginsMinute.addItem(str);
             darknessEndsMinute.addItem(str);
         }
+        
+        populateEntrantCountPanel(entrantsCountPanel, entrantsCountFields, club);
     }
 
     private boolean hoursOfDarknessEnabled()
@@ -173,6 +201,7 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBeginsMinute = new javax.swing.JComboBox();
         darknessEndsSeperator = new javax.swing.JLabel();
         darknessBeginsSeperator = new javax.swing.JLabel();
+        entrantsCountPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -371,6 +400,14 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
         add(darknessBeginsSeperator, gridBagConstraints);
 
+        entrantsCountPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("No. Members and Birds entered"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(entrantsCountPanel, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
 
     private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_daysCoveredComboActionPerformed
@@ -392,6 +429,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JLabel dayMonthSeperator;
     private javax.swing.JComboBox daysCoveredCombo;
     private javax.swing.JLabel daysCoveredLabel;
+    private javax.swing.JPanel entrantsCountPanel;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel hourMinuteSeperator;
     private javax.swing.JLabel liberationDateLabel;
@@ -427,6 +465,15 @@ final class RaceSummary extends javax.swing.JPanel {
                     (new Integer(darknessEndsMinute.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_MINUTE;
             race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }
+        
+        Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+        Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+        for (Map.Entry<String, JTextField[]> entry: entrantsCountFields.entrySet()) {
+            membersEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[0].getText()));
+            birdsEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[1].getText()));
+        }
+        race.setMembersEntered(membersEntered);
+        race.setBirdsEntered(birdsEntered);
     }
 
     public static void editRace(Component parent, Race race, Organization club, boolean newRace) throws UserCancelledException {
@@ -455,5 +502,69 @@ final class RaceSummary extends javax.swing.JPanel {
         editRace(parent, race, club, true);
         return race;
     }
+    
+    /**
+        Populates the JPanel which contains the input dialogs for inputting the number of
+        members and birds entered from each section.
+    */
+    private static void populateEntrantCountPanel(JPanel panel, Map<String, JTextField[]> textFieldMap, Organization club)
+    {
+        GridBagLayout gridbag = new GridBagLayout();
+        panel.setLayout(gridbag);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+        
+        {
+            constraints.gridx = 1;
+            JLabel memberCountLabel = new JLabel("Members");
+            gridbag.setConstraints(memberCountLabel, constraints);
+            panel.add(memberCountLabel);
+        }
+        {
+            constraints.gridx = 2;
+            constraints.gridwidth = GridBagConstraints.REMAINDER;
+            JLabel birdCountLabel = new JLabel("Birds");
+            gridbag.setConstraints(birdCountLabel, constraints);
+            panel.add(birdCountLabel);
+        }
+        
+        List<String> sections = pigeon.report.Utilities.participatingSections(club);
+        for (String section: sections) {
+            {
+                constraints.anchor = GridBagConstraints.EAST;
+                constraints.fill = GridBagConstraints.NONE;
+                constraints.gridx = 0;
+                constraints.gridy = sections.indexOf(section) + 1;
+                constraints.weightx = 0.0;
+                constraints.gridwidth = 1;
+                JLabel label = new JLabel(section);
+                gridbag.setConstraints(label, constraints);
+                panel.add(label);
+            }
+            textFieldMap.put(section, new JTextField[2]);
+            {
+                constraints.anchor = GridBagConstraints.CENTER;
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.gridx = 1;
+                constraints.weightx = 1.0;
+                constraints.gridwidth = 1;
+                JTextField memberCountField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                gridbag.setConstraints(memberCountField, constraints);
+                panel.add(memberCountField);
+                textFieldMap.get(section)[0] = memberCountField;
+            }
+            {
+                constraints.anchor = GridBagConstraints.CENTER;
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.gridx = 2;
+                constraints.weightx = 1.0;
+                constraints.gridwidth = GridBagConstraints.REMAINDER;
+                JTextField birdCountField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                gridbag.setConstraints(birdCountField, constraints);
+                panel.add(birdCountField);
+                textFieldMap.get(section)[1] = birdCountField;
+            }
+        }
+    }    
 
 }

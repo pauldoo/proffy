@@ -54,7 +54,7 @@ public final class RaceReporter implements Reporter {
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
 
-        List<String> sections = Utilities.participatingSections(race);
+        List<String> sections = Utilities.participatingSections(club);
         // Push the null section to the front to guarantee we do the whole lot.
         sections.add(0, null);
 
@@ -71,17 +71,13 @@ public final class RaceReporter implements Reporter {
             }
             out.print("<h2>Race from " + race.getRacepoint().toString() + "</h2>\n");
             out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
-            int memberCount = 0;
-            int birdCount = 0;
             SortedSet<BirdResult> results = new TreeSet<BirdResult>();
 
             for (Clock clock: race.getClocks()) {
                 if (section != null && !clock.getMember().getSection().equals(section)) {
                     continue;
                 }
-                memberCount ++;
                 for (Time time: clock.getTimes()) {
-                    birdCount ++;
                     BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
 
                     row.html.append("<td>" + clock.getMember().toString() + "</td>");
@@ -101,6 +97,15 @@ public final class RaceReporter implements Reporter {
                     row.html.append("<td>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
                     results.add(row);
                 }
+            }
+            int memberCount;
+            int birdCount;
+            if (section != null) {
+                memberCount = race.getMembersEntered().get(section);
+                birdCount = race.getBirdsEntered().get(section);
+            } else {
+                memberCount = race.getTotalNumberOfMembersEntered();
+                birdCount = race.getTotalNumberOfBirdsEntered();
             }
             out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
             out.print("<table>\n");

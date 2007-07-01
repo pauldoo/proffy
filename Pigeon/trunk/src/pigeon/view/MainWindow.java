@@ -51,10 +51,10 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import pigeon.About;
 import pigeon.competitions.Competition;
 import pigeon.model.Member;
+import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
@@ -711,7 +711,7 @@ final class MainWindow extends javax.swing.JFrame {
                 }
                 if (poolsReport.isSelected()) {
                     Map<String, Map<String, JTextField>> textFieldMap = new TreeMap<String, Map<String, JTextField>>();
-                    JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, race);
+                    JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, season.getOrganization(), configuration);
 
                     int dialogResult = JOptionPane.showConfirmDialog(
                         this,
@@ -742,8 +742,8 @@ final class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), e.toString());
         }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
-
-    private JPanel constructCompetitionEntrantCountPanel(Map<String, Map<String, JTextField>> textFieldMap, Race race) throws IllegalArgumentException
+    
+    private static JPanel constructCompetitionEntrantCountPanel(Map<String, Map<String, JTextField>> textFieldMap, Organization club, Configuration configuration) throws IllegalArgumentException
     {
         JPanel panel = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();
@@ -751,7 +751,7 @@ final class MainWindow extends javax.swing.JFrame {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
 
-        List<String> sections = pigeon.report.Utilities.participatingSections(race);
+        List<String> sections = pigeon.report.Utilities.participatingSections(club);
         if (sections.contains("Open")) {
             throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
         }

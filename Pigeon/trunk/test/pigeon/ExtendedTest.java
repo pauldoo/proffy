@@ -125,6 +125,19 @@ public final class ExtendedTest extends TestCase
             if (daysCovered >= 2) {
                 race.setHoursOfDarkness(darknessBegins, darknessEnds);
             }
+            
+            {
+                Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+                membersEntered.put("East", random.nextInt(50) + 50);
+                membersEntered.put("West", random.nextInt(50) + 50);
+                race.setMembersEntered(membersEntered);
+            }
+            {
+                Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+                birdsEntered.put("East", random.nextInt(150) + 50);
+                birdsEntered.put("West", random.nextInt(150) + 50);
+                race.setBirdsEntered(birdsEntered);
+            }
 
             for (int i = 0; i < season.getOrganization().getNumberOfMembers(); i++) {
                 Member m = season.getOrganization().getMembers().get(i);
@@ -157,7 +170,7 @@ public final class ExtendedTest extends TestCase
                         t.setSex(previous.getSex());
                     } else {
                         String color;
-                        int colorCode = Math.abs(ringNumber.hashCode()) % 5;
+                        int colorCode = random.nextInt(5);
                         switch (colorCode) {
                             case 0:
                                 color = "Pink";
@@ -178,7 +191,7 @@ public final class ExtendedTest extends TestCase
                                 throw new IllegalArgumentException("Bug in test: " + colorCode);
                         }
                         t.setColor(color);
-                        t.setSex(Sex.values()[(Math.abs(ringNumber.hashCode()) / 5) % 2]);
+                        t.setSex(Sex.values()[random.nextInt(Sex.values().length)]);
                     }
 
                     for (Competition c: configuration.getCompetitions()) {

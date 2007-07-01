@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
+import pigeon.model.Member;
 import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Time;
@@ -101,14 +102,14 @@ public final class Utilities
     }
 
     /**
-        Returns a list of the sections that were involved in a race,
+        Returns a list of all the different sections,
         or an empty collection if no section information is available.
     */
-    public static List<String> participatingSections(Race race)
+    public static List<String> participatingSections(Organization club)
     {
         Set<String> result = new TreeSet<String>();
-        for (Clock clock: race.getClocks()) {
-            String section = clock.getMember().getSection();
+        for (Member member: club.getMembers()) {
+            String section = member.getSection();
             if (section != null) {
                 result.add(section);
             }

@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Stores information about a race.
@@ -42,6 +44,8 @@ public final class Race implements Serializable, Comparable<Race> {
     private int darknessEnds;
     private String windDirection;
     private List<Clock> clocks = new ArrayList<Clock>();
+    private Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+    private Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
 
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
@@ -181,5 +185,49 @@ public final class Race implements Serializable, Comparable<Race> {
     public long getLengthOfDarknessEachNight()
     {
         return (Constants.MILLISECONDS_PER_DAY + darknessEnds) - darknessBegins;
+    }
+
+    public Map<String, Integer> getMembersEntered()
+    {
+        if (membersEntered == null) {
+            setMembersEntered(new TreeMap<String, Integer>());
+        }
+        return Collections.unmodifiableMap(membersEntered);
+    }
+
+    public void setMembersEntered(Map<String, Integer> membersEntered)
+    {
+        this.membersEntered = new TreeMap<String, Integer>(membersEntered);
+    }
+
+    public Map<String, Integer> getBirdsEntered()
+    {
+        if (birdsEntered == null) {
+            setBirdsEntered(new TreeMap<String, Integer>());
+        }
+        return Collections.unmodifiableMap(birdsEntered);
+    }
+
+    public void setBirdsEntered(Map<String, Integer> birdsEntered)
+    {
+        this.birdsEntered = new TreeMap<String, Integer>(birdsEntered);
+    }
+    
+    public int getTotalNumberOfMembersEntered()
+    {
+        int result = 0;
+        for (Integer i: getMembersEntered().values()) {
+            result += i;
+        }
+        return result;
+    }
+    
+    public int getTotalNumberOfBirdsEntered()
+    {
+        int result = 0;
+        for (Integer i: getBirdsEntered().values()) {
+            result += i;
+        }
+        return result;
     }
 }
