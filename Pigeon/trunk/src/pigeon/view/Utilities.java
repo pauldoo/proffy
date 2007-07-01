@@ -17,6 +17,7 @@
 
 package pigeon.view;
 
+import java.awt.Component;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -41,6 +42,7 @@ import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import pigeon.competitions.Competition;
 import pigeon.model.Clock;
@@ -50,7 +52,6 @@ import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Season;
 import pigeon.model.Time;
-import pigeon.model.ValidationException;
 
 /**
     Public static methods that don't have a natural home in any
@@ -228,14 +229,20 @@ public final class Utilities {
         in the loaded file are still present in the application configuration
         file.
     */
-    public static void validateSeason(Season season, Configuration configuration) throws ValidationException
+    public static void validateSeason(Component parent, Season season, Configuration configuration) throws UserCancelledException
     {
         Collection<String> competitionsMentionedInFile = getCompetitionNames(season);
         Collection<String> competitionsConfigured = getCompetitionNames(configuration.getCompetitions());
         if (!competitionsConfigured.containsAll(competitionsMentionedInFile)) {
-            // The application configuration does not mention all the competitions mentioned
-            // in the season, so we shouldn't load it.
-            throw new ValidationException("The season cannot be loaded.\nThe application is not configured with the pools used in this season.");
+            String message =
+                "This season's pools do not match the current pool list.\n" +
+                "Some of the pool entry information may not load correctly.\n" +
+                "\n" +
+                "Continue anyway?";
+            int result = JOptionPane.showConfirmDialog(parent, message, "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (result != JOptionPane.YES_OPTION) {
+                throw new UserCancelledException();
+            }
         }
     }
 

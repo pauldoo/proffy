@@ -1196,12 +1196,11 @@ final class MainWindow extends javax.swing.JFrame {
     {
         try {
             if (season != null) {
-                Utilities.validateSeason(season, configuration);
+                Utilities.validateSeason(this.getContentPane(), season, configuration);
             }
             this.season = season;
             switchToCard(cardName);
-        } catch (ValidationException e) {
-            e.displayErrorDialog(this.getContentPane());
+        } catch (UserCancelledException e) {
             setSeason(null, "mainMenu");
         }
     }
