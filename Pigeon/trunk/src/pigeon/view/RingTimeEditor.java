@@ -26,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import pigeon.model.Constants;
 import pigeon.model.Season;
+import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
 
@@ -64,6 +65,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         minuteCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         secondCombo.setSelectedIndex((int)((time.getMemberTime() / Constants.MILLISECONDS_PER_SECOND) % 60));
         birdColorCombo.setSelectedItem(time.getColor());
+        birdSexCombo.setSelectedItem(time.getSex());
 
         switch (configuration.getMode()) {
             case FEDERATION:
@@ -119,6 +121,8 @@ final class RingTimeEditor extends javax.swing.JPanel
                 (new Integer(secondCombo.getSelectedItem().toString()) * Constants.MILLISECONDS_PER_SECOND);
         time.setMemberTime(memberTime, numberOfDaysCovered);
         time.setColor(((String)birdColorCombo.getSelectedItem()).trim());
+        time.setSex((Sex)birdSexCombo.getSelectedItem());
+        
 
         switch (configuration.getMode()) {
             case FEDERATION:
@@ -160,6 +164,8 @@ final class RingTimeEditor extends javax.swing.JPanel
         sectionPoolsPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         birdColorCombo = new javax.swing.JComboBox();
+        jLabel7 = new javax.swing.JLabel();
+        birdSexCombo = new javax.swing.JComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -251,7 +257,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         openPoolsLabel.setText("Open Pools");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(openPoolsLabel, gridBagConstraints);
@@ -260,7 +266,7 @@ final class RingTimeEditor extends javax.swing.JPanel
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -269,7 +275,7 @@ final class RingTimeEditor extends javax.swing.JPanel
         sectionPoolsLabel.setText("Section Pools");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(sectionPoolsLabel, gridBagConstraints);
@@ -278,7 +284,7 @@ final class RingTimeEditor extends javax.swing.JPanel
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -301,22 +307,40 @@ final class RingTimeEditor extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(birdColorCombo, gridBagConstraints);
 
+        jLabel7.setText("Bird Sex");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(jLabel7, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(birdSexCombo, gridBagConstraints);
+
     }// </editor-fold>//GEN-END:initComponents
 
     private void ringNumberTextActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ringNumberTextActionPerformed
     {//GEN-HEADEREND:event_ringNumberTextActionPerformed
-        if (((String)birdColorCombo.getSelectedItem()).trim().length() == 0) {
-            String ringNumber = ringNumberText.getText().trim();
-            String guessedColor = Utilities.guessBirdColor(season, ringNumber);
-            if (guessedColor != null) {
-                birdColorCombo.setSelectedItem(guessedColor);
+        String ringNumber = ringNumberText.getText().trim();
+        Time bird = Utilities.findBirdEntry(season, ringNumber);
+        if (bird != null) {
+            if (((String)birdColorCombo.getSelectedItem()).trim().length() == 0) {
+                birdColorCombo.setSelectedItem(bird.getColor());
             }
+            birdSexCombo.setSelectedItem(bird.getSex());
         }
     }//GEN-LAST:event_ringNumberTextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox birdColorCombo;
+    private javax.swing.JComboBox birdSexCombo;
     private javax.swing.JComboBox dayCombo;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel jLabel1;
@@ -325,6 +349,7 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JComboBox minuteCombo;
     private javax.swing.JLabel openPoolsLabel;
     private javax.swing.JPanel openPoolsPanel;
@@ -422,6 +447,10 @@ final class RingTimeEditor extends javax.swing.JPanel
 
         for (String color: Utilities.getBirdColors(season)) {
             birdColorCombo.addItem(color);
+        }
+        
+        for (Sex sex: Sex.values()) {
+            birdSexCombo.addItem(sex);
         }
     }
 }

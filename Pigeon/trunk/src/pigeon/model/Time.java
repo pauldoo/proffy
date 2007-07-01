@@ -34,6 +34,7 @@ public final class Time implements Comparable<Time>, Serializable
 
     private String ringNumber = "";
     private String color = "";
+    private Sex sex = Sex.COCK;
     private int time = 0;
 
     /// In CLUB mode, this list stores the club competitions.
@@ -117,5 +118,18 @@ public final class Time implements Comparable<Time>, Serializable
     public void setColor(String color)
     {
         this.color = color.trim();
+    }
+
+    public Sex getSex()
+    {
+        if (sex == null) {
+            setSex(Sex.COCK);
+        }
+        return sex;
+    }
+
+    public void setSex(Sex sex)
+    {
+        this.sex = sex;
     }
 }

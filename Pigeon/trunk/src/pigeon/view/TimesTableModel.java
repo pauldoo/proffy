@@ -17,13 +17,12 @@
 
 package pigeon.view;
 
-import java.text.ParseException;
 import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
+import pigeon.model.Sex;
 import pigeon.model.Time;
-import pigeon.model.ValidationException;
 
 /**
  * Shows the times entered for a clock by listing the ring numbers and times currently entered.
@@ -48,7 +47,7 @@ final class TimesTableModel extends AbstractTableModel
     }
 
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     private Time getEntry(int row) {
@@ -65,6 +64,8 @@ final class TimesTableModel extends AbstractTableModel
                 return String.class;
             case 3:
                 return String.class;
+            case 4:
+                return Sex.class;
             default:
                 throw new IllegalArgumentException();
         }
@@ -82,6 +83,8 @@ final class TimesTableModel extends AbstractTableModel
                 return Utilities.TIME_FORMAT_WITHOUT_LOCALE.format(new Date(entry.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
             case 3:
                 return entry.getColor();
+            case 4:
+                return entry.getSex();
             default:
                 throw new IllegalArgumentException();
         }
@@ -97,6 +100,8 @@ final class TimesTableModel extends AbstractTableModel
                 return "Clock Time";
             case 3:
                 return "Bird Color";
+            case 4:
+                return "Bird Sex";
             default:
                 throw new IllegalArgumentException();
         }

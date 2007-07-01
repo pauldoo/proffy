@@ -49,6 +49,7 @@ import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
+import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
 import pigeon.report.CompetitionReporter;
@@ -150,8 +151,12 @@ public final class ExtendedTest extends TestCase
                         (random.nextDouble() * 6 + 9) * Constants.MILLISECONDS_PER_HOUR);
                     assert(setTime + clockInTime <= masterOpenTime);
                     t.setMemberTime(clockInTime, daysCovered);
-                    String color = Utilities.guessBirdColor(season, ringNumber);
-                    if (color == null) {
+                    Time previous = Utilities.findBirdEntry(season, ringNumber);
+                    if (previous != null) {
+                        t.setColor(previous.getColor());
+                        t.setSex(previous.getSex());
+                    } else {
+                        String color;
                         int colorCode = Math.abs(ringNumber.hashCode()) % 5;
                         switch (colorCode) {
                             case 0:
@@ -172,8 +177,9 @@ public final class ExtendedTest extends TestCase
                             default:
                                 throw new IllegalArgumentException("Bug in test: " + colorCode);
                         }
+                        t.setColor(color);
+                        t.setSex(Sex.values()[(Math.abs(ringNumber.hashCode()) / 5) % 2]);
                     }
-                    t.setColor(color);
 
                     for (Competition c: configuration.getCompetitions()) {
                         if (random.nextBoolean()) {

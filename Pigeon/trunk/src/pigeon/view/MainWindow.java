@@ -937,10 +937,7 @@ final class MainWindow extends javax.swing.JFrame {
             }
        } else {
             try {
-                JFileChooser chooser = new JFileChooser();
-                FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
-                chooser.addChoosableFileFilter(filter);
-                chooser.setAcceptAllFileFilterUsed(false);
+                JFileChooser chooser = Utilities.createFileChooser();
                 while (true) {
                     int result = chooser.showSaveDialog(this);
                     switch (result) {

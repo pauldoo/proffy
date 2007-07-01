@@ -191,25 +191,27 @@ public final class Utilities {
     }
 
     /**
-        Checks through a season looking for a given ring number so that
-        the bird colour can be guessed from a previous race.
+        Checks through previous races looking for a bird with the given ring number.
+     
+        This is used to "guess" the sex and colour of a bird when the same ring number
+        is entered in a later race.
     */
-    public static String guessBirdColor(final Season season, final String ringNumber)
+    public static Time findBirdEntry(final Season season, final String ringNumber)
     {
         if (ringNumber.length() != 0) {
             for (Race r: season.getRaces()) {
                 for (Clock c: r.getClocks()) {
                     for (Time t: c.getTimes()) {
                         if (ringNumber.equals(t.getRingNumber())) {
-                            return t.getColor();
+                            return t;
                         }
                     }
                 }
             }
         }
         return null;
-    }
-
+    }    
+    
     /**
         Returns a list of all the competition names in a configuration.
     */

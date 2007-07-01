@@ -97,9 +97,7 @@ public final class RaceReporter implements Reporter {
                     row.html.append("<td>" + row.distance.getYardsRemainder() + "</td>");
                     row.html.append("<td>" + time.getRingNumber() + "</td>");
                     row.html.append("<td>" + time.getColor() + "</td>");
-                    row.html.append("<td>H</td>");
-                    row.html.append("<td></td>");
-                    row.html.append("<td></td>");
+                    row.html.append("<td>" + time.getSex().toString() + "</td>");
                     row.html.append("<td>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
                     results.add(row);
                 }
@@ -113,7 +111,7 @@ public final class RaceReporter implements Reporter {
             if (race.getDaysCovered() > 1) {
                 out.print("<th>Day</th>");
             }
-            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
+            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Velocity</th></tr>\n");
             int pos = 0;
             for (BirdResult row: results) {
                 pos ++;
