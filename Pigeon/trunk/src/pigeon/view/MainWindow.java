@@ -159,6 +159,8 @@ final class MainWindow extends javax.swing.JFrame {
         closeItem = new javax.swing.JMenuItem();
         saveItem = new javax.swing.JMenuItem();
         exitItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        setupClubItem = new javax.swing.JMenuItem();
         reportsMenu = new javax.swing.JMenu();
         viewMembersItem = new javax.swing.JMenuItem();
         menuSeparator1 = new javax.swing.JSeparator();
@@ -530,6 +532,20 @@ final class MainWindow extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
+        editMenu.setText("Edit");
+        setupClubItem.setText("Members and Racepoints");
+        setupClubItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                setupClubItemActionPerformed(evt);
+            }
+        });
+
+        editMenu.add(setupClubItem);
+
+        menuBar.add(editMenu);
+
         reportsMenu.setText("Reports");
         viewMembersItem.setText("View Members");
         viewMembersItem.addActionListener(new java.awt.event.ActionListener()
@@ -586,6 +602,11 @@ final class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void setupClubItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_setupClubItemActionPerformed
+    {//GEN-HEADEREND:event_setupClubItemActionPerformed
+        switchToCard("setupClub");
+    }//GEN-LAST:event_setupClubItemActionPerformed
 
     private void viewMembersItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_viewMembersItemActionPerformed
     {//GEN-HEADEREND:event_viewMembersItemActionPerformed
@@ -900,25 +921,8 @@ final class MainWindow extends javax.swing.JFrame {
         try {
             String clubName = clubNameText.getText();
             season.getOrganization().setName(clubName);
-
-            int memberCount = season.getOrganization().getNumberOfMembers();
-            int racepointCount = season.getOrganization().getNumberOfRacepoints();
-            String message =
-                    "Have you finished adding all of the members (total of " + memberCount + ") " +
-                    "and racepoints (total of " + racepointCount + ") for the " +
-                    "organisation \"" + season.getOrganization().getName() + "\"?";
-            int result = JOptionPane.showConfirmDialog(this, message, "Finishing organisation setup", JOptionPane.YES_NO_OPTION);
-            switch (result) {
-                case JOptionPane.YES_OPTION:
-                    promptSaveSeason();
-                    switchToCard("viewingSeason");
-                    break;
-                case JOptionPane.NO_OPTION:
-                    JOptionPane.showMessageDialog(this, "Please continue to add members and racepoints.");
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
+            promptSaveSeason();
+            switchToCard("viewingSeason");
         } catch (ValidationException e) {
             e.displayErrorDialog(getContentPane());
         } catch (UserCancelledException e) {
@@ -1087,7 +1091,7 @@ final class MainWindow extends javax.swing.JFrame {
         reloadMembersList();
     }//GEN-LAST:event_memberAddButtonActionPerformed
 
-    private void reloadControlData() {
+    private void reloadControlData(String cardName) {
         if (season != null) {
             clubNameText.setText(season.getOrganization().getName());
             reloadMembersList();
@@ -1095,7 +1099,7 @@ final class MainWindow extends javax.swing.JFrame {
             reloadRacesTable();
         }
         refreshButtons();
-        refreshMenus();
+        refreshMenus(cardName);
     }
 
     private void reloadMembersList() {
@@ -1123,16 +1127,17 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
     }
 
-    private void refreshMenus() {
+    private void refreshMenus(String cardName) {
         saveItem.setEnabled(season != null);
         closeItem.setEnabled(season != null);
         reportsMenu.setEnabled(season != null);
+        setupClubItem.setEnabled(season != null && !cardName.equals("setupClub"));
     }
 
     private void switchToCard(String cardName) {
         Container parent = this.getContentPane();
         ((CardLayout)parent.getLayout()).show(parent, cardName);
-        reloadControlData();
+        reloadControlData(cardName);
     }
 
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
@@ -1241,6 +1246,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JLabel clubNameLabel;
     private javax.swing.JTextField clubNameText;
+    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
@@ -1278,6 +1284,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTable raceresultsTable;
     private javax.swing.JMenu reportsMenu;
     private javax.swing.JMenuItem saveItem;
+    private javax.swing.JMenuItem setupClubItem;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JMenuItem viewMemberDistancesItem;
     private javax.swing.JMenuItem viewMembersItem;
