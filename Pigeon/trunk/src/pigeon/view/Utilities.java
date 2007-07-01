@@ -25,16 +25,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TimeZone;
@@ -252,17 +255,96 @@ public final class Utilities {
         FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
         chooser.addChoosableFileFilter(filter);
         chooser.setAcceptAllFileFilterUsed(false);
+        File mostRecentFile = getMostRecentFile();
+        if (mostRecentFile != null) {
+            File defaultDirectory = mostRecentFile.getParentFile();
+            if (defaultDirectory != null && defaultDirectory.isDirectory()) {
+                chooser.setCurrentDirectory(defaultDirectory);
+            }
+        }
         return chooser;
     }
 
+    private static Properties loadUserSettings()
+    {
+        String filename = System.getProperty("user.home") + File.separator + ".RacePoint.xml";
+        Properties result = new Properties();
+        InputStream in = null;
+        try {
+            in = new FileInputStream(filename);
+            BufferedInputStream inBuf = new BufferedInputStream(in);
+            result.loadFromXML(inBuf);
+            inBuf.close();
+        } catch (IOException e) {
+            result = new Properties();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return result;
+    }
+    
+    private static void saveUserSettings(Properties properties)
+    {
+        String filename = System.getProperty("user.home") + File.separator + ".RacePoint.xml";
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            BufferedOutputStream outBuf = new BufferedOutputStream(out);
+            properties.storeToXML(outBuf, "User settings for RacePoint");
+            outBuf.close();
+        } catch (IOException e) {
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+    
+    private static String loadProperty(String key)
+    {
+        Properties properties = loadUserSettings();
+        return properties.getProperty(key);
+    }
+    
+    private static void saveProperty(String key, String value)
+    {
+        Properties properties = loadUserSettings();
+        properties.setProperty(key, value);
+        saveUserSettings(properties);
+    }
+    
+    public static File getMostRecentFile()
+    {
+        String mostRecentFilename = loadProperty("MostRecentFile");
+        if (mostRecentFilename != null) {
+            return new File(mostRecentFilename);
+        } else {
+            return null;
+        }
+    }
+    
+    public static void setMostRecentFile(File file)
+    {
+        saveProperty("MostRecentFile", file.getPath());
+    }    
+    
     public static Season loadSeasonFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        FileInputStream fileIn = null;
+        InputStream fileIn = null;
         try {
             fileIn = new FileInputStream(file);
             ObjectInput objectIn = new ObjectInputStream(new GZIPInputStream(new BufferedInputStream(fileIn)));
             Season loaded = (Season)objectIn.readObject();
             objectIn.close();
+            setMostRecentFile(file);
             return loaded;
         } finally {
             if (fileIn != null) {
@@ -273,12 +355,13 @@ public final class Utilities {
 
     public static void writeSeasonToFile(Season season, File file) throws FileNotFoundException, IOException
     {
-        FileOutputStream fileOut = null;
+        OutputStream fileOut = null;
         try {
             fileOut = new FileOutputStream(file);
             ObjectOutput objectOut = new ObjectOutputStream(new GZIPOutputStream(new BufferedOutputStream(fileOut)));
             objectOut.writeObject(season);
             objectOut.close();
+            setMostRecentFile(file);
         } finally {
             if (fileOut != null) {
                 fileOut.close();
