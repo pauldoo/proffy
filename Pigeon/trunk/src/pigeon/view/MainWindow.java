@@ -727,7 +727,7 @@ final class MainWindow extends javax.swing.JFrame {
 
         if (result == JOptionPane.OK_OPTION) {
             if (raceReport.isSelected()) {
-                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
+                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
             }
             if (poolsReport.isSelected()) {
                 writeReport("PoolResults", new CompetitionReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));

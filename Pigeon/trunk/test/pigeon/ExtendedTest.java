@@ -370,7 +370,7 @@ public final class ExtendedTest extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true);
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             reporter.write(out);
             out.close();
