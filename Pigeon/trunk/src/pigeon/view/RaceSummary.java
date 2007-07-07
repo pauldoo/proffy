@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import pigeon.competitions.Competition;
 import pigeon.model.Organization;
 import pigeon.model.Constants;
 import pigeon.model.Race;
@@ -47,12 +48,14 @@ final class RaceSummary extends javax.swing.JPanel {
     private static final long serialVersionUID = 5181019751737997744L;
 
     private final Race race;
-    private final Map<String, JTextField[]> entrantsCountFields = new TreeMap<String, JTextField[]>();
+    private final Map<String, JTextField[]> raceEntrantsCountFields = new TreeMap<String, JTextField[]>();
+    private final Map<String, Map<String, JTextField>> poolEntrantsCountFields = new TreeMap<String, Map<String, JTextField>>();
 
-    public RaceSummary(Race race, Organization club, boolean editable) {
+
+    public RaceSummary(Race race, Organization club, Configuration configuration, boolean editable) {
         this.race = race;
         initComponents();
-        addComboOptions(club);
+        addComboOptions(club, configuration);
 
         if (race.getRacepoint() != null) {
             racepointCombo.setSelectedItem(race.getRacepoint());
@@ -75,25 +78,36 @@ final class RaceSummary extends javax.swing.JPanel {
             darknessEndsHour.setSelectedIndex((int)(race.getDarknessEnds() / Constants.MILLISECONDS_PER_HOUR));
             darknessEndsMinute.setSelectedIndex((int)((race.getDarknessEnds() / Constants.MILLISECONDS_PER_MINUTE) % 60));
         }
-        Map<String, Integer> membersEntered = race.getMembersEntered();
-        Map<String, Integer> birdsEntered = race.getBirdsEntered();
-        for (Map.Entry<String, JTextField[]> entry: entrantsCountFields.entrySet()) {
-            Integer members = membersEntered.get(entry.getKey());
-            Integer birds = birdsEntered.get(entry.getKey());
-            if (members == null) {
-                members = new Integer(0);
+        {
+            Map<String, Integer> membersEntered = race.getMembersEntered();
+            Map<String, Integer> birdsEntered = race.getBirdsEntered();
+            for (Map.Entry<String, JTextField[]> entry: raceEntrantsCountFields.entrySet()) {
+                Integer members = membersEntered.get(entry.getKey());
+                Integer birds = birdsEntered.get(entry.getKey());
+                if (members == null) {
+                    members = new Integer(0);
+                }
+                if (birds == null) {
+                    birds = new Integer(0);
+                }
+                entry.getValue()[0].setText(members.toString());
+                entry.getValue()[1].setText(birds.toString());
             }
-            if (birds == null) {
-                birds = new Integer(0);
+        }
+        {
+            Map<String, Map<String, Integer>> entrantsCount = race.getBirdsEnteredInPools();
+            for (Map.Entry<String, Map<String, Integer>> i: entrantsCount.entrySet()) {
+                for (Map.Entry<String, Integer> j: i.getValue().entrySet()) {
+                    poolEntrantsCountFields.get(i.getKey()).get(j.getKey()).setText(Integer.toString(j.getValue()));
+                }
             }
-            entry.getValue()[0].setText(members.toString());
-            entry.getValue()[1].setText(birds.toString());
+            race.setBirdsEnteredInPools(entrantsCount);
         }
 
         updateHoursOfDarknessEnabledStatus();
     }
 
-    private void addComboOptions(Organization club) {
+    private void addComboOptions(Organization club, Configuration configuration) {
         for (Racepoint r: club.getRacepoints()) {
             racepointCombo.addItem( r );
         }
@@ -145,7 +159,8 @@ final class RaceSummary extends javax.swing.JPanel {
             darknessEndsMinute.addItem(str);
         }
         
-        populateEntrantCountPanel(entrantsCountPanel, entrantsCountFields, club);
+        populateRaceEntrantsCountPanel(raceEntrantsCountPanel, raceEntrantsCountFields, club);
+        populatePoolEntrantsCountPanel(poolEntrantsCountPanel, poolEntrantsCountFields, club, configuration);
     }
 
     private boolean hoursOfDarknessEnabled()
@@ -201,7 +216,10 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBeginsMinute = new javax.swing.JComboBox();
         darknessEndsSeperator = new javax.swing.JLabel();
         darknessBeginsSeperator = new javax.swing.JLabel();
-        entrantsCountPanel = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        raceEntrantsCountPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        poolEntrantsCountPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -400,13 +418,20 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
         add(darknessBeginsSeperator, gridBagConstraints);
 
-        entrantsCountPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("No. Members and Birds entered"));
+        jTabbedPane1.addTab("No. Race Entrants", raceEntrantsCountPanel);
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(260, 196));
+        jScrollPane1.setRequestFocusEnabled(false);
+        jScrollPane1.setViewportView(poolEntrantsCountPanel);
+
+        jTabbedPane1.addTab("No. Pool Entrants", jScrollPane1);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(entrantsCountPanel, gridBagConstraints);
+        add(jTabbedPane1, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
 
@@ -429,14 +454,17 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JLabel dayMonthSeperator;
     private javax.swing.JComboBox daysCoveredCombo;
     private javax.swing.JLabel daysCoveredLabel;
-    private javax.swing.JPanel entrantsCountPanel;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel hourMinuteSeperator;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel liberationDateLabel;
     private javax.swing.JLabel liberationTimeLabel;
     private javax.swing.JComboBox minuteCombo;
     private javax.swing.JComboBox monthCombo;
     private javax.swing.JLabel monthYearSeperator;
+    private javax.swing.JPanel poolEntrantsCountPanel;
+    private javax.swing.JPanel raceEntrantsCountPanel;
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
     private javax.swing.JLabel windDirectionLabel;
@@ -466,18 +494,31 @@ final class RaceSummary extends javax.swing.JPanel {
             race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }
         
-        Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
-        Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
-        for (Map.Entry<String, JTextField[]> entry: entrantsCountFields.entrySet()) {
-            membersEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[0].getText()));
-            birdsEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[1].getText()));
+        {
+            Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+            Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+            for (Map.Entry<String, JTextField[]> entry: raceEntrantsCountFields.entrySet()) {
+                membersEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[0].getText()));
+                birdsEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[1].getText()));
+            }
+            race.setMembersEntered(membersEntered);
+            race.setBirdsEntered(birdsEntered);
         }
-        race.setMembersEntered(membersEntered);
-        race.setBirdsEntered(birdsEntered);
+        
+        {
+            Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
+            for (Map.Entry<String, Map<String, JTextField>> i: poolEntrantsCountFields.entrySet()) {
+                entrantsCount.put(i.getKey(), new TreeMap<String, Integer>());
+                for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
+                    entrantsCount.get(i.getKey()).put(j.getKey(), Integer.parseInt(j.getValue().getText()));
+                }
+            }
+            race.setBirdsEnteredInPools(entrantsCount);
+        }
     }
 
-    public static void editRace(Component parent, Race race, Organization club, boolean newRace) throws UserCancelledException {
-        RaceSummary panel = new RaceSummary(race, club, true);
+    public static void editRace(Component parent, Race race, Organization club, Configuration configuration, boolean newRace) throws UserCancelledException {
+        RaceSummary panel = new RaceSummary(race, club, configuration, true);
         while (true) {
             Object[] options = { (newRace ? "Add" : "Ok"), "Cancel" };
             int result = JOptionPane.showOptionDialog(parent, panel, "Race Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -497,9 +538,9 @@ final class RaceSummary extends javax.swing.JPanel {
         }
     }
 
-    public static Race createRace(Component parent, Organization club) throws UserCancelledException {
+    public static Race createRace(Component parent, Organization club, Configuration configuration) throws UserCancelledException {
         Race race = new Race();
-        editRace(parent, race, club, true);
+        editRace(parent, race, club, configuration, true);
         return race;
     }
     
@@ -507,7 +548,7 @@ final class RaceSummary extends javax.swing.JPanel {
         Populates the JPanel which contains the input dialogs for inputting the number of
         members and birds entered from each section.
     */
-    private static void populateEntrantCountPanel(JPanel panel, Map<String, JTextField[]> textFieldMap, Organization club)
+    private static void populateRaceEntrantsCountPanel(JPanel panel, Map<String, JTextField[]> textFieldMap, Organization club)
     {
         GridBagLayout gridbag = new GridBagLayout();
         panel.setLayout(gridbag);
@@ -565,6 +606,64 @@ final class RaceSummary extends javax.swing.JPanel {
                 textFieldMap.get(section)[1] = birdCountField;
             }
         }
-    }    
+    }
+    
+    /**
+        Populates the JPanel which contains the input dialogs for inputting the number of
+        birds entered in the pools.
+    */
+    private static void populatePoolEntrantsCountPanel(JPanel panel, Map<String, Map<String, JTextField>> textFieldMap, Organization club, Configuration configuration) throws IllegalArgumentException
+    {
+        GridBagLayout gridbag = new GridBagLayout();
+        panel.setLayout(gridbag);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
 
+        List<String> sections = pigeon.report.Utilities.participatingSections(club);
+        if (sections.contains("Open")) {
+            throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
+        }
+        sections.add(0, "Open");
+
+        for (String section: sections) {
+            textFieldMap.put(section, new TreeMap<String, JTextField>());
+
+            constraints.anchor = GridBagConstraints.CENTER;
+            constraints.fill = GridBagConstraints.NONE;
+            constraints.weightx = 1.0;
+            constraints.gridwidth = 2;
+            if (section == sections.get(sections.size() - 1)) {
+                constraints.gridwidth = GridBagConstraints.REMAINDER;
+            }
+            JLabel label = new JLabel(section);
+            gridbag.setConstraints(label, constraints);
+            panel.add(label);
+        }
+
+        for (Competition c: configuration.getCompetitions()) {
+            for (String section: sections) {
+                constraints.anchor = GridBagConstraints.EAST;
+                constraints.fill = GridBagConstraints.NONE;
+                constraints.weightx = 0.0;
+                constraints.gridwidth = 1;
+                JLabel label = new JLabel(c.getName());
+                gridbag.setConstraints(label, constraints);
+                panel.add(label);
+
+                constraints.anchor = GridBagConstraints.WEST;
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.weightx = 1.0;
+                constraints.gridwidth = 1;
+                if (section == sections.get(sections.size() - 1)) {
+                    constraints.gridwidth = GridBagConstraints.REMAINDER;
+                }
+                JTextField field = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                field.setColumns(4);
+                gridbag.setConstraints(field, constraints);
+                panel.add(field);
+
+                textFieldMap.get(section).put(c.getName(), field);
+            }
+        }
+    }
 }

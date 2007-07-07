@@ -725,101 +725,15 @@ final class MainWindow extends javax.swing.JFrame {
             "Results",
             JOptionPane.OK_CANCEL_OPTION);
 
-        try {
-            if (result == JOptionPane.OK_OPTION) {
-                if (raceReport.isSelected()) {
-                    writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
-                }
-                if (poolsReport.isSelected()) {
-                    Map<String, Map<String, JTextField>> textFieldMap = new TreeMap<String, Map<String, JTextField>>();
-                    JPanel panel = constructCompetitionEntrantCountPanel(textFieldMap, season.getOrganization(), configuration);
-
-                    int dialogResult = JOptionPane.showConfirmDialog(
-                        this,
-                        panel,
-                        "Entrants",
-                        JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-
-                    if (dialogResult == JOptionPane.OK_OPTION) {
-                        Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
-                        for (Map.Entry<String, Map<String, JTextField>> i: textFieldMap.entrySet()) {
-                            entrantsCount.put(i.getKey(), new TreeMap<String, Integer>());
-                            for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
-                                int entrants = NumberFormat.getIntegerInstance().parse(j.getValue().getText()).intValue();
-                                entrantsCount.get(i.getKey()).put(j.getKey(), entrants);
-                            }
-                        }
-                        writeReport("PoolResults", new CompetitionReporter(
-                            season.getOrganization(),
-                            race,
-                            listClubNames,
-                            configuration.getCompetitions(),
-                            entrantsCount));
-                    }
-                }
+        if (result == JOptionPane.OK_OPTION) {
+            if (raceReport.isSelected()) {
+                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames));
             }
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(getContentPane(), e.toString());
+            if (poolsReport.isSelected()) {
+                writeReport("PoolResults", new CompetitionReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
+            }
         }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
-    
-    private static JPanel constructCompetitionEntrantCountPanel(Map<String, Map<String, JTextField>> textFieldMap, Organization club, Configuration configuration) throws IllegalArgumentException
-    {
-        JPanel panel = new JPanel();
-        GridBagLayout gridbag = new GridBagLayout();
-        panel.setLayout(gridbag);
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        List<String> sections = pigeon.report.Utilities.participatingSections(club);
-        if (sections.contains("Open")) {
-            throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
-        }
-        sections.add(0, "Open");
-
-        for (String section: sections) {
-            textFieldMap.put(section, new TreeMap<String, JTextField>());
-
-            constraints.anchor = GridBagConstraints.CENTER;
-            constraints.fill = GridBagConstraints.NONE;
-            constraints.weightx = 1.0;
-            constraints.gridwidth = 2;
-            if (section == sections.get(sections.size() - 1)) {
-                constraints.gridwidth = GridBagConstraints.REMAINDER;
-            }
-            JLabel label = new JLabel(section);
-            gridbag.setConstraints(label, constraints);
-            panel.add(label);
-        }
-
-        for (Competition c: configuration.getCompetitions()) {
-            for (String section: sections) {
-                constraints.anchor = GridBagConstraints.EAST;
-                constraints.fill = GridBagConstraints.NONE;
-                constraints.weightx = 0.0;
-                constraints.gridwidth = 1;
-                JLabel label = new JLabel(c.getName());
-                gridbag.setConstraints(label, constraints);
-                panel.add(label);
-
-                constraints.anchor = GridBagConstraints.WEST;
-                constraints.fill = GridBagConstraints.HORIZONTAL;
-                constraints.weightx = 1.0;
-                constraints.gridwidth = 1;
-                if (section == sections.get(sections.size() - 1)) {
-                    constraints.gridwidth = GridBagConstraints.REMAINDER;
-                }
-                JTextField field = new JFormattedTextField(NumberFormat.getIntegerInstance());
-                field.setColumns(4);
-                gridbag.setConstraints(field, constraints);
-                panel.add(field);
-
-                textFieldMap.get(section).put(c.getName(), field);
-            }
-        }
-        return panel;
-    }
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
         try {
@@ -883,7 +797,7 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         try {
-            RaceSummary.editRace(this, race, season.getOrganization(), false);
+            RaceSummary.editRace(this, race, season.getOrganization(), configuration, false);
             editResultsForRace( race );
         } catch (UserCancelledException e) {
         }
@@ -892,7 +806,7 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race race = RaceSummary.createRace(this, season.getOrganization());
+            Race race = RaceSummary.createRace(this, season.getOrganization(), configuration);
             season.addRace( race );
             try {
                 editResultsForRace( race );

@@ -44,8 +44,12 @@ public final class Race implements Serializable, Comparable<Race> {
     private int darknessEnds;
     private String windDirection;
     private List<Clock> clocks = new ArrayList<Clock>();
+    // Map from Section -> Member count
     private Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+    // Map from Section -> Bird count
     private Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+    // Map from Section -> Pool name -> Bird count
+    private Map<String, Map<String, Integer>> birdsEnteredInPools = new TreeMap<String, Map<String, Integer>>();
 
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
@@ -229,5 +233,26 @@ public final class Race implements Serializable, Comparable<Race> {
             result += i;
         }
         return result;
+    }
+
+    public Map<String, Map<String, Integer>> getBirdsEnteredInPools()
+    {
+        if (birdsEnteredInPools == null) {
+            setBirdsEnteredInPools(new TreeMap<String, Map<String, Integer>>());
+        }
+        Map<String, Map<String, Integer>> result = new TreeMap<String, Map<String, Integer>>();
+        for (Map.Entry<String, Map<String, Integer>> e: birdsEnteredInPools.entrySet()) {
+            result.put(e.getKey(), Collections.unmodifiableMap(e.getValue()));
+        }
+        return Collections.unmodifiableMap(result);
+    }
+
+    public void setBirdsEnteredInPools(Map<String, Map<String, Integer>> birdsEnteredInPools)
+    {
+        Map<String, Map<String, Integer>> result = new TreeMap<String, Map<String, Integer>>();
+        for (Map.Entry<String, Map<String, Integer>> e: birdsEnteredInPools.entrySet()) {
+            result.put(e.getKey(), new TreeMap<String, Integer>(e.getValue()));
+        }
+        this.birdsEnteredInPools = result;
     }
 }

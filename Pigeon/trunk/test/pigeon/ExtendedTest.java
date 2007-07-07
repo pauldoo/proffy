@@ -211,6 +211,17 @@ public final class ExtendedTest extends TestCase
                 }
                 race.addClock(clock);
             }
+            // Need to randomly decide how many birds entered each pool.
+            Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
+            String[] sections = new String[]{"Open", "East", "West"};
+            for (String section: sections) {
+                entrantsCount.put(section, new TreeMap<String, Integer>());
+                for (Competition pool: configuration.getCompetitions()) {
+                    entrantsCount.get(section).put(pool.getName(), (int)((random.nextDouble()) * MEMBER_COUNT * BIRDS_PER_MEMBER));
+                }
+            }
+            race.setBirdsEnteredInPools(entrantsCount);
+            
             season.addRace(race);
         }
     }
@@ -371,17 +382,7 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            // Need to randomly decide how many birds entered each pool.
-            Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
-            String[] sections = new String[]{"Open", "East", "West"};
-            for (String section: sections) {
-                entrantsCount.put(section, new TreeMap<String, Integer>());
-                for (Competition pool: configuration.getCompetitions()) {
-                    entrantsCount.get(section).put(pool.getName(), (int)((random.nextDouble()) * MEMBER_COUNT * BIRDS_PER_MEMBER));
-                }
-            }
-
-            CompetitionReporter reporter = new CompetitionReporter(season.getOrganization(), race, true, configuration.getCompetitions(), entrantsCount);
+            CompetitionReporter reporter = new CompetitionReporter(season.getOrganization(), race, true, configuration.getCompetitions());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             reporter.write(out);
             out.close();

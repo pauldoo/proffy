@@ -55,15 +55,14 @@ public class CompetitionReporter implements Reporter
         Organization club,
         Race race,
         boolean listClubNames,
-        List<Competition> competitions,
-        Map<String, Map<String, Integer>> entrantsCount
+        List<Competition> competitions
     )
     {
         this.club = club;
         this.race = race;
         this.listClubNames = listClubNames;
         this.competitions = competitions;
-        this.entrantsCount = entrantsCount;
+        this.entrantsCount = race.getBirdsEnteredInPools();
     }
 
     public void write(OutputStream stream) throws IOException

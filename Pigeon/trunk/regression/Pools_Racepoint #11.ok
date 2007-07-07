@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Racepoint #11 on 02/03/12</title>
+  <title>Racepoint #11 on 14/06/06</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css" media="screen">
     body { font-family: Verdana, sans-serif; white-space: nowrap; }
@@ -35,261 +35,259 @@
 <h1>Test fed</h1>
 <h2>Open</h2>
 <h2>Race from Racepoint #11</h2>
-<h3>Liberated at 08:55:00 on 02/03/12 in a null wind</h3>
+<h3>Liberated at 06:09:00 on 14/06/06 in a null wind</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>N</th><th>Total</th></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B12</td><td/><td/><td>4.00</td><td/><td>8.00</td><td>10.00</td><td>20.00</td><td>87.21</td><td>129.21</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B12</td><td/><td>2.00</td><td/><td>6.00</td><td/><td>10.00</td><td/><td/><td>18.00</td></tr>
 <tr>
-<td>Member #0</td><td>Club #6</td><td>M0B10</td><td>1.00</td><td>2.00</td><td>4.00</td><td>6.00</td><td/><td>10.00</td><td>20.00</td><td>58.14</td><td>101.14</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B5</td><td/><td/><td>4.00</td><td>6.00</td><td>8.00</td><td>10.00</td><td/><td>25.37</td><td>53.36</td></tr>
 <tr>
-<td>Member #17</td><td>Club #4</td><td>M9B0</td><td/><td>2.00</td><td/><td>5.68</td><td/><td>10.00</td><td/><td/><td>17.69</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B0</td><td/><td>2.00</td><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>20.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B4</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td>20.00</td><td/><td>29.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B16</td><td>1.00</td><td/><td/><td>6.00</td><td>8.00</td><td/><td>20.00</td><td>16.91</td><td>51.91</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B10</td><td/><td>2.00</td><td/><td/><td/><td/><td>20.00</td><td/><td>22.00</td></tr>
+<td>Member #3</td><td>Club #13</td><td>M16B6</td><td>1.00</td><td/><td>4.00</td><td>6.00</td><td>8.00</td><td/><td/><td/><td>19.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B13</td><td>1.00</td><td>1.70</td><td>4.00</td><td/><td/><td/><td/><td/><td>6.70</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B9</td><td>1.00</td><td>2.00</td><td>4.00</td><td/><td>8.00</td><td>10.00</td><td/><td/><td>25.00</td></tr>
 <tr>
-<td>Member #10</td><td>Club #9</td><td>M2B18</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B0</td><td/><td/><td>4.00</td><td>6.00</td><td/><td>7.50</td><td>20.00</td><td/><td>37.50</td></tr>
 <tr>
-<td>Member #2</td><td>Club #6</td><td>M12B15</td><td>1.00</td><td/><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>19.00</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B8</td><td/><td/><td/><td>6.00</td><td>8.00</td><td/><td/><td/><td>14.00</td></tr>
 <tr>
-<td>Member #9</td><td>Club #3</td><td>M22B18</td><td>1.00</td><td/><td/><td/><td/><td/><td>20.00</td><td/><td>21.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B6</td><td>1.00</td><td>2.00</td><td/><td/><td>8.00</td><td/><td/><td/><td>11.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B9</td><td>1.00</td><td/><td/><td/><td/><td/><td>20.00</td><td/><td>21.00</td></tr>
+<td>Member #22</td><td>Club #9</td><td>M15B5</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B10</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B17</td><td>1.00</td><td/><td>4.00</td><td/><td>8.00</td><td/><td/><td/><td>13.00</td></tr>
 <tr>
-<td>Member #1</td><td>Club #3</td><td>M1B8</td><td/><td/><td>4.00</td><td/><td>8.00</td><td>10.00</td><td/><td/><td>22.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B8</td><td/><td/><td/><td>6.00</td><td>5.16</td><td/><td>20.00</td><td/><td>31.16</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B15</td><td/><td/><td/><td/><td/><td>10.00</td><td>20.00</td><td/><td>30.00</td></tr>
+<td>Member #18</td><td>Club #3</td><td>M10B12</td><td>1.00</td><td/><td/><td/><td/><td/><td/><td/><td>1.00</td></tr>
 <tr>
-<td>Member #18</td><td>Club #3</td><td>M10B9</td><td>1.00</td><td/><td>4.00</td><td/><td>8.00</td><td/><td/><td/><td>13.00</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B7</td><td>1.00</td><td>2.00</td><td>4.00</td><td>6.00</td><td/><td/><td>20.00</td><td/><td>33.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B5</td><td>1.00</td><td/><td>4.00</td><td/><td>8.00</td><td/><td/><td/><td>13.00</td></tr>
+<td>Member #8</td><td>Club #15</td><td>M21B7</td><td/><td>2.00</td><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>28.00</td></tr>
 <tr>
-<td>Member #19</td><td>Club #15</td><td>M11B0</td><td>0.69</td><td/><td/><td/><td/><td/><td/><td/><td>0.69</td></tr>
+<td>Member #1</td><td>Club #3</td><td>M1B6</td><td>0.27</td><td/><td>4.00</td><td>1.57</td><td/><td/><td>20.00</td><td/><td>25.84</td></tr>
 <tr>
-<td>Member #1</td><td>Club #3</td><td>M1B5</td><td/><td/><td>4.00</td><td/><td/><td>10.00</td><td>20.00</td><td/><td>34.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B13</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B5</td><td/><td/><td/><td/><td>8.00</td><td>8.83</td><td>20.00</td><td/><td>36.83</td></tr>
+<td>Member #9</td><td>Club #3</td><td>M22B15</td><td/><td>2.00</td><td/><td/><td/><td/><td>20.00</td><td/><td>22.00</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B1</td><td/><td/><td>4.00</td><td/><td>2.90</td><td/><td/><td/><td>6.90</td></tr>
+<td>Member #2</td><td>Club #6</td><td>M12B1</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B17</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
+<td>Member #21</td><td>Club #1</td><td>M14B14</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
 <tr>
-<td>Member #3</td><td>Club #13</td><td>M16B10</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B17</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B2</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B14</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B8</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #4</td><td>Club #13</td><td>M17B3</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B9</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B18</td><td/><td>2.00</td><td/><td/><td/><td/><td>20.00</td><td/><td>22.00</td></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B7</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B13</td><td/><td>2.00</td><td/><td/><td/><td/><td>20.00</td><td/><td>22.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B2</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #3</td><td>Club #13</td><td>M16B14</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #0</td><td>Club #6</td><td>M0B2</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
+<td>Member #9</td><td>Club #3</td><td>M22B14</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td/><td/><td>6.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B6</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #6</td><td>Club #16</td><td>M19B1</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B1</td><td/><td/><td/><td/><td/><td/><td>1.10</td><td/><td>1.10</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B11</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
 <tr>
-<td>Member #7</td><td>Club #3</td><td>M20B4</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #6</td><td>Club #16</td><td>M19B5</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #10</td><td>Club #9</td><td>M2B7</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B5</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td>13.40</td><td/><td>19.40</td></tr>
 <tr>
-<td>Member #21</td><td>Club #1</td><td>M14B14</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #1</td><td>Club #3</td><td>M1B1</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B3</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B15</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td/><td/><td>6.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B6</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B16</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
 <tr>
-<td>Member #9</td><td>Club #3</td><td>M22B14</td><td/><td/><td>1.32</td><td/><td/><td/><td/><td/><td>1.32</td></tr>
-<tr><td/><td/><td>Total</td><td>8.69</td><td>7.70</td><td>81.32</td><td>11.68</td><td>58.90</td><td>88.83</td><td>321.10</td><td>145.35</td><td>723.57</td></tr>
-<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>-0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
-<tr><td/><td/><td>Club take</td><td>0.46</td><td>0.41</td><td>4.28</td><td>0.62</td><td>3.10</td><td>4.68</td><td>16.90</td><td>7.65</td><td>38.08</td></tr>
-<tr><td/><td/><td>Total pool money</td><td>9.15</td><td>8.10</td><td>85.60</td><td>12.30</td><td>62.00</td><td>93.50</td><td>338.00</td><td>153.00</td><td>761.65</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B11</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
+<tr>
+<td>Member #6</td><td>Club #16</td><td>M19B16</td><td/><td/><td>3.25</td><td/><td/><td/><td/><td/><td>3.25</td></tr>
+<tr>
+<td>Member #21</td><td>Club #1</td><td>M14B4</td><td/><td>1.23</td><td/><td/><td/><td/><td/><td/><td>1.23</td></tr>
+<tr><td/><td/><td>Total</td><td>7.27</td><td>39.24</td><td>71.25</td><td>55.57</td><td>69.16</td><td>47.50</td><td>353.40</td><td>42.28</td><td>685.66</td></tr>
+<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td/><td/><td>Club take</td><td>0.38</td><td>2.07</td><td>3.75</td><td>2.93</td><td>3.64</td><td>2.50</td><td>18.60</td><td>2.23</td><td>36.09</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>7.65</td><td>41.30</td><td>75.00</td><td>58.50</td><td>72.80</td><td>50.00</td><td>372.00</td><td>44.50</td><td>721.75</td></tr>
 </table>
 </div>
 <div class="outer">
 <h1>Test fed</h1>
 <h2>Section: East</h2>
 <h2>Race from Racepoint #11</h2>
-<h3>Liberated at 08:55:00 on 02/03/12 in a null wind</h3>
+<h3>Liberated at 06:09:00 on 14/06/06 in a null wind</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>N</th><th>Total</th></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B12</td><td>1.00</td><td/><td/><td>6.00</td><td/><td/><td/><td>31.92</td><td>38.92</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B0</td><td/><td>2.00</td><td>4.00</td><td>6.00</td><td/><td/><td>20.00</td><td>94.90</td><td>126.90</td></tr>
 <tr>
-<td>Member #0</td><td>Club #6</td><td>M0B10</td><td/><td>2.00</td><td>4.00</td><td>6.00</td><td>8.00</td><td/><td>20.00</td><td/><td>40.00</td></tr>
+<td>Member #3</td><td>Club #13</td><td>M16B6</td><td>1.00</td><td/><td>4.00</td><td>6.00</td><td/><td/><td>20.00</td><td>63.27</td><td>94.27</td></tr>
 <tr>
-<td>Member #17</td><td>Club #4</td><td>M9B0</td><td>1.00</td><td>2.00</td><td/><td>0.25</td><td>8.00</td><td/><td/><td/><td>11.25</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B0</td><td>0.43</td><td/><td>0.17</td><td/><td/><td/><td>20.00</td><td/><td>20.60</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B10</td><td/><td>2.00</td><td/><td/><td/><td>10.00</td><td>20.00</td><td>21.28</td><td>53.28</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B8</td><td/><td>2.00</td><td/><td/><td>8.00</td><td>10.00</td><td>20.00</td><td/><td>40.00</td></tr>
 <tr>
-<td>Member #10</td><td>Club #9</td><td>M2B18</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B6</td><td/><td>2.00</td><td/><td/><td>8.00</td><td/><td>20.00</td><td/><td>30.00</td></tr>
 <tr>
-<td>Member #2</td><td>Club #6</td><td>M12B15</td><td>1.00</td><td>2.00</td><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>27.00</td></tr>
+<td>Member #22</td><td>Club #9</td><td>M15B5</td><td/><td>2.00</td><td/><td>6.00</td><td>8.00</td><td>10.00</td><td>20.00</td><td/><td>46.00</td></tr>
 <tr>
-<td>Member #9</td><td>Club #3</td><td>M22B18</td><td/><td>2.00</td><td>4.00</td><td/><td>8.00</td><td/><td>20.00</td><td/><td>34.00</td></tr>
+<td>Member #18</td><td>Club #3</td><td>M10B12</td><td/><td>2.00</td><td/><td>6.00</td><td/><td>10.00</td><td>20.00</td><td/><td>38.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B9</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td/><td/><td>9.00</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B7</td><td/><td/><td/><td/><td/><td>10.00</td><td>20.00</td><td/><td>30.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B10</td><td/><td>2.00</td><td/><td/><td>8.00</td><td>10.00</td><td>13.10</td><td/><td>33.10</td></tr>
+<td>Member #8</td><td>Club #15</td><td>M21B7</td><td/><td>2.00</td><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>28.00</td></tr>
 <tr>
-<td>Member #1</td><td>Club #3</td><td>M1B8</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #1</td><td>Club #3</td><td>M1B6</td><td/><td>2.00</td><td/><td>6.00</td><td>8.00</td><td>10.00</td><td/><td/><td>26.00</td></tr>
 <tr>
-<td>Member #18</td><td>Club #3</td><td>M10B9</td><td>0.32</td><td/><td/><td/><td/><td/><td/><td/><td>0.32</td></tr>
+<td>Member #9</td><td>Club #3</td><td>M22B15</td><td/><td>2.00</td><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>28.00</td></tr>
 <tr>
-<td>Member #19</td><td>Club #15</td><td>M11B0</td><td/><td>2.00</td><td>4.00</td><td/><td/><td>10.00</td><td/><td/><td>16.00</td></tr>
+<td>Member #2</td><td>Club #6</td><td>M12B1</td><td/><td>1.20</td><td/><td>6.00</td><td>8.00</td><td/><td>20.00</td><td/><td>35.20</td></tr>
 <tr>
-<td>Member #1</td><td>Club #3</td><td>M1B5</td><td/><td>2.00</td><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>20.00</td></tr>
+<td>Member #21</td><td>Club #1</td><td>M14B14</td><td/><td/><td/><td>6.00</td><td>8.00</td><td/><td/><td/><td>14.00</td></tr>
 <tr>
-<td>Member #1</td><td>Club #3</td><td>M1B16</td><td/><td>2.00</td><td>4.00</td><td/><td>8.00</td><td>10.00</td><td/><td/><td>24.00</td></tr>
+<td>Member #2</td><td>Club #6</td><td>M12B6</td><td/><td/><td/><td>6.00</td><td>8.00</td><td/><td/><td/><td>14.00</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B5</td><td/><td>2.00</td><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>20.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B17</td><td/><td/><td/><td>6.00</td><td>8.00</td><td>10.00</td><td/><td/><td>24.00</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B1</td><td/><td>2.00</td><td/><td/><td/><td/><td/><td/><td>2.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B14</td><td/><td/><td/><td>6.00</td><td/><td/><td>15.60</td><td/><td>21.60</td></tr>
 <tr>
-<td>Member #5</td><td>Club #1</td><td>M18B17</td><td/><td/><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>18.00</td></tr>
+<td>Member #4</td><td>Club #13</td><td>M17B3</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
 <tr>
-<td>Member #3</td><td>Club #13</td><td>M16B10</td><td/><td>2.00</td><td/><td/><td>8.00</td><td/><td/><td/><td>10.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B18</td><td/><td/><td/><td/><td>2.50</td><td/><td/><td/><td>2.50</td></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B2</td><td/><td>2.00</td><td/><td/><td>8.00</td><td/><td/><td/><td>10.00</td></tr>
+<td>Member #18</td><td>Club #3</td><td>M10B4</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
 <tr>
-<td>Member #12</td><td>Club #4</td><td>M4B8</td><td/><td/><td/><td/><td>8.00</td><td/><td/><td/><td>8.00</td></tr>
+<td>Member #3</td><td>Club #13</td><td>M16B14</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B9</td><td/><td>2.00</td><td/><td/><td/><td>10.00</td><td/><td/><td>12.00</td></tr>
+<td>Member #6</td><td>Club #16</td><td>M19B1</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
 <tr>
-<td>Member #17</td><td>Club #4</td><td>M9B5</td><td/><td>0.49</td><td>4.00</td><td/><td/><td>10.00</td><td/><td/><td>14.49</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B11</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #22</td><td>Club #9</td><td>M15B7</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #12</td><td>Club #4</td><td>M4B5</td><td/><td/><td/><td>2.63</td><td/><td/><td/><td/><td>2.63</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B2</td><td/><td/><td>4.00</td><td/><td/><td/><td/><td/><td>4.00</td></tr>
+<td>Member #1</td><td>Club #3</td><td>M1B1</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #0</td><td>Club #6</td><td>M0B2</td><td/><td/><td>1.81</td><td/><td/><td/><td/><td/><td>1.81</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B16</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B6</td><td/><td/><td/><td/><td>8.00</td><td/><td/><td/><td>8.00</td></tr>
+<td>Member #6</td><td>Club #16</td><td>M19B6</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #7</td><td>Club #3</td><td>M20B4</td><td/><td/><td/><td/><td>8.00</td><td/><td/><td/><td>8.00</td></tr>
+<td>Member #4</td><td>Club #13</td><td>M17B17</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #10</td><td>Club #9</td><td>M2B7</td><td/><td/><td/><td/><td>5.80</td><td/><td/><td/><td>5.80</td></tr>
+<td>Member #21</td><td>Club #1</td><td>M14B4</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #21</td><td>Club #1</td><td>M14B14</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #7</td><td>Club #3</td><td>M20B5</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #6</td><td>Club #16</td><td>M19B4</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #5</td><td>Club #1</td><td>M18B11</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #19</td><td>Club #15</td><td>M11B12</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #17</td><td>Club #4</td><td>M9B7</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #4</td><td>Club #13</td><td>M17B2</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #1</td><td>Club #3</td><td>M1B12</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #10</td><td>Club #9</td><td>M2B0</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #0</td><td>Club #6</td><td>M0B11</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #4</td><td>Club #13</td><td>M17B7</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
-<tr>
-<td>Member #7</td><td>Club #3</td><td>M20B14</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
-<tr>
-<td>Member #10</td><td>Club #9</td><td>M2B9</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
-<tr>
-<td>Member #2</td><td>Club #6</td><td>M12B14</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
-<tr>
-<td>Member #9</td><td>Club #3</td><td>M22B8</td><td/><td/><td/><td/><td/><td>3.83</td><td/><td/><td>3.83</td></tr>
-<tr><td/><td/><td>Total</td><td>4.32</td><td>30.49</td><td>37.81</td><td>12.25</td><td>117.80</td><td>183.83</td><td>93.10</td><td>53.20</td><td>532.81</td></tr>
+<td>Member #17</td><td>Club #4</td><td>M9B10</td><td/><td/><td/><td/><td/><td>1.92</td><td/><td/><td>1.92</td></tr>
+<tr><td/><td/><td>Total</td><td>1.43</td><td>17.20</td><td>8.17</td><td>92.63</td><td>66.50</td><td>181.92</td><td>235.60</td><td>158.17</td><td>761.61</td></tr>
 <tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
-<tr><td/><td/><td>Club take</td><td>0.23</td><td>1.61</td><td>1.99</td><td>0.65</td><td>6.20</td><td>9.68</td><td>4.90</td><td>2.80</td><td>28.04</td></tr>
-<tr><td/><td/><td>Total pool money</td><td>4.55</td><td>32.10</td><td>39.80</td><td>12.90</td><td>124.00</td><td>193.50</td><td>98.00</td><td>56.00</td><td>560.85</td></tr>
+<tr><td/><td/><td>Club take</td><td>0.08</td><td>0.91</td><td>0.43</td><td>4.88</td><td>3.50</td><td>9.58</td><td>12.40</td><td>8.33</td><td>40.09</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>1.50</td><td>18.10</td><td>8.60</td><td>97.50</td><td>70.00</td><td>191.50</td><td>248.00</td><td>166.50</td><td>801.70</td></tr>
 </table>
 </div>
 <div class="outer last">
 <h1>Test fed</h1>
 <h2>Section: West</h2>
 <h2>Race from Racepoint #11</h2>
-<h3>Liberated at 08:55:00 on 02/03/12 in a null wind</h3>
+<h3>Liberated at 06:09:00 on 14/06/06 in a null wind</h3>
 <table>
 <tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>N</th><th>Total</th></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B4</td><td>1.00</td><td>2.00</td><td>4.00</td><td/><td/><td>10.00</td><td>20.00</td><td/><td>37.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B12</td><td>1.00</td><td>1.23</td><td/><td>6.00</td><td>8.00</td><td/><td/><td/><td>16.24</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B13</td><td/><td>2.00</td><td>4.00</td><td>6.00</td><td/><td>10.00</td><td>20.00</td><td>102.32</td><td>144.32</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B5</td><td/><td/><td>4.00</td><td/><td/><td>10.00</td><td/><td/><td>14.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B15</td><td/><td/><td/><td/><td>8.00</td><td/><td/><td/><td>8.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B16</td><td>1.00</td><td/><td>4.00</td><td/><td/><td>10.00</td><td>20.00</td><td/><td>35.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B5</td><td/><td>2.00</td><td/><td/><td>8.00</td><td/><td/><td/><td>10.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B9</td><td>1.00</td><td/><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>27.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B1</td><td>1.00</td><td/><td/><td>6.00</td><td>8.00</td><td>10.00</td><td/><td>68.21</td><td>93.21</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B17</td><td/><td/><td/><td/><td>8.00</td><td/><td/><td/><td>8.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B15</td><td>1.00</td><td/><td>4.00</td><td>6.00</td><td>8.00</td><td/><td/><td/><td>19.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B8</td><td>1.00</td><td/><td/><td>6.00</td><td/><td>10.00</td><td/><td/><td>17.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B6</td><td/><td/><td>4.00</td><td>6.00</td><td/><td/><td>20.00</td><td/><td>30.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B13</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #20</td><td>Club #11</td><td>M13B3</td><td>1.00</td><td/><td/><td/><td/><td/><td>20.00</td><td/><td>21.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B17</td><td/><td/><td>4.00</td><td/><td/><td>10.00</td><td>20.00</td><td/><td>34.00</td></tr>
 <tr>
-<td>Member #11</td><td>Club #2</td><td>M3B4</td><td/><td/><td>4.00</td><td>6.00</td><td/><td>10.00</td><td/><td/><td>20.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B13</td><td>1.00</td><td/><td/><td>6.00</td><td>8.00</td><td>10.00</td><td/><td>88.92</td><td>113.92</td></tr>
 <tr>
-<td>Member #11</td><td>Club #2</td><td>M3B9</td><td>0.75</td><td>2.00</td><td>4.00</td><td/><td>8.00</td><td/><td>20.00</td><td/><td>34.75</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B15</td><td/><td/><td>4.00</td><td/><td>8.00</td><td/><td/><td/><td>12.00</td></tr>
 <tr>
-<td>Member #11</td><td>Club #2</td><td>M3B3</td><td/><td>2.00</td><td>4.00</td><td/><td>8.00</td><td/><td/><td/><td>14.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B11</td><td>1.00</td><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td>59.28</td><td>84.28</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B16</td><td/><td>2.00</td><td/><td/><td>0.64</td><td/><td/><td/><td>2.64</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B2</td><td>1.00</td><td/><td>4.00</td><td>1.93</td><td>8.00</td><td/><td/><td/><td>14.93</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B10</td><td/><td>2.00</td><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B9</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td/><td/><td>9.00</td></tr>
 <tr>
-<td>Member #11</td><td>Club #2</td><td>M3B16</td><td/><td/><td>4.00</td><td>6.00</td><td/><td>10.00</td><td/><td/><td>20.00</td></tr>
+<td>Member #14</td><td>Club #12</td><td>M6B18</td><td/><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>24.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B12</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B17</td><td>1.00</td><td/><td>4.00</td><td/><td/><td/><td>20.00</td><td/><td>25.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B3</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B11</td><td/><td/><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>18.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B11</td><td/><td>2.00</td><td>4.00</td><td>6.00</td><td/><td/><td/><td/><td>12.00</td></tr>
+<td>Member #15</td><td>Club #10</td><td>M7B11</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td>20.00</td><td/><td>29.00</td></tr>
 <tr>
-<td>Member #20</td><td>Club #11</td><td>M13B17</td><td/><td>2.00</td><td>3.89</td><td/><td/><td>10.00</td><td>20.00</td><td/><td>35.89</td></tr>
+<td>Member #15</td><td>Club #10</td><td>M7B4</td><td/><td/><td>3.34</td><td/><td>8.00</td><td>10.00</td><td/><td/><td>21.34</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B9</td><td/><td/><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B5</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td/><td/><td>9.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B1</td><td/><td>0.43</td><td/><td/><td/><td>10.00</td><td/><td/><td>10.43</td></tr>
+<td>Member #14</td><td>Club #12</td><td>M6B0</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B17</td><td/><td/><td/><td>6.00</td><td/><td>10.00</td><td>20.00</td><td/><td>36.00</td></tr>
+<td>Member #15</td><td>Club #10</td><td>M7B0</td><td>1.00</td><td/><td/><td/><td>8.00</td><td>10.00</td><td>20.00</td><td/><td>39.00</td></tr>
 <tr>
-<td>Member #20</td><td>Club #11</td><td>M13B4</td><td/><td/><td/><td/><td/><td>10.00</td><td>20.00</td><td/><td>30.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B1</td><td>1.00</td><td/><td/><td/><td/><td/><td/><td/><td>1.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B15</td><td/><td/><td/><td>6.00</td><td/><td>10.00</td><td/><td/><td>16.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B16</td><td>1.00</td><td/><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>19.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B15</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B16</td><td>1.00</td><td/><td/><td/><td>8.00</td><td>10.00</td><td/><td/><td>19.00</td></tr>
 <tr>
-<td>Member #11</td><td>Club #2</td><td>M3B6</td><td/><td/><td/><td/><td/><td>10.00</td><td>20.00</td><td/><td>30.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B15</td><td/><td/><td/><td/><td>8.00</td><td>10.00</td><td>20.00</td><td/><td>38.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B8</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B10</td><td>1.00</td><td/><td/><td/><td/><td/><td/><td/><td>1.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B2</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B1</td><td>1.00</td><td/><td/><td/><td>8.00</td><td/><td>20.00</td><td/><td>29.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B0</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<td>Member #20</td><td>Club #11</td><td>M13B5</td><td/><td/><td/><td/><td/><td>10.00</td><td>20.00</td><td/><td>30.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B17</td><td/><td/><td/><td>6.00</td><td/><td>10.00</td><td/><td/><td>16.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B7</td><td/><td/><td/><td/><td>8.00</td><td>10.00</td><td>20.00</td><td/><td>38.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B10</td><td/><td/><td/><td/><td/><td>6.72</td><td/><td/><td>6.72</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B14</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B14</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #15</td><td>Club #10</td><td>M7B6</td><td>1.00</td><td/><td/><td/><td>7.66</td><td/><td/><td/><td>8.66</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B6</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B1</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B4</td><td/><td/><td/><td>6.00</td><td/><td/><td/><td/><td>6.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B0</td><td>0.00</td><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B12</td><td/><td/><td/><td>6.00</td><td/><td/><td>20.00</td><td/><td>26.00</td></tr>
+<td>Member #13</td><td>Club #10</td><td>M5B18</td><td/><td/><td/><td/><td/><td>10.00</td><td>12.55</td><td/><td>22.55</td></tr>
 <tr>
-<td>Member #14</td><td>Club #12</td><td>M6B3</td><td/><td/><td/><td>2.05</td><td/><td/><td>20.00</td><td/><td>22.05</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B10</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #16</td><td>Club #5</td><td>M8B2</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #14</td><td>Club #12</td><td>M6B10</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #13</td><td>Club #10</td><td>M5B13</td><td/><td/><td/><td/><td/><td/><td>20.00</td><td/><td>20.00</td></tr>
+<td>Member #11</td><td>Club #2</td><td>M3B2</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
 <tr>
-<td>Member #15</td><td>Club #10</td><td>M7B11</td><td/><td/><td/><td/><td/><td/><td>3.90</td><td/><td>3.90</td></tr>
-<tr><td/><td/><td>Total</td><td>4.75</td><td>18.43</td><td>43.89</td><td>92.05</td><td>48.64</td><td>166.73</td><td>343.90</td><td>170.52</td><td>888.92</td></tr>
-<tr><td/><td/><td>Unclaimed</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
-<tr><td/><td/><td>Club take</td><td>0.25</td><td>0.97</td><td>2.31</td><td>4.85</td><td>2.56</td><td>8.78</td><td>18.10</td><td>8.98</td><td>46.79</td></tr>
-<tr><td/><td/><td>Total pool money</td><td>5.00</td><td>19.40</td><td>46.20</td><td>96.90</td><td>51.20</td><td>175.50</td><td>362.00</td><td>179.50</td><td>935.70</td></tr>
+<td>Member #16</td><td>Club #5</td><td>M8B13</td><td/><td/><td/><td/><td/><td>10.00</td><td/><td/><td>10.00</td></tr>
+<tr>
+<td>Member #14</td><td>Club #12</td><td>M6B6</td><td/><td/><td/><td/><td/><td>2.82</td><td/><td/><td>2.82</td></tr>
+<tr><td/><td/><td>Total</td><td>18.00</td><td>1.23</td><td>35.34</td><td>25.94</td><td>135.66</td><td>202.83</td><td>312.55</td><td>148.20</td><td>879.75</td></tr>
+<tr><td/><td/><td>Unclaimed</td><td>-0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td/><td/><td>Club take</td><td>0.95</td><td>0.07</td><td>1.86</td><td>1.37</td><td>7.14</td><td>10.68</td><td>16.45</td><td>7.80</td><td>46.30</td></tr>
+<tr><td/><td/><td>Total pool money</td><td>18.95</td><td>1.30</td><td>37.20</td><td>27.30</td><td>142.80</td><td>213.50</td><td>329.00</td><td>156.00</td><td>926.05</td></tr>
 </table>
 </div>
 </body>
