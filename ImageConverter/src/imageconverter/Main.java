@@ -85,6 +85,26 @@ final class ImageScaler implements Runnable
     }
 }
 
+/** Filter for JPEG files and directories, used by the Swing filechooser thing.
+*/
+final class ImageFileFilter extends javax.swing.filechooser.FileFilter
+{
+    public boolean accept(File f)
+    {
+        return
+            f.isDirectory() ||
+            f.getName().toUpperCase().endsWith(".JPEG") ||
+            f.getName().toUpperCase().endsWith(".JPG") ||
+            f.getName().toUpperCase().endsWith(".GIF") ||
+            f.getName().toUpperCase().endsWith(".PNG");
+    }
+
+    public String getDescription()
+    {
+        return "Images";
+    }
+}
+
 /** Program to resize a bunch of images and generate thumbnails.
  */
 public final class Main
@@ -101,26 +121,6 @@ public final class Main
     /** Image type.
      */
     protected static String imageType = "jpeg";
-    
-    /** Filter for JPEG files and directories, used by the Swing filechooser thing.
-     */
-    protected static class ImageFileFilter extends javax.swing.filechooser.FileFilter
-    {
-        public boolean accept(File f)
-        {
-            return
-                f.isDirectory() ||
-                f.getName().toUpperCase().endsWith(".JPEG") ||
-                f.getName().toUpperCase().endsWith(".JPG") ||
-                f.getName().toUpperCase().endsWith(".GIF") ||
-                f.getName().toUpperCase().endsWith(".PNG");
-        }
-        
-        public String getDescription()
-        {
-            return "Images";
-        }
-    }
     
     /** Main method.
      */
