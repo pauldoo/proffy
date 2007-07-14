@@ -238,7 +238,7 @@ public final class Main
             outWriter.println("        <div class=\"album\">");
             outWriter.println("          <a href=\"image.html?image=" + fullName + "\"><img src=\"" + thumbName + "\" alt=\"" + altText + "\"/></a>");
             outWriter.println("        </div>");
-            if (i % 3 == 2) {
+            if (((i % 3) == 2) || (i == (inputFiles.length - 1))) {
                 outWriter.println("      </div>");
             }
             
