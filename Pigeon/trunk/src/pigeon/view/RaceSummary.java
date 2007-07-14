@@ -192,6 +192,8 @@ final class RaceSummary extends javax.swing.JPanel {
     {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        summaryPanel = new javax.swing.JPanel();
         racepointLabel = new javax.swing.JLabel();
         racepointCombo = new javax.swing.JComboBox();
         liberationDateLabel = new javax.swing.JLabel();
@@ -216,24 +218,24 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBeginsMinute = new javax.swing.JComboBox();
         darknessEndsSeperator = new javax.swing.JLabel();
         darknessBeginsSeperator = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         raceEntrantsCountPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
         poolEntrantsCountPanel = new javax.swing.JPanel();
 
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.BorderLayout());
+
+        summaryPanel.setLayout(new java.awt.GridBagLayout());
 
         racepointLabel.setText("Racepoint");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(racepointLabel, gridBagConstraints);
+        summaryPanel.add(racepointLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(racepointCombo, gridBagConstraints);
+        summaryPanel.add(racepointCombo, gridBagConstraints);
 
         liberationDateLabel.setText("Liberation Date");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -241,7 +243,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(liberationDateLabel, gridBagConstraints);
+        summaryPanel.add(liberationDateLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -249,7 +251,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(dayCombo, gridBagConstraints);
+        summaryPanel.add(dayCombo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -257,7 +259,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(hourCombo, gridBagConstraints);
+        summaryPanel.add(hourCombo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -265,7 +267,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(minuteCombo, gridBagConstraints);
+        summaryPanel.add(minuteCombo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
@@ -273,7 +275,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(yearCombo, gridBagConstraints);
+        summaryPanel.add(yearCombo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -281,7 +283,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(monthCombo, gridBagConstraints);
+        summaryPanel.add(monthCombo, gridBagConstraints);
 
         monthYearSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         monthYearSeperator.setText("/");
@@ -289,7 +291,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        add(monthYearSeperator, gridBagConstraints);
+        summaryPanel.add(monthYearSeperator, gridBagConstraints);
 
         hourMinuteSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         hourMinuteSeperator.setText(":");
@@ -297,7 +299,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        add(hourMinuteSeperator, gridBagConstraints);
+        summaryPanel.add(hourMinuteSeperator, gridBagConstraints);
 
         dayMonthSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         dayMonthSeperator.setText("/");
@@ -305,7 +307,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        add(dayMonthSeperator, gridBagConstraints);
+        summaryPanel.add(dayMonthSeperator, gridBagConstraints);
 
         liberationTimeLabel.setText("Liberation Time");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -313,7 +315,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(liberationTimeLabel, gridBagConstraints);
+        summaryPanel.add(liberationTimeLabel, gridBagConstraints);
 
         windDirectionLabel.setText("Wind Direction");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -321,7 +323,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(windDirectionLabel, gridBagConstraints);
+        summaryPanel.add(windDirectionLabel, gridBagConstraints);
 
         windDirectionText.setColumns(20);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -330,7 +332,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(windDirectionText, gridBagConstraints);
+        summaryPanel.add(windDirectionText, gridBagConstraints);
 
         daysCoveredLabel.setText("No. of days covered");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -338,15 +340,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(daysCoveredLabel, gridBagConstraints);
-
-        daysCoveredCombo.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                daysCoveredComboActionPerformed(evt);
-            }
-        });
+        summaryPanel.add(daysCoveredLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -354,7 +348,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(daysCoveredCombo, gridBagConstraints);
+        summaryPanel.add(daysCoveredCombo, gridBagConstraints);
 
         darknessBeginsText.setText("Darkness Begins");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -362,7 +356,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessBeginsText, gridBagConstraints);
+        summaryPanel.add(darknessBeginsText, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -370,7 +364,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessBeginsHour, gridBagConstraints);
+        summaryPanel.add(darknessBeginsHour, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -378,7 +372,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessEndsHour, gridBagConstraints);
+        summaryPanel.add(darknessEndsHour, gridBagConstraints);
 
         darknessEndsText.setText("Darkness Ends");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -386,7 +380,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessEndsText, gridBagConstraints);
+        summaryPanel.add(darknessEndsText, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -394,7 +388,7 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessEndsMinute, gridBagConstraints);
+        summaryPanel.add(darknessEndsMinute, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -402,43 +396,31 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(darknessBeginsMinute, gridBagConstraints);
+        summaryPanel.add(darknessBeginsMinute, gridBagConstraints);
 
         darknessEndsSeperator.setText(":");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        add(darknessEndsSeperator, gridBagConstraints);
+        summaryPanel.add(darknessEndsSeperator, gridBagConstraints);
 
         darknessBeginsSeperator.setText(":");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        add(darknessBeginsSeperator, gridBagConstraints);
+        summaryPanel.add(darknessBeginsSeperator, gridBagConstraints);
+
+        jTabbedPane1.addTab("Summary", summaryPanel);
 
         jTabbedPane1.addTab("No. Race Entrants", raceEntrantsCountPanel);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(260, 196));
-        jScrollPane1.setRequestFocusEnabled(false);
-        jScrollPane1.setViewportView(poolEntrantsCountPanel);
+        jTabbedPane1.addTab("No. Pool Entrants", poolEntrantsCountPanel);
 
-        jTabbedPane1.addTab("No. Pool Entrants", jScrollPane1);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(jTabbedPane1, gridBagConstraints);
+        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
-
-    private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_daysCoveredComboActionPerformed
-    {//GEN-HEADEREND:event_daysCoveredComboActionPerformed
-        updateHoursOfDarknessEnabledStatus();
-    }//GEN-LAST:event_daysCoveredComboActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -456,7 +438,6 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JLabel daysCoveredLabel;
     private javax.swing.JComboBox hourCombo;
     private javax.swing.JLabel hourMinuteSeperator;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel liberationDateLabel;
     private javax.swing.JLabel liberationTimeLabel;
@@ -467,6 +448,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JPanel raceEntrantsCountPanel;
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
+    private javax.swing.JPanel summaryPanel;
     private javax.swing.JLabel windDirectionLabel;
     private javax.swing.JTextField windDirectionText;
     private javax.swing.JComboBox yearCombo;
