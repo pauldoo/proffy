@@ -96,12 +96,19 @@ final class RaceSummary extends javax.swing.JPanel {
         }
         {
             Map<String, Map<String, Integer>> entrantsCount = race.getBirdsEnteredInPools();
-            for (Map.Entry<String, Map<String, Integer>> i: entrantsCount.entrySet()) {
-                for (Map.Entry<String, Integer> j: i.getValue().entrySet()) {
-                    poolEntrantsCountFields.get(i.getKey()).get(j.getKey()).setText(Integer.toString(j.getValue()));
+            for (Map.Entry<String, Map<String, JTextField>> i: poolEntrantsCountFields.entrySet()) {
+                Map<String, Integer> map = entrantsCount.get(i.getKey());
+                for (Map.Entry<String, JTextField> j: i.getValue().entrySet()) {
+                    Integer count = null;
+                    if (map != null) {
+                        count = map.get(j.getKey());
+                    }
+                    if (count == null) {
+                        count = new Integer(0);
+                    }
+                    j.getValue().setText(count.toString());
                 }
             }
-            race.setBirdsEnteredInPools(entrantsCount);
         }
 
         updateHoursOfDarknessEnabledStatus();
@@ -572,6 +579,7 @@ final class RaceSummary extends javax.swing.JPanel {
                 constraints.weightx = 1.0;
                 constraints.gridwidth = 1;
                 JTextField memberCountField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                memberCountField.setColumns(4);
                 gridbag.setConstraints(memberCountField, constraints);
                 panel.add(memberCountField);
                 textFieldMap.get(section)[0] = memberCountField;
@@ -583,6 +591,7 @@ final class RaceSummary extends javax.swing.JPanel {
                 constraints.weightx = 1.0;
                 constraints.gridwidth = GridBagConstraints.REMAINDER;
                 JTextField birdCountField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                birdCountField.setColumns(4);
                 gridbag.setConstraints(birdCountField, constraints);
                 panel.add(birdCountField);
                 textFieldMap.get(section)[1] = birdCountField;
