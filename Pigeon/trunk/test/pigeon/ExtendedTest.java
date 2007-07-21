@@ -196,9 +196,11 @@ public final class ExtendedTest extends TestCase
 
                     for (Competition c: configuration.getCompetitions()) {
                         if (random.nextBoolean()) {
-                            Collection<String> set = new ArrayList<String>(t.getOpenCompetitionsEntered());
-                            set.add(c.getName());
-                            t.setOpenCompetitionsEntered(set);
+                            if (c.isAvailableInOpen()) {
+                                Collection<String> set = new ArrayList<String>(t.getOpenCompetitionsEntered());
+                                set.add(c.getName());
+                                t.setOpenCompetitionsEntered(set);
+                            }
                         }
                         if (random.nextBoolean()) {
                             Collection<String> set = new ArrayList<String>(t.getSectionCompetitionsEntered());
