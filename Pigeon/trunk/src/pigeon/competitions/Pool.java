@@ -21,9 +21,9 @@ public final class Pool extends Competition
 {
     private final int payoutPeriod;
     
-    public Pool(String name, double entryCost, double clubTake, int payoutPeriod)
+    public Pool(String name, double entryCost, double clubTake, boolean availableInOpen, int payoutPeriod)
     {
-        super(name, entryCost, clubTake);
+        super(name, entryCost, clubTake, availableInOpen);
         this.payoutPeriod = payoutPeriod;
     }
     

@@ -215,7 +215,7 @@ public final class Utilities {
     /**
         Returns a list of all the competition names in a configuration.
     */
-    public static List<String>  getCompetitionNames(List<Competition> competitions)
+    private static List<String>  getCompetitionNames(List<Competition> competitions)
     {
         // Don't expect duplicate names in the configuration, so we can use
         // any kind of collection.

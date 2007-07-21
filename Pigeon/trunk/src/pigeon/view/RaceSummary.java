@@ -633,27 +633,30 @@ final class RaceSummary extends javax.swing.JPanel {
 
         for (Competition c: configuration.getCompetitions()) {
             for (String section: sections) {
-                constraints.anchor = GridBagConstraints.EAST;
-                constraints.fill = GridBagConstraints.NONE;
-                constraints.weightx = 0.0;
-                constraints.gridwidth = 1;
-                JLabel label = new JLabel(c.getName());
-                gridbag.setConstraints(label, constraints);
-                panel.add(label);
+                if (c.isAvailableInOpen() || !section.equals("Open")) {
+                    final int index = sections.indexOf(section);
+                    
+                    constraints.anchor = GridBagConstraints.EAST;
+                    constraints.fill = GridBagConstraints.NONE;
+                    constraints.gridx = index * 2;
+                    constraints.weightx = 0.0;
+                    constraints.gridwidth = 1;
+                    JLabel label = new JLabel(c.getName());
+                    gridbag.setConstraints(label, constraints);
+                    panel.add(label);
 
-                constraints.anchor = GridBagConstraints.WEST;
-                constraints.fill = GridBagConstraints.HORIZONTAL;
-                constraints.weightx = 1.0;
-                constraints.gridwidth = 1;
-                if (section == sections.get(sections.size() - 1)) {
-                    constraints.gridwidth = GridBagConstraints.REMAINDER;
+                    constraints.anchor = GridBagConstraints.WEST;
+                    constraints.fill = GridBagConstraints.HORIZONTAL;
+                    constraints.gridx = index * 2 + 1;
+                    constraints.weightx = 1.0;
+                    constraints.gridwidth = 1;
+                    JTextField field = new JFormattedTextField(NumberFormat.getIntegerInstance());
+                    field.setColumns(4);
+                    gridbag.setConstraints(field, constraints);
+                    panel.add(field);
+
+                    textFieldMap.get(section).put(c.getName(), field);
                 }
-                JTextField field = new JFormattedTextField(NumberFormat.getIntegerInstance());
-                field.setColumns(4);
-                gridbag.setConstraints(field, constraints);
-                panel.add(field);
-
-                textFieldMap.get(section).put(c.getName(), field);
             }
         }
     }

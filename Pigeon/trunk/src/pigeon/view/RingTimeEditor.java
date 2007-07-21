@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import pigeon.competitions.Competition;
 import pigeon.model.Constants;
 import pigeon.model.Season;
 import pigeon.model.Sex;
@@ -403,14 +404,16 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private void addCompetitions()
     {
-        for (String name: Utilities.getCompetitionNames(configuration.getCompetitions())) {
-            JCheckBox checkBox = new JCheckBox(name);
-            openCompetitionCheckboxes.put(name, checkBox);
-            openPoolsPanel.add(checkBox);
+        for (Competition comp: configuration.getCompetitions()) {
+            if (comp.isAvailableInOpen()) {
+                JCheckBox checkBox = new JCheckBox(comp.getName());
+                openCompetitionCheckboxes.put(comp.getName(), checkBox);
+                openPoolsPanel.add(checkBox);
+            }
         }
-        for (String name: Utilities.getCompetitionNames(configuration.getCompetitions())) {
-            JCheckBox checkBox = new JCheckBox(name);
-            sectionCompetitionCheckboxes.put(name, checkBox);
+        for (Competition comp: configuration.getCompetitions()) {
+            JCheckBox checkBox = new JCheckBox(comp.getName());
+            sectionCompetitionCheckboxes.put(comp.getName(), checkBox);
             sectionPoolsPanel.add(checkBox);
         }
     }

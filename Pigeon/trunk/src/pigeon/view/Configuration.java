@@ -70,11 +70,12 @@ public final class Configuration
             final String type = properties.getProperty(competitionPrefix + ".Type");
             final double cost = Double.parseDouble(properties.getProperty(competitionPrefix + ".Cost"));
             final double clubTake = Double.parseDouble(properties.getProperty(competitionPrefix + ".ClubTake"));
-
+            final boolean availableInOpen = Boolean.parseBoolean(properties.getProperty(competitionPrefix + ".AvailableInOpen"));
+            
             if ("Pool".equals(type)) {
                 // Parse out Pool specific fields
                 final int payoutPeriod = Integer.parseInt(properties.getProperty(competitionPrefix + ".PayoutPeriod"));
-                result.add(new Pool(name, cost, clubTake, payoutPeriod));
+                result.add(new Pool(name, cost, clubTake, availableInOpen, payoutPeriod));
             } else if ("Nomination".equals(type)) {
                 // Parse out Nomination specific fields
                 final String payoutRatios = properties.getProperty(competitionPrefix + ".PayoutRatios");
@@ -84,7 +85,7 @@ public final class Configuration
                 for (int j = 0; j < payoutCount; ++j) {
                     payouts[j] = Double.parseDouble(tokenizer.nextToken());
                 }
-                result.add(new Nomination(name, cost, clubTake, payouts));
+                result.add(new Nomination(name, cost, clubTake, availableInOpen, payouts));
             } else {
                 throw new IOException("Unknown competiion type: '" + type + "'");
             }

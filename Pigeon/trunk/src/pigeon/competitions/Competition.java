@@ -23,7 +23,7 @@ public abstract class Competition
         The textual name of the competition as it
         appears on reports etc.
     */
-    protected final String name;
+    private final String name;
     
     /**
         The cost per bird to enter.
@@ -36,11 +36,17 @@ public abstract class Competition
     */
     protected final double clubTake;
     
-    public Competition(String name, double entryCost, double clubTake)
+    /**
+        Is this competition ran in the Open?
+    */
+    private final boolean availableInOpen;
+    
+    public Competition(String name, double entryCost, double clubTake, boolean availableInOpen)
     {
         this.name = name;
         this.entryCost = entryCost;
         this.clubTake = clubTake;
+        this.availableInOpen = availableInOpen;
     }
     
     public String getName()
@@ -79,5 +85,10 @@ public abstract class Competition
     public double totalClubTake(int entrants)
     {
         return totalPoolMoney(entrants) * clubTake;
+    }
+
+    public boolean isAvailableInOpen()
+    {
+        return availableInOpen;
     }
 }

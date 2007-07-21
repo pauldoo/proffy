@@ -23,9 +23,9 @@ public final class Nomination extends Competition
 {
     private final double[] payouts;
     
-    public Nomination(String name, double cost, double clubTake, double[] payouts)
+    public Nomination(String name, double cost, double clubTake, boolean availableInOpen, double[] payouts)
     {
-        super(name, cost, clubTake);
+        super(name, cost, clubTake, availableInOpen);
         this.payouts = payouts;
         
         double totalPayout = 0;
