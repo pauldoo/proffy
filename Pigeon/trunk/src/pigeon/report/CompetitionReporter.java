@@ -121,7 +121,9 @@ public class CompetitionReporter implements Reporter
             }
             out.print("<th>Ring Number</th>");
             for (Competition c: competitions) {
-                out.print("<th>" + c.getName() + "</th>");
+                if (section != null || c.isAvailableInOpen()) {
+                    out.print("<th>" + c.getName() + "</th>");
+                }
             }
             out.print("<th>Total</th>");
             out.print("</tr>\n");
@@ -129,14 +131,18 @@ public class CompetitionReporter implements Reporter
             // For each competition name keep a track of how many of the winners we have found.
             Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                competitionPositions.put(c.getName(), 0);
+                if (section != null || c.isAvailableInOpen()) {
+                    competitionPositions.put(c.getName(), 0);
+                }
             }
 
             // For each competition within this section, calculate the number of winners
             Map<String, Integer> numberOfWinners = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
+                if (section != null || c.isAvailableInOpen()) {
+                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                    numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
+                }
             }
 
             // Iterate each of the birds, in order they would appear in the race result.
@@ -152,18 +158,20 @@ public class CompetitionReporter implements Reporter
 
                 // Check the competitions that this bird entered
                 for (Competition c: competitions) {
-                    if (competitionsEnteredByThisBird.contains(c.getName())) {
-                        int position = competitionPositions.get(c.getName()) + 1;
-                        if (position <= numberOfWinners.get(c.getName())) {
-                            int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                            double prize = c.prize(position, entrants);
-                            row.html.append("<td>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
-                            totalPrizeWonByThisBird += prize;
-                            competitionPositions.put(c.getName(), position);
-                            continue;
+                    if (section != null || c.isAvailableInOpen()) {
+                        if (competitionsEnteredByThisBird.contains(c.getName())) {
+                            int position = competitionPositions.get(c.getName()) + 1;
+                            if (position <= numberOfWinners.get(c.getName())) {
+                                int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                                double prize = c.prize(position, entrants);
+                                row.html.append("<td>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
+                                totalPrizeWonByThisBird += prize;
+                                competitionPositions.put(c.getName(), position);
+                                continue;
+                            }
                         }
+                        row.html.append("<td/>");
                     }
-                    row.html.append("<td/>");
                 }
                 if (totalPrizeWonByThisBird > 0) {
                     // If this member has taken a place in any competition, print their line.
@@ -180,14 +188,16 @@ public class CompetitionReporter implements Reporter
                 out.print("<tr><td/><td/><td>Total</td>");
                 double totalPrizeGivenToEveryone = 0.0;
                 for (Competition c: competitions) {
-                    double totalPrizeGivenForThisCompetition = 0.0;
-                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                    for (int pos = 1; pos <= competitionPositions.get(c.getName()); ++pos) {
-                        totalPrizeGivenForThisCompetition += c.prize(pos, entrants);
+                    if (section != null || c.isAvailableInOpen()) {
+                        double totalPrizeGivenForThisCompetition = 0.0;
+                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                        for (int pos = 1; pos <= competitionPositions.get(c.getName()); ++pos) {
+                            totalPrizeGivenForThisCompetition += c.prize(pos, entrants);
+                        }
+                        totalForCompetition.put(c.getName(), totalPrizeGivenForThisCompetition);
+                        totalPrizeGivenToEveryone += totalPrizeGivenForThisCompetition;
+                        out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
                     }
-                    totalForCompetition.put(c.getName(), totalPrizeGivenForThisCompetition);
-                    totalPrizeGivenToEveryone += totalPrizeGivenForThisCompetition;
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
                 }
                 out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
                 out.print("</tr>\n");
@@ -198,10 +208,12 @@ public class CompetitionReporter implements Reporter
                 out.print("<tr><td/><td/><td>Unclaimed</td>");
                 double totalUnclaimed = 0.0;
                 for (Competition c: competitions) {
-                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                    double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
-                    totalUnclaimed += unclaimed;
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
+                    if (section != null || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                        double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
+                        totalUnclaimed += unclaimed;
+                        out.print("<td>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
+                    }
                 }
                 out.print("<td>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
                 out.print("</tr>\n");
@@ -212,10 +224,12 @@ public class CompetitionReporter implements Reporter
                 out.print("<tr><td/><td/><td>Club take</td>");
                 double totalClubTake = 0.0;
                 for (Competition c: competitions) {
-                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                    double clubTake = c.totalClubTake(entrants);
-                    totalClubTake += clubTake;
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
+                    if (section != null || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                        double clubTake = c.totalClubTake(entrants);
+                        totalClubTake += clubTake;
+                        out.print("<td>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
+                    }
                 }
                 out.print("<td>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
                 out.print("</tr>\n");
@@ -226,10 +240,12 @@ public class CompetitionReporter implements Reporter
                 out.print("<tr><td/><td/><td>Total pool money</td>");
                 double totalPoolMoney = 0.0;
                 for (Competition c: competitions) {
-                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
-                    double poolMoney = c.totalPoolMoney(entrants);
-                    totalPoolMoney += poolMoney;
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
+                    if (section != null || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                        double poolMoney = c.totalPoolMoney(entrants);
+                        totalPoolMoney += poolMoney;
+                        out.print("<td>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
+                    }
                 }
                 out.print("<td>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
                 out.print("</tr>\n");
