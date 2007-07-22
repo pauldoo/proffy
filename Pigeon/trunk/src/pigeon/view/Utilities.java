@@ -32,6 +32,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -376,5 +377,13 @@ public final class Utilities {
         String lcOSName = System.getProperty("os.name").toLowerCase();
         boolean MAC_OS_X = lcOSName.startsWith("mac os x");
         return MAC_OS_X;
+    }
+    
+    public static NumberFormat currencyFormat()
+    {
+        NumberFormat format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(2);
+        return format;
     }
 }

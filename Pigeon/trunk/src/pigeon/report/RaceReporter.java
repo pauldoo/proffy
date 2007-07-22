@@ -125,7 +125,11 @@ public final class RaceReporter implements Reporter {
             if (race.getDaysCovered() > 1) {
                 out.print("<th>Day</th>");
             }
-            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th>Prize</th><th>Velocity</th></tr>\n");
+            out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/>");
+            if (section != null) {
+                out.print("<th>Prize</th>");
+            }
+            out.print("<th>Velocity</th></tr>\n");
             
             // For each competition name keep a track of how many of the winners we have found.
             Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
@@ -137,10 +141,13 @@ public final class RaceReporter implements Reporter {
             // For each competition within this section, calculate the number of winners
             Map<String, Integer> numberOfWinners = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                int entrants = birdsInPools.get(sectionNotNull).get(c.getName());
-                numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
+                if (section != null || c.isAvailableInOpen()) {
+                    int entrants = birdsInPools.get(sectionNotNull).get(c.getName());
+                    numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
+                }
             }
-            
+
+            List<Double> prizes = (section == null) ? null : race.getPrizes().get(section);
             int pos = 0;
             for (BirdResult row: results) {
                 pos ++;
@@ -172,6 +179,15 @@ public final class RaceReporter implements Reporter {
                 } else {
                     row.html.append("<td/>");
                 }
+                
+                if (section != null) {
+                    if (prizes != null && pos <= prizes.size() && prizes.get(pos-1) > 0) {
+                        row.html.append("<td>" + Utilities.stringPrintf("%.2f", prizes.get(pos-1)) + "</td>");
+                    } else {
+                        row.html.append("<td/>");
+                    }
+                }
+                    
                 row.html.append("<td>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
 
                 out.print(row.html.toString());

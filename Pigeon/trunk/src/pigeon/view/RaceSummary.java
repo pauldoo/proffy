@@ -18,12 +18,12 @@
 package pigeon.view;
 
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -89,7 +89,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private final Race race;
     private final Map<String, JTextField[]> raceEntrantsCountFields = new TreeMap<String, JTextField[]>();
     private final Map<String, Map<String, JTextField>> poolEntrantsCountFields = new TreeMap<String, Map<String, JTextField>>();
-
+    private final Map<String, List<JTextField>> prizeFields = new TreeMap<String, List<JTextField>>();
 
     public RaceSummary(Race race, Organization club, Configuration configuration, boolean editable) {
         this.race = race;
@@ -146,6 +146,20 @@ final class RaceSummary extends javax.swing.JPanel {
                         count = new Integer(0);
                     }
                     j.getValue().setText(count.toString());
+                }
+            }
+        }
+        {
+            Map<String, List<Double>> prizes = race.getPrizes();
+            for (Map.Entry<String, List<JTextField>> i: prizeFields.entrySet()) {
+                List<Double> list = prizes.get(i.getKey());
+                for (JTextField field: i.getValue()) {
+                    int index = i.getValue().indexOf(field);
+                    if (list != null && index < list.size()) {
+                        field.setText(Utilities.currencyFormat().format(list.get(index)));
+                    } else {
+                        field.setText(Utilities.currencyFormat().format(0));
+                    }
                 }
             }
         }
@@ -207,6 +221,7 @@ final class RaceSummary extends javax.swing.JPanel {
         
         populateRaceEntrantsCountPanel(raceEntrantsCountPanel, raceEntrantsCountFields, club);
         populatePoolEntrantsCountPanel(poolEntrantsCountPanel, poolEntrantsCountFields, club, configuration);
+        populatePrizesPanel(prizesPanel, prizeFields, club);
     }
 
     private boolean hoursOfDarknessEnabled()
@@ -266,6 +281,7 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBeginsSeperator = new javax.swing.JLabel();
         raceEntrantsCountPanel = new javax.swing.JPanel();
         poolEntrantsCountPanel = new javax.swing.JPanel();
+        prizesPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -464,6 +480,8 @@ final class RaceSummary extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("No. Pool Entrants", poolEntrantsCountPanel);
 
+        jTabbedPane1.addTab("Prizes", prizesPanel);
+
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
     }// </editor-fold>//GEN-END:initComponents
@@ -491,6 +509,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JComboBox monthCombo;
     private javax.swing.JLabel monthYearSeperator;
     private javax.swing.JPanel poolEntrantsCountPanel;
+    private javax.swing.JPanel prizesPanel;
     private javax.swing.JPanel raceEntrantsCountPanel;
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
@@ -542,6 +561,18 @@ final class RaceSummary extends javax.swing.JPanel {
                 }
             }
             race.setBirdsEnteredInPools(entrantsCount);
+        }
+        
+        {
+            Map<String, List<Double>> prizes = new TreeMap<String, List<Double>>();
+            for (Map.Entry<String, List<JTextField>> i: prizeFields.entrySet()) {
+                List<Double> list = new ArrayList<Double>();
+                for (JTextField field: i.getValue()) {
+                    list.add(Double.parseDouble(field.getText()));
+                }
+                prizes.put(i.getKey(), list);
+            }
+            race.setPrizes(prizes);
         }
     }
 
@@ -701,5 +732,45 @@ final class RaceSummary extends javax.swing.JPanel {
 
         panel.setFocusTraversalPolicyProvider(true);
         panel.setFocusTraversalPolicy(new TopDownFocusTraversalPolicy());
+    }
+    
+    private static void populatePrizesPanel(JPanel panel, Map<String, List<JTextField>> fields, Organization club)
+    {
+        GridBagLayout gridbag = new GridBagLayout();
+        panel.setLayout(gridbag);
+        
+        List<String> sections = pigeon.report.Utilities.participatingSections(club);
+        for (String section: sections) {
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.insets = new Insets(10, 10, 10, 10);
+            constraints.gridwidth = GridBagConstraints.REMAINDER;
+            JLabel label = new JLabel(section);
+            gridbag.setConstraints(label, constraints);
+            panel.add(label);
+            
+            List<JTextField> list = new ArrayList<JTextField>();
+            
+            for (int i = 0; i < 20; ++i) {
+                constraints.fill = GridBagConstraints.NONE;
+                constraints.anchor = GridBagConstraints.EAST;
+                constraints.gridwidth = 1;
+                JLabel posLabel = new JLabel(Integer.toString(i+1) + ".");
+                gridbag.setConstraints(posLabel, constraints);
+                panel.add(posLabel);
+
+
+                constraints.fill = GridBagConstraints.BOTH;
+                constraints.anchor = GridBagConstraints.CENTER;
+                if ((i % 4) == 3 || i == 19) {
+                    constraints.gridwidth = GridBagConstraints.REMAINDER;
+                }
+                JTextField field = new JFormattedTextField(Utilities.currencyFormat());
+                field.setColumns(6);
+                gridbag.setConstraints(field, constraints);
+                panel.add(field);
+                list.add(field);
+            }
+            fields.put(section, list);
+        }
     }
 }

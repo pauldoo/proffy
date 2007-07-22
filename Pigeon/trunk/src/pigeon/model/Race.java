@@ -44,13 +44,19 @@ public final class Race implements Serializable, Comparable<Race> {
     private int darknessEnds;
     private String windDirection;
     private List<Clock> clocks = new ArrayList<Clock>();
+    
     // Map from Section -> Member count
     private Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+    
     // Map from Section -> Bird count
     private Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+    
     // Map from Section -> Pool name -> Bird count
     private Map<String, Map<String, Integer>> birdsEnteredInPools = new TreeMap<String, Map<String, Integer>>();
-
+    
+    // Map from Section -> Prize list
+    private Map<String, List<Double>> prizes = new TreeMap<String, List<Double>>();
+    
     public Race() {
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
@@ -254,5 +260,26 @@ public final class Race implements Serializable, Comparable<Race> {
             result.put(e.getKey(), new TreeMap<String, Integer>(e.getValue()));
         }
         this.birdsEnteredInPools = result;
+    }
+    
+    public Map<String, List<Double>> getPrizes()
+    {
+        if (prizes == null) {
+            setPrizes(new TreeMap<String, List<Double>>());
+        }
+        Map<String, List<Double>> result = new TreeMap<String, List<Double>>();
+        for (Map.Entry<String, List<Double>> e: prizes.entrySet()) {
+            result.put(e.getKey(), Collections.unmodifiableList(e.getValue()));
+        }
+        return Collections.unmodifiableMap(result);
+    }
+    
+    public void setPrizes(Map<String, List<Double>> prizes)
+    {
+        Map<String, List<Double>> result = new TreeMap<String, List<Double>>();
+        for (Map.Entry<String, List<Double>> e: prizes.entrySet()) {
+            result.put(e.getKey(), new ArrayList<Double>(e.getValue()));
+        }
+        this.prizes = prizes;
     }
 }

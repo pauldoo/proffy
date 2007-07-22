@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -223,6 +224,15 @@ public final class ExtendedTest extends TestCase
                 }
             }
             race.setBirdsEnteredInPools(entrantsCount);
+            
+            Map<String, List<Double>> prizes = new TreeMap<String, List<Double>>();
+            for (int s = 1; s < sections.length; s++) {
+                prizes.put(sections[s], new ArrayList<Double>());
+                for (int i = 0; i < 20; ++i) {
+                    prizes.get(sections[s]).add(new Double((20 - i) * s));
+                }
+            }
+            race.setPrizes(prizes);
             
             season.addRace(race);
         }
