@@ -18,11 +18,14 @@
 package pigeon.view;
 
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -33,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SortingFocusTraversalPolicy;
 import pigeon.competitions.Competition;
 import pigeon.model.Organization;
 import pigeon.model.Constants;
@@ -41,8 +45,43 @@ import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
 
 /**
- * Edits basic info regarding a race like the racepoint, date, time etc.
- */
+    FocusTraversalPolicy based on LayoutFocusTraversalPolicy, but runs top down.
+*/
+final class TopDownFocusTraversalPolicy extends SortingFocusTraversalPolicy
+{
+    private static final class LocalComparator implements Comparator<Component>
+    {
+        public int compare(Component lhs, Component rhs)
+        {
+            Rectangle lhsRect = lhs.getBounds();
+            Rectangle rhsRect = rhs.getBounds();
+            int result = new Integer(lhsRect.x).compareTo(rhsRect.x);
+            if (result == 0) {
+                result = new Integer(lhsRect.y).compareTo(rhsRect.y);
+            }
+            return result;
+        }
+
+        public boolean equals(Object obj)
+        {
+            return (obj instanceof TopDownFocusTraversalPolicy);
+        }
+    }
+
+    public TopDownFocusTraversalPolicy()
+    {
+        super(new LocalComparator());
+    }
+
+    protected boolean accept(Component aComponent)
+    {
+        return !(aComponent instanceof JLabel);
+    }
+}
+
+/**
+    Edits basic info regarding a race like the racepoint, date, time etc.
+*/
 final class RaceSummary extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 5181019751737997744L;
@@ -659,5 +698,8 @@ final class RaceSummary extends javax.swing.JPanel {
                 }
             }
         }
+
+        panel.setFocusTraversalPolicyProvider(true);
+        panel.setFocusTraversalPolicy(new TopDownFocusTraversalPolicy());
     }
 }
