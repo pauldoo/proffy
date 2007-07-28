@@ -27,7 +27,7 @@ import pigeon.view.Configuration;
 /**
     Produces a table of all the member details.
 */
-public final class MembersReporter implements Reporter
+public final class MembersReporter extends Reporter
 {
     private final String organization;
     private final Collection<Member> members;
@@ -40,8 +40,9 @@ public final class MembersReporter implements Reporter
         this.mode = mode;
     }
 
-    public void write(OutputStream stream) throws IOException
+    public void write() throws IOException
     {
+        final OutputStream stream = createNewStream("Members");
         PrintStream out = Utilities.writeHtmlHeader(stream, "Members for " + organization);
         out.print("<div class='outer'>\n");
         out.print("<h1>" + organization + "</h1>\n");

@@ -17,13 +17,59 @@
 
 package pigeon.report;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
     Interface implemented by all the HTML reporters.
 */
-public interface Reporter
+public abstract class Reporter
 {
-    public void write(OutputStream stream) throws IOException;
+    private final Collection<File> files = new LinkedList<File>();
+    private final Collection<OutputStream> streams = new LinkedList<OutputStream>();
+    private final List<OutputStream> forcedStreams = new LinkedList<OutputStream>();
+    
+    public abstract void write() throws IOException;
+    
+    public void closeAllStreams() throws IOException
+    {
+        for (OutputStream stream: streams) {
+            stream.close();
+        }
+    }
+    
+    /**
+        Override the stream used during write(), used by unit tests.
+    */
+    public void forceOutputStream(OutputStream out)
+    {
+        forcedStreams.add(out);
+    }
+    
+    public Collection<File> getFiles()
+    {
+        return Collections.unmodifiableCollection(files);
+    }
+    
+    protected OutputStream createNewStream(String prefix) throws IOException
+    {
+        OutputStream result;
+        if (forcedStreams.isEmpty()) {
+            File outputFile = File.createTempFile(prefix, ".html");
+            FileOutputStream fileOut = new FileOutputStream(outputFile);
+            files.add(outputFile);
+            result = new BufferedOutputStream(fileOut);
+        } else {
+            result = forcedStreams.remove(0);
+        }
+        streams.add(result);
+        return result;
+    }
 }

@@ -53,7 +53,6 @@ import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
-import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -355,7 +354,8 @@ public final class ExtendedTest extends TestCase
                 season.getOrganization().getDistancesForMember(member));
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.write(out);
+            reporter.forceOutputStream(out);
+            reporter.write();
             out.close();
 
             checkRegression(out.toByteArray(), "Distance_" + member.toString());
@@ -372,7 +372,8 @@ public final class ExtendedTest extends TestCase
                 season.getOrganization().getDistancesForRacepoint(racepoint));
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.write(out);
+            reporter.forceOutputStream(out);
+            reporter.write();
             out.close();
 
             checkRegression(out.toByteArray(), "Distance_" + racepoint.toString());
@@ -384,7 +385,9 @@ public final class ExtendedTest extends TestCase
         for (Race race: season.getRaces()) {
             RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.write(out);
+            reporter.forceOutputStream(out);
+            reporter.forceOutputStream(new ByteArrayOutputStream());
+            reporter.write();
             out.close();
 
             checkRegression(out.toByteArray(), "Race_" + race.getRacepoint());
@@ -394,9 +397,11 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            CompetitionReporter reporter = new CompetitionReporter(season.getOrganization(), race, true, configuration.getCompetitions());
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.write(out);
+            reporter.forceOutputStream(new ByteArrayOutputStream());
+            reporter.forceOutputStream(out);
+            reporter.write();
             out.close();
 
             checkRegression(out.toByteArray(), "Pools_" + race.getRacepoint());
@@ -411,7 +416,8 @@ public final class ExtendedTest extends TestCase
             configuration.getMode()
         );
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        reporter.write(out);
+        reporter.forceOutputStream(out);
+        reporter.write();
         out.close();
 
         checkRegression(out.toByteArray(), "Members");

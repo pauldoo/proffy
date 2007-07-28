@@ -20,46 +20,29 @@ package pigeon.view;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pigeon.About;
-import pigeon.competitions.Competition;
 import pigeon.model.Member;
-import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
-import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -616,7 +599,7 @@ final class MainWindow extends javax.swing.JFrame {
             configuration.getMode()
         );
 
-        writeReport("Members", reporter);
+        writeReport(reporter);
     }//GEN-LAST:event_viewMembersItemActionPerformed
 
     private void racepointsListValueChanged(javax.swing.event.ListSelectionEvent evt)//GEN-FIRST:event_racepointsListValueChanged
@@ -629,25 +612,20 @@ final class MainWindow extends javax.swing.JFrame {
         refreshButtons();
     }//GEN-LAST:event_membersListValueChanged
 
-    private void writeReport(String type, Reporter reporter)
+    private void writeReport(Reporter reporter)
     {
         try {
-            File outputFile = File.createTempFile(type, ".html");
-            FileOutputStream fileOut = null;
             try {
-                fileOut = new FileOutputStream(outputFile);
-                OutputStream stream = new BufferedOutputStream(fileOut);
-                reporter.write(stream);
-                stream.close();
+                reporter.write();
             } finally {
-                if (fileOut != null) {
-                    fileOut.close();
-                }
+                reporter.closeAllStreams();
             }
-            if (Utilities.isMacOsX()) {
-                com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
-            } else {
-                com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.getAbsolutePath());
+            for (File outputFile: reporter.getFiles()) {
+                if (Utilities.isMacOsX()) {
+                    com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
+                } else {
+                    com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.getAbsolutePath());
+                }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(getContentPane(), e.toString());
@@ -671,7 +649,7 @@ final class MainWindow extends javax.swing.JFrame {
                 season.getOrganization().getDistancesForRacepoint(racepoint)
             );
 
-            writeReport("RacepointDistances", reporter);
+            writeReport(reporter);
         }
     }//GEN-LAST:event_viewRacepointDistancesItemActionPerformed
 
@@ -692,7 +670,7 @@ final class MainWindow extends javax.swing.JFrame {
                 season.getOrganization().getDistancesForMember(member)
             );
 
-            writeReport("MemberDistances", reporter);
+            writeReport(reporter);
         }
     }//GEN-LAST:event_viewMemberDistancesItemActionPerformed
 
@@ -711,28 +689,7 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
-
-        JCheckBox raceReport = new JCheckBox("Race results", true);
-        JCheckBox poolsReport = new JCheckBox("Pool results", true);
-        JPanel options = new JPanel();
-        options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
-        options.add(raceReport);
-        options.add(poolsReport);
-
-        int result = JOptionPane.showConfirmDialog(
-            this,
-            options,
-            "Results",
-            JOptionPane.OK_CANCEL_OPTION);
-
-        if (result == JOptionPane.OK_OPTION) {
-            if (raceReport.isSelected()) {
-                writeReport("RaceResults", new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
-            }
-            if (poolsReport.isSelected()) {
-                writeReport("PoolResults", new CompetitionReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
-            }
-        }
+        writeReport(new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
