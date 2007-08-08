@@ -1,16 +1,23 @@
-all: Minimum.class Minimum Minimum.s
+all: Minimum.class Minimum Minimum.s Convolve
 
 clean:
-	rm -f *.class *.s Minimum
+	rm -f *.class *.s *.o Minimum Convolve
+
+%.o: %.cxx
+	g++ -Wall -g -O3 -c -o $@ $^
 
 Minimum.class: Minimum.java
-	javac -Xlint:all -g Minimum.java
-	java -server -Xmx512m Minimum
+	javac -Xlint:all -g $^
+	#java -server -Xmx512m Minimum
 
 Minimum.s: Minimum.cxx
-	g++ -Wall -g -O3 -c -S -o Minimum.s Minimum.cxx
+	g++ -Wall -g -O3 -c -S -o $@ $^
 
 Minimum: Minimum.cxx
-	g++ -Wall -g -O3 -o Minimum Minimum.cxx
-	./Minimum
+	g++ -Wall -g -O3 -o $@ $^
+	#./Minimum
+
+Convolve: Convolve.o Convolve_Intrinsics.o Convolve_Vanilla.o
+	g++ -Wall -g -O3 -o $@ $^
+	./Convolve && ./Convolve && ./Convolve
 
