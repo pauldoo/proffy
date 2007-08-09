@@ -1,12 +1,12 @@
 Linux arthur 2.6.20-16-generic #2 SMP Thu Jun 7 19:00:28 UTC 2007 x86_64 GNU/Linux
 Float:
-  Vanilla: 14.11s
-  Intrinsics: 5.13s
-  2.75049x faster
+  Vanilla: 14.37s
+  Intrinsics: 3.54s
+  4.05932x faster
 Double:
-  Vanilla: 13.13s
-  Intrinsics: 8.36s
-  1.57057x faster
+  Vanilla: 13.71s
+  Intrinsics: 6.96s
+  1.96983x faster
 Darwin shiney.home 8.10.1 Darwin Kernel Version 8.10.1: Wed May 23 16:33:00 PDT 2007; root:xnu-792.22.5~1/RELEASE_I386 i386 i386
 Float:
   Vanilla: 24.86s
