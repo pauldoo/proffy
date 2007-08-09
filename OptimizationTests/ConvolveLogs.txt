@@ -7,3 +7,12 @@ Double:
   Vanilla: 13.13s
   Intrinsics: 8.36s
   1.57057x faster
+Darwin shiney.home 8.10.1 Darwin Kernel Version 8.10.1: Wed May 23 16:33:00 PDT 2007; root:xnu-792.22.5~1/RELEASE_I386 i386 i386
+Float:
+  Vanilla: 24.86s
+  Intrinsics: 4.3s
+  5.7814x faster
+Double:
+  Vanilla: 23.72s
+  Intrinsics: 8.31s
+  2.85439x faster
