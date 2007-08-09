@@ -4,6 +4,7 @@ clean:
 	rm -f *.class *.s *.o Minimum Convolve
 
 %.o: %.cxx
+	g++ -Wall -g -O3 -c -S -o $@.s $^
 	g++ -Wall -g -O3 -c -o $@ $^
 
 Minimum.class: Minimum.java
@@ -19,5 +20,5 @@ Minimum: Minimum.cxx
 
 Convolve: Convolve.o Convolve_Intrinsics.o Convolve_Vanilla.o
 	g++ -Wall -g -O3 -o $@ $^
-	./Convolve && ./Convolve && ./Convolve
+	./Convolve
 
