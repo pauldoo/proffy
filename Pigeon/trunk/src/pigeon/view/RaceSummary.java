@@ -350,7 +350,7 @@ final class RaceSummary extends javax.swing.JPanel {
         try {
             race.setLiberationDate(liberationDate.getDate());
         } catch (ParseException e) {
-            throw new ValidationException("Liberation date is invalid", e);
+            throw new ValidationException("Liberation date is invalid, " + liberationDate.getFormatPattern(), e);
         }
         race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
         race.setWindDirection(windDirectionText.getText());
@@ -361,12 +361,12 @@ final class RaceSummary extends javax.swing.JPanel {
             try {
                 darknessBegins = this.darknessBegins.getDate().getTime();
             } catch (ParseException e) {
-                throw new ValidationException("Darkness begin time is invalid", e);
+                throw new ValidationException("Darkness begin time is invalid, " + this.darknessBegins.getFormatPattern(), e);
             }
             try {
                 darknessEnds = this.darknessEnds.getDate().getTime();
             } catch (ParseException e) {
-                throw new ValidationException("Darkness end time is invalid", e);
+                throw new ValidationException("Darkness end time is invalid, " + this.darknessEnds.getFormatPattern(), e);
             }
             race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }

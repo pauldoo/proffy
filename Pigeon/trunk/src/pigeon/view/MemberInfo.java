@@ -264,7 +264,7 @@ final class MemberInfo extends javax.swing.JPanel {
                     panel.updateMemberObject();
                     break;
                 } catch (ValidationException e) {
-                    e.displayErrorDialog(parent);
+                    e.displayErrorDialog(panel);
                 }
             } else {
                 result = JOptionPane.showConfirmDialog(parent, "Return to main window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);

@@ -48,7 +48,7 @@ public final class RaceTest extends TestCase {
     }
 
     public void testClockOpenOffset() throws ValidationException {
-        final long today = Utilities.beginningOfDay(new Date()).getTime();
+        final long today = pigeon.model.Utilities.beginningOfCalendarDay(new Date()).getTime();
 
         Race race = new Race();
         race.setLiberationDate(new Date(today + 1000000));

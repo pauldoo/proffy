@@ -189,7 +189,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Date liberationDayOffset()
     {
-        return Utilities.beginningOfDay(liberationDate);
+        return Utilities.beginningOfCalendarDay(liberationDate);
     }
 
     public long getLengthOfDarknessEachNight()

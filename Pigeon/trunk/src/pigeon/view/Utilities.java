@@ -100,17 +100,7 @@ public final class Utilities {
         The local time zone is taken into account.
     */
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-
-    /**
-        Given a long value representing a time, returns the beginning of that day.
-
-        Does not take into account timezones or locale information, so should only
-        be used for times that are relative and span only a few days.
-    */
-    public static long startOfDay(long time) {
-        return (time / Constants.MILLISECONDS_PER_DAY) * Constants.MILLISECONDS_PER_DAY;
-    }
-
+    
     /**
         Given an Organization, return a list of all the club names mentioned in member profiles.
     */

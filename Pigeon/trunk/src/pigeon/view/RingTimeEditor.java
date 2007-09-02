@@ -376,7 +376,7 @@ final class RingTimeEditor extends javax.swing.JPanel
                 }
                 catch (ValidationException e)
                 {
-                    e.displayErrorDialog(parent);
+                    e.displayErrorDialog(panel);
                 }
             }
             else

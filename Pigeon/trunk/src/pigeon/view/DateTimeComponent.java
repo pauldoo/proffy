@@ -60,6 +60,14 @@ public class DateTimeComponent extends javax.swing.JPanel
     {
         return mode;
     }
+    
+    /**
+        Returns 'getMode().getFormat().toPattern()'.
+    */
+    public String getFormatPattern()
+    {
+        return getMode().getFormat().toPattern();
+    }
 
     public void setMode(DateTimeDisplayMode mode)
     {
