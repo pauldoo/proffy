@@ -26,17 +26,24 @@ public final class ValidationException extends Exception {
 
     private static final long serialVersionUID = 1525226081739583319L;
 
-    private final String cause;
+    private final String message;
+    private final Throwable cause;
 
-    public ValidationException(String cause) {
+    public ValidationException(String message) {
+        this.message = message;
+        this.cause = null;
+    }
+
+    public ValidationException(String message, Throwable cause) {
+        this.message = message;
         this.cause = cause;
     }
 
     public String toString() {
-        return cause;
+        return message;
     }
 
     public void displayErrorDialog(Component parent) {
-        JOptionPane.showMessageDialog(parent, cause, "Invalid information", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(parent, message, "Invalid information", JOptionPane.WARNING_MESSAGE);
     }
 }

@@ -23,6 +23,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -39,7 +40,6 @@ import javax.swing.JTextField;
 import javax.swing.SortingFocusTraversalPolicy;
 import pigeon.competitions.Competition;
 import pigeon.model.Organization;
-import pigeon.model.Constants;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.ValidationException;
@@ -103,19 +103,15 @@ final class RaceSummary extends javax.swing.JPanel {
         }
 
         Calendar calendar = new GregorianCalendar();
-        calendar.setTime(race.getLiberationDate());
-        dayCombo.setSelectedIndex(calendar.get(Calendar.DAY_OF_MONTH) - 1);
-        monthCombo.setSelectedIndex(calendar.get(Calendar.MONTH));
-        yearCombo.setSelectedIndex(calendar.get(Calendar.YEAR) - Utilities.YEAR_DISPLAY_START);
-        hourCombo.setSelectedIndex(calendar.get(Calendar.HOUR_OF_DAY));
-        minuteCombo.setSelectedIndex(calendar.get(Calendar.MINUTE));
+        
+        liberationDate.setDate(race.getLiberationDate());
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
         windDirectionText.setText(race.getWindDirection());
         if (race.hasHoursOfDarkness()) {
-            darknessBeginsHour.setSelectedIndex((int)((race.getDarknessBegins() / Constants.MILLISECONDS_PER_HOUR) - 12));
-            darknessBeginsMinute.setSelectedIndex((int)((race.getDarknessBegins() / Constants.MILLISECONDS_PER_MINUTE) % 60));
-            darknessEndsHour.setSelectedIndex((int)(race.getDarknessEnds() / Constants.MILLISECONDS_PER_HOUR));
-            darknessEndsMinute.setSelectedIndex((int)((race.getDarknessEnds() / Constants.MILLISECONDS_PER_MINUTE) % 60));
+            darknessBegins.setMode(DateTimeDisplayMode.HOURS_MINUTES);
+            darknessBegins.setDate(new Date(race.getDarknessBegins()));
+            darknessEnds.setMode(DateTimeDisplayMode.HOURS_MINUTES);
+            darknessEnds.setDate(new Date(race.getDarknessEnds()));
         }
         {
             Map<String, Integer> membersEntered = race.getMembersEntered();
@@ -172,53 +168,10 @@ final class RaceSummary extends javax.swing.JPanel {
             racepointCombo.addItem( r );
         }
 
-        for (int day = 1; day <= 31; day++) {
-            String str = new Integer(day).toString();
-            if (day < 10) {
-                str = "0" + str;
-            }
-            dayCombo.addItem(str);
-        }
-
-        for (int month = 1; month <= 12; month++) {
-            String str = new Integer(month).toString();
-            if (month < 10) {
-                str = "0" + str;
-            }
-            monthCombo.addItem(str);
-        }
-
-        for (int year = Utilities.YEAR_DISPLAY_START; year <= Utilities.YEAR_DISPLAY_END; year++) {
-            yearCombo.addItem(year);
-        }
-
         for (int day = 1; day <= 3; day++) {
             daysCoveredCombo.addItem(day);
         }
 
-        for (int hour = 0; hour <= 23; hour++) {
-            String str = new Integer(hour).toString();
-            if (hour < 10) {
-                str = "0" + str;
-            }
-            hourCombo.addItem(str);
-            if (hour >= 12) {
-                darknessBeginsHour.addItem(str);
-            } else {
-                darknessEndsHour.addItem(str);
-            }
-        }
-
-        for (int minute = 0; minute <= 59; minute++) {
-            String str = new Integer(minute).toString();
-            if (minute < 10) {
-                str = "0" + str;
-            }
-            minuteCombo.addItem(str);
-            darknessBeginsMinute.addItem(str);
-            darknessEndsMinute.addItem(str);
-        }
-        
         populateRaceEntrantsCountPanel(raceEntrantsCountPanel, raceEntrantsCountFields, club);
         populatePoolEntrantsCountPanel(poolEntrantsCountPanel, poolEntrantsCountFields, club, configuration);
         populatePrizesPanel(prizesPanel, prizeFields, club);
@@ -234,13 +187,9 @@ final class RaceSummary extends javax.swing.JPanel {
     {
         boolean enable = hoursOfDarknessEnabled();
         darknessBeginsText.setEnabled(enable);
-        darknessBeginsHour.setEnabled(enable);
-        darknessBeginsSeperator.setEnabled(enable);
-        darknessBeginsMinute.setEnabled(enable);
+        darknessBegins.setEnabled(enable);
         darknessEndsText.setEnabled(enable);
-        darknessEndsHour.setEnabled(enable);
-        darknessEndsSeperator.setEnabled(enable);
-        darknessEndsMinute.setEnabled(enable);
+        darknessEnds.setEnabled(enable);
     }
 
     /** This method is called from within the constructor to
@@ -258,27 +207,15 @@ final class RaceSummary extends javax.swing.JPanel {
         racepointLabel = new javax.swing.JLabel();
         racepointCombo = new javax.swing.JComboBox();
         liberationDateLabel = new javax.swing.JLabel();
-        dayCombo = new javax.swing.JComboBox();
-        hourCombo = new javax.swing.JComboBox();
-        minuteCombo = new javax.swing.JComboBox();
-        yearCombo = new javax.swing.JComboBox();
-        monthCombo = new javax.swing.JComboBox();
-        monthYearSeperator = new javax.swing.JLabel();
-        hourMinuteSeperator = new javax.swing.JLabel();
-        dayMonthSeperator = new javax.swing.JLabel();
-        liberationTimeLabel = new javax.swing.JLabel();
         windDirectionLabel = new javax.swing.JLabel();
         windDirectionText = new javax.swing.JTextField();
         daysCoveredLabel = new javax.swing.JLabel();
         daysCoveredCombo = new javax.swing.JComboBox();
         darknessBeginsText = new javax.swing.JLabel();
-        darknessBeginsHour = new javax.swing.JComboBox();
-        darknessEndsHour = new javax.swing.JComboBox();
         darknessEndsText = new javax.swing.JLabel();
-        darknessEndsMinute = new javax.swing.JComboBox();
-        darknessBeginsMinute = new javax.swing.JComboBox();
-        darknessEndsSeperator = new javax.swing.JLabel();
-        darknessBeginsSeperator = new javax.swing.JLabel();
+        liberationDate = new pigeon.view.DateTimeComponent();
+        darknessBegins = new pigeon.view.DateTimeComponent();
+        darknessEnds = new pigeon.view.DateTimeComponent();
         raceEntrantsCountPanel = new javax.swing.JPanel();
         poolEntrantsCountPanel = new javax.swing.JPanel();
         prizesPanel = new javax.swing.JPanel();
@@ -294,12 +231,11 @@ final class RaceSummary extends javax.swing.JPanel {
         summaryPanel.add(racepointLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(racepointCombo, gridBagConstraints);
 
-        liberationDateLabel.setText("Liberation Date");
+        liberationDateLabel.setText("Liberation");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -307,82 +243,10 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(liberationDateLabel, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(dayCombo, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(hourCombo, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(minuteCombo, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(yearCombo, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(monthCombo, gridBagConstraints);
-
-        monthYearSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        monthYearSeperator.setText("/");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        summaryPanel.add(monthYearSeperator, gridBagConstraints);
-
-        hourMinuteSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hourMinuteSeperator.setText(":");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        summaryPanel.add(hourMinuteSeperator, gridBagConstraints);
-
-        dayMonthSeperator.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        dayMonthSeperator.setText("/");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        summaryPanel.add(dayMonthSeperator, gridBagConstraints);
-
-        liberationTimeLabel.setText("Liberation Time");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(liberationTimeLabel, gridBagConstraints);
-
         windDirectionLabel.setText("Wind Direction");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(windDirectionLabel, gridBagConstraints);
@@ -390,8 +254,7 @@ final class RaceSummary extends javax.swing.JPanel {
         windDirectionText.setColumns(20);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(windDirectionText, gridBagConstraints);
@@ -399,14 +262,14 @@ final class RaceSummary extends javax.swing.JPanel {
         daysCoveredLabel.setText("No. of days covered");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(daysCoveredLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -415,64 +278,39 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBeginsText.setText("Darkness Begins");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(darknessBeginsText, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(darknessBeginsHour, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(darknessEndsHour, gridBagConstraints);
-
         darknessEndsText.setText("Darkness Ends");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(darknessEndsText, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(darknessEndsMinute, gridBagConstraints);
+        summaryPanel.add(liberationDate, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        summaryPanel.add(darknessBegins, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        summaryPanel.add(darknessBeginsMinute, gridBagConstraints);
-
-        darknessEndsSeperator.setText(":");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        summaryPanel.add(darknessEndsSeperator, gridBagConstraints);
-
-        darknessBeginsSeperator.setText(":");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.insets = new java.awt.Insets(10, 2, 10, 2);
-        summaryPanel.add(darknessBeginsSeperator, gridBagConstraints);
+        summaryPanel.add(darknessEnds, gridBagConstraints);
 
         jTabbedPane1.addTab("Summary", summaryPanel);
 
@@ -488,26 +326,15 @@ final class RaceSummary extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox darknessBeginsHour;
-    private javax.swing.JComboBox darknessBeginsMinute;
-    private javax.swing.JLabel darknessBeginsSeperator;
+    private pigeon.view.DateTimeComponent darknessBegins;
     private javax.swing.JLabel darknessBeginsText;
-    private javax.swing.JComboBox darknessEndsHour;
-    private javax.swing.JComboBox darknessEndsMinute;
-    private javax.swing.JLabel darknessEndsSeperator;
+    private pigeon.view.DateTimeComponent darknessEnds;
     private javax.swing.JLabel darknessEndsText;
-    private javax.swing.JComboBox dayCombo;
-    private javax.swing.JLabel dayMonthSeperator;
     private javax.swing.JComboBox daysCoveredCombo;
     private javax.swing.JLabel daysCoveredLabel;
-    private javax.swing.JComboBox hourCombo;
-    private javax.swing.JLabel hourMinuteSeperator;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private pigeon.view.DateTimeComponent liberationDate;
     private javax.swing.JLabel liberationDateLabel;
-    private javax.swing.JLabel liberationTimeLabel;
-    private javax.swing.JComboBox minuteCombo;
-    private javax.swing.JComboBox monthCombo;
-    private javax.swing.JLabel monthYearSeperator;
     private javax.swing.JPanel poolEntrantsCountPanel;
     private javax.swing.JPanel prizesPanel;
     private javax.swing.JPanel raceEntrantsCountPanel;
@@ -516,28 +343,31 @@ final class RaceSummary extends javax.swing.JPanel {
     private javax.swing.JPanel summaryPanel;
     private javax.swing.JLabel windDirectionLabel;
     private javax.swing.JTextField windDirectionText;
-    private javax.swing.JComboBox yearCombo;
     // End of variables declaration//GEN-END:variables
 
     private void updateRaceObject() throws ValidationException {
         race.setRacepoint((Racepoint)racepointCombo.getSelectedItem());
-        Date liberationDate = new GregorianCalendar(
-                new Integer(yearCombo.getSelectedItem().toString()),
-                new Integer(monthCombo.getSelectedItem().toString()) - 1,
-                new Integer(dayCombo.getSelectedItem().toString()),
-                new Integer(hourCombo.getSelectedItem().toString()),
-                new Integer(minuteCombo.getSelectedItem().toString())).getTime();
-        race.setLiberationDate(liberationDate);
+        try {
+            race.setLiberationDate(liberationDate.getDate());
+        } catch (ParseException e) {
+            throw new ValidationException("Liberation date is invalid", e);
+        }
         race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
         race.setWindDirection(windDirectionText.getText());
 
         if (hoursOfDarknessEnabled()) {
-            long darknessBegins =
-                    (new Integer(darknessBeginsHour.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_HOUR +
-                    (new Integer(darknessBeginsMinute.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_MINUTE;
-            long darknessEnds =
-                    (new Integer(darknessEndsHour.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_HOUR +
-                    (new Integer(darknessEndsMinute.getSelectedItem().toString())) * Constants.MILLISECONDS_PER_MINUTE;
+            long darknessBegins;
+            long darknessEnds;
+            try {
+                darknessBegins = this.darknessBegins.getDate().getTime();
+            } catch (ParseException e) {
+                throw new ValidationException("Darkness begin time is invalid", e);
+            }
+            try {
+                darknessEnds = this.darknessEnds.getDate().getTime();
+            } catch (ParseException e) {
+                throw new ValidationException("Darkness end time is invalid", e);
+            }
             race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }
         
@@ -586,7 +416,7 @@ final class RaceSummary extends javax.swing.JPanel {
                     panel.updateRaceObject();
                     break;
                 } catch (ValidationException e) {
-                    e.displayErrorDialog(parent);
+                    e.displayErrorDialog(panel);
                 }
             } else {
                 result = JOptionPane.showConfirmDialog(parent, "Return to Races window and discard these changes?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);

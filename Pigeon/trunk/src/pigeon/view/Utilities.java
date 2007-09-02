@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -84,11 +83,7 @@ public final class Utilities {
         Their 'long' representation spans only from 0 to 24 * 60 * 60 * 1000.
         The resulting string will be in 24hr time (hopefully).
     */
-    public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE;
-    static {
-        TIME_FORMAT_WITHOUT_LOCALE = new SimpleDateFormat("HH:mm:ss");
-        TIME_FORMAT_WITHOUT_LOCALE.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
+    public static final DateFormat TIME_FORMAT_WITHOUT_LOCALE = DateTimeDisplayMode.HOURS_MINUTES_SECONDS.getFormat();
 
     /**
         DateFormat for formatting times that occur on a real calendar.
@@ -96,10 +91,7 @@ public final class Utilities {
         Their 'long' representation is not confined to spanning just a single day.
         The local time zone is taken into account.
     */
-    public static final DateFormat TIME_FORMAT_WITH_LOCALE;
-    static {
-        TIME_FORMAT_WITH_LOCALE = new SimpleDateFormat("HH:mm:ss");
-    }
+    public static final DateFormat TIME_FORMAT_WITH_LOCALE = new SimpleDateFormat("HH:mm:ss");
 
     /**
         DateFormat for formatting dates that occur on a real calendar.
@@ -107,10 +99,7 @@ public final class Utilities {
         Their 'long' representation is not confined to spanning just a single day.
         The local time zone is taken into account.
     */
-    public static final DateFormat DATE_FORMAT;
-    static {
-        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-    }
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
 
     /**
         Given a long value representing a time, returns the beginning of that day.
