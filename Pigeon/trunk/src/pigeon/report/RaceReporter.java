@@ -96,7 +96,7 @@ public final class RaceReporter extends Reporter {
                     for (Time time: clock.getTimes()) {
                         BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
 
-                        row.html.append("<td>" + clock.getMember().toString() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getName() + "</td>");
                         if (listClubNames) {
                             row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                         }
@@ -249,7 +249,7 @@ public final class RaceReporter extends Reporter {
                         birdCount ++;
                         BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
 
-                        row.html.append("<td>" + clock.getMember().toString() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getName() + "</td>");
                         if (listClubNames) {
                             row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                         }

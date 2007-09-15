@@ -358,7 +358,7 @@ public final class ExtendedTest extends TestCase
             reporter.write();
             out.close();
 
-            checkRegression(out.toByteArray(), "Distance_" + member.toString());
+            checkRegression(out.toByteArray(), "Distance_" + member.getName());
         }
     }
 
@@ -376,7 +376,7 @@ public final class ExtendedTest extends TestCase
             reporter.write();
             out.close();
 
-            checkRegression(out.toByteArray(), "Distance_" + racepoint.toString());
+            checkRegression(out.toByteArray(), "Distance_" + racepoint.getName());
         }
     }
 

@@ -52,9 +52,20 @@ public final class Member implements Serializable, Comparable<Member> {
         }
         this.name = name;
     }
+    
+    private String getNameAndClubAndSection() {
+        StringBuffer result = new StringBuffer(this.getName());
+        if (this.getClub() != null) {
+            result.append(", " + this.getClub());
+        }
+        if (this.getSection() != null) {
+            result.append(", " + this.getSection());
+        }
+        return result.toString();
+    }
 
     public String toString() {
-        return getName();
+        return getNameAndClubAndSection();
     }
 
     public int hashCode() {

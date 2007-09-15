@@ -78,20 +78,7 @@ final class DistancesTableModel<Target> extends AbstractTableModel {
 
         switch (column) {
             case 0:
-                Target t = entry.getKey();
-                if (t instanceof Member) {
-                    Member m = (Member)t;
-                    StringBuffer result = new StringBuffer(m.getName());
-                    if (m.getClub() != null) {
-                        result.append(", " + m.getClub());
-                    }
-                    if (m.getSection() != null) {
-                        result.append(", " + m.getSection());
-                    }
-                    return result.toString();
-                } else {
-                    return entry.getKey();
-                }
+                return entry.getKey();
             case 1:
                 return entry.getValue().getMiles();
             case 2:
