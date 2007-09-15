@@ -235,14 +235,10 @@ public final class Utilities {
     {
         JFileChooser chooser = new JFileChooser();
         FileFilter filter = SimpleFileFilter.createSeasonFileFilter();
-        chooser.addChoosableFileFilter(filter);
-        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(filter);
         File mostRecentFile = getMostRecentFile();
         if (mostRecentFile != null) {
-            File defaultDirectory = mostRecentFile.getParentFile();
-            if (defaultDirectory != null && defaultDirectory.isDirectory()) {
-                chooser.setCurrentDirectory(defaultDirectory);
-            }
+            chooser.setSelectedFile(mostRecentFile);
         }
         return chooser;
     }
