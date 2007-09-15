@@ -29,7 +29,7 @@ import java.io.StringWriter;
 */
 public final class About
 {
-    public static final String VERSION = "0.5" + " (build " + getBuildId() + ")";
+    public static final String VERSION = "0.6" + " (build " + getBuildId() + ")";
     public static final String TITLE = "RacePoint v" + VERSION;
     public static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
     
