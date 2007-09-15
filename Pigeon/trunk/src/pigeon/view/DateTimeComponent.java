@@ -28,23 +28,13 @@ import javax.swing.text.DefaultFormatterFactory;
 import pigeon.model.Constants;
 
 /**
- *
- * @author  Paul
- */
-public class DateTimeComponent extends javax.swing.JPanel
+    This is a Swing GUI component which is for entering dates and times.
+ 
+    It wraps up the DateFormatter stuff.
+*/
+public final class DateTimeComponent extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 5961795005357652678L;
-    
-    private static class LocalFocusListener extends FocusAdapter
-    {
-        public void focusLost(FocusEvent e)
-        {
-            JFormattedTextField source = (JFormattedTextField)e.getSource();
-            if (!source.isEditValid()) {
-                Toolkit.getDefaultToolkit().beep();
-            }
-        }
-    }
     
     private DateTimeDisplayMode mode;
     
@@ -52,7 +42,7 @@ public class DateTimeComponent extends javax.swing.JPanel
     public DateTimeComponent()
     {
         initComponents();
-        textField.addFocusListener(new LocalFocusListener());
+        textField.addFocusListener(new BeepingFocusListener());
         setMode(DateTimeDisplayMode.DATE_HOURS_MINUTES_SECONDS);
     }
 
@@ -63,6 +53,9 @@ public class DateTimeComponent extends javax.swing.JPanel
     
     /**
         Returns 'getMode().getFormat().toPattern()'.
+        
+        This allows the GUI to display error messages to the user which
+        show the expected input format.
     */
     public String getFormatPattern()
     {
