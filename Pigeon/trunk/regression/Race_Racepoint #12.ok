@@ -15,7 +15,7 @@
     h2, h3 { margin-top:0; margin-bottom:5px; }
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
-    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }
+    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
   </style>
   <style type="text/css" media="print">
     body { font-family: Verdana, sans-serif; white-space: nowrap; }
