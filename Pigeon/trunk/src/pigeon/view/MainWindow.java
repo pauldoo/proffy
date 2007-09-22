@@ -689,7 +689,7 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
-        writeReport(new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions()));
+        writeReport(new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions(), configuration.getResultsFooter()));
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost

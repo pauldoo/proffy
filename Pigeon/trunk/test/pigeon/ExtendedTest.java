@@ -383,7 +383,7 @@ public final class ExtendedTest extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions());
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             reporter.forceOutputStream(out);
             reporter.forceOutputStream(new ByteArrayOutputStream());
@@ -397,7 +397,7 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions());
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             reporter.forceOutputStream(new ByteArrayOutputStream());
             reporter.forceOutputStream(out);

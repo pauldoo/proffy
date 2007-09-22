@@ -35,6 +35,7 @@ import pigeon.competitions.Pool;
 public final class Configuration
 {
     private final Mode mode;
+    private final String resultsFooter;
     private final List<Competition> competitions;
 
     public static enum Mode {
@@ -48,12 +49,18 @@ public final class Configuration
         properties.loadFromXML(input);
 
         this.mode = loadMode(properties);
+        this.resultsFooter = loadResultsFooter(properties);
         this.competitions = loadCompetitions(properties);
     }
 
     private static Mode loadMode(Properties properties)
     {
         return Mode.valueOf(properties.getProperty("Mode"));
+    }
+    
+    private static String loadResultsFooter(Properties properties)
+    {
+        return properties.getProperty("ResultsFooter");
     }
 
     private static List<Competition> loadCompetitions(Properties properties) throws IOException
@@ -101,5 +108,10 @@ public final class Configuration
     public List<Competition> getCompetitions()
     {
         return this.competitions;
+    }
+
+    public String getResultsFooter()
+    {
+        return resultsFooter;
     }
 }

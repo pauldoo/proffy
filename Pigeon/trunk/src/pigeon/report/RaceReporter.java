@@ -45,19 +45,22 @@ public final class RaceReporter extends Reporter {
     private final boolean listClubNames;
     private final List<Competition> competitions;
     private final Map<String, Map<String, Integer>> entrantsCount;
-
+    private final String resultsFooter;
+    
     /** Creates a new instance of RaceReporter */
     public RaceReporter(
         Organization club,
         Race race,
         boolean listClubNames,
-        List<Competition> competitions
+        List<Competition> competitions,
+        String resultsFooter
     ) {
         this.club = club;
         this.race = race;
         this.listClubNames = listClubNames;
         this.competitions = competitions;
         this.entrantsCount = race.getBirdsEnteredInPools();
+        this.resultsFooter = resultsFooter;
     }
 
     public void write() throws IOException
@@ -207,7 +210,9 @@ public final class RaceReporter extends Reporter {
                 out.print("</table>\n");
                 out.print("</div>\n");
             }
-
+            if (resultsFooter != null) {
+                out.print("<h4>" + resultsFooter + "</h4>\n");
+            }
             Utilities.writeHtmlFooter(out);
         }
         {
@@ -399,7 +404,9 @@ public final class RaceReporter extends Reporter {
                 out.print("</table>\n");
                 out.print("</div>\n");
             }
-
+            if (resultsFooter != null) {
+                out.print("<h4>" + resultsFooter + "</h4>\n");
+            }
             Utilities.writeHtmlFooter(out);
         }
     }
