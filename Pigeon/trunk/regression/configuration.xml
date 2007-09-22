@@ -11,6 +11,11 @@
     <entry key="Mode">FEDERATION</entry>
     
     <!--
+        ResultsFooter: Text to be displayed at the bottom of every race and pool results.
+    -->
+    <entry key="ResultsFooter">Any objections to be sent to the secretary in writing within 7 days of publication.</entry>
+    
+    <!--
         The number of configured competitions.
     -->
     <entry key="Competition.Count">8</entry>
