@@ -20,6 +20,7 @@ package pigeon.view;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pigeon.model.Clock;
@@ -79,19 +80,6 @@ final class ClockEditor extends javax.swing.JPanel
         clockTimesPanel.setLayout(new java.awt.BorderLayout());
 
         clockTimesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Clock Times For")));
-        timesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String []
-            {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         jScrollPane1.setViewportView(timesTable);
 
         clockTimesPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -189,11 +177,14 @@ final class ClockEditor extends javax.swing.JPanel
     private void reloadTimesTable()
     {
         timesTable.setModel(new TimesTableModel(clock, daysInRace, true));
+        timesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refreshButtons();
     }
 
     private void refreshButtons()
     {
-        removeButton.setEnabled( timesTable.getSelectedRow() != -1 );
+        final boolean isSomethingSelected = timesTable.getSelectedRow() != -1;
+        removeButton.setEnabled(isSomethingSelected);
+        editButton.setEnabled(isSomethingSelected);
     }
 }

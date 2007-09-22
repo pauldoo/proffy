@@ -20,6 +20,7 @@ package pigeon.view;
 import java.awt.Component;
 import java.util.Collection;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -83,19 +84,6 @@ final class RaceEditor extends javax.swing.JPanel {
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clocks"));
-        clocksTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String []
-            {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         jScrollPane1.setViewportView(clocksTable);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -209,6 +197,7 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private void reloadClocksTable() {
         clocksTable.setModel(new ClocksTableModel(race.getClocks()));
+        clocksTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refreshButtons();
     }
 

@@ -26,14 +26,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -373,19 +371,6 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultPanel.setLayout(new java.awt.BorderLayout());
 
         raceresultPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Races"));
-        raceresultsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String []
-            {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         raceresultListScrollPane.setViewportView(raceresultsTable);
 
         raceresultPanel.add(raceresultListScrollPane, java.awt.BorderLayout.CENTER);
@@ -984,6 +969,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void reloadRacesTable() {
         RacesTableModel model = new RacesTableModel(season.getRaces());
         raceresultsTable.setModel(model);
+        raceresultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     private void refreshButtons() {
