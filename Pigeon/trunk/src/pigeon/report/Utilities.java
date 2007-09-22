@@ -69,6 +69,7 @@ public final class Utilities
         out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }\n");
         out.print("    th { border-bottom:3px solid #000000; text-align: left; }\n");
         out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }\n");
+        out.print("    td.numeric { text-align: right; }\n");
         out.print("  </style>\n");
         out.print("  <style type=\"text/css\" media=\"print\">\n");
         out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; }\n");
@@ -80,7 +81,8 @@ public final class Utilities
         out.print("    h2, h3 { margin-top:0; margin-bottom:5px; }\n");
         out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }\n");
         out.print("    th { border-bottom:3px solid #000000; text-align: left; }\n");
-        out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; }\n");
+        out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }\n");
+        out.print("    td.numeric { text-align: right; }\n");
         out.print("  </style>\n");
         out.print("</head>\n");
         out.print("<body>\n");

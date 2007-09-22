@@ -189,20 +189,20 @@ public final class RaceReporter extends Reporter {
                         }
                     }
                     if (totalPrizeWonByThisBird > 0) {
-                        row.html.append("<td>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
+                        row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
                     } else {
                         row.html.append("<td/>");
                     }
 
                     if (section != null) {
                         if (prizes != null && pos <= prizes.size() && prizes.get(pos-1) > 0) {
-                            row.html.append("<td>" + Utilities.stringPrintf("%.2f", prizes.get(pos-1)) + "</td>");
+                            row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", prizes.get(pos-1)) + "</td>");
                         } else {
                             row.html.append("<td/>");
                         }
                     }
 
-                    row.html.append("<td>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
+                    row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
 
                     out.print(row.html.toString());
                     out.print("</tr>\n");
@@ -313,7 +313,7 @@ public final class RaceReporter extends Reporter {
                                 if (position <= numberOfWinners.get(c.getName())) {
                                     int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                                     double prize = c.prize(position, entrants);
-                                    row.html.append("<td>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
+                                    row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
                                     totalPrizeWonByThisBird += prize;
                                     competitionPositions.put(c.getName(), position);
                                     continue;
@@ -326,7 +326,7 @@ public final class RaceReporter extends Reporter {
                         // If this member has taken a place in any competition, print their line.
                         out.print("<tr>\n");
                         out.print(row.html.toString());
-                        out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
+                        out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
                         out.print("</tr>\n");
                     }
                 }
@@ -345,10 +345,10 @@ public final class RaceReporter extends Reporter {
                             }
                             totalForCompetition.put(c.getName(), totalPrizeGivenForThisCompetition);
                             totalPrizeGivenToEveryone += totalPrizeGivenForThisCompetition;
-                            out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
+                            out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
                         }
                     }
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
+                    out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
                     out.print("</tr>\n");
                 }
 
@@ -361,10 +361,10 @@ public final class RaceReporter extends Reporter {
                             int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                             double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
                             totalUnclaimed += unclaimed;
-                            out.print("<td>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
+                            out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
                         }
                     }
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
+                    out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
                     out.print("</tr>\n");
                 }
 
@@ -377,10 +377,10 @@ public final class RaceReporter extends Reporter {
                             int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                             double clubTake = c.totalClubTake(entrants);
                             totalClubTake += clubTake;
-                            out.print("<td>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
+                            out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
                         }
                     }
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
+                    out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
                     out.print("</tr>\n");
                 }
 
@@ -393,10 +393,10 @@ public final class RaceReporter extends Reporter {
                             int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                             double poolMoney = c.totalPoolMoney(entrants);
                             totalPoolMoney += poolMoney;
-                            out.print("<td>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
+                            out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
                         }
                     }
-                    out.print("<td>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
+                    out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
                     out.print("</tr>\n");
                 }
 
