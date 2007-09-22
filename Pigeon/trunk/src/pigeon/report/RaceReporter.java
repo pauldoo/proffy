@@ -365,7 +365,7 @@ public final class RaceReporter extends Reporter {
 
                 {
                     // Print club take row
-                    out.print("<tr><td/><td/><td>Club take</td>");
+                    out.print("<tr><td/><td/><td>" + clubTakeString(competitions) + "</td>");
                     double totalClubTake = 0.0;
                     for (Competition c: competitions) {
                         if (section != null || c.isAvailableInOpen()) {
@@ -402,5 +402,25 @@ public final class RaceReporter extends Reporter {
 
             Utilities.writeHtmlFooter(out);
         }
+    }
+    
+    /**
+        Returns the club take as a string, ie "5.0%".
+     
+        If the competitions have different settings for the club takes, then
+        the string "Club Take" is returned.
+    */
+    private static String clubTakeString(Collection<Competition> competitions)
+    {
+        if (competitions.isEmpty()) {
+            throw new IllegalArgumentException("No competitions");
+        }
+        final double clubTakeOfFirstCompetition = competitions.iterator().next().getClubTake();
+        for (Competition c: competitions) {
+            if (c.getClubTake() != clubTakeOfFirstCompetition) {
+                return "Club Take";
+            }
+        }
+        return Utilities.stringPrintf("%.1f%%", clubTakeOfFirstCompetition * 100.0);
     }
 }

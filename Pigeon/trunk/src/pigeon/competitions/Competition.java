@@ -34,7 +34,7 @@ public abstract class Competition
         The fraction of the total prize fund that is kept by the
         club before prizes are calculated.
     */
-    protected final double clubTake;
+    private final double clubTake;
     
     /**
         Is this competition ran in the Open?
@@ -84,11 +84,16 @@ public abstract class Competition
     
     public double totalClubTake(int entrants)
     {
-        return totalPoolMoney(entrants) * clubTake;
+        return totalPoolMoney(entrants) * getClubTake();
     }
 
     public boolean isAvailableInOpen()
     {
         return availableInOpen;
+    }
+
+    public double getClubTake()
+    {
+        return clubTake;
     }
 }

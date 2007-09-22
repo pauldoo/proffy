@@ -51,6 +51,6 @@ public final class Nomination extends Competition
     public double prize(int place, int entrants)
     {
         checkPlaceIsInRange(place, entrants);
-        return payouts[place - 1] * entrants * entryCost * (1.0 - clubTake);
+        return payouts[place - 1] * entrants * entryCost * (1.0 - getClubTake());
     }
 }

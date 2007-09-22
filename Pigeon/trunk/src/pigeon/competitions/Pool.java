@@ -29,14 +29,14 @@ public final class Pool extends Competition
     
     public int maximumNumberOfWinners(int entrants)
     {
-        double winners = ((1.0 - clubTake) * entrants)  / payoutPeriod;
+        double winners = ((1.0 - getClubTake()) * entrants)  / payoutPeriod;
         return (int)Math.ceil(winners);
     }
 
     public double prize(int place, int entrants)
     {
         checkPlaceIsInRange(place, entrants);
-        final double prize = Math.min(1.0, ((1.0 - clubTake) * entrants / payoutPeriod) - (place - 1)) * entryCost * payoutPeriod;
+        final double prize = Math.min(1.0, ((1.0 - getClubTake()) * entrants / payoutPeriod) - (place - 1)) * entryCost * payoutPeriod;
         return prize;
     }
 }
