@@ -49,7 +49,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import pigeon.competitions.Competition;
 import pigeon.model.Clock;
-import pigeon.model.Constants;
 import pigeon.model.Member;
 import pigeon.model.Organization;
 import pigeon.model.Race;
@@ -345,13 +344,6 @@ public final class Utilities {
                 fileOut.close();
             }
         }
-    }
-
-    public static boolean isMacOsX()
-    {
-        String lcOSName = System.getProperty("os.name").toLowerCase();
-        boolean MAC_OS_X = lcOSName.startsWith("mac os x");
-        return MAC_OS_X;
     }
     
     public static NumberFormat currencyFormat()

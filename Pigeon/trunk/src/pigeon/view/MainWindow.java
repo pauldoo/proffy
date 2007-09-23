@@ -606,11 +606,7 @@ final class MainWindow extends javax.swing.JFrame {
                 reporter.closeAllStreams();
             }
             for (File outputFile: reporter.getFiles()) {
-                if (Utilities.isMacOsX()) {
-                    com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.toURI().toURL().toString());
-                } else {
-                    com.centerkey.utils.BareBonesBrowserLaunch.openURL(outputFile.getAbsolutePath());
-                }
+                java.awt.Desktop.getDesktop().open(outputFile);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(getContentPane(), e.toString());
