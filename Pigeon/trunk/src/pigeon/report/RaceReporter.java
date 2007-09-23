@@ -113,11 +113,6 @@ public final class RaceReporter extends Reporter {
                         row.html.append("<td>" + time.getRingNumber() + "</td>");
                         row.html.append("<td>" + time.getColor() + "</td>");
                         row.html.append("<td>" + time.getSex().toString() + "</td>");
-                        row.html.append("<td>");
-                        for (String pool: (section == null) ? time.getOpenCompetitionsEntered() : time.getSectionCompetitionsEntered()) {
-                            row.html.append(pool);
-                        }
-                        row.html.append("</td>");
                         results.add(row);
                     }
                 }
@@ -176,6 +171,7 @@ public final class RaceReporter extends Reporter {
                         competitionsEnteredByThisBird = row.time.getSectionCompetitionsEntered();
                     }
 
+                    StringBuffer competitionsWonByThisBird = new StringBuffer();
                     // Check the competitions that this bird entered
                     for (Competition c: competitions) {
                         if (competitionsEnteredByThisBird.contains(c.getName())) {
@@ -185,12 +181,15 @@ public final class RaceReporter extends Reporter {
                                 double prize = c.prize(position, entrants);
                                 totalPrizeWonByThisBird += prize;
                                 competitionPositions.put(c.getName(), position);
+                                competitionsWonByThisBird.append(c.getName());
                             }
                         }
                     }
                     if (totalPrizeWonByThisBird > 0) {
+                        row.html.append("<td>" + competitionsWonByThisBird + "</td>");
                         row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
                     } else {
+                        row.html.append("<td/>");
                         row.html.append("<td/>");
                     }
 
