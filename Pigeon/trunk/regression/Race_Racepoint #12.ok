@@ -16,7 +16,7 @@
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
-    td.numeric { text-align: right; }
+    .numeric { text-align: right; }
   </style>
   <style type="text/css" media="print">
     body { font-family: Verdana, sans-serif; white-space: nowrap; }
@@ -29,7 +29,7 @@
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
-    td.numeric { text-align: right; }
+    .numeric { text-align: right; }
   </style>
 </head>
 <body>
@@ -39,7 +39,7 @@
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <h3>147 members sent in a total of 324 birds</h3>
 <table>
-<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th class='numeric'>Velocity</th></tr>
 <tr><td>1</td><td>Member #10</td><td>Club #9</td><td>1</td><td>09:00:42</td><td>736</td><td>445</td><td>M2B6</td><td>Pink</td><td>Cock</td><td>BDFG</td><td class='numeric'>21.80</td><td class='numeric'>94500.842</td></tr>
 <tr><td>2</td><td>Member #21</td><td>Club #1</td><td>1</td><td>09:00:33</td><td>699</td><td>600</td><td>M14B2</td><td>Pink</td><td>Hen</td><td>ACDF</td><td class='numeric'>21.00</td><td class='numeric'>90738.907</td></tr>
 <tr><td>3</td><td>Member #0</td><td>Club #6</td><td>1</td><td>09:01:32</td><td>712</td><td>302</td><td>M0B18</td><td>Pink</td><td>Hen</td><td>ABD</td><td class='numeric'>9.00</td><td class='numeric'>86160.350</td></tr>
@@ -486,7 +486,7 @@
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <h3>92 members sent in a total of 173 birds</h3>
 <table>
-<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th class='numeric'>Prize</th><th class='numeric'>Velocity</th></tr>
 <tr><td>1</td><td>Member #10</td><td>Club #9</td><td>1</td><td>09:00:42</td><td>736</td><td>445</td><td>M2B6</td><td>Pink</td><td>Cock</td><td>ABEN</td><td class='numeric'>19.27</td><td class='numeric'>20.00</td><td class='numeric'>94500.842</td></tr>
 <tr><td>2</td><td>Member #21</td><td>Club #1</td><td>1</td><td>09:00:33</td><td>699</td><td>600</td><td>M14B2</td><td>Pink</td><td>Hen</td><td>AF</td><td class='numeric'>11.00</td><td class='numeric'>19.00</td><td class='numeric'>90738.907</td></tr>
 <tr><td>3</td><td>Member #0</td><td>Club #6</td><td>1</td><td>09:01:32</td><td>712</td><td>302</td><td>M0B18</td><td>Pink</td><td>Hen</td><td>ACG</td><td class='numeric'>25.00</td><td class='numeric'>18.00</td><td class='numeric'>86160.350</td></tr>
@@ -819,7 +819,7 @@
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <h3>55 members sent in a total of 151 birds</h3>
 <table>
-<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th>Prize</th><th>Velocity</th></tr>
+<tr><th>Pos.</th><th>Member</th><th>Club</th><th>Day</th><th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/><th class='numeric'>Prize</th><th class='numeric'>Velocity</th></tr>
 <tr><td>1</td><td>Member #15</td><td>Club #10</td><td>1</td><td>09:04:03</td><td>600</td><td>286</td><td>M7B7</td><td>Blue</td><td>Hen</td><td>ADF</td><td class='numeric'>17.00</td><td class='numeric'>40.00</td><td class='numeric'>61918.847</td></tr>
 <tr><td>2</td><td>Member #11</td><td>Club #2</td><td>1</td><td>09:14:28</td><td>784</td><td>842</td><td>M3B9</td><td>Blue</td><td>Hen</td><td>AEFGN</td><td class='numeric'>76.34</td><td class='numeric'>38.00</td><td class='numeric'>50241.605</td></tr>
 <tr><td>3</td><td>Member #20</td><td>Club #11</td><td>1</td><td>09:15:54</td><td>761</td><td>542</td><td>M13B9</td><td>Brown</td><td>Hen</td><td>ADEGN</td><td class='numeric'>59.89</td><td class='numeric'>36.00</td><td class='numeric'>46338.057</td></tr>

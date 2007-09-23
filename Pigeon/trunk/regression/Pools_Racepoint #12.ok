@@ -16,7 +16,7 @@
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
-    td.numeric { text-align: right; }
+    .numeric { text-align: right; }
   </style>
   <style type="text/css" media="print">
     body { font-family: Verdana, sans-serif; white-space: nowrap; }
@@ -29,7 +29,7 @@
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
-    td.numeric { text-align: right; }
+    .numeric { text-align: right; }
   </style>
 </head>
 <body>
@@ -39,7 +39,7 @@
 <h2>Race from Racepoint #12</h2>
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <table>
-<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>Total</th></tr>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th class='numeric'>A</th><th class='numeric'>B</th><th class='numeric'>C</th><th class='numeric'>D</th><th class='numeric'>E</th><th class='numeric'>F</th><th class='numeric'>G</th><th class='numeric'>Total</th></tr>
 <tr>
 <td>Member #10</td><td>Club #9</td><td>M2B6</td><td/><td class='numeric'>2.00</td><td/><td class='numeric'>6.00</td><td/><td class='numeric'>10.00</td><td class='numeric'>3.80</td><td class='numeric'>21.80</td></tr>
 <tr>
@@ -118,7 +118,7 @@
 <h2>Race from Racepoint #12</h2>
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <table>
-<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>N</th><th>Total</th></tr>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th class='numeric'>A</th><th class='numeric'>B</th><th class='numeric'>C</th><th class='numeric'>D</th><th class='numeric'>E</th><th class='numeric'>F</th><th class='numeric'>G</th><th class='numeric'>N</th><th class='numeric'>Total</th></tr>
 <tr>
 <td>Member #10</td><td>Club #9</td><td>M2B6</td><td class='numeric'>1.00</td><td class='numeric'>2.00</td><td/><td/><td class='numeric'>8.00</td><td/><td/><td class='numeric'>8.26</td><td class='numeric'>19.27</td></tr>
 <tr>
@@ -207,7 +207,7 @@
 <h2>Race from Racepoint #12</h2>
 <h3>Liberated at 08:47:00 on 06/10/07 in a null wind</h3>
 <table>
-<tr><th>Member</th><th>Club</th><th>Ring Number</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>N</th><th>Total</th></tr>
+<tr><th>Member</th><th>Club</th><th>Ring Number</th><th class='numeric'>A</th><th class='numeric'>B</th><th class='numeric'>C</th><th class='numeric'>D</th><th class='numeric'>E</th><th class='numeric'>F</th><th class='numeric'>G</th><th class='numeric'>N</th><th class='numeric'>Total</th></tr>
 <tr>
 <td>Member #15</td><td>Club #10</td><td>M7B7</td><td class='numeric'>1.00</td><td/><td/><td class='numeric'>6.00</td><td/><td class='numeric'>10.00</td><td/><td/><td class='numeric'>17.00</td></tr>
 <tr>

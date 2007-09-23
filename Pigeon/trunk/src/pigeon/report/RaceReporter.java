@@ -136,9 +136,9 @@ public final class RaceReporter extends Reporter {
                 }
                 out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/>");
                 if (section != null) {
-                    out.print("<th>Prize</th>");
+                    out.print("<th class='numeric'>Prize</th>");
                 }
-                out.print("<th>Velocity</th></tr>\n");
+                out.print("<th class='numeric'>Velocity</th></tr>\n");
 
                 // For each competition name keep a track of how many of the winners we have found.
                 Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
@@ -270,10 +270,10 @@ public final class RaceReporter extends Reporter {
                 out.print("<th>Ring Number</th>");
                 for (Competition c: competitions) {
                     if (section != null || c.isAvailableInOpen()) {
-                        out.print("<th>" + c.getName() + "</th>");
+                        out.print("<th class='numeric'>" + c.getName() + "</th>");
                     }
                 }
-                out.print("<th>Total</th>");
+                out.print("<th class='numeric'>Total</th>");
                 out.print("</tr>\n");
 
                 // For each competition name keep a track of how many of the winners we have found.
