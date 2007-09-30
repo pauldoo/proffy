@@ -103,6 +103,11 @@ public final class RaceReporter extends Reporter {
                         if (listClubNames) {
                             row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                         }
+                        if (clock.getBirdsEntered() > 0) {
+                            row.html.append("<td>" + clock.getBirdsEntered() + "</td>");
+                        } else {
+                            row.html.append("<td/>");
+                        }
                         if (race.getDaysCovered() > 1) {
                             int days = (int)((row.correctedClockTime.getTime() - race.liberationDayOffset().getTime()) / Constants.MILLISECONDS_PER_DAY);
                             row.html.append("<td>" + (days + 1) + "</td>");
@@ -131,6 +136,7 @@ public final class RaceReporter extends Reporter {
                 if (listClubNames) {
                     out.print("<th>Club</th>");
                 }
+                out.print("<th>Birds entered</th>");
                 if (race.getDaysCovered() > 1) {
                     out.print("<th>Day</th>");
                 }

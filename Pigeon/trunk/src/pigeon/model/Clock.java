@@ -20,17 +20,16 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- * Represents a single member's results for a race.
- *
- * Stores the master and member set and open times along
- * with a list of all the ring numbers clocked and their times.
- */
+    Represents a single member's results for a race.
+
+    Stores the master and member set and open times along
+    with a list of all the ring numbers clocked and their times.
+*/
 public final class Clock implements Comparable<Clock>, Serializable
 {
     private static final long serialVersionUID = 7133528350681374891L;
@@ -42,6 +41,7 @@ public final class Clock implements Comparable<Clock>, Serializable
     private Date memberSet;
     private Date memberOpen;
 
+    private int birdsEntered = 0;
     private List<Time> times = new ArrayList<Time>();
 
     public Clock()
@@ -169,5 +169,19 @@ public final class Clock implements Comparable<Clock>, Serializable
     public int compareTo(Clock other)
     {
         return this.member.compareTo(other.getMember());
+    }
+
+    public int getBirdsEntered()
+    {
+        return birdsEntered;
+    }
+
+    public void setBirdsEntered(int birdsEntered) throws ValidationException
+    {
+        if (birdsEntered >= times.size()) {
+            this.birdsEntered = birdsEntered;
+        } else {
+            throw new ValidationException("Total number of birds entered cannot be less than the number of birds clocked.");
+        }
     }
 }

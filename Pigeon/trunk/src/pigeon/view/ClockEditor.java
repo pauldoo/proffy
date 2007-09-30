@@ -26,12 +26,13 @@ import javax.swing.event.ListSelectionListener;
 import pigeon.model.Clock;
 import pigeon.model.Season;
 import pigeon.model.Time;
+import pigeon.model.ValidationException;
 
 /**
- * Edits the list of times associated with a clock.
- *
- * The ClockSummary final class edits the higher level info like open / close times.
- */
+    Edits the list of times associated with a clock.
+
+    The ClockSummary final class edits the higher level info like open / close times.
+*/
 final class ClockEditor extends javax.swing.JPanel
 {
 
@@ -42,7 +43,7 @@ final class ClockEditor extends javax.swing.JPanel
     private final Season season;
     private final Configuration configuration;
 
-    public ClockEditor(Clock clock, int daysInRace, Season season, Configuration configuration)
+    private ClockEditor(Clock clock, int daysInRace, Season season, Configuration configuration)
     {
         this.clock = clock;
         this.daysInRace = daysInRace;
@@ -55,6 +56,8 @@ final class ClockEditor extends javax.swing.JPanel
             }
         });
         clockTimesPanel.setBorder(new javax.swing.border.TitledBorder("Clock Times For " + clock.getMember()));
+
+        birdsEnteredText.setValue(new Integer(clock.getBirdsEntered()));
         reloadTimesTable();
     }
 
@@ -66,6 +69,8 @@ final class ClockEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents()
     {
+        java.awt.GridBagConstraints gridBagConstraints;
+
         clockTimesPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         timesTable = new javax.swing.JTable();
@@ -74,15 +79,25 @@ final class ClockEditor extends javax.swing.JPanel
         editButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        birdsEnteredText = new javax.swing.JFormattedTextField();
 
         setLayout(new java.awt.BorderLayout());
 
-        clockTimesPanel.setLayout(new java.awt.BorderLayout());
+        clockTimesPanel.setLayout(new java.awt.GridBagLayout());
 
         clockTimesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Clock Times For")));
         jScrollPane1.setViewportView(timesTable);
 
-        clockTimesPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        clockTimesPanel.add(jScrollPane1, gridBagConstraints);
 
         addButton.setText("Add Ring Number");
         addButton.addActionListener(new java.awt.event.ActionListener()
@@ -117,10 +132,40 @@ final class ClockEditor extends javax.swing.JPanel
 
         jPanel1.add(removeButton);
 
-        clockTimesPanel.add(jPanel1, java.awt.BorderLayout.SOUTH);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        clockTimesPanel.add(jPanel1, gridBagConstraints);
 
         jLabel1.setText("Please enter details for all the birds timed in this clock.");
-        clockTimesPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        clockTimesPanel.add(jLabel1, gridBagConstraints);
+
+        jLabel2.setText("No. Birds entered");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        clockTimesPanel.add(jLabel2, gridBagConstraints);
+
+        birdsEnteredText.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        clockTimesPanel.add(birdsEnteredText, gridBagConstraints);
 
         add(clockTimesPanel, java.awt.BorderLayout.CENTER);
 
@@ -158,9 +203,11 @@ final class ClockEditor extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JFormattedTextField birdsEnteredText;
     private javax.swing.JPanel clockTimesPanel;
     private javax.swing.JButton editButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton removeButton;
@@ -171,7 +218,20 @@ final class ClockEditor extends javax.swing.JPanel
     {
         ClockEditor panel = new ClockEditor(clock, daysInRace, season, configuration);
         Object[] options = {"Finished"};
-        int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        while (true) {
+            int result = JOptionPane.showOptionDialog(parent, panel, "Clock Times", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            try {
+                panel.updateClockObject();
+                break;
+            } catch (ValidationException e) {
+                e.displayErrorDialog(panel);
+            }
+        }
+    }
+    
+    private void updateClockObject() throws ValidationException
+    {
+        clock.setBirdsEntered(Integer.parseInt(birdsEnteredText.getText()));
     }
 
     private void reloadTimesTable()

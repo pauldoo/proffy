@@ -23,12 +23,12 @@ import pigeon.model.Clock;
 import pigeon.model.Member;
 
 /**
- * Represents a list of clocks for placing into a JTable.
- *
- * Displays the associated member and the number of rings entered.
- */
-final class ClocksTableModel extends AbstractTableModel {
+    Represents a list of clocks for placing into a JTable.
 
+    Displays the associated member and the number of rings entered.
+*/
+final class ClocksTableModel extends AbstractTableModel
+{
     private static final long serialVersionUID = 6245142229764744394L;
 
     private final List<Clock> clocks;
@@ -43,7 +43,7 @@ final class ClocksTableModel extends AbstractTableModel {
     }
 
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
 
     public Class getColumnClass(int column) {
@@ -51,6 +51,8 @@ final class ClocksTableModel extends AbstractTableModel {
             case 0:
                 return Member.class;
             case 1:
+                return Integer.class;
+            case 2:
                 return Integer.class;
             default:
                 throw new IllegalArgumentException();
@@ -63,6 +65,8 @@ final class ClocksTableModel extends AbstractTableModel {
             case 0:
                 return clock.getMember();
             case 1:
+                return new Integer(clock.getBirdsEntered());
+            case 2:
                 return new Integer(clock.getTimes().size());
             default:
                 throw new IllegalArgumentException();
@@ -74,7 +78,9 @@ final class ClocksTableModel extends AbstractTableModel {
             case 0:
                 return "Member";
             case 1:
-                return "Rings entered";
+                return "Birds entered";
+            case 2:
+                return "Birds clocked";
             default:
                 throw new IllegalArgumentException();
         }
