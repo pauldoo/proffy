@@ -154,6 +154,8 @@ public final class ExtendedTest extends TestCase
                 long memberOpenTime = (long)(masterOpenTime + (random.nextDouble() - 0.5) * Constants.MILLISECONDS_PER_MINUTE);
                 clock.setTimeOnMemberWhenOpened(new Date(memberOpenTime));
 
+                clock.setBirdsEntered(30);
+
                 for (int j = 0; j < BIRDS_PER_MEMBER; j++) {
                     Time t = new Time();
                     String ringNumber = "M" + i + "B" + j;
