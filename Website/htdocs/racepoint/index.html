@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>RacePoint</title>
 <style type="text/css">
-#outer{
+#outer {
     font-family:Verdana, Sans-Serif;
     font-size:0.8em;
     width:60em;
@@ -12,6 +12,10 @@
 }
 td, th {
     padding: 0.5em 1em;
+    background-color: #eeeeee;
+}
+.highlight {
+  background-color: #cccccc;  
 }
 </style>
 </head>
@@ -21,137 +25,102 @@ td, th {
         <h2>Software for managing your racing season</h2>
 
         <h3>About</h3>
-        <div>
-            <p>Free software for pigeon racers.</p>
-            <ul>
-                <li>Stores member and racepoint information.</li>
-                <li>Stores the clock times during the season.</li>
-                <li>Calculates race results.</li>
-                <li>Calculates pools results.</li>
-            </ul>
-            <p>Created by <a href="mailto:paul.richards@gmail.com">Paul Richards</a> and released as free software.</p>
-        </div>
+        <p>Free software for pigeon racers.</p>
+        <ul>
+            <li>Stores member and racepoint information.</li>
+            <li>Stores the individual bird clock times for each race during the season.</li>
+            <li>Calculates race results.</li>
+            <li>Calculates pools results.</li>
+        </ul>
+        <p>Created by <a href="mailto:paul.richards@gmail.com">Paul Richards</a> and released
+        as free software under the <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a>.</p>
 
         <h3>Download</h3>
-        <div>
-           <p>Requires Java 5 or better. Java 6 is recommended (<a href="http://www.java.com/getjava/">get it here</a>).</p>
-           <table>
-              <tr><th>Version</th><th>Type</th><th>Size</th><th>Filename</th></tr>
-              <tr>
-                <td>0.6 (build 245)<br/></td>
-                <td>Program</td>
-                <td>392 KiB</td>
-                <td><a href="../downloads/RacePoint_0.6-245.zip">RacePoint_0.6-245.zip</a></td>
-                <td><em>If unsure, download this.</em></td>
-              </tr>
-              <tr>
-                <td>0.6 (build 245)<br/></td>
-                <td>Source code</td>
-                <td>2.2 MiB</td>
-                <td><a href="../downloads/RacePoint_0.6-245_source.zip">RacePoint_0.6-245_source.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.5 (build 229)<br/></td>
-                <td>Program</td>
-                <td>380 KiB</td>
-                <td><a href="../downloads/RacePoint_0.5-229.zip">RacePoint_0.5-229.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.5 (build 229)<br/></td>
-                <td>Source code</td>
-                <td>2.2 MiB</td>
-                <td><a href="../downloads/RacePoint_0.5-229_source.zip">RacePoint_0.5-229_source.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.4 (build 219)<br/></td>
-                <td>Program</td>
-                <td>380 KiB</td>
-                <td><a href="../downloads/RacePoint_0.4-219.zip">RacePoint_0.4-219.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.4 (build 219)<br/></td>
-                <td>Source code</td>
-                <td>2.2 MiB</td>
-                <td><a href="../downloads/RacePoint_0.4-219_source.zip">RacePoint_0.4-219_source.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.3 (build 199)<br/></td>
-                <td>Program</td>
-                <td>360 KiB</td>
-                <td><a href="../downloads/RacePoint_0.3-199.zip">RacePoint_0.3-199.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.3 (build 199)<br/></td>
-                <td>Source code</td>
-                <td>2.1 MiB</td>
-                <td><a href="../downloads/RacePoint_0.3-199_source.zip">RacePoint_0.3-199_source.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.2 (build 188)<br/></td>
-                <td>Program</td>
-                <td>360 KiB</td>
-                <td><a href="../downloads/RacePoint_0.2-188.zip">RacePoint_0.2-188.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.2 (build 188)<br/></td>
-                <td>Source code</td>
-                <td>2.1 MiB</td>
-                <td><a href="../downloads/RacePoint_0.2-188_source.zip">RacePoint_0.2-188_source.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.1 (build 161)</td>
-                <td>Program</td>
-                <td>352 KiB</td>
-                <td><a href="../downloads/RacePoint_0.1-161.zip">RacePoint_0.1-161.zip</a></td>
-              </tr>
-              <tr>
-                <td>0.1 (build 161)</td>
-                <td>Source code</td>
-                <td>2.1 MiB</td>
-                <td><a href="../downloads/RacePoint_0.1-161_source.zip">RacePoint_0.1-161_source.zip</a> </td>
-              </tr>
-           </table>
-        </div>
+        <p>Requires Java 6 or better (<a href="http://www.java.com/getjava/">get it here</a>).</p>
+        <table>
+          <tr><th>Version</th><th>Download Source</th><th class="highlight">Download Program</th></tr>
+          <tr>
+            <td>0.7 (build 261)<br/></td>
+            <td><a href="../downloads/RacePoint_0.7-261_source.zip">RacePoint_0.7-261_source.zip</a> (2.1 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.7-261.zip">RacePoint_0.7-261.zip</a> (380 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.6 (build 245)<br/></td>
+            <td><a href="../downloads/RacePoint_0.6-245_source.zip">RacePoint_0.6-245_source.zip</a> (2.2 MiB)</td>
+            <td  class="highlight"><a href="../downloads/RacePoint_0.6-245.zip">RacePoint_0.6-245.zip</a> (392 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.5 (build 229)<br/></td>
+            <td><a href="../downloads/RacePoint_0.5-229_source.zip">RacePoint_0.5-229_source.zip</a> (2.2 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.5-229.zip">RacePoint_0.5-229.zip</a> (380 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.4 (build 219)<br/></td>
+            <td><a href="../downloads/RacePoint_0.4-219_source.zip">RacePoint_0.4-219_source.zip</a> (2.2 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.4-219.zip">RacePoint_0.4-219.zip</a> (380 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.3 (build 199)<br/></td>
+            <td><a href="../downloads/RacePoint_0.3-199_source.zip">RacePoint_0.3-199_source.zip</a> (2.1 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.3-199.zip">RacePoint_0.3-199.zip</a> (360 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.2 (build 188)<br/></td>
+            <td><a href="../downloads/RacePoint_0.2-188_source.zip">RacePoint_0.2-188_source.zip</a> (2.1 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.2-188.zip">RacePoint_0.2-188.zip</a> (360 KiB)</td>
+          </tr>
+          <tr>
+            <td>0.1 (build 161)</td>
+            <td><a href="../downloads/RacePoint_0.1-161_source.zip">RacePoint_0.1-161_source.zip</a> (2.1 MiB)</td>
+            <td class="highlight"><a href="../downloads/RacePoint_0.1-161.zip">RacePoint_0.1-161.zip</a> (352 KiB)</td>
+          </tr>
+        </table>
 
         <h3>News</h3>
-        <div>
-            <p>2007 September 15: RacePoint v0.6 (r245)</p>
-            <ul>
-                <li>Race reports now display prize winnings for the top entries.</li>
-                <li>Improved GUI components for entering dates and times.</li>
-                <li>Other minor GUI changes.</li>
-            </ul>
-            <p>2007 July 21: RacePoint v0.5 (r229)</p>
-            <ul>
-                <li>Removed Nomination from the Open.</li>
-                <li>Fixed minor GUI bugs.</li>
-            </ul>
-            <p>2007 July 7: RacePoint v0.4 (r219)</p>
-            <ul>
-                <li>Changed to GPL license.</li>
-                <li>Added recording of bird sex.</li>
-                <li>Now saves the number of entrants for race and pools.</li>
-                <li>Now possible to edit member and racepoint information after a race has been entered.</li>
-                <li>Reports print with a smaller font to fit on an A4 page.</li>
-                <li>Race reports now correctly show the pools entered and the prize won.</li>
-            </ul>
-            <p>2007 June 21: RacePoint v0.3 (r199)</p>
-            <ul>
-                <li>Added bird colours.</li>
-                <li>Fixed Windows 2000 specific bug in reports.</li>
-            </ul>
-            <p>2007 June 14: RacePoint v0.2 (r188)</p>
-            <ul>
-                <li>Various UI enhancements.</li>
-                <li>Added ability to start a new season and copy over existing club setup.</li>
-                <li>Still looking for feedback.</li>
-            </ul>
-            <p>2007 April 5: RacePoint v0.1 (r161)</p>
-            <ul>
-                <li>First release to the public.</li>
-                <li>Looking for feedback.</li>
-            </ul>
-        </div>
+        <p>2007 October 9: RacePoint v0.7 (r261)</p>
+        <ul>
+            <li>GUI behaviour and appearance is now more consistent across different screens.</li>
+            <li>Formatting of result and pool sheets has been improved.</li>
+            <li>Result and pool sheets now carry a standard footer.</li>
+            <li>Result sheets now only list the pools in which birds won prizes.</li>
+            <li>Total number of birds entered by each member is now tracked.</li>
+        </ul>
+        <p>2007 September 15: RacePoint v0.6 (r245)</p>
+        <ul>
+            <li>Race reports now display prize winnings for the top entries.</li>
+            <li>Improved GUI components for entering dates and times.</li>
+            <li>Other minor GUI changes.</li>
+        </ul>
+        <p>2007 July 21: RacePoint v0.5 (r229)</p>
+        <ul>
+            <li>Removed Nomination from the Open.</li>
+            <li>Fixed minor GUI bugs.</li>
+        </ul>
+        <p>2007 July 7: RacePoint v0.4 (r219)</p>
+        <ul>
+            <li>Changed to GPL license.</li>
+            <li>Added recording of bird sex.</li>
+            <li>Now saves the number of entrants for race and pools.</li>
+            <li>Now possible to edit member and racepoint information after a race has been entered.</li>
+            <li>Reports print with a smaller font to fit on an A4 page.</li>
+            <li>Race reports now correctly show the pools entered and the prize won.</li>
+        </ul>
+        <p>2007 June 21: RacePoint v0.3 (r199)</p>
+        <ul>
+            <li>Added bird colours.</li>
+            <li>Fixed Windows 2000 specific bug in reports.</li>
+        </ul>
+        <p>2007 June 14: RacePoint v0.2 (r188)</p>
+        <ul>
+            <li>Various UI enhancements.</li>
+            <li>Added ability to start a new season and copy over existing club setup.</li>
+            <li>Still looking for feedback.</li>
+        </ul>
+        <p>2007 April 5: RacePoint v0.1 (r161)</p>
+        <ul>
+            <li>First release to the public.</li>
+            <li>Looking for feedback.</li>
+        </ul>
 
   	    <div id="valid">
 	      Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>.
