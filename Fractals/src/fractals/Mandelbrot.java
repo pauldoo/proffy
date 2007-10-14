@@ -47,14 +47,14 @@ public final class Mandelbrot implements TileProvider<IntegerTile>
         double zI = cI;
         
         int v;
-        for (v = 0; v < 10000 && (zR*zR + zI*zI) < 20; v++) {
+        for (v = 0; v < 1000 && (zR*zR + zI*zI) < 20; v++) {
             // z => z^2 + c
             double zRn = zR*zR - zI*zI + cR;
             double zIn = 2*zR*zI + cI;
             zR = zRn;
             zI = zIn;
         }
-        if (v == 10000) v = 0;
+        if (v == 1000) v = 0;
         return v;
     }
 }

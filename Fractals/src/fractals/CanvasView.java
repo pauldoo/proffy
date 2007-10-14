@@ -35,7 +35,7 @@ public class CanvasView extends JComponent implements Runnable
     public CanvasView(int width, int height)
     {
         this.canvas = new Canvas();
-        this.source = new RenderFilter(new Mandelbrot(), 0.1);
+        this.source = new RenderFilter(new Mandelbrot(), 0.02);
         this.tileQueue = new LinkedList<TilePosition>();
         for (int y = 0; y < height; y += TilePosition.SIZE) {
             for (int x = 0; x < width; x += TilePosition.SIZE) {
