@@ -22,20 +22,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public final class Mandelbrot
+public final class Mandelbrot implements TileProvider<IntegerTile>
 {
     private static final long serialVersionUID = 2111799820114618095L;
     
-    public void renderTile(double scale, Tile tile)
+    public IntegerTile getTile(TilePosition pos)
     {
-        for (int iy = tile.getMinY(); iy <= tile.getMaxY(); iy++) {
-            for (int ix = tile.getMinX(); ix <= tile.getMaxX(); ix++) {
-                double x = ix * scale - 3.0 * 0.75;
-                double y = iy * scale - 1.5 * 0.75;
-                int v = iterateUntilEscapes(x, y);
+        IntegerTile tile = new IntegerTile(pos);
+        for (int iy = pos.getMinY(); iy <= pos.getMaxY(); iy++) {
+            for (int ix = pos.getMinX(); ix <= pos.getMaxX(); ix++) {
+                final double r = ix * pos.scale();
+                final double i = iy * pos.scale();
+                int v = iterateUntilEscapes(r, i);
                 tile.setValue(ix, iy, v);
             }
         }
+        return tile;
     }
     
     private int iterateUntilEscapes(double cR, double cI)

@@ -28,24 +28,24 @@ import java.util.Collection;
 */
 public final class Canvas
 {
-    final Collection<Tile> tiles;
+    final Collection<RenderableTile> tiles;
     boolean updatedSinceLastBlit;
     
     public Canvas()
     {
-        tiles = new ArrayList<Tile>();
+        tiles = new ArrayList<RenderableTile>();
     }
     
-    public void blitImmediately(Graphics g, double exposure)
+    public void blitImmediately(Graphics g)
     {
-        Collection<Tile> tilesCopy;
+        Collection<RenderableTile> tilesCopy;
         synchronized(this) {
-            tilesCopy = new ArrayList<Tile>(tiles);
+            tilesCopy = new ArrayList<RenderableTile>(tiles);
             updatedSinceLastBlit = false;
         }
         long time = -System.currentTimeMillis();
-        for (Tile t: tilesCopy) {
-            t.render(g, exposure);
+        for (RenderableTile t: tilesCopy) {
+            t.render(g);
         }
         time += System.currentTimeMillis();
         System.out.println("blitImmediately() took: " + time + "ms");
@@ -58,7 +58,7 @@ public final class Canvas
         }
     }
     
-    public void addTile(Tile t)
+    public void addTile(RenderableTile t)
     {
         synchronized(this) {
             tiles.add(t);

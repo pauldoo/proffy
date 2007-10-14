@@ -29,17 +29,17 @@ public class CanvasView extends JComponent implements Runnable
     private static final long serialVersionUID = 6622327481400970118L;
     
     private final Canvas canvas;
-    private final Mandelbrot fractal;
-    private final Queue<Tile> tileQueue;
+    private final TileProvider<RenderableTile> source;
+    private final Queue<TilePosition> tileQueue;
     
     public CanvasView(int width, int height)
     {
         this.canvas = new Canvas();
-        this.fractal = new Mandelbrot();
-        this.tileQueue = new LinkedList<Tile>();
-        for (int y = 0; y < height; y += Tile.HEIGHT) {
-            for (int x = 0; x < width; x += Tile.WIDTH) {
-                tileQueue.add(new Tile(x, y));
+        this.source = new RenderFilter(new Mandelbrot(), 0.1);
+        this.tileQueue = new LinkedList<TilePosition>();
+        for (int y = 0; y < height; y += TilePosition.SIZE) {
+            for (int x = 0; x < width; x += TilePosition.SIZE) {
+                tileQueue.add(new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, 0));
             }
         }
     }
@@ -77,14 +77,14 @@ public class CanvasView extends JComponent implements Runnable
     public void run()
     {
         while(true) {
-            Tile t;
+            TilePosition pos;
             synchronized(tileQueue) {
-                t = tileQueue.poll();
+                pos = tileQueue.poll();
             }
-            if (t == null) {
+            if (pos == null) {
                 return;
             } else {
-                fractal.renderTile(3.0 / 800, t);
+                RenderableTile t = source.getTile(pos);
                 canvas.addTile(t);
             }
         }
@@ -95,6 +95,6 @@ public class CanvasView extends JComponent implements Runnable
         Rectangle bounds = g.getClipBounds();
         g.setColor(Color.PINK);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-        canvas.blitImmediately(g, 0.02);
+        canvas.blitImmediately(g);
     }
 }
