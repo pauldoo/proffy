@@ -56,7 +56,7 @@ public class CanvasView extends JComponent implements Runnable
         public void mouseDragged(MouseEvent e)
         {
             //System.out.println(e);
-            if (e.getButton() == MouseEvent.BUTTON1) {
+            if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
                 updateMove(e.getPoint());
             }
         }
