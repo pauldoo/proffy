@@ -24,8 +24,6 @@ import javax.swing.JPanel;
 
 public final class Mandelbrot implements TileProvider<IntegerTile>
 {
-    private static final long serialVersionUID = 2111799820114618095L;
-    
     public IntegerTile getTile(TilePosition pos)
     {
         IntegerTile tile = new IntegerTile(pos);

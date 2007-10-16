@@ -18,11 +18,20 @@
 package fractals;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JComponent;
+import javax.swing.event.MouseInputListener;
 
 public class CanvasView extends JComponent implements Runnable
 {
@@ -30,18 +39,81 @@ public class CanvasView extends JComponent implements Runnable
     
     private final Canvas canvas;
     private final TileProvider<RenderableTile> source;
-    private final Queue<TilePosition> tileQueue;
+    private final BlockingQueue<TilePosition> tileQueue;
+    private final Set<TilePosition> visited;
+    private int offsetX = 0;
+    private int offsetY = 0;
+    
+    private final class Listener implements MouseInputListener
+    {
+        private Point previousPoint;
+        
+        public void mouseClicked(MouseEvent e)
+        {
+            //System.out.println(e);
+        }
+
+        public void mouseDragged(MouseEvent e)
+        {
+            //System.out.println(e);
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                updateMove(e.getPoint());
+            }
+        }
+
+        public void mouseEntered(MouseEvent e)
+        {
+            //System.out.println(e);
+        }
+
+        public void mouseExited(MouseEvent e)
+        {
+            //System.out.println(e);
+        }
+
+        public void mouseMoved(MouseEvent e)
+        {
+            //System.out.println(e);
+        }
+
+        public void mousePressed(MouseEvent e)
+        {
+            //System.out.println(e);
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                previousPoint = e.getPoint();
+            }
+        }
+
+        public void mouseReleased(MouseEvent e)
+        {
+            //System.out.println(e);
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                updateMove(e.getPoint());
+                previousPoint = null;
+            }
+        }
+        
+        private void updateMove(Point currentPoint)
+        {
+            int dispX = currentPoint.x - previousPoint.x;
+            int dispY = currentPoint.y - previousPoint.y;
+            moveBy(dispX, dispY);
+            previousPoint = currentPoint;
+        }
+    }
     
     public CanvasView(int width, int height)
     {
         this.canvas = new Canvas();
         this.source = new RenderFilter(new Mandelbrot(), 0.02);
-        this.tileQueue = new LinkedList<TilePosition>();
-        for (int y = 0; y < height; y += TilePosition.SIZE) {
-            for (int x = 0; x < width; x += TilePosition.SIZE) {
-                tileQueue.add(new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, 0));
-            }
-        }
+        this.tileQueue = new LinkedBlockingQueue<TilePosition>();
+        this.visited = new HashSet<TilePosition>();
+        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Listener listener = new Listener();
+        this.addMouseListener(listener);
+        this.addMouseMotionListener(listener);
+        //this.setDoubleBuffered(true);
     }
     
     public void startRenderingThreads()
@@ -76,25 +148,54 @@ public class CanvasView extends JComponent implements Runnable
     
     public void run()
     {
-        while(true) {
-            TilePosition pos;
-            synchronized(tileQueue) {
-                pos = tileQueue.poll();
-            }
-            if (pos == null) {
-                return;
-            } else {
+        try {
+            while(true) {
+                TilePosition pos = tileQueue.take();
+                //System.out.println(Thread.currentThread() + ": " + pos);
                 RenderableTile t = source.getTile(pos);
                 canvas.addTile(t);
             }
+        } catch (InterruptedException e) {
         }
+    }
+
+    private void moveBy(int dispX, int dispY)
+    {
+        offsetX += dispX;
+        offsetY += dispY;
+        repaint();
+        //invalidate();
     }
     
     public void paint(Graphics g)
     {
+        long time = -System.currentTimeMillis();
+        g.translate(offsetX, offsetY);
         Rectangle bounds = g.getClipBounds();
         g.setColor(Color.PINK);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        g.setColor(Color.DARK_GRAY);
+        g.drawLine(-1000, -1000, 1000, 1000);
+        g.drawLine(-1000, 1000, 1000, -1000);
         canvas.blitImmediately(g);
+
+        List<TilePosition> remainingTiles = new ArrayList<TilePosition>();
+        int minX = bounds.x - ((bounds.x % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
+        int minY = bounds.y - ((bounds.y % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
+        for (int y = minY; y < bounds.y + bounds.height; y += TilePosition.SIZE) {
+            for (int x = minX; x < bounds.x + bounds.width; x += TilePosition.SIZE) {
+                TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, 0);
+                if (!visited.contains(pos)) {
+                    remainingTiles.add(pos);
+                    visited.add(pos);
+                }
+            }
+        }
+        if (!remainingTiles.isEmpty()) {
+            Collections.shuffle(remainingTiles);
+            tileQueue.addAll(remainingTiles);
+        }
+        time += System.currentTimeMillis();
+        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
     }
 }

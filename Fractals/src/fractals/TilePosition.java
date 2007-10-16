@@ -32,6 +32,31 @@ final class TilePosition
         this.indexY = indexY;
         this.scaleIndex = scaleIndex;
     }
+
+    public int hashCode()
+    {
+        return (indexX * 11) ^ (indexY * 13) ^ (scaleIndex * 17);
+    }
+    
+    public boolean equals(Object o)
+    {
+        return equals((TilePosition)o);
+    }
+    
+    public boolean equals(TilePosition other)
+    {
+        return
+            this == other || (
+                this.indexX == other.indexX &&
+                this.indexY == other.indexY &&
+                this.scaleIndex == other.scaleIndex
+            );
+    }
+    
+    public String toString()
+    {
+        return "{" + getMinX() + ", " + getMinY() + ", " + scaleIndex + "}";
+    }
     
     public double scale()
     {

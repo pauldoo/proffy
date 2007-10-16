@@ -48,7 +48,7 @@ public final class Canvas
             t.render(g);
         }
         time += System.currentTimeMillis();
-        System.out.println("blitImmediately() took: " + time + "ms");
+        System.out.println(this.getClass().getName() + ".blitImmediately() took: " + time + "ms");
     }
     
     public boolean updatedSinceLastBlit()
