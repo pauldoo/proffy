@@ -63,8 +63,12 @@ if(SDL_FOUND)
         World.cpp
         stdafx.cpp
     )
- 
-    add_executable(PolyRenderBin Main.cpp)
+
+    if(APPLE)
+        add_executable(PolyRenderBin Main.cpp SDLMain.m)
+    else(APPLE) 
+        add_executable(PolyRenderBin Main.cpp)
+    endif(APPLE)
     target_link_libraries(PolyRenderBin PolyRender ${SDL_LIBRARY})
 else(SDL_FOUND)
     message("SDL not found!")

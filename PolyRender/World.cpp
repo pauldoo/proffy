@@ -6,8 +6,8 @@ World::World(
 	const Auto<const Solid>& solid, 
 	const ProjectionPlane& projectionPlane,
 	const LightList& lights)
-:	m_solid(solid), 
-	m_projectionPlane(projectionPlane),
+:	m_projectionPlane(projectionPlane), 
+	m_solid(solid),
 	m_lights(lights)
 {
 }

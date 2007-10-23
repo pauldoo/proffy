@@ -19,9 +19,9 @@ namespace {
 			const Matrix& transformation, 
 			const Point& translation,
 			const Auto<const Intersect>& intersect
-		) :	m_transformation(transformation),
+		) :	IntersectForwarder(intersect),
 			m_translation(translation),
-			IntersectForwarder(intersect) 
+            m_transformation(transformation)
 		{
 		}
 
@@ -44,8 +44,8 @@ namespace {
 	public:
 		TransformationAdapter(const Auto<const Solid>& solid, const Matrix& transformation, const Point& translation)
 		:	m_solid(solid),
-			m_transformation(transformation),
-			m_translation(translation)
+            m_translation(translation),
+			m_transformation(transformation)
 		{
 		}
 

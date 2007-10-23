@@ -10,11 +10,11 @@ ProjectionPlane::ProjectionPlane(
 	const Point& projectionPlaneDisplacement,
 	const Real zoomLevel,
 	const Real angleToHorizontal) 
- :	m_projectionPoint(projectionPoint), 
+ :	m_rotationMatrix(RotationMatrix(projectionPlaneDisplacement,angleToHorizontal)),
+    m_projectionPoint(projectionPoint), 
 	m_projectionPlaneDisplacement(projectionPlaneDisplacement),
 	m_zoomLevel(zoomLevel), 
-	m_angleToHorizontal(angleToHorizontal),
-	m_rotationMatrix(RotationMatrix(projectionPlaneDisplacement,angleToHorizontal))
+	m_angleToHorizontal(angleToHorizontal)
 {
 }	
 

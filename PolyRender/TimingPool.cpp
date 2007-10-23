@@ -15,8 +15,8 @@ namespace {
 	class TimerTree : public LinkCount {
 	public:
 		explicit TimerTree(TimerTree* parent00) 
-		:	m_count(0), 
-			m_parent00(parent00)
+		:	m_parent00(parent00),
+            m_count(0)
 		{
 		}
 

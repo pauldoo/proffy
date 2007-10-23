@@ -14,8 +14,8 @@ namespace {
 		BumpMapAdapterIntersect(
 			const Auto<const BumpMap>& bumpMap, 
 			const Auto<const Intersect>& intersect
-		) :	m_bumpMap(bumpMap),
-			IntersectForwarder(intersect)
+		) :	IntersectForwarder(intersect),
+            m_bumpMap(bumpMap)			
 		{
 		}
 
