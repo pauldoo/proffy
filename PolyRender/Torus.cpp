@@ -44,7 +44,7 @@ namespace {
 				CartesionEquation(lightRay),
 				dynamic_cast<BairstowMemory*>(a.Pointer())->m_remember);
 
-			if (root.IsValid()) return new SolidIntersect(this, lightRay, root.Get());
+			if (root.IsValid()) return Intersect00(new SolidIntersect(this, lightRay, root.Get()));
 			else return Intersect00();
 		}
 

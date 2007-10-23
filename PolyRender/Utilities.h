@@ -22,7 +22,7 @@ std::string ToString(std::vector<Type> valArray) {
 	std::string result;
 	result += "[";
 	if (!valArray.empty()) {
-		std::vector<Type>::const_iterator val_iter = valArray.begin();
+		typename std::vector<Type>::const_iterator val_iter = valArray.begin();
 		result += ToString(*val_iter);
 		val_iter++;
 		for ( ; val_iter != valArray.end() ; val_iter++) {

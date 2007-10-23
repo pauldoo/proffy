@@ -97,7 +97,7 @@ int TimingPool::GiveIDFor(const std::string& name)
 
 void TimingPool::Push(const int id)
 {
-	if (unsigned int(id) >= m_names.size())
+	if (static_cast<unsigned int>(id) >= m_names.size())
 		throw Exception("Timer id out of range");
 	
 	TimerTree* timerTree = static_cast<TimerTree*>(m_currentTimerStack);

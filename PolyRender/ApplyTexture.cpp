@@ -16,8 +16,8 @@ namespace {
 		ApplyTextureIntersect(
 			const Auto<const RenderMask>& renderMask, 
 			const Auto<const Intersect>& intersect
-		) :	m_renderMask(renderMask),
-			IntersectForwarder(intersect)
+		) :	IntersectForwarder(intersect),
+			m_renderMask(renderMask)
 		{
 		}
 
@@ -48,7 +48,7 @@ namespace {
 		{
 			const Intersect00 intersect = m_solid->DetermineClosestIntersectionPoint(lightRay, intersectionType, renderMemory);
 			if(intersect.IsValid()) {
-				return new ApplyTextureIntersect(m_renderMask, intersect.Get());
+				return Intersect00(new ApplyTextureIntersect(m_renderMask, intersect.Get()));
 			} else {
 				return intersect;
 			}

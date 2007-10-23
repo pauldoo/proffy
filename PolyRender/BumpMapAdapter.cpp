@@ -52,7 +52,7 @@ namespace {
 			
 			// TODO: code duplication needs to be removed (introduction of NULL intersect maybe?)
 			if (intersect.IsValid())
-				return new BumpMapAdapterIntersect(m_bumpMap, intersect.Get());
+				return Intersect00(new BumpMapAdapterIntersect(m_bumpMap, intersect.Get()));
 			else 
 				return intersect;
 		}

@@ -37,8 +37,8 @@ Polynomial<Type>& Polynomial<Type>::operator*=(const Polynomial<Type> &Q) {
 	}
 	temp.m_coefficentList.resize(Q.Degree() + P.Degree() + 1);
 
-	for (Polynomial<Type>::DegreeType indentx = 0 ; indentx <= Q.Degree() ; indentx++)
-		for (Polynomial<Type>::DegreeType indenty = 0 ; indenty <= P.Degree() ; indenty++)
+	for (typename Polynomial<Type>::DegreeType indentx = 0 ; indentx <= Q.Degree() ; indentx++)
+		for (typename Polynomial<Type>::DegreeType indenty = 0 ; indenty <= P.Degree() ; indenty++)
 			temp[indentx + indenty] += Q[indentx] * P[indenty];
 
 	*this = temp;
@@ -53,12 +53,12 @@ Polynomial<Type>& Polynomial<Type>::operator+=(const Polynomial<Type> &Q) {
 	Polynomial<Type> A = (Q.Degree() > P.Degree() ? Q : P);
 	const Polynomial<Type> &B = (Q.Degree() > P.Degree() ? P : Q);
 
-	for (Polynomial<Type>::DegreeType indent = 0 ; indent <= B.Degree() ; ++indent) {
+	for (typename Polynomial<Type>::DegreeType indent = 0 ; indent <= B.Degree() ; ++indent) {
 		A[indent] += B[indent];
 	}
 
 	// remove leading zeros
-	for (Polynomial<Type>::DegreeType indent = A.Degree() ; indent > 0 && A[indent] == Type(0);  --indent) {
+	for (typename Polynomial<Type>::DegreeType indent = A.Degree() ; indent > 0 && A[indent] == Type(0);  --indent) {
 		A.m_coefficentList.pop_back();
 	}
 

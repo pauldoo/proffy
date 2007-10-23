@@ -14,7 +14,7 @@ namespace {
 		{
 			TIMETHISFUNCTION;
 			const Real distance = -lightRay.Start().Z() / lightRay.Direction().Z();
-			if (distance >= 0) return new SolidIntersect(this, lightRay, distance);
+			if (distance >= 0) return Intersect00(new SolidIntersect(this, lightRay, distance));
 			else return Intersect00();
 		}
 

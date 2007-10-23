@@ -52,7 +52,7 @@ public:
 	Type2 EvaluateAt(const Type2& t) const
 	{
 		Type2 sum = 0;
-		for(std::vector<Type>::const_reverse_iterator indent = m_coefficentList.rbegin() ; indent != m_coefficentList.rend() ; indent++) {
+		for(typename std::vector<Type>::const_reverse_iterator indent = m_coefficentList.rbegin() ; indent != m_coefficentList.rend() ; indent++) {
 			sum = sum * t + *indent;
 		}
 		return sum;

@@ -28,7 +28,7 @@ namespace {
 			
 			const Maybe<Real> distance = FindSmallestPositiveRootOfQuadratic(a,b,c);
 			if (distance.IsValid())
-				return new SolidIntersect(this, lightRay, distance.Get());
+				return Intersect00(new SolidIntersect(this, lightRay, distance.Get()));
 			else 
 				return Intersect00();
 		}

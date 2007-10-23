@@ -14,18 +14,18 @@ std::string UtilitiesTest::Name() const {
 void  UtilitiesTest::Execute() {
 	{
 		std::vector<int> intVector;
-		AssertEqual("ToString of empty vector bust", ToString(intVector), "[]");
+		AssertEqual<std::string, std::string>("ToString of empty vector bust", ToString(intVector), "[]");
 		intVector.push_back(2);
 		intVector.push_back(-3);
-		AssertEqual("ToString bust", ToString(intVector), "[2, -3]");
+		AssertEqual<std::string, std::string>("ToString bust", ToString(intVector), "[2, -3]");
 	}
 	{
-		AssertEqual("ToString(int)", ToString(-3), "-3");
-		AssertEqual("ToString(Scalar)", ToString(Scalar(0,1)), "i");
-		AssertEqual("ToString(Scalar)", ToString(Scalar(0,0)), "0");
-		AssertEqual("ToString(Scalar)", ToString(Scalar(-3,2)), "(-3+2i)");
-		AssertEqual("ToString(Scalar)", ToString(Scalar(-3,-2)), "(-3-2i)");
-		AssertEqual("ToString(Scalar)", ToString(Scalar(-3,0)), "-3");
+		AssertEqual<std::string, std::string>("ToString(int)", ToString(-3), "-3");
+		AssertEqual<std::string, std::string>("ToString(Scalar)", ToString(Scalar(0,1)), "i");
+		AssertEqual<std::string, std::string>("ToString(Scalar)", ToString(Scalar(0,0)), "0");
+		AssertEqual<std::string, std::string>("ToString(Scalar)", ToString(Scalar(-3,2)), "(-3+2i)");
+		AssertEqual<std::string, std::string>("ToString(Scalar)", ToString(Scalar(-3,-2)), "(-3-2i)");
+		AssertEqual<std::string, std::string>("ToString(Scalar)", ToString(Scalar(-3,0)), "-3");
 	}
 	{
 		const int noOfSummands = 100000;

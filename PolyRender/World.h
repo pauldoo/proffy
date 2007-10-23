@@ -7,7 +7,7 @@ class Light;
 
 class World : public LinkCount {
 public:	
-	typedef std::vector<const Auto<const Light> > LightList;
+	typedef std::vector<Auto<const Light> > LightList;
 	
 	World(
 		const Auto<const Solid>& m_solid, 

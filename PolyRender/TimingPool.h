@@ -34,7 +34,7 @@ private:
 #define TIMETHISBLOCK(msg) \
 	static int timerId = TimingPool::GiveIDFor(msg); \
 	TimingPool::Push(timerId); \
-	const TimingPool::PopOnDeletion popOnDeletion;
+	const TimingPool::PopOnDeletion popOnDeletion();
 
 #define TIMETHISFUNCTION TIMETHISBLOCK(__FUNCTION__)
 #else 

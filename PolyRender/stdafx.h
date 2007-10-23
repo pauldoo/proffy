@@ -8,18 +8,23 @@
 
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-// Windows Header Files:
-#include <windows.h>
 // C RunTime Header Files
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
+#include <cstdlib>
 
 // TODO: reference additional headers your program requires here
+#include <cmath>
 #include <vector>
 #include <string>
 #include <limits>
+
+#if __GNUC__
+// Simple hack to get stuff compiling
+#define HDC int
+#define HWND int
+#define RECT int
+#define COLORREF int
+#endif
+
 
 #pragma warning(disable:4512)
 #pragma warning(disable:4127)

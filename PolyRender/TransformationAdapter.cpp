@@ -66,7 +66,7 @@ namespace {
 				renderMemory);
 			
 			if (intersect.IsValid())
-				return new TransformationAdapterIntersect(m_transformation, m_translation, intersect.Get());
+				return Intersect00(new TransformationAdapterIntersect(m_transformation, m_translation, intersect.Get()));
 			else 
 				return intersect;
 		}

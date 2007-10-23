@@ -22,7 +22,7 @@ namespace {
 			x += Random<Type>() * 1.0e-9;
 			const Type derivativeAtX = derivative.EvaluateAt(x);
 			if (derivativeAtX == Type(0)) throw Exception("divide by zero when finding root.");
-			const Type dx = poly.EvaluateAt<Type>(x)/derivativeAtX;
+			const Type dx = poly.EvaluateAt(x)/derivativeAtX;
 			x -= dx;
 			// TODO: write square function
 			if (NormSquared(dx) < NormSquared(maxAcceptableErrorSquared)) break;
