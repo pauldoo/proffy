@@ -15,20 +15,6 @@
 #include "RenderMask.h"
 #include "Light.h"
 
-template class Auto<DestructionAsserter>;
-template class Auto<DestructionAsserter const>;
-template class Auto<LinkCount>;
-template class Auto<LinkCount const>;
-template class Auto<Solid const>;
-template class Auto<TextureMap const>;
-template class Auto<ColorSolid const>;
-template class Auto<Intersect const>;
-template class Auto<BumpMap const>;
-template class Auto<World const>;
-template class Auto<RenderInfo const>;
-template class Auto<RenderMask const>;
-template class Auto<Light const>;
-
 template <typename Type>
 Auto<Type>::Auto() : m_item(NULL)
 {
@@ -79,3 +65,16 @@ void Auto<Type>::operator=(Type* item) {
 	m_item = item;
 }
 
+template class Auto<DestructionAsserter>;
+template class Auto<DestructionAsserter const>;
+template class Auto<LinkCount>;
+template class Auto<LinkCount const>;
+template class Auto<Solid const>;
+template class Auto<TextureMap const>;
+template class Auto<ColorSolid const>;
+template class Auto<Intersect const>;
+template class Auto<BumpMap const>;
+template class Auto<World const>;
+template class Auto<RenderInfo const>;
+template class Auto<RenderMask const>;
+template class Auto<Light const>;

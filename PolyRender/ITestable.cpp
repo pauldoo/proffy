@@ -2,6 +2,10 @@
 #include "ITestable.h"
 #include "Exception.h"
 
+ITestable::~ITestable()
+{
+}
+
 bool ITestable::Assert(const std::string &errorMessage, const bool assertion) {
 	if (!assertion) PersistentConsole::OutputString(errorMessage + "\n");
 	m_testPasses = m_testPasses && assertion;

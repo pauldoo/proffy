@@ -29,7 +29,8 @@ private:
 	static LinkCount* m_currentTimerStack;
 };
 
-#define TIMINGON
+//#define TIMINGON
+
 #ifdef TIMINGON
 #define TIMETHISBLOCK(msg) \
 	static int timerId = TimingPool::GiveIDFor(msg); \

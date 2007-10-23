@@ -2,6 +2,11 @@
 #include "ColorFuncs.h"
 #include "Point.h"
 
+#ifndef WIN32
+#define TOBYTE(v) (static_cast<int>(static_cast<unsigned char>(v)))
+#define RGB(r, g, b) (TOBYTE(r) << 16 | TOBYTE(g) << 8 | TOBYTE(b))
+#endif
+
 namespace {
 	Real ColorValue(Real x) {
 		x = 3*(Real)fabs(fmod(fabs(x),1)-.5);

@@ -28,7 +28,7 @@ namespace {
 		static Polynomial<Type> t = Polynomial<Type>::MakeT();
 		Polynomial<Type> product(1);
 
-		std::vector<Type>::const_iterator root;
+		typename std::vector<Type>::const_iterator root;
 		for (root = rootList.begin() ; root != rootList.end() ; root++ ) {
 			product = product * (t - *root);
 		}

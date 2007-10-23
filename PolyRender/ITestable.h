@@ -7,8 +7,10 @@
 class ITestable {
 public:
     ITestable() : m_testPasses(true) {}
+    virtual ~ITestable() = 0;
+
 	void ExecuteTest();
-    virtual ~ITestable();
+
 protected:
 	virtual std::string Name() const = 0;
 	virtual void Execute() = 0;

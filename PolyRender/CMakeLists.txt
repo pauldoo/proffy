@@ -1,6 +1,71 @@
 project(PolyRender)
 
-add_library(PolyRender ApplyTexture.cpp Auto.cpp AutoTest.cpp BairstowPolySolve.cpp BoundingSolid.cpp BoundingSolidTest.cpp BumpMap.cpp BumpMapAdapter.cpp CheckerMap.cpp ColorMap.cpp ColorSolid.cpp DestructionAsserter.cpp DiffuseLightingMask.cpp DummySolid.cpp Exception.cpp Fold.cpp FoldTest.cpp GlobalWindowSize.cpp ITest.cpp ITestable.cpp Inheritable.cpp InheritableTest.cpp Intersect.cpp IntersectForwarder.cpp Intersection.cpp JuliaSet.cpp Light.cpp Line.cpp LineFuncs.cpp LinkCount.cpp Maybe.cpp MaybeTest.cpp NewtonPolySolve.cpp Norms.cpp Plane.cpp PlaneTest.cpp Polynomial.cpp ProjectionPlane.cpp ProjectionPlaneTest.cpp RenderInfo.cpp RenderMask.cpp RenderMemory.cpp ShadowMask.cpp Solid.cpp SolidIntersect.cpp SolidIntersection.cpp SolidIntersectionTest.cpp SolidUnion.cpp SolidUnionTest.cpp SpecularLightingMask.cpp Sphere.cpp SphereTest.cpp StandardRenderMask.cpp Test.cpp TextUtilities.cpp TextureMask.cpp Timer.cpp TimerTest.cpp TimingPool.cpp Torus.cpp TransformationAdapter.cpp TransformationAdapterTest.cpp TwirlyBump.cpp Utilities.cpp UtilitiesTest.cpp Vector3d.cpp Vector3dTest.cpp VectorAdapter.cpp World.cpp stdafx.cpp)
+find_package(SDL)
+if(SDL_FOUND)
+    include_directories(${SDL_INCLUDE_DIR})
 
-add_executable(PolyRenderBin Main.cpp)
-target_link_libraries(PolyRenderBin PolyRender)
+    add_library(
+        PolyRender
+        ApplyTexture.cpp
+        Auto.cpp
+        BairstowPolySolve.cpp
+        BoundingSolid.cpp
+        BumpMap.cpp
+        BumpMapAdapter.cpp
+        CheckerMap.cpp
+        ColorFuncs.cpp
+        ColorMap.cpp
+        ColorSolid.cpp
+        Console.cpp
+        DestructionAsserter.cpp
+        DiffuseLightingMask.cpp
+        DrawScreen.cpp
+        DummySolid.cpp
+        Exception.cpp
+        Fold.cpp
+        GlobalWindowSize.cpp
+        Inheritable.cpp
+        Intersect.cpp
+        IntersectForwarder.cpp
+        Intersection.cpp
+        JuliaSet.cpp
+        Light.cpp
+        Line.cpp
+        LineFuncs.cpp
+        LinkCount.cpp
+        Maybe.cpp
+        NewtonPolySolve.cpp
+        Norms.cpp
+        Plane.cpp
+        Polynomial.cpp
+        ProjectionPlane.cpp
+        RenderInfo.cpp
+        RenderMask.cpp
+        RenderMemory.cpp
+        ShadowMask.cpp
+        Solid.cpp
+        SolidIntersect.cpp
+        SolidIntersection.cpp
+        SolidUnion.cpp
+        SpecularLightingMask.cpp
+        Sphere.cpp
+        StandardRenderMask.cpp
+        TextUtilities.cpp
+        TextureMask.cpp
+        Timer.cpp
+        TimingPool.cpp
+        Torus.cpp
+        TransformationAdapter.cpp
+        TwirlyBump.cpp
+        Utilities.cpp
+        Vector3d.cpp
+        VectorAdapter.cpp
+        World.cpp
+        stdafx.cpp
+    )
+ 
+    add_executable(PolyRenderBin Main.cpp)
+    target_link_libraries(PolyRenderBin PolyRender ${SDL_LIBRARY})
+else(SDL_FOUND)
+    message("SDL not found!")
+endif(SDL_FOUND)

@@ -3,8 +3,11 @@
 #include "GlobalMFC.h"
 #include "GlobalWindowSize.h"
 
+#include <iostream>
+
 /////////////////////////////////////////////////////////////////////////////////
 
+#ifdef WIN32
 bool Console::s_firstCall = true;
 RECT Console::s_rect;
 
@@ -18,9 +21,10 @@ void Console::OutputString(const std::string &output) {
 	DrawText(hdc, output.c_str(), -1, (LPRECT)&s_rect, DT_CALCRECT);
 	DrawText(hdc, output.c_str(), -1, (LPRECT)&s_rect, DT_LEFT | DT_WORDBREAK);
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////////
 
+#ifdef WIN32
 bool PersistentConsole::s_firstCall = true;
 RECT PersistentConsole::s_rect;
 std::string PersistentConsole::s_log;
@@ -34,5 +38,16 @@ void PersistentConsole::OutputString(const std::string &output) {
 	SetTextColor(hdc,RGB(255,0,0));
 	DrawText(hdc, s_log.c_str(), -1, (LPRECT)&s_rect, DT_LEFT | DT_WORDBREAK);
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////////
+
+#ifndef WIN32
+void Console::OutputString(const std::string &output) {
+    std::cout << output;
+}
+
+void PersistentConsole::OutputString(const std::string &output) {
+    std::cout << output;
+}
+#endif
+

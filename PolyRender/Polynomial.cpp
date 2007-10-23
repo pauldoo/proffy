@@ -10,9 +10,6 @@
 #include "Console.h" //TODO: remove me
 #include <limits>
 
-template class Polynomial<Real>;
-template class Polynomial<Scalar>;
-
 template <typename Type> 
 Polynomial<Type> Polynomial<Type>::MakeT() {
 	Polynomial<Type> t;
@@ -171,6 +168,9 @@ std::string ToString(const Polynomial<Type> &P) {
     }
     return returnString += ToString(P[0]);
 }
+
+template class Polynomial<Real>;
+template class Polynomial<Scalar>;
 
 template std::string ToString<Real>(const RPolynomial &P);
 template std::string ToString<Scalar>(const CPolynomial &P);

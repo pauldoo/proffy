@@ -5,11 +5,6 @@
 #include "Auto.h"
 #include "Scalar.h"
 
-class Intersect;
-template class Maybe<Real>;
-template class Maybe<Auto<const Intersect> >;
-template class Maybe<class Auto<class LinkCount> >;
-
 template <typename T>
 Maybe<T>::Maybe() : m_item(0) {}
 
@@ -46,3 +41,8 @@ void Maybe<T>::operator=(const Maybe<T>& otherMaybe) {
 	if (m_item) delete m_item;
 	m_item = otherMaybe.IsValid() ? new T(otherMaybe.Get()) : 0;
 }
+
+class Intersect;
+template class Maybe<Real>;
+template class Maybe<Auto<const Intersect> >;
+template class Maybe<class Auto<class LinkCount> >;

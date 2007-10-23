@@ -17,7 +17,7 @@
 #include <string>
 #include <limits>
 
-#if __GNUC__
+#ifndef WIN32
 // Simple hack to get stuff compiling
 #define HDC int
 #define HWND int
