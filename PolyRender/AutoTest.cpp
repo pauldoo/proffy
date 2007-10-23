@@ -120,3 +120,4 @@ void AutoTest::Execute() {
 	Assert("Heap object was deleted: vector case", destroyed1);
 	Assert("Heap object was deleted: vector case", destroyed2);	
 }
+

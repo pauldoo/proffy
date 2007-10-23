@@ -39,3 +39,4 @@ template <typename> class Maybe;
 const Maybe<Real> FindSmallestPositiveRootOfQuadratic(const Real a, const Real b, const Real c);
 
 void CheckIfNull(const void*);
+

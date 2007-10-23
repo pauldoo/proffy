@@ -3,6 +3,7 @@
 #include "PointDeclarations.h"
 #include "MatrixDeclarations.h"
 #include "VectorAdapter.h"
+#include "Norms.h"
 
 template <typename T, typename K>
 class Vector3d : VectorAdapter<K, Vector3d<T, K> > {

@@ -2,7 +2,7 @@
 #include "Test.h"
 #include "PolynomialTest.h"
 #include "ProjectionPlaneTest.h"
-#include "Vector3DTest.h"
+#include "Vector3dTest.h"
 #include "ColorTest.h"
 #include "UtilitiesTest.h"
 #include "AutoTest.h"

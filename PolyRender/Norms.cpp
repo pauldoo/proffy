@@ -15,7 +15,7 @@ Real Norm(const Scalar &X) {
 }
 
 Real Norm(const Real X) {
-	return abs(X);
+	return fabs(X);
 }
 
 template <typename Type>

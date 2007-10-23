@@ -78,3 +78,4 @@ void Auto<Type>::operator=(Type* item) {
 	m_item->DecrementCount();
 	m_item = item;
 }
+
