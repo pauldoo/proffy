@@ -17,25 +17,25 @@
 
 package fractals;
 
-final class TilePosition
+final class TilePosition implements Comparable<TilePosition>
 {
     public static final int SIZE = 32;
     
     private final int indexX;
     private final int indexY;
-    private final int scaleIndex;
+    private final int zoomIndex;
         
     /** Creates a new instance of TilePosition */
-    public TilePosition(int indexX, int indexY, int scaleIndex)
+    public TilePosition(int indexX, int indexY, int zoomIndex)
     {
         this.indexX = indexX;
         this.indexY = indexY;
-        this.scaleIndex = scaleIndex;
+        this.zoomIndex = zoomIndex;
     }
 
     public int hashCode()
     {
-        return (indexX * 11) ^ (indexY * 13) ^ (scaleIndex * 17);
+        return (indexX * 11) ^ (indexY * 13) ^ (zoomIndex * 17);
     }
     
     public boolean equals(Object o)
@@ -49,18 +49,33 @@ final class TilePosition
             this == other || (
                 this.indexX == other.indexX &&
                 this.indexY == other.indexY &&
-                this.scaleIndex == other.scaleIndex
+                this.zoomIndex == other.zoomIndex
             );
+    }
+
+    public int compareTo(TilePosition other)
+    {
+        int result = 0;
+        if (result == 0) {
+            result = Integer.signum(this.indexX - other.indexX);
+        }
+        if (result == 0) {
+            result = Integer.signum(this.indexY - other.indexY);
+        }
+        if (result == 0) {
+            result = Integer.signum(this.zoomIndex - other.zoomIndex);
+        }
+        return result;
     }
     
     public String toString()
     {
-        return "{" + getMinX() + ", " + getMinY() + ", " + scaleIndex + "}";
+        return "{" + getMinX() + ", " + getMinY() + ", " + getZoomIndex() + "}";
     }
-    
-    public double scale()
+        
+    public double relativeScale()
     {
-        return Math.pow(0.75, scaleIndex) / 800.0;
+        return Math.pow(0.5, getZoomIndex());
     }
     
     public int getMinX()
@@ -81,5 +96,10 @@ final class TilePosition
     public int getMaxY()
     {
         return getMinY() + SIZE - 1;
+    }
+    
+    public int getZoomIndex()
+    {
+        return zoomIndex;
     }
 }

@@ -20,9 +20,14 @@ package fractals;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,10 +46,12 @@ public class CanvasView extends JComponent implements Runnable
     private final TileProvider<RenderableTile> source;
     private final BlockingQueue<TilePosition> tileQueue;
     private final Set<TilePosition> visited;
+    
     private int offsetX = 0;
     private int offsetY = 0;
+    private int scaleIndex = 0;
     
-    private final class Listener implements MouseInputListener
+    private final class Listener implements MouseInputListener, MouseWheelListener, KeyListener
     {
         private Point previousPoint;
         
@@ -100,6 +107,44 @@ public class CanvasView extends JComponent implements Runnable
             moveBy(dispX, dispY);
             previousPoint = currentPoint;
         }
+
+        public void mouseWheelMoved(MouseWheelEvent e)
+        {
+            switch (Integer.signum(e.getWheelRotation())) {
+                case -1:
+                    // Up rotation
+                    zoomBy(1);
+                    break;
+                case 1:
+                    // Down rotation
+                    zoomBy(-1);
+                    break;
+                default:
+                    throw new IllegalArgumentException("getWheelRotation() reported zero");
+            }
+        }
+
+        public void keyPressed(KeyEvent e)
+        {
+        }
+
+        public void keyReleased(KeyEvent e)
+        {
+            System.out.println(e);
+            switch (e.getKeyChar()) {
+                case '+':
+                    zoomBy(1);
+                    break;
+                case '-':
+                    zoomBy(-1);
+                    break;
+                default:
+            }
+        }
+
+        public void keyTyped(KeyEvent e)
+        {
+        }
     }
     
     public CanvasView(int width, int height)
@@ -113,6 +158,10 @@ public class CanvasView extends JComponent implements Runnable
         Listener listener = new Listener();
         this.addMouseListener(listener);
         this.addMouseMotionListener(listener);
+        this.addMouseWheelListener(listener);
+        this.addKeyListener(listener);
+        
+        this.setFocusable(true);
         //this.setDoubleBuffered(true);
     }
     
@@ -159,24 +208,46 @@ public class CanvasView extends JComponent implements Runnable
         }
     }
 
+    private void zoomBy(int scales)
+    {
+        scaleIndex += scales;
+        if (scales > 0) {
+            offsetX = ((offsetX + 400) * 2) - 400;
+            offsetY = ((offsetY + 300) * 2) - 300;
+        }
+        if (scales < 0) {
+            offsetX = ((offsetX + 400) / 2) - 400;
+            offsetY = ((offsetY + 300) / 2) - 300;
+        }
+        repaint();
+    }
+    
     private void moveBy(int dispX, int dispY)
     {
-        offsetX += dispX;
-        offsetY += dispY;
+        offsetX -= dispX;
+        offsetY -= dispY;
         repaint();
-        //invalidate();
     }
     
     public void paint(Graphics g)
     {
+        paint((Graphics2D)g);
+    }
+
+    public void paint(Graphics2D g)
+    {
         long time = -System.currentTimeMillis();
-        g.translate(offsetX, offsetY);
+        g.translate(-offsetX, -offsetY);
         Rectangle bounds = g.getClipBounds();
-        g.setColor(Color.PINK);
+        g.setColor(Color.ORANGE);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         g.setColor(Color.DARK_GRAY);
         g.drawLine(-1000, -1000, 1000, 1000);
         g.drawLine(-1000, 1000, 1000, -1000);
+
+        g.scale(Math.pow(2.0, scaleIndex), Math.pow(2.0, scaleIndex));
+        System.out.println(g.getClipBounds());
+        System.out.println(g.getClipBounds().getCenterX() + " : " + g.getClipBounds().getCenterY());
         canvas.blitImmediately(g);
 
         List<TilePosition> remainingTiles = new ArrayList<TilePosition>();
@@ -184,7 +255,7 @@ public class CanvasView extends JComponent implements Runnable
         int minY = bounds.y - ((bounds.y % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
         for (int y = minY; y < bounds.y + bounds.height; y += TilePosition.SIZE) {
             for (int x = minX; x < bounds.x + bounds.width; x += TilePosition.SIZE) {
-                TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, 0);
+                TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, scaleIndex);
                 if (!visited.contains(pos)) {
                     remainingTiles.add(pos);
                     visited.add(pos);

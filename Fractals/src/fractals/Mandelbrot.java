@@ -29,8 +29,8 @@ public final class Mandelbrot implements TileProvider<IntegerTile>
         IntegerTile tile = new IntegerTile(pos);
         for (int iy = pos.getMinY(); iy <= pos.getMaxY(); iy++) {
             for (int ix = pos.getMinX(); ix <= pos.getMaxX(); ix++) {
-                final double r = ix * pos.scale();
-                final double i = iy * pos.scale();
+                final double r = ix * pos.relativeScale() / 800;
+                final double i = iy * pos.relativeScale() / 800;
                 int v = iterateUntilEscapes(r, i);
                 tile.setValue(ix, iy, v);
             }

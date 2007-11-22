@@ -18,6 +18,8 @@
 package fractals;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public final class RenderableTile extends Tile 
@@ -30,13 +32,19 @@ public final class RenderableTile extends Tile
         image = new BufferedImage(TilePosition.SIZE, TilePosition.SIZE, BufferedImage.TYPE_INT_RGB);
     }
     
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
-        if (g.hitClip(position.getMinX(), position.getMinY(), TilePosition.SIZE, TilePosition.SIZE)) {
+        if (false) {
             boolean success = g.drawImage(image, position.getMinX(), position.getMinY(), null);
             if (!success) {
                 throw new RuntimeException("Failed to blit");
             }
+        } else {
+            AffineTransform saved = g.getTransform();
+            g.scale(position.relativeScale(), position.relativeScale());
+            g.translate(position.getMinX(), position.getMinY());
+            g.drawImage(image, 0, 0, null);
+            g.setTransform(saved);
         }
     }
     

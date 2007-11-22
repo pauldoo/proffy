@@ -17,9 +17,13 @@
 
 package fractals;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
     Mutable class which stores the completed output
@@ -28,15 +32,31 @@ import java.util.Collection;
 */
 public final class Canvas
 {
-    final Collection<RenderableTile> tiles;
+    /**
+        Comparator that ensures tiles with the highest zoom level appear last.
+    */
+    private static final class LowestZoomFirstComparator implements Comparator<Tile>
+    {
+        public int compare(Tile o1, Tile o2)
+        {
+            int zoomDifference = o1.getPosition().getZoomIndex() - o2.getPosition().getZoomIndex();
+            if (zoomDifference != 0) {
+                return zoomDifference;
+            } else {
+                return o1.getPosition().compareTo(o2.getPosition());
+            }
+        }
+    }
+    
+    final SortedSet<RenderableTile> tiles;
     boolean updatedSinceLastBlit;
     
     public Canvas()
     {
-        tiles = new ArrayList<RenderableTile>();
+        tiles = new TreeSet<RenderableTile>(new LowestZoomFirstComparator());
     }
     
-    public void blitImmediately(Graphics g)
+    public void blitImmediately(Graphics2D g)
     {
         Collection<RenderableTile> tilesCopy;
         synchronized(this) {
@@ -44,6 +64,7 @@ public final class Canvas
             updatedSinceLastBlit = false;
         }
         long time = -System.currentTimeMillis();
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         for (RenderableTile t: tilesCopy) {
             t.render(g);
         }

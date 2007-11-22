@@ -27,4 +27,9 @@ public abstract class Tile
     protected Tile(TilePosition position) {
         this.position = position;
     }
+    
+    public final TilePosition getPosition()
+    {
+        return position;
+    }
 }
