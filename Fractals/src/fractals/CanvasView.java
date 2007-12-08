@@ -42,7 +42,7 @@ public class CanvasView extends JComponent implements Runnable
 {
     private static final long serialVersionUID = 6622327481400970118L;
     
-    private final Canvas canvas;
+    private final CollectionOfTiles canvas;
     private final TileProvider<RenderableTile> source;
     private final BlockingQueue<TilePosition> tileQueue;
     private final Set<TilePosition> visited;
@@ -147,10 +147,10 @@ public class CanvasView extends JComponent implements Runnable
         }
     }
     
-    public CanvasView(int width, int height)
+    public CanvasView(int width, int height, TileProvider<RenderableTile> source)
     {
-        this.canvas = new Canvas();
-        this.source = new RenderFilter(new Mandelbrot(), 0.02);
+        this.canvas = new CollectionOfTiles();
+        this.source = source;
         this.tileQueue = new LinkedBlockingQueue<TilePosition>();
         this.visited = new HashSet<TilePosition>();
         

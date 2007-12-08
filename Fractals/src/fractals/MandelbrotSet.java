@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public final class Mandelbrot implements TileProvider<IntegerTile>
+public final class MandelbrotSet implements TileProvider<IntegerTile>
 {
     public IntegerTile getTile(TilePosition pos)
     {

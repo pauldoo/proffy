@@ -30,7 +30,7 @@ import java.util.TreeSet;
     for a rendering.  This is essentially a mutating set
     of Tiles.
 */
-public final class Canvas
+public final class CollectionOfTiles
 {
     /**
         Comparator that ensures tiles with the highest zoom level appear last.
@@ -51,7 +51,7 @@ public final class Canvas
     final SortedSet<RenderableTile> tiles;
     boolean updatedSinceLastBlit;
     
-    public Canvas()
+    public CollectionOfTiles()
     {
         tiles = new TreeSet<RenderableTile>(new LowestZoomFirstComparator());
     }

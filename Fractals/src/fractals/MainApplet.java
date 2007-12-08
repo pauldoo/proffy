@@ -35,9 +35,18 @@ public final class MainApplet extends JApplet
         super.start();
         try {
             String fractalType = this.getParameter("type");
-            Class fractalClass = Class.forName("fractals." + fractalType);
+            //Class fractalClass = Class.forName("fractals." + fractalType);
             
-            CanvasView view = new CanvasView(800, 600);
+            TileProvider<RenderableTile> source = null;
+            if (fractalType.equals("MandelbrotSet")) {
+                source = new RenderFilter(new MandelbrotSet(), 0.02);
+            } else if (fractalType.equals("JuliaSet")) {
+                source = new RenderFilter(new JuliaSet(-0.726895347709114071439, 0.188887129043845954792), 0.01);
+            } else {
+                throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
+            }
+
+            CanvasView view = new CanvasView(800, 600, source);
             this.getContentPane().add(view);
             view.startUpdateThread();
             view.startRenderingThreads();
