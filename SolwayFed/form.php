@@ -1,4 +1,11 @@
-<form action="/test.php?action=add" method="post" enctype="multipart/form-data" id="addRacepoint">
+<?php
+require "utils.php";
+
+$action = $_GET["action"];
+switch ($action) {
+    case "add":
+        ?>
+<form action="test.php?action=add" method="post" enctype="multipart/form-data" id="addRacepoint">
     <label for="racepointName">Racepoint Name:</label>
     <input type="text" name="racepointName" id="racepointName" />
     <label for="latitude">Latitude</label>
@@ -70,3 +77,23 @@
 
      <input type="submit" class="submit" />
  </form>
+        <?php
+        break;
+
+    case "view":
+        $dbh = csConnect();
+        $id = $_GET["id"] + 0;
+        $query = "SELECT * FROM csEvents WHERE id=" . $id;
+        $result = csExecuteSingleRowQuery($dbh, $query);
+        ?>
+Name: <?php echo $result["racepoint"]; ?><br/>
+Details: <?php echo $result["details"]; ?><br/>
+        <?php
+        break;
+
+    default:
+        die("Unknown action: " . $action);
+}
+?>
+
+
