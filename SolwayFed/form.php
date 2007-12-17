@@ -87,7 +87,9 @@ switch ($action) {
         $result = csExecuteSingleRowQuery($dbh, $query);
         ?>
 Name: <?php echo $result["racepoint"]; ?><br/>
+Date: <?php echo $result["date"]; ?><br/>
 Details: <?php echo $result["details"]; ?><br/>
+Image: <img src="<?php echo $result["imageFilename"]; ?>" /><br/>
         <?php
         break;
 

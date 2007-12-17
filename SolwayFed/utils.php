@@ -90,9 +90,12 @@ function csAddEvent($dbh)
 
     $id = mysql_insert_id($dbh);
 
+    echo "Added ID: " . $id;
+
     if (substr($_FILES["imageUpload"]["type"], 0, 6) == "image/") {
-        $destinationFilename = "upload/" . $_FILES["file"]["name"];
-        move_uploaded_file($_FILES["file"]["tmp_name"], $destinationFilename);
+        $destinationFilename = "../upload/" . $_FILES["imageUpload"]["name"];
+        move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $destinationFilename) or
+            die("move_uploaded_file failed");
         $statement = "UPDATE csEvents SET " .
             "imageFilename = \"" . mysql_real_escape_string($destinationFilename) . "\" " .
             "WHERE id=" . $id . ";";
