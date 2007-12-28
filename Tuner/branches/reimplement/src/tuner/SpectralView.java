@@ -17,9 +17,9 @@
 
 package tuner;
 
-public interface AudioSource
+interface SpectralView
 {
-    public AudioPacket nextPacket();
-    
-    public void close();
+    public void process(AudioPacket packet);
+
+    public void setTargetFrequency(double frequency);
 }

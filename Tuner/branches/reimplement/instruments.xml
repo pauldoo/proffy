@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (C) 2007  Paul Richards.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<TunerInstruments>
+    <MiddleC>
+        <!--
+            Frequency of Middle C in Hz.
+            
+            The frequencies of all other notes are calculated relative to this.
+        -->
+        261.6256
+    </MiddleC>
+    
+    <!--
+        Next define all the instruments we know about.  For each one the semitone
+        index (relative to middle C) is given for each string.
+        
+        So the low E on a guitar for example is 20 semitones below middle C.
+    -->
+    
+    <Instrument name="Bass Guitar">
+        <String name="E"><Semitone>-32</Semitone></String>
+        <String name="A"><Semitone>-27</Semitone></String>
+        <String name="D"><Semitone>-22</Semitone></String>
+        <String name="G"><Semitone>-17</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Cello">
+        <String name="C"><Semitone>-24</Semitone></String>
+        <String name="G"><Semitone>-17</Semitone></String>
+        <String name="D"><Semitone>-10</Semitone></String>
+        <String name="A"><Semitone>-3</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Double Bass">
+        <String name="E"><Semitone>-32</Semitone></String>
+        <String name="A"><Semitone>-27</Semitone></String>
+        <String name="D"><Semitone>-22</Semitone></String>
+        <String name="G"><Semitone>-17</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Guitar">
+        <String name="E (low)"><Semitone>-20</Semitone></String>
+        <String name="A"><Semitone>-15</Semitone></String>
+        <String name="D"><Semitone>-10</Semitone></String>
+        <String name="G"><Semitone>-5</Semitone></String>
+        <String name="B"><Semitone>-1</Semitone></String>
+        <String name="E (high)"><Semitone>4</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Ukelele">
+        <String name="G"><Semitone>19</Semitone></String>
+        <String name="C"><Semitone>24</Semitone></String>
+        <String name="E"><Semitone>28</Semitone></String>
+        <String name="A"><Semitone>33</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Ukelele (Guitar tuning)">
+        <String name="E"><Semitone>16</Semitone></String>
+        <String name="A"><Semitone>21</Semitone></String>
+        <String name="D"><Semitone>26</Semitone></String>
+        <String name="G"><Semitone>31</Semitone></String>
+    </Instrument>
+
+    <Instrument name="Viola">
+        <String name="C"><Semitone>-12</Semitone></String>
+        <String name="G"><Semitone>-5</Semitone></String>
+        <String name="D"><Semitone>2</Semitone></String>
+        <String name="A"><Semitone>9</Semitone></String>
+    </Instrument>
+    
+    <Instrument name="Violin">
+        <String name="G"><Semitone>-5</Semitone></String>
+        <String name="D"><Semitone>2</Semitone></String>
+        <String name="A"><Semitone>9</Semitone></String>
+        <String name="E"><Semitone>16</Semitone></String>
+    </Instrument>
+</TunerInstruments>

@@ -17,9 +17,27 @@
 
 package tuner;
 
-public interface AudioSource
+final class UpdateRunner implements Runnable
 {
-    public AudioPacket nextPacket();
+    final AudioSource audioSource;
+    final SpectralView spectralView;
     
-    public void close();
+    public UpdateRunner(AudioSource audioSource, SpectralView spectralView)
+    {
+        this.audioSource = audioSource;
+        this.spectralView = spectralView;
+    }
+    
+    public void run()
+    {
+        Thread.currentThread().setName("UpdateRunner");
+        try {
+            while (!Thread.interrupted()) {
+                AudioPacket packet = audioSource.nextPacket();
+                spectralView.process(packet);
+            }
+        } finally {
+            audioSource.close();
+        }
+    }
 }

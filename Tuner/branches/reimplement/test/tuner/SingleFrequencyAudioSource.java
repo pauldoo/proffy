@@ -37,6 +37,10 @@ final class SingleFrequencyAudioSource implements AudioSource
         return 200000;
     }
 
+    public void close()
+    {
+    }
+    
     public AudioPacket nextPacket()
     {
         int numberOfSamples = (int)(getSampleFrequencyInHz() * 0.2); // 1/5th of a second worth
