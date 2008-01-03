@@ -25,6 +25,7 @@ public final class SinglePickup
     private double position = 0.0;
     private double velocity = 0.0;
     private double currentAmplitude = 0.0;
+    private double currentOffset = 0.0;
     
     public SinglePickup(double tuneFrequencyInHz, double damping)
     {
@@ -45,7 +46,10 @@ public final class SinglePickup
         
         currentAmplitude = 0.0;
         for (double sample: packet.getSamples()) {
-            final double force = sample + (-damping * velocity) + (-springConstant() * position);
+            final double offsettedSample = sample - currentOffset;
+            currentOffset += Math.signum(offsettedSample) * 0.1;
+            final double force = offsettedSample + (-damping * velocity) + (-springConstant() * position);
+            
             if (Double.isNaN(force) || Double.isInfinite(force)) {
                 throw new RuntimeException("Force Hit: "+ force);
             }
