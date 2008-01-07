@@ -1,3 +1,10 @@
+<!--
+
+    This file renders HTML and does not modify the database. The HTML presented
+    is used to either display existing entries or allow the user to enter the
+    details of a new entry.
+
+-->
 <?php
 require "utils.php";
 

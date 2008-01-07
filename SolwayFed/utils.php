@@ -1,3 +1,9 @@
+<!--
+
+    An include used by the other php files. Never requested directly by the
+    browser.
+
+-->
 <?php
 date_default_timezone_set("Europe/London") or
     die("date_default_timezone_set failed");
@@ -93,7 +99,7 @@ function csAddEvent($dbh)
     echo "Added ID: " . $id;
 
     if (substr($_FILES["imageUpload"]["type"], 0, 6) == "image/") {
-        $destinationFilename = "../upload/" . $_FILES["imageUpload"]["name"];
+        $destinationFilename = "upload/" . $_FILES["imageUpload"]["name"];
         move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $destinationFilename) or
             die("move_uploaded_file failed");
         $statement = "UPDATE csEvents SET " .
