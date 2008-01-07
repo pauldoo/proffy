@@ -12,7 +12,7 @@ $action = $_GET["action"];
 switch ($action) {
     case "add":
         ?>
-<form action="test.php?action=add" method="post" enctype="multipart/form-data" id="addRacepoint">
+<form action="submit.php?action=add" method="post" enctype="multipart/form-data" id="addRacepoint">
     <label for="racepointName">Racepoint Name:</label>
     <input type="text" name="racepointName" id="racepointName" />
     <label for="latitude">Latitude</label>
