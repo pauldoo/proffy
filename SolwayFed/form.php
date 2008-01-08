@@ -201,6 +201,8 @@ Latitude: <?php echo htmlspecialchars($result["latitude"]); ?><br/>
 Longitude: <?php echo htmlspecialchars($result["longitude"]); ?><br/>
 Details: <?php echo htmlspecialchars($result["details"]); ?><br/>
 Image: <img src="<?php echo htmlspecialchars($result["imageFilename"]); ?>" /><br/>
+
+<a href="form.php?action=edit&id=<?php echo $result["id"]; ?>">Edit</a><br/>
         <?php
         break;
 
@@ -208,5 +210,3 @@ Image: <img src="<?php echo htmlspecialchars($result["imageFilename"]); ?>" /><b
         die("Unknown action: " . $action);
 }
 ?>
-
-

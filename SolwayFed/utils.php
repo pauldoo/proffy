@@ -97,9 +97,9 @@ function csAddEvent($dbh)
 
     $id = mysql_insert_id($dbh);
 
-    echo "Added ID: " . $id;
-
     csHandleImageUpload($dbh, $id);
+
+    header("Location: form.php?action=view&id=" . $id);
 }
 
 /**
@@ -129,6 +129,8 @@ function csEditEvent($dbh)
     csExecuteStatement($dbh, $statement);
 
     csHandleImageUpload($dbh, $id);
+
+    header("Location: form.php?action=view&id=" . $id);
 }
 
 /**
@@ -149,4 +151,3 @@ function csHandleImageUpload($dbh, $id)
     }
 }
 ?>
-
