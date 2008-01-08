@@ -1,11 +1,12 @@
-<!--
+<?php
+/**
 
     This file renders HTML and does not modify the database. The HTML presented
     is used to either display existing entries or allow the user to enter the
     details of a new entry.
 
--->
-<?php
+*/
+
 require "utils.php";
 
 $action = $_GET["action"];
@@ -108,6 +109,7 @@ Image: <?php echo htmlspecialchars($result["imageFilename"]); ?><br/>
 <img src="<?php echo htmlspecialchars($result["imageFilename"]); ?>" /><br/>
 
 <form action="submit.php?action=edit" method="post" enctype="multipart/form-data" id="addRacepoint">
+    <input type="hidden" name="id" value="<?php echo $id; ?>"/>
     <label for="racepointName">Racepoint Name:</label>
     <input type="text" name="racepointName" id="racepointName" value="<?php echo htmlspecialchars($result["racepoint"]); ?>"/>
     <label for="latitude">Latitude</label>

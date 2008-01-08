@@ -1,10 +1,11 @@
-<!--
+<?php
+/**
 
     An include used by the other php files. Never requested directly by the
     browser.
 
--->
-<?php
+*/
+
 date_default_timezone_set("Europe/London") or
     die("date_default_timezone_set failed");
 
@@ -98,6 +99,45 @@ function csAddEvent($dbh)
 
     echo "Added ID: " . $id;
 
+    csHandleImageUpload($dbh, $id);
+}
+
+/**
+    Read the $_POST variable and edit the existing event.
+*/
+function csEditEvent($dbh)
+{
+    $id = $_POST["id"] + 0;
+    $racepointName = $_POST["racepointName"];
+    $latitude = $_POST["latitude"] + 0.0;
+    $longitude = $_POST["longitude"] + 0.0;
+    $details = $_POST["details"];
+
+    $day = $_POST["day"] + 0;
+    $month = $_POST["month"] + 0;
+    $year = $_POST["year"] + 0;
+    $date = $year."-".$month."-".$day;
+
+    $statement = "UPDATE csEvents SET " .
+        "racepoint = \"" . mysql_real_escape_string($racepointName) . "\", " .
+        "date = \"" . $date . "\", " .
+        "latitude = " . $latitude . ", " .
+        "longitude = " . $longitude . ", " .
+        "details = \"" . mysql_real_escape_string($details) . "\" " .
+        "WHERE id = " . $id . ";";
+
+    csExecuteStatement($dbh, $statement);
+
+    csHandleImageUpload($dbh, $id);
+}
+
+/**
+    Saves the image that has been submitted in the $_FILES variable
+    and copies the filename to the database.
+*/
+function csHandleImageUpload($dbh, $id)
+{
+    // TODO: Delete the previous image associated with this event.
     if (substr($_FILES["imageUpload"]["type"], 0, 6) == "image/") {
         $destinationFilename = "upload/" . $_FILES["imageUpload"]["name"];
         move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $destinationFilename) or
