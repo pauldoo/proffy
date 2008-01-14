@@ -29,7 +29,9 @@ import java.io.InputStream;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 public final class MainWindow extends JFrame
 {
@@ -68,9 +70,11 @@ public final class MainWindow extends JFrame
         FrequencyCurve frequencyCurve = new FrequencyCurve();
         this.spectralView = frequencyCurve;
 
+        this.setTitle("Tuner v0.3");
         this.getContentPane().add(frequencyCurve, BorderLayout.CENTER);
         this.getContentPane().add(createButtonPanel(), BorderLayout.NORTH);
-
+        this.getContentPane().add(createStatusPanel(), BorderLayout.SOUTH);
+        
         pack();
     }
 
@@ -108,6 +112,14 @@ public final class MainWindow extends JFrame
         stringPicker.setSelectedIndex(0);
         updateSelectedString();
         return buttonPanel;
+    }
+    
+    private JPanel createStatusPanel()
+    {
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        statusPanel.add(new JLabel("\u00A9 2007-2008 Paul Richards <paul.richards@gmail.com>."));
+        return statusPanel;
     }
     
     private String getSelectedInstrument()
