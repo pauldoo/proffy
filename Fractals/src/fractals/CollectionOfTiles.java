@@ -18,10 +18,15 @@
 package fractals;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -56,7 +61,44 @@ public final class CollectionOfTiles
         tiles = new TreeSet<RenderableTile>(new LowestZoomFirstComparator());
     }
     
-    public void blitImmediately(Graphics2D g)
+    /**
+        Given an AffineTransformation attempts to figure out the scale it applies.
+
+        Assumes that the transform does not contain any shear.
+    */
+    private static double recoverScale(AffineTransform transform)
+    {
+        int scaleType = transform.getType() & AffineTransform.TYPE_MASK_SCALE;
+        if (scaleType == 0 || scaleType == AffineTransform.TYPE_UNIFORM_SCALE) {
+            return Math.sqrt(transform.getDeterminant());
+        } else {
+            throw new IllegalArgumentException("AffineTransform is not a \"uniform scale\" or \"identity\" transform: " + transform.getType());
+        }
+    }
+    
+    private static Rectangle calculateZoomCorrectedBounds(Rectangle clipBounds, int bestScaleIndex)
+    {
+        double xmin = clipBounds.x;
+        double ymin = clipBounds.y;
+        double xmax = clipBounds.x + clipBounds.width;
+        double ymax = clipBounds.y + clipBounds.height;
+        xmin *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
+        ymin *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
+        xmax *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
+        ymax *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
+        return new Rectangle(
+                (int)Math.floor(xmin),
+                (int)Math.floor(ymin),
+                (int)(Math.ceil(xmax) - Math.floor(xmin)),
+                (int)(Math.ceil(ymax) - Math.floor(ymin)));
+    }
+
+    
+    /**
+        Uses currently available tiles to blit over the Graphics2D object's clip bounds.
+        Returns the list of tiles that if rendered would have made this blit look nicer.
+    */
+    public List<TilePosition> blitImmediately(Graphics2D g)
     {
         Collection<RenderableTile> tilesCopy;
         synchronized(this) {
@@ -69,7 +111,28 @@ public final class CollectionOfTiles
             t.render(g);
         }
         time += System.currentTimeMillis();
-        System.out.println(this.getClass().getName() + ".blitImmediately() took: " + time + "ms");
+//        System.out.println(this.getClass().getName() + ".blitImmediately() took: " + time + "ms");
+        
+        AffineTransform forwardTransform = g.getTransform();
+        
+        double magnification = recoverScale(forwardTransform);
+        int bestScaleIndex = (int)Math.ceil(Math.log(magnification) / Math.log(TilePosition.SCALE_POWER));
+        
+//        System.out.println("bestScaleIndex: " + bestScaleIndex);
+        
+        Rectangle bounds = calculateZoomCorrectedBounds(g.getClipBounds(), bestScaleIndex);
+//        System.out.println(bounds);
+        
+        List<TilePosition> remainingTiles = new ArrayList<TilePosition>();
+        int minX = bounds.x - ((bounds.x % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
+        int minY = bounds.y - ((bounds.y % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
+        for (int y = minY; y < bounds.y + bounds.height; y += TilePosition.SIZE) {
+            for (int x = minX; x < bounds.x + bounds.width; x += TilePosition.SIZE) {
+                TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, bestScaleIndex);
+                remainingTiles.add(pos);
+            }
+        } 
+        return remainingTiles;
     }
     
     public boolean updatedSinceLastBlit()

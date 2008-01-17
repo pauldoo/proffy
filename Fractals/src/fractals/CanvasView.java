@@ -28,14 +28,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.awt.geom.AffineTransform;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.event.MouseInputListener;
 
 public class CanvasView extends JComponent implements Runnable
@@ -46,10 +46,9 @@ public class CanvasView extends JComponent implements Runnable
     private final TileProvider<RenderableTile> source;
     private final BlockingQueue<TilePosition> tileQueue;
     private final Set<TilePosition> visited;
+    private final JLabel statusLabel;
     
-    private int offsetX = 0;
-    private int offsetY = 0;
-    private int scaleIndex = 0;
+    private AffineTransform transform = new AffineTransform();
     
     private final class Listener implements MouseInputListener, MouseWheelListener, KeyListener
     {
@@ -147,12 +146,13 @@ public class CanvasView extends JComponent implements Runnable
         }
     }
     
-    public CanvasView(int width, int height, TileProvider<RenderableTile> source)
+    public CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
     {
         this.canvas = new CollectionOfTiles();
         this.source = source;
         this.tileQueue = new LinkedBlockingQueue<TilePosition>();
         this.visited = new HashSet<TilePosition>();
+        this.statusLabel = statusLabel;
         
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         Listener listener = new Listener();
@@ -162,7 +162,7 @@ public class CanvasView extends JComponent implements Runnable
         this.addKeyListener(listener);
         
         this.setFocusable(true);
-        //this.setDoubleBuffered(true);
+        this.setDoubleBuffered(true);
     }
     
     public void startRenderingThreads()
@@ -210,22 +210,20 @@ public class CanvasView extends JComponent implements Runnable
 
     private void zoomBy(int scales)
     {
-        scaleIndex += scales;
-        if (scales > 0) {
-            offsetX = ((offsetX + 400) * 2) - 400;
-            offsetY = ((offsetY + 300) * 2) - 300;
-        }
-        if (scales < 0) {
-            offsetX = ((offsetX + 400) / 2) - 400;
-            offsetY = ((offsetY + 300) / 2) - 300;
-        }
+        double scaleFactor = Math.pow(1.2, scales);
+        AffineTransform zoomTransform = new AffineTransform();
+        zoomTransform.translate(400, 300);
+        zoomTransform.scale(scaleFactor, scaleFactor);
+        zoomTransform.translate(-400, -300);
+        transform.preConcatenate(zoomTransform);
         repaint();
     }
     
     private void moveBy(int dispX, int dispY)
     {
-        offsetX -= dispX;
-        offsetY -= dispY;
+        AffineTransform translateTransform = new AffineTransform();
+        translateTransform.translate(dispX, dispY);
+        transform.preConcatenate(translateTransform);
         repaint();
     }
     
@@ -237,36 +235,30 @@ public class CanvasView extends JComponent implements Runnable
     public void paint(Graphics2D g)
     {
         long time = -System.currentTimeMillis();
-        g.translate(-offsetX, -offsetY);
         Rectangle bounds = g.getClipBounds();
         g.setColor(Color.ORANGE);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-        g.setColor(Color.DARK_GRAY);
-        g.drawLine(-1000, -1000, 1000, 1000);
-        g.drawLine(-1000, 1000, 1000, -1000);
 
-        g.scale(Math.pow(2.0, scaleIndex), Math.pow(2.0, scaleIndex));
-        System.out.println(g.getClipBounds());
-        System.out.println(g.getClipBounds().getCenterX() + " : " + g.getClipBounds().getCenterY());
-        canvas.blitImmediately(g);
-
-        List<TilePosition> remainingTiles = new ArrayList<TilePosition>();
-        int minX = bounds.x - ((bounds.x % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
-        int minY = bounds.y - ((bounds.y % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
-        for (int y = minY; y < bounds.y + bounds.height; y += TilePosition.SIZE) {
-            for (int x = minX; x < bounds.x + bounds.width; x += TilePosition.SIZE) {
-                TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, scaleIndex);
-                if (!visited.contains(pos)) {
-                    remainingTiles.add(pos);
-                    visited.add(pos);
-                }
+//        System.out.println("Before:");
+//        System.out.println("\t" + g.getTransform());
+//        System.out.println("\t" + g.getClipBounds());
+        g.transform(transform);
+//        System.out.println("After:");
+//        System.out.println("\t" + g.getTransform());
+//        System.out.println("\t" + g.getClipBounds());
+        
+        List<TilePosition> remainingTiles = canvas.blitImmediately(g);
+        
+        for (TilePosition pos: remainingTiles) {
+            if (!visited.contains(pos)) {
+                visited.add(pos);
+                tileQueue.add(pos);
             }
         }
-        if (!remainingTiles.isEmpty()) {
-            Collections.shuffle(remainingTiles);
-            tileQueue.addAll(remainingTiles);
-        }
+        
+        statusLabel.setText("Remaining tiles: " + tileQueue.size());
+        
         time += System.currentTimeMillis();
-        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
+//        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
     }
 }

@@ -19,7 +19,16 @@ package fractals;
 
 final class TilePosition implements Comparable<TilePosition>
 {
+    /**
+        Width and height (in pixels) of each tile.
+    */
     public static final int SIZE = 32;
+    
+    /**
+        At each zoom level, the tiles at the next layer are this many times smaller
+        (in the physical sense, not in the number of pixels it stores).
+    */
+    public static final double SCALE_POWER = 2.0;
     
     private final int indexX;
     private final int indexY;
@@ -75,7 +84,7 @@ final class TilePosition implements Comparable<TilePosition>
         
     public double relativeScale()
     {
-        return Math.pow(0.5, getZoomIndex());
+        return 1.0 / Math.pow(SCALE_POWER, getZoomIndex());
     }
     
     public int getMinX()

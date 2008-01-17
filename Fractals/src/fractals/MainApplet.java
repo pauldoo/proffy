@@ -17,10 +17,14 @@
 
 package fractals;
 
+import java.awt.BorderLayout;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import javax.swing.JApplet;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 public final class MainApplet extends JApplet
 {
@@ -30,6 +34,7 @@ public final class MainApplet extends JApplet
     {
     }
 
+    @Override
     public void start()
     {
         super.start();
@@ -46,8 +51,20 @@ public final class MainApplet extends JApplet
                 throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
             }
 
-            CanvasView view = new CanvasView(800, 600, source);
-            this.getContentPane().add(view);
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+
+            JPanel statusPanel = new JPanel();
+            statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            JLabel statusLabel = new JLabel();
+            statusPanel.add(statusLabel);
+            
+            CanvasView view = new CanvasView(800, 600, source, statusLabel);
+            
+            panel.add(view, BorderLayout.CENTER);
+            panel.add(statusPanel, BorderLayout.SOUTH);
+            
+            this.getContentPane().add(panel);
             view.startUpdateThread();
             view.startRenderingThreads();
         } catch (Exception e) {
