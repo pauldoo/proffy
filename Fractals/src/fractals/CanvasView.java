@@ -50,102 +50,6 @@ public class CanvasView extends JComponent implements Runnable
     
     private AffineTransform transform = new AffineTransform();
     
-    private final class Listener implements MouseInputListener, MouseWheelListener, KeyListener
-    {
-        private Point previousPoint;
-        
-        public void mouseClicked(MouseEvent e)
-        {
-            //System.out.println(e);
-        }
-
-        public void mouseDragged(MouseEvent e)
-        {
-            //System.out.println(e);
-            if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-                updateMove(e.getPoint());
-            }
-        }
-
-        public void mouseEntered(MouseEvent e)
-        {
-            //System.out.println(e);
-        }
-
-        public void mouseExited(MouseEvent e)
-        {
-            //System.out.println(e);
-        }
-
-        public void mouseMoved(MouseEvent e)
-        {
-            //System.out.println(e);
-        }
-
-        public void mousePressed(MouseEvent e)
-        {
-            //System.out.println(e);
-            if (e.getButton() == MouseEvent.BUTTON1) {
-                previousPoint = e.getPoint();
-            }
-        }
-
-        public void mouseReleased(MouseEvent e)
-        {
-            //System.out.println(e);
-            if (e.getButton() == MouseEvent.BUTTON1) {
-                updateMove(e.getPoint());
-                previousPoint = null;
-            }
-        }
-        
-        private void updateMove(Point currentPoint)
-        {
-            int dispX = currentPoint.x - previousPoint.x;
-            int dispY = currentPoint.y - previousPoint.y;
-            moveBy(dispX, dispY);
-            previousPoint = currentPoint;
-        }
-
-        public void mouseWheelMoved(MouseWheelEvent e)
-        {
-            switch (Integer.signum(e.getWheelRotation())) {
-                case -1:
-                    // Up rotation
-                    zoomBy(1);
-                    break;
-                case 1:
-                    // Down rotation
-                    zoomBy(-1);
-                    break;
-                default:
-                    throw new IllegalArgumentException("getWheelRotation() reported zero");
-            }
-        }
-
-        public void keyPressed(KeyEvent e)
-        {
-        }
-
-        public void keyReleased(KeyEvent e)
-        {
-            System.out.println(e);
-            switch (e.getKeyChar()) {
-                case '+':
-                    zoomBy(1);
-                    break;
-                case '-':
-                    zoomBy(-1);
-                    break;
-                default:
-            }
-        }
-
-        public void keyTyped(KeyEvent e)
-        {
-        }
-    }
-    
     public CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
     {
         this.canvas = new CollectionOfTiles();
@@ -155,7 +59,7 @@ public class CanvasView extends JComponent implements Runnable
         this.statusLabel = statusLabel;
         
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        Listener listener = new Listener();
+        CanvasViewInputHandler listener = new CanvasViewInputHandler(this);
         this.addMouseListener(listener);
         this.addMouseMotionListener(listener);
         this.addMouseWheelListener(listener);
@@ -208,7 +112,7 @@ public class CanvasView extends JComponent implements Runnable
         }
     }
 
-    private void zoomBy(int scales)
+    public void zoomBy(int scales)
     {
         double scaleFactor = Math.pow(1.2, scales);
         AffineTransform zoomTransform = new AffineTransform();
@@ -219,7 +123,7 @@ public class CanvasView extends JComponent implements Runnable
         repaint();
     }
     
-    private void moveBy(int dispX, int dispY)
+    public void moveBy(int dispX, int dispY)
     {
         AffineTransform translateTransform = new AffineTransform();
         translateTransform.translate(dispX, dispY);
@@ -227,6 +131,17 @@ public class CanvasView extends JComponent implements Runnable
         repaint();
     }
     
+    public void rotateBy(double angleInRadians)
+    {
+        AffineTransform rotateTransform = new AffineTransform();
+        rotateTransform.translate(400, 300);
+        rotateTransform.rotate(angleInRadians);
+        rotateTransform.translate(-400, -300);
+        transform.preConcatenate(rotateTransform);
+        repaint();
+    }
+    
+    @Override
     public void paint(Graphics g)
     {
         paint((Graphics2D)g);
