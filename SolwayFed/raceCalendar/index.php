@@ -33,6 +33,28 @@
 		<div id="contentArea">
 			<div id="leftCol"><!-- InstanceBeginEditable name="EditRegion3" -->
 			  <h1>Race Calendar</h1>
+                <?php
+                require "../utils.php";
+
+                $dbh = csConnect();
+                $result = csExecuteQuery($dbh,
+                    "SELECT * FROM csEvents WHERE date >= CURRENT_DATE() ORDER BY date");
+
+                while ($row = mysql_fetch_assoc($result)) {
+                    $friendlyDate = date('d/m/Y', strtotime($row["date"]));
+                ?>
+                    <div class="race">
+                    <a href="#"><img src="../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
+                    <p><span><strong>Location:</strong></span><?php echo htmlspecialchars($row["racepoint"]); ?><br/>
+                    <span><strong>Date:</strong></span><?php echo htmlspecialchars($friendlyDate); ?></p>
+                    <p><?php echo htmlspecialchars($row["details"]); ?><br/>
+                    <a href="#">read more...</a></p>
+                    </div>
+                    <hr/>
+
+                <?php
+                }
+                ?>
 			  <div class="race">
  			  	<a href="#"><img src="../images/image2.jpg" alt="raceImage"/></a>
 				<p><span><strong>Location:</strong></span> Shap<br/>

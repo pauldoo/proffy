@@ -36,12 +36,22 @@ function csExecuteStatement($dbh, $statement)
 }
 
 /**
+    Executes an SQL query and returns the result from the mysql_query function.
+*/
+function csExecuteQuery($dbh, $query)
+{
+    $result = mysql_query($query, $dbh) or
+        die("mysql_query failed: " . mysql_error());
+
+    return $result;
+}
+
+/**
     Executes an SQL query that is expected to return just a single row.
 */
 function csExecuteSingleRowQuery($dbh, $query)
 {
-    $result = mysql_query($query, $dbh) or
-        die("mysql_query failed: " . mysql_error());
+    $result = csExecuteQuery($dbh, $query);
     $row = mysql_fetch_assoc($result) or
         die("No entry found");
     mysql_fetch_assoc($result) and
