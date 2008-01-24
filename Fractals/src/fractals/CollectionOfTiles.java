@@ -20,13 +20,13 @@ package fractals;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -53,12 +53,21 @@ public final class CollectionOfTiles
         }
     }
     
-    final SortedSet<RenderableTile> tiles;
-    boolean updatedSinceLastBlit;
+    private enum State {
+        HAVE_NEW_TILES,
+        NEED_HIGH_QUALITY_RENDER,
+        UP_TO_DATE
+    }
     
-    public CollectionOfTiles()
+    private final Object lockThing = new Object();
+    private final int maximumCapacity;
+    private final List<RenderableTile> tiles = new LinkedList<RenderableTile>();
+    
+    State state = State.HAVE_NEW_TILES;
+    
+    public CollectionOfTiles(int maximumCapacity)
     {
-        tiles = new TreeSet<RenderableTile>(new LowestZoomFirstComparator());
+        this.maximumCapacity = maximumCapacity;
     }
     
     /**
@@ -76,12 +85,12 @@ public final class CollectionOfTiles
         }
     }
     
-    private static Rectangle calculateZoomCorrectedBounds(Rectangle clipBounds, int bestScaleIndex)
+    private static Rectangle calculateZoomCorrectedBounds(Rectangle2D clipBounds, int bestScaleIndex)
     {
-        double xmin = clipBounds.x;
-        double ymin = clipBounds.y;
-        double xmax = clipBounds.x + clipBounds.width;
-        double ymax = clipBounds.y + clipBounds.height;
+        double xmin = clipBounds.getMinX();
+        double ymin = clipBounds.getMinY();
+        double xmax = clipBounds.getMaxX();
+        double ymax = clipBounds.getMaxY();
         xmin *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
         ymin *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
         xmax *= Math.pow(TilePosition.SCALE_POWER, bestScaleIndex);
@@ -92,25 +101,43 @@ public final class CollectionOfTiles
                 (int)(Math.ceil(xmax) - Math.floor(xmin)),
                 (int)(Math.ceil(ymax) - Math.floor(ymin)));
     }
-
     
     /**
         Uses currently available tiles to blit over the Graphics2D object's clip bounds.
         Returns the list of tiles that if rendered would have made this blit look nicer.
     */
-    public List<TilePosition> blitImmediately(Graphics2D g)
+    Set<TilePosition> blitImmediately(Graphics2D g)
     {
-        Collection<RenderableTile> tilesCopy;
-        synchronized(this) {
-            tilesCopy = new ArrayList<RenderableTile>(tiles);
-            updatedSinceLastBlit = false;
+        // The copy we make must be sorted so that we paint them in the correct order.
+        final SortedSet<RenderableTile> tilesCopy = new TreeSet<RenderableTile>(new LowestZoomFirstComparator());
+        boolean doHighQualityRender = false;
+        synchronized(lockThing) {
+            tilesCopy.addAll(tiles);
+            
+            if (state == State.HAVE_NEW_TILES) {
+                // Do a quick render as we are still getting new tiles, and mark ourselves as requiring a better blit.
+                state = State.NEED_HIGH_QUALITY_RENDER;
+            } else if (state == State.NEED_HIGH_QUALITY_RENDER) {
+                // No new tiles arrived recently, so lets do a high quality render since the last blit was low quality.
+                doHighQualityRender = true;
+                state = State.UP_TO_DATE;
+            } else if (state == State.UP_TO_DATE) {
+                // No new tiles, and our last blit was high quality.  Most likely a user drag then, so do a quick render and
+                // mark ourselves as requiring a better one.
+                state = State.NEED_HIGH_QUALITY_RENDER;
+            } else {
+                throw new IllegalArgumentException("Invalid state");
+            }
         }
-        long time = -System.currentTimeMillis();
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        if (doHighQualityRender) {
+            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        } else {
+            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        }
         for (RenderableTile t: tilesCopy) {
             t.render(g);
         }
-        time += System.currentTimeMillis();
 //        System.out.println(this.getClass().getName() + ".blitImmediately() took: " + time + "ms");
         
         AffineTransform forwardTransform = g.getTransform();
@@ -120,33 +147,63 @@ public final class CollectionOfTiles
         
 //        System.out.println("bestScaleIndex: " + bestScaleIndex);
         
-        Rectangle bounds = calculateZoomCorrectedBounds(g.getClipBounds(), bestScaleIndex);
+        Rectangle bounds = calculateZoomCorrectedBounds(g.getClip().getBounds2D(), bestScaleIndex);
 //        System.out.println(bounds);
         
-        List<TilePosition> remainingTiles = new ArrayList<TilePosition>();
+        Set<TilePosition> remainingVisibleTiles = new HashSet<TilePosition>();
         int minX = bounds.x - ((bounds.x % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
         int minY = bounds.y - ((bounds.y % TilePosition.SIZE) + TilePosition.SIZE) % TilePosition.SIZE;
+        //System.out.println(bounds);
         for (int y = minY; y < bounds.y + bounds.height; y += TilePosition.SIZE) {
             for (int x = minX; x < bounds.x + bounds.width; x += TilePosition.SIZE) {
                 TilePosition pos = new TilePosition(x / TilePosition.SIZE, y / TilePosition.SIZE, bestScaleIndex);
-                remainingTiles.add(pos);
+                remainingVisibleTiles.add(pos);
             }
-        } 
-        return remainingTiles;
+        }
+        //System.out.println("Visible tiles: " + remainingVisibleTiles.size());
+        synchronized(lockThing) {
+            // Iterate over all tiles in our collection, if any of them are currently visible then
+            // move them to the end of the purge queue.
+            for (int i = 0; i < tiles.size(); i++) {
+                RenderableTile tile = tiles.get(i);
+                boolean isVisible = remainingVisibleTiles.remove(tile.getPosition());
+                if (isVisible) {
+                    tiles.remove(i);
+                    tiles.add(tile);
+                    i--;
+                }
+            }
+        }
+        return remainingVisibleTiles;
     }
     
-    public boolean updatedSinceLastBlit()
+    public boolean wouldLookBetterWithAnotherBlit()
     {
-        synchronized(this) {
-            return updatedSinceLastBlit;
+        synchronized(lockThing) {
+            return state != State.UP_TO_DATE;
         }
     }
     
-    public void addTile(RenderableTile t)
+    /**
+        Adds a tile to the canvas.  If a different tile had to be purged to make
+        space for this one, the position of the purged tile is returned (so it can
+        presumably be made eligable for re-rendering if needed.)
+    */
+    TilePosition addTile(RenderableTile t)
     {
-        synchronized(this) {
+        Tile purgedTile = null;
+        synchronized(lockThing) {
             tiles.add(t);
-            updatedSinceLastBlit = true;
+            if (tiles.size() > maximumCapacity) {
+                purgedTile = tiles.remove(0);
+            }
+            state = State.HAVE_NEW_TILES;
         }
+        return (purgedTile != null) ? (purgedTile.getPosition()) : null;
+    }
+    
+    int getMaximumCapacity()
+    {
+        return maximumCapacity;
     }
 }

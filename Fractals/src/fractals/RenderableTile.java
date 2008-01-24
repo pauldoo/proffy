@@ -17,7 +17,6 @@
 
 package fractals;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -26,7 +25,7 @@ public final class RenderableTile extends Tile
 {
     private final BufferedImage image;
     
-    public RenderableTile(TilePosition position)
+    RenderableTile(TilePosition position)
     {
         super(position);
         image = new BufferedImage(TilePosition.SIZE, TilePosition.SIZE, BufferedImage.TYPE_INT_RGB);

@@ -22,7 +22,7 @@ final class TilePosition implements Comparable<TilePosition>
     /**
         Width and height (in pixels) of each tile.
     */
-    public static final int SIZE = 32;
+    public static final int SIZE = 64;
     
     /**
         At each zoom level, the tiles at the next layer are this many times smaller
@@ -42,11 +42,13 @@ final class TilePosition implements Comparable<TilePosition>
         this.zoomIndex = zoomIndex;
     }
 
+    @Override
     public int hashCode()
     {
         return (indexX * 11) ^ (indexY * 13) ^ (zoomIndex * 17);
     }
     
+    @Override
     public boolean equals(Object o)
     {
         return equals((TilePosition)o);
@@ -77,6 +79,7 @@ final class TilePosition implements Comparable<TilePosition>
         return result;
     }
     
+    @Override
     public String toString()
     {
         return "{" + getMinX() + ", " + getMinY() + ", " + getZoomIndex() + "}";

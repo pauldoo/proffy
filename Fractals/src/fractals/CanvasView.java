@@ -21,22 +21,16 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.event.MouseInputListener;
 
 public class CanvasView extends JComponent implements Runnable
 {
@@ -44,18 +38,29 @@ public class CanvasView extends JComponent implements Runnable
     
     private final CollectionOfTiles canvas;
     private final TileProvider<RenderableTile> source;
-    private final BlockingQueue<TilePosition> tileQueue;
-    private final Set<TilePosition> visited;
+    
+    private final Object lockThing = new Object();
+    
+    /**
+        Queue of tiles to render next.  Should not contain any tiles that are in the notToBeRenderedAgain set.
+    */
+    private final Queue<TilePosition> tileQueue = new LinkedList<TilePosition>();
+
+    /**
+        All tile positions that are either in the process of being rendered, or have already been rendered.
+        Does not include those tile positions that may be waiting in the queue.
+    */
+    private final Set<TilePosition> notToBeRenderedAgain = new HashSet<TilePosition>();
+    
     private final JLabel statusLabel;
     
     private AffineTransform transform = new AffineTransform();
     
     public CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
     {
-        this.canvas = new CollectionOfTiles();
+        // Configure the canvas with 6 megapixels of cache
+        this.canvas = new CollectionOfTiles((6 * 1000000) / (TilePosition.SIZE * TilePosition.SIZE));
         this.source = source;
-        this.tileQueue = new LinkedBlockingQueue<TilePosition>();
-        this.visited = new HashSet<TilePosition>();
         this.statusLabel = statusLabel;
         
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -71,11 +76,15 @@ public class CanvasView extends JComponent implements Runnable
     
     public void startRenderingThreads()
     {
-        int threads = Runtime.getRuntime().availableProcessors() + 1;
+        int threads = Runtime.getRuntime().availableProcessors();
         for (int i = 1; i <= threads; i++) {
             Thread t = new Thread(this);
+            int currentPriority = t.getPriority();
+            t.setPriority(currentPriority - 1);
+            //System.out.println("Before: " + currentPriority + " ... After: " + t.getPriority());
             t.start();
         }
+        //System.out.println("Main thread: " + Thread.currentThread().getPriority());
     }
     
     public void startUpdateThread()
@@ -86,7 +95,7 @@ public class CanvasView extends JComponent implements Runnable
                 try {
                     while(true) {
                         Thread.sleep(500);
-                        if (canvas.updatedSinceLastBlit()) {
+                        if (canvas.wouldLookBetterWithAnotherBlit()) {
                             self.repaint();
                         }
                     }
@@ -103,10 +112,24 @@ public class CanvasView extends JComponent implements Runnable
     {
         try {
             while(true) {
-                TilePosition pos = tileQueue.take();
-                //System.out.println(Thread.currentThread() + ": " + pos);
+                TilePosition pos = null;
+                synchronized(lockThing) {
+                    while (pos == null) {
+                        try {
+                            pos = tileQueue.remove();
+                        } catch (NoSuchElementException e) {
+                            lockThing.wait();
+                        }
+                    }
+                    notToBeRenderedAgain.add(pos);
+                }
                 RenderableTile t = source.getTile(pos);
-                canvas.addTile(t);
+                TilePosition removed = canvas.addTile(t);
+                if (removed != null) {
+                    synchronized(lockThing) {
+                        notToBeRenderedAgain.remove(removed);
+                    }
+                }
             }
         } catch (InterruptedException e) {
         }
@@ -114,7 +137,7 @@ public class CanvasView extends JComponent implements Runnable
 
     public void zoomBy(int scales)
     {
-        double scaleFactor = Math.pow(1.2, scales);
+        double scaleFactor = Math.pow(1.6, scales);
         AffineTransform zoomTransform = new AffineTransform();
         zoomTransform.translate(400, 300);
         zoomTransform.scale(scaleFactor, scaleFactor);
@@ -149,7 +172,8 @@ public class CanvasView extends JComponent implements Runnable
 
     public void paint(Graphics2D g)
     {
-        long time = -System.currentTimeMillis();
+        //System.out.println("Paint thread: " + Thread.currentThread().getPriority());
+        //long time = -System.currentTimeMillis();
         Rectangle bounds = g.getClipBounds();
         g.setColor(Color.ORANGE);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -162,18 +186,19 @@ public class CanvasView extends JComponent implements Runnable
 //        System.out.println("\t" + g.getTransform());
 //        System.out.println("\t" + g.getClipBounds());
         
-        List<TilePosition> remainingTiles = canvas.blitImmediately(g);
-        
-        for (TilePosition pos: remainingTiles) {
-            if (!visited.contains(pos)) {
-                visited.add(pos);
-                tileQueue.add(pos);
+        Collection<TilePosition> remainingTiles = canvas.blitImmediately(g);
+        synchronized(lockThing) {
+            remainingTiles.removeAll(notToBeRenderedAgain);
+            tileQueue.clear();
+            tileQueue.addAll(remainingTiles);
+            if (!tileQueue.isEmpty()) {
+                lockThing.notifyAll();
             }
         }
         
-        statusLabel.setText("Remaining tiles: " + tileQueue.size());
+        statusLabel.setText("Remaining tiles: " + tileQueue.size() + " / " + canvas.getMaximumCapacity());
         
-        time += System.currentTimeMillis();
+        //time += System.currentTimeMillis();
 //        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
     }
 }

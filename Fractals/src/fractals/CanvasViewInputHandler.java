@@ -112,7 +112,7 @@ final class CanvasViewInputHandler implements MouseInputListener, MouseWheelList
 
     public void keyReleased(KeyEvent e)
     {
-        System.out.println(e);
+        //System.out.println(e);
         switch (e.getKeyChar()) {
             case '+':
                 canvasView.zoomBy(1);

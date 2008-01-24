@@ -62,7 +62,7 @@ public final class MainApplet extends JApplet
             CanvasView view = new CanvasView(800, 600, source, statusLabel);
             
             panel.add(view, BorderLayout.CENTER);
-            panel.add(statusPanel, BorderLayout.SOUTH);
+            //panel.add(statusPanel, BorderLayout.SOUTH);
             
             this.getContentPane().add(panel);
             view.startUpdateThread();
