@@ -80,11 +80,13 @@ final class CanvasViewInputHandler implements MouseInputListener, MouseWheelList
 
     private void updateDrag(Point currentPoint, boolean isRotate)
     {
-        int dispX = currentPoint.x - previousPoint.x;
-        int dispY = currentPoint.y - previousPoint.y;
         if (isRotate) {
-            canvasView.rotateBy(dispY * 0.01);
+            double angleOld = Math.atan2(previousPoint.y - 300, previousPoint.x - 400);
+            double angleNew = Math.atan2(currentPoint.y - 300, currentPoint.x - 400);
+            canvasView.rotateBy(angleNew - angleOld);
         } else {
+            int dispX = currentPoint.x - previousPoint.x;
+            int dispY = currentPoint.y - previousPoint.y;
             canvasView.moveBy(dispX, dispY);
         }
         previousPoint = currentPoint;
