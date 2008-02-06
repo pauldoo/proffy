@@ -39,7 +39,7 @@ public final class MainApplet extends JApplet
     {
         super.start();
         try {
-            String fractalType = this.getParameter("type");
+            String fractalType = this.getParameter("FractalType");
             //Class fractalClass = Class.forName("fractals." + fractalType);
             
             TileProvider<RenderableTile> source = null;
