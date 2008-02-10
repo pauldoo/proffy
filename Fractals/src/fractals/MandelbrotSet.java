@@ -41,16 +41,13 @@ public final class MandelbrotSet implements TileProvider<IntegerTile>
     private int iterateUntilEscapes(double cR, double cI)
     {
         // z0 = c;
-        double zR = cR;
-        double zI = cI;
+        final Complex c = new Complex(cR, cI);
+        Complex z = c;
         
         int v;
-        for (v = 0; v < 1000 && (zR*zR + zI*zI) < 20; v++) {
+        for (v = 0; v < 1000 && z.magnitudeSquared() <= 4; v++) {
             // z => z^2 + c
-            double zRn = zR*zR - zI*zI + cR;
-            double zIn = 2*zR*zI + cI;
-            zR = zRn;
-            zI = zIn;
+            z = z.multiply(z).add(c);
         }
         if (v == 1000) v = 0;
         return v;
