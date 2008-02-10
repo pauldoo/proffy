@@ -56,8 +56,9 @@ final class Complex
     public boolean equals(Complex other)
     {
         return
-            this.R() == other.R() &&
-            this.I() == other.I();
+            this == other || (
+                this.R() == other.R() &&
+                this.I() == other.I());
     }
     
     @Override
