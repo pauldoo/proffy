@@ -42,12 +42,13 @@ public final class MandelbrotSet implements TileProvider<IntegerTile>
     {
         // z0 = c;
         final Complex c = new Complex(cR, cI);
-        Complex z = c;
+        Complex z = c.clone();
         
         int v;
         for (v = 0; v < 1000 && z.magnitudeSquared() <= 4; v++) {
             // z => z^2 + c
-            z = z.multiply(z).add(c);
+            Complex.multiplyReplace(z, z);
+            Complex.addReplace(z, c);
         }
         if (v == 1000) v = 0;
         return v;

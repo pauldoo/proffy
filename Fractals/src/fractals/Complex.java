@@ -18,15 +18,23 @@
 package fractals;
 
 /**
-    Immutable complex number class.
+    Complex number class.
+ 
+    This class is not immutable but most methods behave as if it were. 
+    That is they return new instances rather than modify any existing
+    instance.
+ 
+    If the overhead of creating new instances is deemed too high, then the
+    "xxxReplace()" methods should be used instead.  These perform their
+    operation and write the result out to an existing instance.
 */
-final class Complex
+final class Complex implements Cloneable
 {
     /// Real part
-    private final double real;
+    private double real;
     
     /// Imaginary part
-    private final double imaginary;
+    private double imaginary;
     
     public Complex(double real, double imaginary)
     {
@@ -37,6 +45,16 @@ final class Complex
     public static Complex createFromPolar(double r, double theta)
     {
         return new Complex(r * Math.cos(theta), r * Math.sin(theta));
+    }
+
+    @Override
+    public Complex clone()
+    {
+        try {
+            return (Complex)super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new Error("Clone should always succeed", ex);
+        }
     }
 
     @Override
@@ -71,10 +89,20 @@ final class Complex
     {
         return real;
     }
+    
+    public void setReal(double real)
+    {
+        this.real = real;
+    }
 
     public double getImaginary()
     {
         return imaginary;
+    }
+
+    public void setImaginary(double imaginary)
+    {
+        this.imaginary = imaginary;
     }
     
     /**
@@ -123,11 +151,17 @@ final class Complex
         return conjugate().divide(magnitudeSquared());
     }
     
+    public static void addReplace(Complex a, Complex b)
+    {
+        a.setReal(a.R() + b.R());
+        a.setImaginary(a.I() + b.I());
+    }
+    
     public static Complex add(Complex a, Complex b)
     {
-        return new Complex(
-                a.R() + b.R(),
-                a.I() + b.I());
+        Complex result = a.clone();
+        addReplace(result, b);
+        return result;
     }
     
     public Complex add(Complex b)
@@ -147,11 +181,19 @@ final class Complex
         return subtract(this, b);
     }
     
+    public static void multiplyReplace(Complex a, Complex b)
+    {
+        double r = a.R() * b.R() - a.I() * b.I();
+        double i = a.I() * b.R() + a.R() * b.I();
+        a.setReal(r);
+        a.setImaginary(i);
+    }
+    
     public static Complex multiply(Complex a, Complex b)
     {
-        return new Complex(
-                a.R() * b.R() - a.I() * b.I(),
-                a.I() * b.R() + a.R() * b.I());
+        Complex result = a.clone();
+        multiplyReplace(result, b);
+        return result;
     }
     
     public Complex multiply(Complex b)
