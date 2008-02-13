@@ -23,6 +23,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,6 +33,7 @@ import java.util.Queue;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class CanvasView extends JComponent implements Runnable
 {
@@ -101,6 +104,10 @@ public class CanvasView extends JComponent implements Runnable
                     }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
+                } catch (Exception e) {
+                    StringWriter message = new StringWriter();
+                    e.printStackTrace(new PrintWriter(message));
+                    JOptionPane.showInternalMessageDialog(self, message.toString(), e.toString(), JOptionPane.ERROR_MESSAGE);
                 }
             }
         };
@@ -132,6 +139,10 @@ public class CanvasView extends JComponent implements Runnable
                 }
             }
         } catch (InterruptedException e) {
+        } catch (Exception e) {
+            StringWriter message = new StringWriter();
+            e.printStackTrace(new PrintWriter(message));
+            JOptionPane.showInternalMessageDialog(this, message.toString(), e.toString(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
