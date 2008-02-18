@@ -4,9 +4,13 @@
 int main(void)
 {
     boost::mt19937 generator;
+    uint64_t sum = 0;
     for (int i = 0; i < 5000; i++) {
-        std::cout << generator() << ((i % 5 == 4) ? "\n" : " ");
+        const uint32_t v = generator();
+        std::cout << v << ((i % 5 == 4) ? "\n" : " ");
+        sum += v;
     }
+    std::cout << "Sum: " << sum << "\n";
     return 0;
 }
 
