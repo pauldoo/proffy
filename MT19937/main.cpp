@@ -4,7 +4,7 @@
 int main(void)
 {
     boost::mt19937 generator;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 5000; i++) {
         std::cout << generator() << ((i % 5 == 4) ? "\n" : " ");
     }
     return 0;
