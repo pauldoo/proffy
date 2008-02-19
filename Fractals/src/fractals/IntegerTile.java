@@ -17,7 +17,7 @@
 
 package fractals;
 
-public final class IntegerTile extends Tile
+final class IntegerTile extends Tile
 {
     private final int[][] values;
     

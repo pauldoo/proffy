@@ -17,7 +17,7 @@
 
 package fractals;
 
-public interface TileProvider<T extends Tile>
+interface TileProvider<T extends Tile>
 {
     public T getTile(TilePosition position);
 }

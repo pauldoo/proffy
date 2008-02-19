@@ -17,13 +17,18 @@
 
 package fractals;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 
 
-public final class MandelbrotSet implements TileProvider<IntegerTile>
+final class MandelbrotSet implements TileProvider<IntegerTile>
 {
+    final int maxIterations;
+    
+    public MandelbrotSet(int maxIterations) {
+        this.maxIterations = maxIterations;
+    }
+    
     public IntegerTile getTile(TilePosition pos)
     {
         IntegerTile tile = new IntegerTile(pos);
@@ -45,12 +50,28 @@ public final class MandelbrotSet implements TileProvider<IntegerTile>
         Complex z = c.clone();
         
         int v;
-        for (v = 0; v < 1000 && z.magnitudeSquared() <= 4; v++) {
+        for (v = 0; v < maxIterations && z.magnitudeSquared() <= 4; v++) {
             // z => z^2 + c
             Complex.multiplyReplace(z, z);
             Complex.addReplace(z, c);
         }
-        if (v == 1000) v = 0;
+        if (v == maxIterations) v = 0;
         return v;
     }
+    
+    static BufferedImage quickRender(Complex min, Complex max, Dimension imageSize)
+    {
+        BufferedImage result = new BufferedImage(imageSize.width, imageSize.height, BufferedImage.TYPE_BYTE_GRAY);
+        MandelbrotSet me = new MandelbrotSet(32);
+        for (int y = 0; y < imageSize.height; y++) {
+            final double cI = ((y + 0.5) / imageSize.height) * (max.getImaginary() - min.getImaginary()) + min.getImaginary();
+            for (int x = 0; x < imageSize.width; x++) {
+                final double cR = ((x + 0.5) / imageSize.width) * (max.getReal() - min.getReal()) + min.getReal();
+                int v = me.iterateUntilEscapes(cR, cI);
+                int rgb = (v << 3) | (v << 11) | (v << 19); 
+                result.setRGB(x, y, rgb);
+            }
+        }
+        return result;
+    }      
 }

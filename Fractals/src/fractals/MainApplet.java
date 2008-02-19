@@ -52,11 +52,15 @@ public final class MainApplet extends JApplet
     
     private static JComponent createMainComponent(Map<String, String> parameters)
     {
+        if (true) {
+            return new BackwardsIterationJuliaView();
+        }
+
         TileProvider<RenderableTile> source = null;
         
         String fractalType = parameters.get("FractalType");
         if (fractalType.equals("MandelbrotSet")) {
-            source = new RenderFilter(new MandelbrotSet(), 0.02);
+            source = new RenderFilter(new MandelbrotSet(1000), 0.02);
         } else if (fractalType.equals("JuliaSet")) {
             source = new RenderFilter(new JuliaSet(-0.726895347709114071439, 0.188887129043845954792), 0.01);
         } else {

@@ -151,6 +151,11 @@ final class Complex implements Cloneable
         return conjugate().divide(magnitudeSquared());
     }
     
+    public Complex negate()
+    {
+        return new Complex(-R(), -I());
+    }
+    
     public static void addReplace(Complex a, Complex b)
     {
         a.setReal(a.R() + b.R());
@@ -169,11 +174,17 @@ final class Complex implements Cloneable
         return add(this, b);
     }
     
+    public static void subtractReplace(Complex a, Complex b)
+    {
+        a.setReal(a.R() - b.R());
+        a.setImaginary(a.I() - b.I());
+    }
+    
     public static Complex subtract(Complex a, Complex b)
     {
-        return new Complex(
-                a.R() - b.R(),
-                a.I() - b.I());
+        Complex result = a.clone();
+        subtractReplace(result, b);
+        return result;
     }
 
     public Complex subtract(Complex b)
