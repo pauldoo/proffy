@@ -85,6 +85,9 @@ final class Complex implements Cloneable
         return R() + " + " + I() + "i";
     }
     
+    /**
+        The real part of this complex number.
+    */
     public double getReal()
     {
         return real;
@@ -95,6 +98,9 @@ final class Complex implements Cloneable
         this.real = real;
     }
 
+    /**
+        The imaginary part of this complex number.
+    */
     public double getImaginary()
     {
         return imaginary;

@@ -22,8 +22,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -35,10 +39,16 @@ import javax.swing.event.MouseInputListener;
 final class BackwardsIterationJuliaView extends JComponent
 {
     private static final long serialVersionUID = 2075009885338468014L;
-    
+
+    /// Complex coordinate of the top left corner of the view.
     private static final Complex viewMin = new Complex(-2.5, -1.5);
+    /// Complex coordinate of the bottom right corner of the view.
     private static final Complex viewMax = new Complex(1.5, 1.5);
     
+    /**
+        Static picture of a Mandelbrot set, used to illustrate that each point
+        on the mandelbrot set corresponds to a different julia set.
+    */
     private static final Image backgroundImage = MandelbrotSet.quickRender(viewMin, viewMax, new Dimension(600, 400));
     
     private Complex constant;
@@ -71,6 +81,7 @@ final class BackwardsIterationJuliaView extends JComponent
         final Complex half = new Complex(0.5, 0.0);
         
         Random random = new Random();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.drawImage(backgroundImage, 0, 0, size.width, size.height, null);
         g.setColor(Color.GREEN);
@@ -86,13 +97,12 @@ final class BackwardsIterationJuliaView extends JComponent
 
                 if (i >= 5) {
                     {
-                        int x = (int)Math.round(((z.getReal() - viewMin.getReal()) / (viewMax.getReal() - viewMin.getReal())) * size.width);
-                        int y = (int)Math.round(((z.getImaginary() - viewMin.getImaginary()) / (viewMax.getImaginary() - viewMin.getImaginary())) * size.height);
-                        g.drawRect(x, y, 1, 1);
+                        double x = (((z.getReal() - viewMin.getReal()) / (viewMax.getReal() - viewMin.getReal())) * size.width);
+                        double y = (((z.getImaginary() - viewMin.getImaginary()) / (viewMax.getImaginary() - viewMin.getImaginary())) * size.height);
+                        Shape shape = new Ellipse2D.Double(x, y, 2, 2);
+                        g.fill(shape);
+                        //g.drawRect(x, y, 1, 1);
                     }
-                }
-                if (random.nextBoolean()) {
-                    z = savedZ;
                 }
             }
         }
@@ -132,8 +142,8 @@ final class BackwardsIterationJuliaView extends JComponent
 
         public void mouseMoved(MouseEvent e)
         {
-            double x = (e.getX() * 4.0) / getSize().width - 2.0;
-            double y = (e.getY() * 4.0) / getSize().height - 2.0;
+            double x = (e.getX() + 0.5) * (viewMax.getReal() - viewMin.getReal()) / getSize().width + viewMin.getReal();
+            double y = (e.getY() + 0.5) * (viewMax.getImaginary() - viewMin.getImaginary()) / getSize().height + viewMin.getImaginary();
             setConstant(new Complex(x, y));
         }
     }
