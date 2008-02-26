@@ -18,18 +18,25 @@
 package fractals;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.Random;
 import javax.swing.JComponent;
+import javax.swing.JLayeredPane;
 import javax.swing.event.MouseInputListener;
 
 /**
@@ -45,21 +52,27 @@ final class BackwardsIterationJuliaView extends JComponent
     /// Complex coordinate of the bottom right corner of the view.
     private static final Complex viewMax = new Complex(1.5, 1.5);
     
-    /**
-        Static picture of a Mandelbrot set, used to illustrate that each point
-        on the mandelbrot set corresponds to a different julia set.
-    */
-    private static final Image backgroundImage = MandelbrotSet.quickRender(viewMin, viewMax, new Dimension(600, 400));
-    
     private Complex constant;
     
-    public BackwardsIterationJuliaView()
+    public static JComponent createView()
+    {
+        JLayeredPane result = new JLayeredPane();
+        
+        result.setLayout(new SpecializedLayoutManager());
+        
+        Image backgroundImage = MandelbrotSet.quickRender(viewMin, viewMax, new Dimension(600, 400));
+
+        BackwardsIterationJuliaView backwardsIterationJuliaView = new BackwardsIterationJuliaView();
+        result.add(new StrechyImage(backgroundImage), new Integer(0));
+        result.add(backwardsIterationJuliaView, new Integer(1));
+        result.add(new DraggableSpot(backwardsIterationJuliaView), new Integer(2));
+        
+        return result;
+    }
+    
+    private BackwardsIterationJuliaView()
     {
         constant = new Complex(0.4, 0.3);
-        
-        MouseInputListener listener = new InputHandler();
-        addMouseListener(listener);
-        addMouseMotionListener(listener);
     }
     
     @Override
@@ -82,14 +95,12 @@ final class BackwardsIterationJuliaView extends JComponent
         
         Random random = new Random();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.drawImage(backgroundImage, 0, 0, size.width, size.height, null);
-        g.setColor(Color.GREEN);
+        g.setColor(new Color(0.0f, 1.0f, 0.0f, 0.5f));
 
         for (int j = 0; j < 100; j++) {
-            Complex z = new Complex(0.0, 0.0);
+            Complex z = new Complex(random.nextGaussian(), random.nextGaussian());
             for (int i = 0; i < 100; i++) {
-                final Complex savedZ = z.clone();
+                final Complex previousZ = z.clone();
                 z = z.subtract(c).power(half);
                 if (random.nextBoolean()) {
                     z = z.negate();
@@ -104,47 +115,190 @@ final class BackwardsIterationJuliaView extends JComponent
                         //g.drawRect(x, y, 1, 1);
                     }
                 }
+                
+                if (previousZ.subtract(z).magnitudeSquared() < 0.001) {
+                    break;
+                }
             }
         }
     }
     
-    public final class InputHandler implements MouseInputListener
+    public void updateSpotPosition(Point2D p)
     {
-        public void mouseClicked(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
-        }
+        double x = p.getX() * (viewMax.getReal() - viewMin.getReal()) / getSize().width + viewMin.getReal();
+        double y = p.getY() * (viewMax.getImaginary() - viewMin.getImaginary()) / getSize().height + viewMin.getImaginary();
+        setConstant(new Complex(x, y));
+    }
+}
 
-        public void mousePressed(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
-        }
+final class SpecializedLayoutManager implements LayoutManager
+{
+    public void addLayoutComponent(String name, Component comp)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        public void mouseReleased(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
-        }
+    public void removeLayoutComponent(Component comp)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        public void mouseEntered(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
-        }
+    public Dimension preferredLayoutSize(Container parent)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        public void mouseExited(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
-        }
+    public Dimension minimumLayoutSize(Container parent)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        public void mouseDragged(MouseEvent e)
-        {
-            //throw new UnsupportedOperationException("Not supported yet.");
+    public void layoutContainer(Container parent)
+    {
+        for (Component c: parent.getComponents()) {
+            if (c instanceof StrechyImage) {
+                c.setBounds(0, 0, parent.getWidth(), parent.getHeight());
+            } else if (c instanceof BackwardsIterationJuliaView) {
+                c.setBounds(10, 10, parent.getWidth(), parent.getHeight());
+            } else if (c instanceof DraggableSpot) {
+                c.setBounds(parent.getWidth() / 2 - 7, parent.getHeight() / 2 - 7, 14, 14);
+            } else {
+                throw new IllegalArgumentException("Not expecting to layout: " + c.toString());
+            }
         }
+    }
+}
 
-        public void mouseMoved(MouseEvent e)
-        {
-            double x = (e.getX() + 0.5) * (viewMax.getReal() - viewMin.getReal()) / getSize().width + viewMin.getReal();
-            double y = (e.getY() + 0.5) * (viewMax.getImaginary() - viewMin.getImaginary()) / getSize().height + viewMin.getImaginary();
-            setConstant(new Complex(x, y));
+
+final class DraggableSpot extends JComponent implements MouseInputListener, ComponentListener
+{
+    private static final long serialVersionUID = 392823523233732646L;
+    
+    private final BackwardsIterationJuliaView backwardsIterationJuliaView;
+    private Point previousPoint = null;
+    
+    public DraggableSpot(BackwardsIterationJuliaView backwardsIterationJuliaView)
+    {
+        this.backwardsIterationJuliaView = backwardsIterationJuliaView;
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addComponentListener(this);;
+    }
+    
+    @Override
+    public void paint(Graphics g)
+    {
+        paint((Graphics2D)g);
+    }
+    
+    private void paint(Graphics2D g)
+    {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        int w = getWidth();
+        int h = getHeight();
+        g.setColor(Color.ORANGE);
+        g.fill(new Ellipse2D.Double(0, 0, w, h));
+    }
+    
+    private void updateBounds()
+    {
+        Rectangle r = getBounds();
+        backwardsIterationJuliaView.updateSpotPosition(new Point2D.Double(r.x + r.width * 0.5, r.y + r.height * 0.5));
+    }
+
+    public void mouseDragged(MouseEvent e)
+    {
+        //System.out.println(e);
+        if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+            updateDrag(e.getPoint());
         }
+    }
+
+    public void mouseMoved(MouseEvent e)
+    {
+    }
+    
+    private void updateDrag(Point currentPoint)
+    {
+        int dispX = currentPoint.x - previousPoint.x;
+        int dispY = currentPoint.y - previousPoint.y;
+       
+        Rectangle bounds = getBounds();
+        bounds.translate(dispX, dispY);
+        setBounds(bounds);
+        //previousPoint = currentPoint;
+    }
+    
+    public void mouseClicked(MouseEvent e)
+    {
+    }
+
+    public void mousePressed(MouseEvent e)
+    {
+        //System.out.println(e);
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            previousPoint = e.getPoint();
+        }
+    }
+
+    public void mouseReleased(MouseEvent e)
+    {
+        //System.out.println(e);
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            updateDrag(e.getPoint());
+            previousPoint = null;
+        }
+    }
+
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+
+    public void mouseExited(MouseEvent e)
+    {
+    }
+
+    public void componentResized(ComponentEvent e)
+    {
+        updateBounds();
+    }
+
+    public void componentMoved(ComponentEvent e)
+    {
+        updateBounds();
+    }
+
+    public void componentShown(ComponentEvent e)
+    {
+    }
+
+    public void componentHidden(ComponentEvent e)
+    {
+    }
+}
+
+final class StrechyImage extends JComponent
+{
+    private static final long serialVersionUID = 1264801009066714104L;
+
+    private final Image image;
+
+    public StrechyImage(Image image)
+    {
+        this.image = image;
+    }
+    
+    @Override
+    public void paint(Graphics g)
+    {
+        paint((Graphics2D)g);
+    }
+    
+    private void paint(Graphics2D g)
+    {
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        int w = getWidth();
+        int h = getHeight();
+        g.drawImage(image, 0, 0, w, h, null);
     }
 }

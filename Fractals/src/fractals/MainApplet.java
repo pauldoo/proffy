@@ -53,7 +53,7 @@ public final class MainApplet extends JApplet
     private static JComponent createMainComponent(Map<String, String> parameters)
     {
         if (true) {
-            return new BackwardsIterationJuliaView();
+            return BackwardsIterationJuliaView.createView();
         }
 
         TileProvider<RenderableTile> source = null;
