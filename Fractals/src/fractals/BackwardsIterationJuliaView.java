@@ -159,7 +159,7 @@ final class SpecializedLayoutManager implements LayoutManager
             if (c instanceof StrechyImage) {
                 c.setBounds(0, 0, parent.getWidth(), parent.getHeight());
             } else if (c instanceof BackwardsIterationJuliaView) {
-                c.setBounds(10, 10, parent.getWidth(), parent.getHeight());
+                c.setBounds(0, 0, parent.getWidth(), parent.getHeight());
             } else if (c instanceof DraggableSpot) {
                 c.setBounds(parent.getWidth() / 2 - 7, parent.getHeight() / 2 - 7, 14, 14);
             } else {
@@ -182,7 +182,7 @@ final class DraggableSpot extends JComponent implements MouseInputListener, Comp
         this.backwardsIterationJuliaView = backwardsIterationJuliaView;
         addMouseListener(this);
         addMouseMotionListener(this);
-        addComponentListener(this);;
+        addComponentListener(this);
     }
     
     @Override
