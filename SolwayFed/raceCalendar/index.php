@@ -44,30 +44,17 @@
                     $friendlyDate = date('d/m/Y', strtotime($row["date"]));
                 ?>
                     <div class="race">
-                    <a href="#"><img src="../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
+                    <a href="details.php?id=<?php echo $row["id"]; ?>"><img src="/<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
                     <p><span><strong>Location:</strong></span><?php echo htmlspecialchars($row["racepoint"]); ?><br/>
                     <span><strong>Date:</strong></span><?php echo htmlspecialchars($friendlyDate); ?></p>
                     <p><?php echo htmlspecialchars($row["details"]); ?><br/>
-                    <a href="#">read more...</a></p>
+                    <a href="details.php?id=<?php echo $row["id"]; ?>">read more...</a></p>
                     </div>
                     <hr/>
 
                 <?php
                 }
                 ?>
-			  <div class="race">
- 			  	<a href="#"><img src="../images/image2.jpg" alt="raceImage"/></a>
-				<p><span><strong>Location:</strong></span> Shap<br/>
-				<span><strong>Date:</strong></span> 01/01/08</p>
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. <a href="#">read more...</a></p>
-			  </div>
-			  <hr/>
-			  <div class="race">
- 			  	<a href="#"><img src="../images/image2.jpg" alt="raceImage"/></a>
-				<p><span><strong>Location:</strong></span> Shap<br/>
-				<span><strong>Date:</strong></span> 01/01/08</p>
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. <a href="#">read more...</a></p>
-			  </div>
 			<!-- InstanceEndEditable --></div>
 			<div id="rightCol">
 			   <h1>This Week's Race</h1>
