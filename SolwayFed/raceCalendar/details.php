@@ -42,9 +42,9 @@
                     ?>
                     <h1><?php echo htmlspecialchars($result["racepoint"]); ?></h1>
                     <h2><?php echo htmlspecialchars($friendlyDate); ?></h2>
-                    <img src="/<?php echo htmlspecialchars($result["imageFilename"]); ?>" class="floatright" />
+                    <img src="/includes/thumbnail.php?s=200&path=../<?php echo htmlspecialchars($result["imageFilename"]); ?>" class="floatright" />
                     <p><?php echo htmlspecialchars($result["details"]); ?></p>
-                    <div id="map" style="width:450px; height:300px;"></div>
+                    <div id="map" style="width:450px; height:300px; clear: both;"></div>
                     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAYrFofuFPMX8rrxchY-dtbRSEIYkWFGd2J2hsP_ngrZQDjJ82fRQXX-HGn-6ftv7DzfC1PhNNQztHRQ"
       type="text/javascript"></script>
                     <script type="text/javascript">

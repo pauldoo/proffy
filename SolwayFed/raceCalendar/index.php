@@ -44,7 +44,7 @@
                     $friendlyDate = date('d/m/Y', strtotime($row["date"]));
                 ?>
                     <div class="race">
-                    <a href="details.php?id=<?php echo $row["id"]; ?>"><img src="/<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
+                    <a href="details.php?id=<?php echo $row["id"]; ?>"><img src="/includes/thumbnail.php?s=181&path=../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
                     <p><span><strong>Location:</strong></span><?php echo htmlspecialchars($row["racepoint"]); ?><br/>
                     <span><strong>Date:</strong></span><?php echo htmlspecialchars($friendlyDate); ?></p>
                     <p><?php echo htmlspecialchars($row["details"]); ?><br/>

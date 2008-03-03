@@ -10,7 +10,7 @@ if ($row = mysql_fetch_assoc($result)) {
 ?>
 
     <h1>This Week's Race</h1>
-    <a href="#"><img src="../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
+    <a href="#"><img src="/includes/thumbnail.php?s=181&path=../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
     <p><?php echo htmlspecialchars($row["details"]); ?><br/>
     <a href="#">read more...</a></p>
 
