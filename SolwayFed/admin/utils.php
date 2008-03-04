@@ -153,6 +153,8 @@ function csDeleteEvent($dbh)
     $statement = "DELETE FROM csEvents WHERE id = " . $id . ";";
 
     csExecuteStatement($dbh, $statement);
+
+    header("Location: index.php");
 }
 
 /**
