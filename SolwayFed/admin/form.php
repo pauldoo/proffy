@@ -134,14 +134,6 @@ switch ($action) {
         $friendlyDate = date('d m Y', strtotime($result["date"]));
         $friendlyMonth = date('F', strtotime($result["date"]));
         ?>
-Id: <?php echo $result["id"]; ?><br/>
-Racepoint: <?php echo htmlspecialchars($result["racepoint"]); ?><br/>
-Date: <?php echo htmlspecialchars($friendlyDate); ?><br/>
-Latitude: <?php echo htmlspecialchars($result["latitude"]); ?><br/>
-Longitude: <?php echo htmlspecialchars($result["longitude"]); ?><br/>
-Details: <?php echo htmlspecialchars($result["details"]); ?><br/>
-Image: <?php echo htmlspecialchars($result["imageFilename"]); ?><br/>
-<img src="<?php echo htmlspecialchars($result["imageFilename"]); ?>" /><br/>
 
 <form action="submit.php?action=edit" method="post" enctype="multipart/form-data" id="addRacepoint">
     <input type="hidden" name="id" value="<?php echo $id; ?>"/>
@@ -154,6 +146,7 @@ Image: <?php echo htmlspecialchars($result["imageFilename"]); ?><br/>
     <label for="details">Details:</label>
     <textarea name="details" id="details"><?php echo htmlspecialchars($result["details"]); ?></textarea>
     <label for="day">Date:</label>
+    <br/>
     <select name="day">
         <option selected><?php echo $day; ?></option>
         <option>1</option>
