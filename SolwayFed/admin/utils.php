@@ -144,6 +144,18 @@ function csEditEvent($dbh)
 }
 
 /**
+    Delete an existing event referenced by the id.
+*/
+function csDeleteEvent($dbh)
+{
+    $id = $_REQUEST["id"] + 0;
+
+    $statement = "DELETE FROM csEvents WHERE id = " . $id . ";";
+
+    csExecuteStatement($dbh, $statement);
+}
+
+/**
     Saves the image that has been submitted in the $_FILES variable
     and copies the filename to the database.
 */

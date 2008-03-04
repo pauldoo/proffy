@@ -21,6 +21,11 @@ switch($action) {
         csEditEvent($dbh);
         break;
 
+    case "delete":
+        $dbh = csConnect();
+        csDeleteEvent($dbh);
+        break;
+
     case "install":
         $dbh = csConnect();
         csCreateTables($dbh);

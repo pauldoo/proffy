@@ -1,5 +1,5 @@
 <?php
-require "../utils.php";
+require "../admin/utils.php";
 
 $dbh = csConnect();
 $result = csExecuteQuery($dbh,
@@ -8,7 +8,6 @@ $result = csExecuteQuery($dbh,
 if ($row = mysql_fetch_assoc($result)) {
     $friendlyDate = date('d/m/Y', strtotime($row["date"]));
 ?>
-
     <h1>This Week's Race</h1>
     <a href="#"><img src="/includes/thumbnail.php?s=181&path=../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
     <p><?php echo htmlspecialchars($row["details"]); ?><br/>

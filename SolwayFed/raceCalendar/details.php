@@ -33,7 +33,7 @@
 		<div id="contentArea">
 			<div id="leftCol"><!-- InstanceBeginEditable name="EditRegion3" -->
 			  <?php
-                    require "../utils.php";
+                    require "../admin/utils.php";
                     $dbh = csConnect();
                     $id = $_GET["id"] + 0;
                     $query = "SELECT * FROM csEvents WHERE id=" . $id;

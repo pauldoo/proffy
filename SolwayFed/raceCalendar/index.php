@@ -34,7 +34,7 @@
 			<div id="leftCol"><!-- InstanceBeginEditable name="EditRegion3" -->
 			  <h1>Race Calendar</h1>
                 <?php
-                require "../utils.php";
+                require "../admin/utils.php";
 
                 $dbh = csConnect();
                 $result = csExecuteQuery($dbh,
