@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007  Paul Richards.
+    Copyright (C) 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 package fractals;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,15 +30,23 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.Random;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
 /**
     This class renders a rough sketch of a Julia fractal using the
@@ -56,16 +65,23 @@ final class BackwardsIterationJuliaView extends JComponent
     
     public static JComponent createView()
     {
-        JLayeredPane result = new JLayeredPane();
+        JPanel result = new JPanel();
+        result.setLayout(new BorderLayout());
+        JLayeredPane layeredPane = new JLayeredPane();
         
-        result.setLayout(new SpecializedLayoutManager());
+        layeredPane.setLayout(new SpecializedLayoutManager());
         
         Image backgroundImage = MandelbrotSet.quickRender(viewMin, viewMax, new Dimension(600, 400));
 
         BackwardsIterationJuliaView backwardsIterationJuliaView = new BackwardsIterationJuliaView();
-        result.add(new StrechyImage(backgroundImage), new Integer(0));
-        result.add(backwardsIterationJuliaView, new Integer(1));
-        result.add(new DraggableSpot(backwardsIterationJuliaView), new Integer(2));
+        layeredPane.add(new StrechyImage(backgroundImage), new Integer(0));
+        layeredPane.add(backwardsIterationJuliaView, new Integer(1));
+        layeredPane.add(new DraggableSpot(backwardsIterationJuliaView), new Integer(2));
+        result.add(layeredPane, BorderLayout.CENTER);
+        
+        JButton button = new JButton("View \"proper\" rendering");
+        button.addActionListener(new ButtonListener(backwardsIterationJuliaView));
+        result.add(button, BorderLayout.SOUTH);
         
         return result;
     }
@@ -85,6 +101,11 @@ final class BackwardsIterationJuliaView extends JComponent
     {
         this.constant = c;
         repaint();
+    }
+    
+    public Complex getConstant()
+    {
+        return this.constant.clone();
     }
         
     public void paint(Graphics2D g)
@@ -300,5 +321,37 @@ final class StrechyImage extends JComponent
         int w = getWidth();
         int h = getHeight();
         g.drawImage(image, 0, 0, w, h, null);
+    }
+}
+
+final class ButtonListener implements ActionListener
+{
+    final BackwardsIterationJuliaView backwardsIterationJuliaView;
+    
+    ButtonListener(BackwardsIterationJuliaView view)
+    {
+        this.backwardsIterationJuliaView = view;
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+        Complex c = backwardsIterationJuliaView.getConstant();
+        
+        TileProvider<RenderableTile> source = null;
+        source = new RenderFilter(new JuliaSet(1000, c), 0.02);
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        JLabel statusLabel = new JLabel();
+        statusPanel.add(statusLabel);
+
+        CanvasView view = new CanvasView(800, 600, source, statusLabel);
+
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(view);
+        frame.addWindowListener(view.createWindowListenerForThreadManagement());
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setVisible(true);
     }
 }

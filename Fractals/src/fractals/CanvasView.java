@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007  Paul Richards.
+    Copyright (C) 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,9 +22,12 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,14 +38,15 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+
 public class CanvasView extends JComponent implements Runnable
 {
     private static final long serialVersionUID = 6622327481400970118L;
     
     private final CollectionOfTiles canvas;
     private final TileProvider<RenderableTile> source;
-    
     private final Object lockThing = new Object();
+    private final Collection<Thread> threads = new ArrayList<Thread>();
     
     /**
         Queue of tiles to render next.  Should not contain any tiles that are in the notToBeRenderedAgain set.
@@ -59,7 +63,7 @@ public class CanvasView extends JComponent implements Runnable
     
     private AffineTransform transform = new AffineTransform();
     
-    public CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
+    CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
     {
         // Configure the canvas with 6 megapixels of cache
         this.canvas = new CollectionOfTiles((6 * 1000000) / (TilePosition.SIZE * TilePosition.SIZE));
@@ -77,20 +81,23 @@ public class CanvasView extends JComponent implements Runnable
         this.setDoubleBuffered(true);
     }
     
-    public void startRenderingThreads()
+    private Collection<Thread> startRenderingThreads()
     {
-        int threads = Runtime.getRuntime().availableProcessors();
-        for (int i = 1; i <= threads; i++) {
+        Collection<Thread> result = new ArrayList<Thread>();
+        int threadCount = Runtime.getRuntime().availableProcessors();
+        for (int i = 1; i <= threadCount; i++) {
             Thread t = new Thread(this);
             int currentPriority = t.getPriority();
             t.setPriority(currentPriority - 1);
             //System.out.println("Before: " + currentPriority + " ... After: " + t.getPriority());
             t.start();
+            result.add(t);
         }
+        return result;
         //System.out.println("Main thread: " + Thread.currentThread().getPriority());
     }
     
-    public void startUpdateThread()
+    private Thread startUpdateThread()
     {
         final CanvasView self = this;
         Runnable r = new Runnable() {
@@ -103,7 +110,7 @@ public class CanvasView extends JComponent implements Runnable
                         }
                     }
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    System.out.println(Thread.currentThread().toString() + ": Terminating normally.");
                 } catch (Exception e) {
                     StringWriter message = new StringWriter();
                     e.printStackTrace(new PrintWriter(message));
@@ -112,7 +119,9 @@ public class CanvasView extends JComponent implements Runnable
             }
         };
         
-        (new Thread(r)).start();
+        Thread result = new Thread(r);
+        result.start();
+        return result;
     }
     
     public void run()
@@ -139,6 +148,7 @@ public class CanvasView extends JComponent implements Runnable
                 }
             }
         } catch (InterruptedException e) {
+            System.out.println(Thread.currentThread().toString() + ": Terminating normally.");
         } catch (Exception e) {
             StringWriter message = new StringWriter();
             e.printStackTrace(new PrintWriter(message));
@@ -211,5 +221,64 @@ public class CanvasView extends JComponent implements Runnable
         
         //time += System.currentTimeMillis();
 //        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
+    }
+    
+    synchronized void stopAllThreads()
+    {
+        for (Thread t: threads) {
+            t.interrupt();
+        }
+        threads.clear();
+    }
+    
+    synchronized void startAllThreads()
+    {
+        if (threads.isEmpty() == false) {
+            stopAllThreads();
+        }
+        threads.addAll(startRenderingThreads());
+        threads.add(startUpdateThread());
+    }
+    
+    /**
+        This component has a number of background threads which it uses for rendering.
+        These must be terminated when the component is no longer visible.  The best way I
+        can see to do this is to attach a WindowListener to the top level window.  The user of
+        this class is expected to call this method and attach the returned window listener to
+        the top level window.
+    */
+    WindowListener createWindowListenerForThreadManagement()
+    {
+        return new WindowListener(){
+            public void windowOpened(WindowEvent e)
+            {
+                startAllThreads();
+            }
+
+            public void windowClosing(WindowEvent e)
+            {
+            }
+
+            public void windowClosed(WindowEvent e)
+            {
+                stopAllThreads();
+            }
+
+            public void windowIconified(WindowEvent e)
+            {
+            }
+
+            public void windowDeiconified(WindowEvent e)
+            {
+            }
+
+            public void windowActivated(WindowEvent e)
+            {
+            }
+
+            public void windowDeactivated(WindowEvent e)
+            {
+            }
+        };
     }
 }

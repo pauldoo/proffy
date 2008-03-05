@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007  Paul Richards.
+    Copyright (C) 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@ package fractals;
 
 public class JuliaSet implements TileProvider<IntegerTile>
 {
-    private final double cReal;
-    private final double cImag;
+    private final int maxIterations;
+    private final Complex constant;
     
-    public JuliaSet(double real, double imag)
+    JuliaSet(int maxIterations, Complex constant)
     {
-        this.cReal = real;
-        this.cImag = imag;
+        this.maxIterations = maxIterations;
+        this.constant = constant.clone();
     }
     
     public IntegerTile getTile(TilePosition position)
@@ -33,8 +33,8 @@ public class JuliaSet implements TileProvider<IntegerTile>
         IntegerTile tile = new IntegerTile(position);
         for (int iy = position.getMinY(); iy <= position.getMaxY(); iy++) {
             for (int ix = position.getMinX(); ix <= position.getMaxX(); ix++) {
-                final double r = ix * position.relativeScale() / 800;
-                final double i = iy * position.relativeScale() / 800;
+                final double r = ix * position.relativeScale() / 200 - 2.0;
+                final double i = iy * position.relativeScale() / 200 - 1.5;
                 int v = iterateUntilEscapes(r, i);
                 tile.setValue(ix, iy, v);
             }
@@ -44,15 +44,14 @@ public class JuliaSet implements TileProvider<IntegerTile>
 
     private int iterateUntilEscapes(double zR, double zI)
     {
+        final Complex z = new Complex(zR, zI);
         int v;
-        for (v = 0; v < 2000 && (zR*zR + zI*zI) < 20; v++) {
+        for (v = 0; v < maxIterations && z.magnitudeSquared() <= 4; v++) {
             // z => z^2 + c
-            double zRn = zR*zR - zI*zI + cReal;
-            double zIn = 2*zR*zI + cImag;
-            zR = zRn;
-            zI = zIn;
+            Complex.multiplyReplace(z, z);
+            Complex.addReplace(z, constant);
         }
-        if (v == 2000) v = 0;
+        if (v == maxIterations) v = 0;
         return v;
     }
 }

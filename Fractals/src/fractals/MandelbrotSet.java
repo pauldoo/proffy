@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007  Paul Richards.
+    Copyright (C) 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 
 final class MandelbrotSet implements TileProvider<IntegerTile>
 {
-    final int maxIterations;
+    private final int maxIterations;
     
     public MandelbrotSet(int maxIterations) {
         this.maxIterations = maxIterations;
@@ -34,8 +34,8 @@ final class MandelbrotSet implements TileProvider<IntegerTile>
         IntegerTile tile = new IntegerTile(pos);
         for (int iy = pos.getMinY(); iy <= pos.getMaxY(); iy++) {
             for (int ix = pos.getMinX(); ix <= pos.getMaxX(); ix++) {
-                final double r = ix * pos.relativeScale() / 800;
-                final double i = iy * pos.relativeScale() / 800;
+                final double r = ix * pos.relativeScale() / 200 - 2.5;
+                final double i = iy * pos.relativeScale() / 200 - 1.5;
                 int v = iterateUntilEscapes(r, i);
                 tile.setValue(ix, iy, v);
             }

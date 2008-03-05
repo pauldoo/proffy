@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007  Paul Richards.
+    Copyright (C) 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,42 +52,39 @@ public final class MainApplet extends JApplet
     
     private static JComponent createMainComponent(Map<String, String> parameters)
     {
-        if (true) {
-            return BackwardsIterationJuliaView.createView();
-        }
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-        TileProvider<RenderableTile> source = null;
-        
+
         String fractalType = parameters.get("FractalType");
         if (fractalType.equals("MandelbrotSet")) {
+            TileProvider<RenderableTile> source = null;
             source = new RenderFilter(new MandelbrotSet(1000), 0.02);
+            JPanel statusPanel = new JPanel();
+            statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            JLabel statusLabel = new JLabel();
+            statusPanel.add(statusLabel);
+
+            CanvasView view = new CanvasView(800, 600, source, statusLabel);
+            view.startAllThreads();
+
+            panel.add(view, BorderLayout.CENTER);
+            //panel.add(statusPanel, BorderLayout.SOUTH);
         } else if (fractalType.equals("JuliaSet")) {
-            source = new RenderFilter(new JuliaSet(-0.726895347709114071439, 0.188887129043845954792), 0.01);
+            panel.add(BackwardsIterationJuliaView.createView(), BorderLayout.CENTER);
         } else {
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
             
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
 
-        JPanel statusPanel = new JPanel();
-        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        JLabel statusLabel = new JLabel();
-        statusPanel.add(statusLabel);
-
-        CanvasView view = new CanvasView(800, 600, source, statusLabel);
-
-        panel.add(view, BorderLayout.CENTER);
-        //panel.add(statusPanel, BorderLayout.SOUTH);
-        view.startUpdateThread();
-        view.startRenderingThreads();        
         return panel;
     }
     
     public static void main(String[] args)
     {
         Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("FractalType", "MandelbrotSet");
+        //parameters.put("FractalType", "MandelbrotSet");
+        parameters.put("FractalType", "JuliaSet");
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
