@@ -1,5 +1,6 @@
+<? include("c:\sites_web\sarah_solwayFed\includes\checkLogin.php"); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/general.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/admin.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <!-- InstanceBeginEditable name="doctitle" -->
@@ -33,7 +34,7 @@
 		<div id="contentArea">
 			<div id="leftCol"><!-- InstanceBeginEditable name="EditRegion3" -->
 <?php
-require "utils.php";
+require_once ("c:\sites_web\sarah_solwayFed\admin\utils.php");
 
 $dbh = csConnect();
 $result = csExecuteQuery($dbh,
@@ -68,9 +69,9 @@ while ($row = mysql_fetch_assoc($result)) {
     </table>
 			<!-- InstanceEndEditable --></div>
 			<div id="rightCol">
-			   <h1>This Week's Race</h1>
-			   <img src="/images/image2.jpg" alt="Image" />
-			   <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. <a href="#">more...</a></p>
+				<div id="submenu">
+			   <? include("c:\sites_web\sarah_solwayFed\includes\adminSubmenu.php"); ?>
+			   </div>
 			</div>
 		</div>
 	</div>

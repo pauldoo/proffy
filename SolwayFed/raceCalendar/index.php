@@ -34,7 +34,7 @@
 			<div id="leftCol"><!-- InstanceBeginEditable name="EditRegion3" -->
 			  <h1>Race Calendar</h1>
                 <?php
-                require "../admin/utils.php";
+                require_once ("c:\sites_web\sarah_solwayFed\admin\utils.php");
 
                 $dbh = csConnect();
                 $result = csExecuteQuery($dbh,
@@ -57,9 +57,7 @@
                 ?>
 			<!-- InstanceEndEditable --></div>
 			<div id="rightCol">
-			   <h1>This Week's Race</h1>
-			   <img src="/images/image2.jpg" alt="Image" />
-			   <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris a odio at felis gravida tincidunt. Vestibulum vitae. <a href="#">more...</a></p>
+			   <? require_once("c:\sites_web\sarah_solwayFed\includes\\next.php"); ?>
 			</div>
 		</div>
 	</div>
