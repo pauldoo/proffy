@@ -26,6 +26,7 @@ import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
@@ -72,6 +73,12 @@ public final class MainApplet extends JApplet
             //panel.add(statusPanel, BorderLayout.SOUTH);
         } else if (fractalType.equals("JuliaSet")) {
             panel.add(BackwardsIterationJuliaView.createView(), BorderLayout.CENTER);
+        } else if (fractalType.equals("IFS")) {
+            JLayeredPane canvas = new JLayeredPane();
+            canvas.setLayout(new BorderLayout());
+            DraggableQuadrilateral quad = new DraggableQuadrilateral();
+            quad.addToCanvas(canvas);
+            panel.add(canvas);
         } else {
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
@@ -84,7 +91,7 @@ public final class MainApplet extends JApplet
     {
         Map<String, String> parameters = new HashMap<String, String>();
         //parameters.put("FractalType", "MandelbrotSet");
-        parameters.put("FractalType", "JuliaSet");
+        parameters.put("FractalType", "IFS");
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
