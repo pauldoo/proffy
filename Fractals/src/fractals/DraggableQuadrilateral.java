@@ -19,6 +19,7 @@ package fractals;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -50,13 +51,10 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     
     DraggableQuadrilateral()
     {
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-    }
-    
-    void addToCanvas(JLayeredPane canvas)
-    {
-        canvas.add(this);
+        setOpaque(false);
+        setRequestFocusEnabled(true);
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
     
     @Override
@@ -150,5 +148,17 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
             isBeingHoveredOver = nowBeingHoveredOver;
             repaint();
         }
-    }    
+        if (!isBeingHoveredOver) {
+            /*
+                This appears to be a bit of a hack.  We move ourselves to the back
+                of the stack and so when the mouse moves by the next pixel a different
+                object will get a chance to do hit detection.
+                So with N objects on the canvas, each one only gets a chance to check
+                for mouse floating every N pixels of mouse movement.
+            */
+            JLayeredPane canvas = (JLayeredPane)getParent();
+            Component c = canvas.getComponentAt(e.getPoint());
+            canvas.moveToBack(this);
+        }
+    }
 }
