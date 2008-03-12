@@ -40,6 +40,13 @@ import javax.swing.JLayeredPane;
 final class DraggableQuadrilateral extends JComponent implements MouseListener, MouseMotionListener
 {
     private static final long serialVersionUID = 4705086044490724806L;
+
+    /// How close must the mouse pointer be to count as selecting.
+    private static final double SELECTING_FUZZ = 10.0;
+    /// Stroke used to render the quad.
+    private static final Stroke NORMAL_STROKE = new BasicStroke(2.0f);
+    /// Stroke used to render an outline shape used for selection.
+    private static final Stroke SELECTING_STROKE = new BasicStroke((float)SELECTING_FUZZ);
     
     private Point2D cornerA = new Point2D.Double(100, 100);
     private Point2D cornerB = new Point2D.Double(200, 100);
@@ -48,6 +55,11 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     
     private boolean isBeingHoveredOver = false;
     private Point dragStart = null;
+    /**
+        If the user is dragging a corner of the quad then this value aliases
+        whichever corner is being dragged (only for the duration of the drag).
+    */
+     private Point2D dragCorner = null;
     
     DraggableQuadrilateral()
     {
@@ -68,18 +80,8 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
         Utilities.setGraphicsToHighQuality(g);
         
         g.setColor(isBeingHoveredOver ? Color.RED : Color.BLACK);
-        g.setStroke(getNormalStroke());
+        g.setStroke(NORMAL_STROKE);
         g.draw(getShape());
-    }
-    
-    private static Stroke getNormalStroke()
-    {
-        return new BasicStroke(2.0f);
-    }
-    
-    private static Stroke getSelectingStroke()
-    {
-        return new BasicStroke(10.0f);
     }
     
     private Shape getShape()
@@ -94,7 +96,7 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     
     Shape getSelectingOutlineShape()
     {
-        return getSelectingStroke().createStrokedShape(getShape());
+        return SELECTING_STROKE.createStrokedShape(getShape());
     }
     
     private static Point2D displacePoint(Point2D p, double dx, double dy)
@@ -110,12 +112,27 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     {
         if (getSelectingOutlineShape().contains(e.getPoint())) {
             dragStart = e.getPoint();
+            Point2D closestCorner = cornerA;
+            if (e.getPoint().distance(cornerB) < e.getPoint().distance(closestCorner)) {
+                closestCorner = cornerB;
+            }
+            if (e.getPoint().distance(cornerC) < e.getPoint().distance(closestCorner)) {
+                closestCorner = cornerC;
+            }
+            if (e.getPoint().distance(cornerD) < e.getPoint().distance(closestCorner)) {
+                closestCorner = cornerD;
+            }
+            
+            if (e.getPoint().distance(closestCorner) <= SELECTING_FUZZ) {
+                dragCorner = closestCorner;
+            }
         }
     }
 
     public void mouseReleased(MouseEvent e)
     {
         dragStart = null;
+        dragCorner = null;
     }
 
     public void mouseEntered(MouseEvent e)
@@ -129,14 +146,18 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     public void mouseDragged(MouseEvent e)
     {
         if (dragStart != null) {
-            Point p = e.getPoint();
-            double dx = p.x - dragStart.x;
-            double dy = p.y - dragStart.y;
-            dragStart = p;
-            cornerA = displacePoint(cornerA, dx, dy);
-            cornerB = displacePoint(cornerB, dx, dy);
-            cornerC = displacePoint(cornerC, dx, dy);
-            cornerD = displacePoint(cornerD, dx, dy);
+            if (dragCorner != null) {
+                dragCorner.setLocation(e.getPoint());
+            } else {
+                Point p = e.getPoint();
+                double dx = p.x - dragStart.x;
+                double dy = p.y - dragStart.y;
+                dragStart = p;
+                cornerA = displacePoint(cornerA, dx, dy);
+                cornerB = displacePoint(cornerB, dx, dy);
+                cornerC = displacePoint(cornerC, dx, dy);
+                cornerD = displacePoint(cornerD, dx, dy);
+            }
             repaint();
         }
     }
