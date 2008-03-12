@@ -30,6 +30,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 
@@ -48,10 +50,10 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     /// Stroke used to render an outline shape used for selection.
     private static final Stroke SELECTING_STROKE = new BasicStroke((float)SELECTING_FUZZ);
     
-    private Point2D cornerA = new Point2D.Double(100, 100);
-    private Point2D cornerB = new Point2D.Double(200, 100);
-    private Point2D cornerC = new Point2D.Double(200, 200);
-    private Point2D cornerD = new Point2D.Double(100, 200);
+    private Point2D.Double cornerA = new Point2D.Double(100, 100);
+    private Point2D.Double cornerB = new Point2D.Double(200, 100);
+    private Point2D.Double cornerC = new Point2D.Double(200, 200);
+    private Point2D.Double cornerD = new Point2D.Double(100, 200);
     
     private boolean isBeingHoveredOver = false;
     private Point dragStart = null;
@@ -59,14 +61,27 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
         If the user is dragging a corner of the quad then this value aliases
         whichever corner is being dragged (only for the duration of the drag).
     */
-     private Point2D dragCorner = null;
+     private Point2D.Double dragCorner = null;
     
+     private final List<Listener> listeners = new ArrayList<Listener>();
+     
     DraggableQuadrilateral()
     {
         setOpaque(false);
         setRequestFocusEnabled(true);
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+    
+    void addListener(Listener listener){
+        listeners.add(listener);
+    }
+    
+    private void notifyListeners()
+    {
+        for (Listener listener: listeners) {
+            listener.draggableQuadrilateralHasMoved(this);
+        }
     }
     
     @Override
@@ -99,7 +114,7 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
         return SELECTING_STROKE.createStrokedShape(getShape());
     }
     
-    private static Point2D displacePoint(Point2D p, double dx, double dy)
+    private static Point2D.Double displacePoint(Point2D.Double p, double dx, double dy)
     {
         return new Point2D.Double(p.getX() + dx, p.getY() + dy);
     }
@@ -112,7 +127,7 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     {
         if (getSelectingOutlineShape().contains(e.getPoint())) {
             dragStart = e.getPoint();
-            Point2D closestCorner = cornerA;
+            Point2D.Double closestCorner = cornerA;
             if (e.getPoint().distance(cornerB) < e.getPoint().distance(closestCorner)) {
                 closestCorner = cornerB;
             }
@@ -158,7 +173,7 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
                 cornerC = displacePoint(cornerC, dx, dy);
                 cornerD = displacePoint(cornerD, dx, dy);
             }
-            repaint();
+            notifyListeners();
         }
     }
 
@@ -181,5 +196,30 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
             Component c = canvas.getComponentAt(e.getPoint());
             canvas.moveToBack(this);
         }
+    }
+
+    public Point2D.Double getCornerA()
+    {
+        return (Point2D.Double)cornerA.clone();
+    }
+
+    public Point2D.Double getCornerB()
+    {
+        return (Point2D.Double)cornerB.clone();
+    }
+
+    public Point2D.Double getCornerC()
+    {
+        return (Point2D.Double)cornerC.clone();
+    }
+
+    public Point2D.Double getCornerD()
+    {
+        return (Point2D.Double)cornerD.clone();
+    }
+    
+    static interface Listener
+    {
+        public void draggableQuadrilateralHasMoved(DraggableQuadrilateral source);
     }
 }

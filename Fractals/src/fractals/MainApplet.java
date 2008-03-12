@@ -74,13 +74,7 @@ public final class MainApplet extends JApplet
         } else if (fractalType.equals("JuliaSet")) {
             panel.add(BackwardsIterationJuliaView.createView(), BorderLayout.CENTER);
         } else if (fractalType.equals("IFS")) {
-            JLayeredPane canvas = new JLayeredPane();
-            canvas.setLayout(new EverythingGetsOverlayedLayout());
-            DraggableQuadrilateral quadA = new DraggableQuadrilateral();
-            DraggableQuadrilateral quadB = new DraggableQuadrilateral();
-            canvas.add(quadA);
-            canvas.add(quadB);
-            panel.add(canvas);
+            panel.add(IteratedFunctionSystem.createView());
         } else {
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
