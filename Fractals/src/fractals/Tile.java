@@ -17,10 +17,7 @@
 
 package fractals;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-public abstract class Tile
+abstract class Tile
 {
     protected final TilePosition position;
 

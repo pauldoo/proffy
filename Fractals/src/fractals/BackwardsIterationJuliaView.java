@@ -46,7 +46,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.MouseInputListener;
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
 /**
     This class renders a rough sketch of a Julia fractal using the

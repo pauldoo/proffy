@@ -19,12 +19,12 @@ package fractals;
 
 import java.awt.Color;
 
-public final class RenderFilter implements TileProvider<RenderableTile>
+final class RenderFilter implements TileProvider<RenderableTile>
 {
     private final TileProvider<IntegerTile> source;
     private final double exposure;
     
-    public RenderFilter(TileProvider<IntegerTile> source, double exposure)
+    RenderFilter(TileProvider<IntegerTile> source, double exposure)
     {
         this.source = source;
         this.exposure = exposure;

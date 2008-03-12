@@ -17,7 +17,7 @@
 
 package fractals;
 
-public class JuliaSet implements TileProvider<IntegerTile>
+class JuliaSet implements TileProvider<IntegerTile>
 {
     private final int maxIterations;
     private final Complex constant;
