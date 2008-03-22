@@ -163,9 +163,14 @@ function csDeleteEvent($dbh)
 */
 function csHandleImageUpload($dbh, $id)
 {
-    // TODO: Delete the previous image associated with this event.
-    if (substr($_FILES["imageUpload"]["type"], 0, 6) == "image/") {
-        $destinationFilename = "upload/" . $_FILES["imageUpload"]["name"];
+    $existingImage = $_POST["existingImage"];
+    if (strcmp($existingImage, "none") != 0) {
+        $statement = "UPDATE csEvents SET " .
+            "imageFilename = \"" . mysql_real_escape_string($existingImage) . "\" " .
+            "WHERE id=" . $id . ";";
+        csExecuteStatement($dbh, $statement);
+    } else if (substr($_FILES["imageUpload"]["type"], 0, 6) == "image/") {
+        $destinationFilename = "upload/" . $id . "_" . $_FILES["imageUpload"]["name"];
         move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $destinationFilename) or
             die("move_uploaded_file failed");
         $statement = "UPDATE csEvents SET " .

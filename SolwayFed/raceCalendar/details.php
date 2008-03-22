@@ -38,7 +38,7 @@
                     $id = $_GET["id"] + 0;
                     $query = "SELECT * FROM csEvents WHERE id=" . $id;
                     $result = csExecuteSingleRowQuery($dbh, $query);
-                    $friendlyDate = date('d m Y', strtotime($result["date"]));
+                    $friendlyDate = date('l jS F Y', strtotime($result["date"]));
                     ?>
                     <h1><?php echo htmlspecialchars($result["racepoint"]); ?></h1>
                     <h2><?php echo htmlspecialchars($friendlyDate); ?></h2>

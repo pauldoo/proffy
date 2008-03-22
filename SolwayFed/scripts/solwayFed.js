@@ -39,6 +39,13 @@ function heights(){
 
 }
 
+function changeImage(){
+    var imageBox = document.getElementById("thumbnail");
+    var existingImage = document.getElementById("existingImage");
+    var imageChoice = existingImage.value;
+    imageBox.innerHTML = "<img src='/includes/thumbnail.php?s=200&path=../"+imageChoice+"' alt=' ' class='floatright' />";
+}
+
 function goWithConfirm(url, message)
 {
     if (confirm(message) == true) {

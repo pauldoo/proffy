@@ -47,6 +47,8 @@ require_once ("c:\sites_web\sarah_solwayFed\admin\utils.php");
 $action = $_GET["action"];
 switch ($action) {
     case "add":
+        $dbh = csConnect();
+        $result = csExecuteQuery($dbh, "SELECT id, imageFilename FROM csEvents");
         ?>
 <form action="submit.php?action=add" method="post" enctype="multipart/form-data" id="addRacepoint">
     <label for="racepointName">Racepoint Name:</label>
@@ -116,7 +118,23 @@ switch ($action) {
         <option>2014</option>
         <option>2015</option>
      </select>
-     <label for="imageUpload">Image:</label>
+     <label for="existingImage">Choose Existing Image:</label>
+     <select name="existingImage" id="existingImage" onchange="changeImage();">
+            <option value="none">No Image Selected</option>
+     <?php
+        while ($row = mysql_fetch_assoc($result)) {
+     ?>
+            <option
+                value="<?php echo htmlspecialchars($row["imageFilename"]); ?>">
+                <?php echo htmlspecialchars($row["imageFilename"]); ?>
+            </option>
+     <?php
+        }
+     ?>
+     </select>
+     <div id="thumbnail"><p>No image selected</p></div>
+     <p>Or</p>
+     <label for="imageUpload">Upload New Image:</label>
      <input type="file" name="imageUpload" id="imageUpload" />
 
      <input type="submit" class="submit" />
@@ -221,15 +239,32 @@ switch ($action) {
         $id = $_GET["id"] + 0;
         $query = "SELECT * FROM csEvents WHERE id=" . $id;
         $result = csExecuteSingleRowQuery($dbh, $query);
-        $friendlyDate = date('d m Y', strtotime($result["date"]));
+        $friendlyDate = date('l jS F Y', strtotime($result["date"]));
         ?>
-Id: <?php echo $result["id"]; ?><br/>
-Racepoint: <?php echo htmlspecialchars($result["racepoint"]); ?><br/>
-Date: <?php echo htmlspecialchars($friendlyDate); ?><br/>
-Latitude: <?php echo htmlspecialchars($result["latitude"]); ?><br/>
-Longitude: <?php echo htmlspecialchars($result["longitude"]); ?><br/>
-Details: <?php echo htmlspecialchars($result["details"]); ?><br/>
-Image: <img src="<?php echo htmlspecialchars($result["imageFilename"]); ?>" /><br/>
+                    <h1><?php echo htmlspecialchars($result["racepoint"]); ?></h1>
+                    <h2><?php echo htmlspecialchars($friendlyDate); ?></h2>
+                    <img src="/includes/thumbnail.php?s=200&path=../<?php echo htmlspecialchars($result["imageFilename"]); ?>" class="floatright" />
+                    <p><?php echo htmlspecialchars($result["details"]); ?></p>
+                    <div id="map" style="width:450px; height:300px; clear: both;"></div>
+                    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAYrFofuFPMX8rrxchY-dtbRSEIYkWFGd2J2hsP_ngrZQDjJ82fRQXX-HGn-6ftv7DzfC1PhNNQztHRQ"
+      type="text/javascript"></script>
+                    <script type="text/javascript">
+                            function load() {
+                                      if (GBrowserIsCompatible()) {
+                                        var map = new GMap2(document.getElementById("map"));
+                                        map.addControl(new GSmallMapControl());
+                                        map.addControl(new GMapTypeControl());
+
+                                        var point = new GLatLng(<?php echo htmlspecialchars($result["latitude"]); ?>, <?php echo htmlspecialchars($result["longitude"]); ?>);
+                                        map.setCenter(point, 13);
+                                        var marker = new GMarker(point);
+                                        map.addOverlay(marker);
+                                        map.setMapType(G_HYBRID_MAP);
+                                      }
+                                    }
+                            window.onload = load;
+                            window.onunload = GUnload;
+                    </script>
 
 <a href="form.php?action=edit&id=<?php echo $result["id"]; ?>">Edit</a><br/>
        <?php
