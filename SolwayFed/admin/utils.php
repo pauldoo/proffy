@@ -163,8 +163,8 @@ function csDeleteEvent($dbh)
 */
 function csHandleImageUpload($dbh, $id)
 {
-    $existingImage = $_POST["existingImage"];
-    if (strcmp($existingImage, "none") != 0) {
+    if (isset($_POST["existingImage"]) && strcmp($_POST["existingImage"], "none") != 0) {
+        $existingImage = $_POST["existingImage"];
         $statement = "UPDATE csEvents SET " .
             "imageFilename = \"" . mysql_real_escape_string($existingImage) . "\" " .
             "WHERE id=" . $id . ";";
@@ -177,6 +177,17 @@ function csHandleImageUpload($dbh, $id)
             "imageFilename = \"" . mysql_real_escape_string($destinationFilename) . "\" " .
             "WHERE id=" . $id . ";";
         csExecuteStatement($dbh, $statement);
+    }
+}
+
+function csTruncateString($string, $maximumLength)
+{
+    if (strlen($string) <= $maximumLength) {
+        return $string;
+    } else {
+        $result = substr($string, 0, $maximumLength + 1);
+        $result = substr($result, 0, strrpos($result, " ")) . " ...";
+        return $result;
     }
 }
 ?>

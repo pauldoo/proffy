@@ -47,7 +47,7 @@
                     <a href="details.php?id=<?php echo $row["id"]; ?>"><img src="/includes/thumbnail.php?s=181&path=../<?php echo htmlspecialchars($row["imageFilename"]); ?>" alt="raceImage"/></a>
                     <p><span><strong>Location:</strong></span><?php echo htmlspecialchars($row["racepoint"]); ?><br/>
                     <span><strong>Date:</strong></span><?php echo htmlspecialchars($friendlyDate); ?></p>
-                    <p><?php echo htmlspecialchars($row["details"]); ?><br/>
+                    <p><?php echo nl2br(htmlspecialchars(csTruncateString($row["details"], 200))); ?><br/>
                     <a href="details.php?id=<?php echo $row["id"]; ?>">read more...</a></p>
                     </div>
                     <hr/>
