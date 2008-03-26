@@ -29,6 +29,7 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,8 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     private static final double SELECTING_FUZZ = 10.0;
     /// Stroke used to render the quad.
     private static final Stroke NORMAL_STROKE = new BasicStroke(2.0f);
+    /// Stroke used to render the quad.
+    private static final Stroke FINE_STROKE = new BasicStroke(1.0f);
     /// Stroke used to render an outline shape used for selection.
     private static final Stroke SELECTING_STROKE = new BasicStroke((float)SELECTING_FUZZ);
     
@@ -97,6 +100,15 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
         g.setColor(isBeingHoveredOver ? Color.RED : Color.BLACK);
         g.setStroke(NORMAL_STROKE);
         g.draw(getShape());
+        if (isBeingHoveredOver) {
+            g.setStroke(FINE_STROKE);
+            final double width = getBounds().width;
+            final double height = getBounds().height;
+            g.draw(new Line2D.Double(80, 60, cornerA.getX(), cornerA.getY()));
+            g.draw(new Line2D.Double(width - 80, 60, cornerB.getX(), cornerB.getY()));
+            g.draw(new Line2D.Double(width - 80, height - 60, cornerC.getX(), cornerC.getY()));
+            g.draw(new Line2D.Double(80, height - 60, cornerD.getX(), cornerD.getY()));
+        }
     }
     
     private Shape getShape()
