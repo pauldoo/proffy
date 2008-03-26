@@ -17,11 +17,13 @@
 
 package fractals;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -80,11 +82,18 @@ final class IteratedFunctionSystem extends JComponent implements DraggableQuadri
         final double width = getBounds().width;
         final double height = getBounds().height;
         
+        {
+            Shape border = new Rectangle2D.Double(80, 60, width - 160, height - 120);
+            g.setStroke(new BasicStroke());
+            g.draw(border);
+        }
+        
         Random generator = new Random();
         Point2D.Double point = new Point2D.Double(generator.nextDouble() * width, generator.nextDouble() * height);
+        Utilities.setGraphicsToLowQuality(g);
         for (int i = 0; i < 10000; i++) {
-            point.x /= width;
-            point.y /= height;
+            point.x = (point.x - 80) / (width - 160);
+            point.y = (point.y - 60) / (height - 120);
             
             int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
             DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
