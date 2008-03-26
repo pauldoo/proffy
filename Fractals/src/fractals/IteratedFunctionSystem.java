@@ -92,16 +92,19 @@ final class IteratedFunctionSystem extends JComponent implements DraggableQuadri
         Point2D.Double point = new Point2D.Double(generator.nextDouble() * width, generator.nextDouble() * height);
         Utilities.setGraphicsToLowQuality(g);
         for (int i = 0; i < 10000; i++) {
-            point.x = (point.x - 80) / (width - 160);
-            point.y = (point.y - 60) / (height - 120);
-            
             int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
             DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
+            if (quad.getShape().contains(generator.nextDouble() * (width - 160) + 80, generator.nextDouble() * (height - 120) + 60) == false) {
+                i--;
+                continue;
+            }
             Point2D.Double cornerA = quad.getCornerA();
             Point2D.Double cornerB = quad.getCornerB();
             Point2D.Double cornerC = quad.getCornerC();
             Point2D.Double cornerD = quad.getCornerD();
             
+            point.x = (point.x - 80) / (width - 160);
+            point.y = (point.y - 60) / (height - 120);
             double weightA = (1.0 - point.x) * (1.0 - point.y);
             double weightB = (point.x) * (1.0 - point.y);
             double weightC = (point.x) * (point.y);

@@ -111,7 +111,7 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
         }
     }
     
-    private Shape getShape()
+    public Shape getShape()
     {
         Polygon result = new Polygon();
         result.addPoint((int)Math.round(cornerA.getX()), (int)Math.round(cornerA.getY()));
