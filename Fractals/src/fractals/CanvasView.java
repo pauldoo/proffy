@@ -87,8 +87,7 @@ public class CanvasView extends JComponent implements Runnable
         int threadCount = Runtime.getRuntime().availableProcessors();
         for (int i = 1; i <= threadCount; i++) {
             Thread t = new Thread(this);
-            int currentPriority = t.getPriority();
-            t.setPriority(currentPriority - 1);
+            Utilities.setToBackgroundThread(t);
             //System.out.println("Before: " + currentPriority + " ... After: " + t.getPriority());
             t.start();
             result.add(t);

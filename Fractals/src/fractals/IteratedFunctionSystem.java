@@ -18,12 +18,13 @@
 package fractals;
 
 import java.awt.BasicStroke;
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +35,7 @@ import javax.swing.JLayeredPane;
     Implements an Iterated Function System (IFS) fractal where the
     user is able to define the different transforms that are used.
 */
-final class IteratedFunctionSystem extends JComponent implements DraggableQuadrilateral.Listener
+final class IteratedFunctionSystem extends BackgroundRenderingComponent implements DraggableQuadrilateral.Listener
 {
     private static final long serialVersionUID = 5488481579716517944L;
 
@@ -70,28 +71,29 @@ final class IteratedFunctionSystem extends JComponent implements DraggableQuadri
         repaint();
     }
     
-    @Override
-    public void paintComponent(Graphics g)
-    {
-        paintComponent((Graphics2D)g);
-    }
-    
-    private void paintComponent(Graphics2D g)
+    protected void render(Graphics2D g) throws InterruptedException
     {
         Utilities.setGraphicsToHighQuality(g);
+
+        g.setColor(Color.BLACK);
+        g.setBackground(Color.LIGHT_GRAY);
         final double width = getBounds().width;
         final double height = getBounds().height;
-        
+
         {
             Shape border = new Rectangle2D.Double(80, 60, width - 160, height - 120);
             g.setStroke(new BasicStroke());
             g.draw(border);
         }
-        
+
         Random generator = new Random();
         Point2D.Double point = new Point2D.Double(generator.nextDouble() * width, generator.nextDouble() * height);
-        Utilities.setGraphicsToLowQuality(g);
-        for (int i = 0; i < 10000; i++) {
+
+        for (int i = 0; i < 100000; i++) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+
             int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
             DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
             if (quad.getShape().contains(generator.nextDouble() * (width - 160) + 80, generator.nextDouble() * (height - 120) + 60) == false) {
@@ -102,7 +104,7 @@ final class IteratedFunctionSystem extends JComponent implements DraggableQuadri
             Point2D.Double cornerB = quad.getCornerB();
             Point2D.Double cornerC = quad.getCornerC();
             Point2D.Double cornerD = quad.getCornerD();
-            
+
             point.x = (point.x - 80) / (width - 160);
             point.y = (point.y - 60) / (height - 120);
             double weightA = (1.0 - point.x) * (1.0 - point.y);
@@ -112,14 +114,16 @@ final class IteratedFunctionSystem extends JComponent implements DraggableQuadri
             point = new Point2D.Double(
                     weightA * cornerA.x + weightB * cornerB.x + weightC * cornerC.x + weightD * cornerD.x,
                     weightA * cornerA.y + weightB * cornerB.y + weightC * cornerC.y + weightD * cornerD.y);
-            
-            Shape shape = new Ellipse2D.Double(point.x - 1.0, point.y - 1.0, 2.0, 2.0);
-            g.fill(shape);
+
+            if (i >= 100) {
+                Shape shape = new Ellipse2D.Double(point.x - 0.25, point.y - 0.25, 0.5, 0.5);
+                g.fill(shape);
+            }
         }
     }
 
     public void draggableQuadrilateralHasMoved(DraggableQuadrilateral source)
     {
-        repaint();
+        this.rerender();
     }
 }

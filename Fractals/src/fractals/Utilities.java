@@ -37,4 +37,14 @@ final class Utilities
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
     }
+    
+    /**
+        Lowers the priority of the thread and sets it to be a daemon thread.
+    */
+    static void setToBackgroundThread(Thread t)
+    {
+        int currentPriority = t.getPriority();
+        t.setPriority(currentPriority - 1);
+        t.setDaemon(true);
+    }
 }
