@@ -104,10 +104,10 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
             g.setStroke(FINE_STROKE);
             final double width = getBounds().width;
             final double height = getBounds().height;
-            g.draw(new Line2D.Double(80, 60, cornerA.getX(), cornerA.getY()));
-            g.draw(new Line2D.Double(width - 80, 60, cornerB.getX(), cornerB.getY()));
-            g.draw(new Line2D.Double(width - 80, height - 60, cornerC.getX(), cornerC.getY()));
-            g.draw(new Line2D.Double(80, height - 60, cornerD.getX(), cornerD.getY()));
+            g.draw(new Line2D.Double(IteratedFunctionSystem.GAP_FROM_EDGE, IteratedFunctionSystem.GAP_FROM_EDGE, cornerA.getX(), cornerA.getY()));
+            g.draw(new Line2D.Double(width - IteratedFunctionSystem.GAP_FROM_EDGE, IteratedFunctionSystem.GAP_FROM_EDGE, cornerB.getX(), cornerB.getY()));
+            g.draw(new Line2D.Double(width - IteratedFunctionSystem.GAP_FROM_EDGE, height - IteratedFunctionSystem.GAP_FROM_EDGE, cornerC.getX(), cornerC.getY()));
+            g.draw(new Line2D.Double(IteratedFunctionSystem.GAP_FROM_EDGE, height - IteratedFunctionSystem.GAP_FROM_EDGE, cornerD.getX(), cornerD.getY()));
         }
     }
     

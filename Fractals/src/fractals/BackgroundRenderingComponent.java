@@ -99,6 +99,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                     if (Thread.interrupted()) throw new InterruptedException();
                     g = (Graphics2D)buffer.getGraphics();
                     render(g);
+                    repaint();
                 } catch (InterruptedException ex) {
                 } finally {
                     if (g != null) {
@@ -114,6 +115,7 @@ abstract class BackgroundRenderingComponent extends JComponent
         backgroundThread = new Thread(runner);
         Utilities.setToBackgroundThread(backgroundThread);
         backgroundThread.start();
+        repaint();
     }
     
     private final void stopBackgroundThread()

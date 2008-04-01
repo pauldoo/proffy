@@ -18,18 +18,25 @@
 package fractals;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.LayoutManager;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 /**
     Implements an Iterated Function System (IFS) fractal where the
@@ -38,37 +45,83 @@ import javax.swing.JLayeredPane;
 final class IteratedFunctionSystem extends BackgroundRenderingComponent implements DraggableQuadrilateral.Listener
 {
     private static final long serialVersionUID = 5488481579716517944L;
+    
+    public static final int GAP_FROM_EDGE = 60;
 
+    private final JLayeredPane quadrilateralsPane;
     private final List<DraggableQuadrilateral> draggableQuadrilaterals = new ArrayList<DraggableQuadrilateral>();
     
     static JComponent createView()
     {
+        JPanel root = new JPanel();
+        root.setLayout(new BorderLayout());
+        
         JLayeredPane panel = new JLayeredPane();
+        JLayeredPane nestedPanel = new JLayeredPane();
+        panel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         panel.setLayout(new EverythingGetsOverlayedLayout());
-        IteratedFunctionSystem ifs = new IteratedFunctionSystem();
-        DraggableQuadrilateral quadA = new DraggableQuadrilateral();
-        DraggableQuadrilateral quadB = new DraggableQuadrilateral();
-        DraggableQuadrilateral quadC = new DraggableQuadrilateral();
-        ifs.addDraggableQuadrilateral(quadA);
-        ifs.addDraggableQuadrilateral(quadB);
-        ifs.addDraggableQuadrilateral(quadC);
-        panel.add(quadA);
-        panel.add(quadB);
-        panel.add(quadC);
-        panel.add(ifs);
-        return panel;
+        nestedPanel.setLayout(new EverythingGetsOverlayedLayout());
+        IteratedFunctionSystem ifs = new IteratedFunctionSystem(nestedPanel);
+        panel.add(ifs, JLayeredPane.DEFAULT_LAYER);
+        panel.add(nestedPanel, JLayeredPane.PALETTE_LAYER);
+        root.add(panel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = ifs.createButtonPanel();
+        root.add(buttonPanel, BorderLayout.WEST);
+        
+        return root;
     }
 
-    IteratedFunctionSystem()
+    IteratedFunctionSystem(JLayeredPane containerPane)
     {
+        this.quadrilateralsPane = containerPane;
         setOpaque(false);
     }
     
-    void addDraggableQuadrilateral(DraggableQuadrilateral quad)
+    private JPanel createButtonPanel()
     {
+        JPanel buttonPanel = new JPanel();
+        LayoutManager layout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
+        buttonPanel.setLayout(layout);
+        
+        {
+            JButton addButton = new JButton("Add");
+            addButton.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    addDraggableQuadrilateral();
+                }
+            });
+            buttonPanel.add(addButton);
+        }
+        
+        {
+            JButton resetButton = new JButton("Reset");
+            resetButton.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    removeAllDraggableQuadrilaterals();
+                }
+            });
+            buttonPanel.add(resetButton);
+        }
+        return buttonPanel;
+    }
+    
+    private void addDraggableQuadrilateral()
+    {
+        System.out.println("Boo");
+        DraggableQuadrilateral quad = new DraggableQuadrilateral();
         quad.addListener(this);
+        quadrilateralsPane.add(quad);
+        quadrilateralsPane.doLayout();
         draggableQuadrilaterals.add(quad);
-        repaint();
+        rerender();
+    }
+    
+    private void removeAllDraggableQuadrilaterals()
+    {
+        quadrilateralsPane.removeAll();
+        draggableQuadrilaterals.clear();
+        rerender();
     }
     
     protected void render(Graphics2D g) throws InterruptedException
@@ -76,27 +129,30 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
         Utilities.setGraphicsToHighQuality(g);
 
         g.setColor(Color.BLACK);
-        g.setBackground(Color.LIGHT_GRAY);
-        final double width = getBounds().width;
-        final double height = getBounds().height;
+        final double width = getWidth();
+        final double height = getHeight();
 
         {
-            Shape border = new Rectangle2D.Double(80, 60, width - 160, height - 120);
+            Shape border = new Rectangle2D.Double(GAP_FROM_EDGE, GAP_FROM_EDGE, width - GAP_FROM_EDGE*2, height - GAP_FROM_EDGE*2);
             g.setStroke(new BasicStroke());
             g.draw(border);
         }
 
+        if (draggableQuadrilaterals.isEmpty()) {
+            return;
+        }
+        
         Random generator = new Random();
         Point2D.Double point = new Point2D.Double(generator.nextDouble() * width, generator.nextDouble() * height);
 
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
 
             int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
             DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
-            if (quad.getShape().contains(generator.nextDouble() * (width - 160) + 80, generator.nextDouble() * (height - 120) + 60) == false) {
+            if (quad.getShape().contains(generator.nextDouble() * (width - GAP_FROM_EDGE*2) + GAP_FROM_EDGE, generator.nextDouble() * (height - GAP_FROM_EDGE*2) + GAP_FROM_EDGE) == false) {
                 i--;
                 continue;
             }
@@ -105,8 +161,8 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
             Point2D.Double cornerC = quad.getCornerC();
             Point2D.Double cornerD = quad.getCornerD();
 
-            point.x = (point.x - 80) / (width - 160);
-            point.y = (point.y - 60) / (height - 120);
+            point.x = (point.x - GAP_FROM_EDGE) / (width - GAP_FROM_EDGE*2);
+            point.y = (point.y - GAP_FROM_EDGE) / (height - GAP_FROM_EDGE*2);
             double weightA = (1.0 - point.x) * (1.0 - point.y);
             double weightB = (point.x) * (1.0 - point.y);
             double weightC = (point.x) * (point.y);

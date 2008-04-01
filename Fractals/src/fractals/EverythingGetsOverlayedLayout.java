@@ -20,6 +20,7 @@ package fractals;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.LayoutManager;
 
 /**
@@ -36,7 +37,7 @@ final class EverythingGetsOverlayedLayout implements LayoutManager
 
     public void removeLayoutComponent(Component comp)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public Dimension preferredLayoutSize(Container parent)
@@ -51,8 +52,13 @@ final class EverythingGetsOverlayedLayout implements LayoutManager
 
     public void layoutContainer(Container parent)
     {
+        Insets insets = parent.getInsets();
+        int x = insets.left;
+        int y = insets.top;
+        int width = parent.getWidth() - insets.left - insets.right;
+        int height = parent.getHeight() - insets.top - insets.bottom;
         for (Component c: parent.getComponents()) {
-            c.setBounds(parent.getBounds());
+            c.setBounds(x, y, width, height);
         }
     }
 }
