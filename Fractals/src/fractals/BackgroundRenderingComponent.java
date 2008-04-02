@@ -118,7 +118,7 @@ abstract class BackgroundRenderingComponent extends JComponent
         repaint();
     }
     
-    private final void stopBackgroundThread()
+    public final void stopBackgroundThread()
     {
         Thread t = backgroundThread;
         try {

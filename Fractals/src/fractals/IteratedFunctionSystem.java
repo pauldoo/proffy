@@ -20,6 +20,7 @@ package fractals;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Shape;
@@ -31,7 +32,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
@@ -67,8 +67,12 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
         root.add(panel, BorderLayout.CENTER);
 
         JPanel buttonPanel = ifs.createButtonPanel();
-        root.add(buttonPanel, BorderLayout.WEST);
-        
+        root.add(buttonPanel, BorderLayout.NORTH);
+
+        DraggableQuadrilateral quad = new DraggableQuadrilateral();
+        quad.addListener(ifs);
+        nestedPanel.add(quad);
+
         return root;
     }
 
@@ -81,11 +85,11 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
     private JPanel createButtonPanel()
     {
         JPanel buttonPanel = new JPanel();
-        LayoutManager layout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
+        LayoutManager layout = new FlowLayout();
         buttonPanel.setLayout(layout);
         
         {
-            JButton addButton = new JButton("Add");
+            JButton addButton = new JButton("Add new transform");
             addButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     addDraggableQuadrilateral();
@@ -95,7 +99,7 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
         }
         
         {
-            JButton resetButton = new JButton("Reset");
+            JButton resetButton = new JButton("Reset applet");
             resetButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     removeAllDraggableQuadrilaterals();
@@ -108,7 +112,7 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
     
     private void addDraggableQuadrilateral()
     {
-        System.out.println("Boo");
+        stopBackgroundThread();
         DraggableQuadrilateral quad = new DraggableQuadrilateral();
         quad.addListener(this);
         quadrilateralsPane.add(quad);
@@ -119,8 +123,10 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
     
     private void removeAllDraggableQuadrilaterals()
     {
+        stopBackgroundThread();
         quadrilateralsPane.removeAll();
         draggableQuadrilaterals.clear();
+        addDraggableQuadrilateral();
         rerender();
     }
     
@@ -145,35 +151,37 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
         Random generator = new Random();
         Point2D.Double point = new Point2D.Double(generator.nextDouble() * width, generator.nextDouble() * height);
 
-        for (int i = 0; i < 1000000; i++) {
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
+        for (int j = 0; j < 1000; j++) {
+            for (int i = 0; i < 1000; i++) {
+                if (Thread.interrupted()) {
+                    throw new InterruptedException();
+                }
 
-            int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
-            DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
-            if (quad.getShape().contains(generator.nextDouble() * (width - GAP_FROM_EDGE*2) + GAP_FROM_EDGE, generator.nextDouble() * (height - GAP_FROM_EDGE*2) + GAP_FROM_EDGE) == false) {
-                i--;
-                continue;
-            }
-            Point2D.Double cornerA = quad.getCornerA();
-            Point2D.Double cornerB = quad.getCornerB();
-            Point2D.Double cornerC = quad.getCornerC();
-            Point2D.Double cornerD = quad.getCornerD();
+                int quadIndex = generator.nextInt(draggableQuadrilaterals.size());
+                DraggableQuadrilateral quad = draggableQuadrilaterals.get(quadIndex);
+                if (quad.getShape().contains(generator.nextDouble() * (width - GAP_FROM_EDGE*2) + GAP_FROM_EDGE, generator.nextDouble() * (height - GAP_FROM_EDGE*2) + GAP_FROM_EDGE) == false) {
+                    i--;
+                    continue;
+                }
+                Point2D.Double cornerA = quad.getCornerA();
+                Point2D.Double cornerB = quad.getCornerB();
+                Point2D.Double cornerC = quad.getCornerC();
+                Point2D.Double cornerD = quad.getCornerD();
 
-            point.x = (point.x - GAP_FROM_EDGE) / (width - GAP_FROM_EDGE*2);
-            point.y = (point.y - GAP_FROM_EDGE) / (height - GAP_FROM_EDGE*2);
-            double weightA = (1.0 - point.x) * (1.0 - point.y);
-            double weightB = (point.x) * (1.0 - point.y);
-            double weightC = (point.x) * (point.y);
-            double weightD = (1.0 - point.x) * (point.y);
-            point = new Point2D.Double(
-                    weightA * cornerA.x + weightB * cornerB.x + weightC * cornerC.x + weightD * cornerD.x,
-                    weightA * cornerA.y + weightB * cornerB.y + weightC * cornerC.y + weightD * cornerD.y);
+                point.x = (point.x - GAP_FROM_EDGE) / (width - GAP_FROM_EDGE*2);
+                point.y = (point.y - GAP_FROM_EDGE) / (height - GAP_FROM_EDGE*2);
+                double weightA = (1.0 - point.x) * (1.0 - point.y);
+                double weightB = (point.x) * (1.0 - point.y);
+                double weightC = (point.x) * (point.y);
+                double weightD = (1.0 - point.x) * (point.y);
+                point = new Point2D.Double(
+                        weightA * cornerA.x + weightB * cornerB.x + weightC * cornerC.x + weightD * cornerD.x,
+                        weightA * cornerA.y + weightB * cornerB.y + weightC * cornerC.y + weightD * cornerD.y);
 
-            if (i >= 100) {
-                Shape shape = new Ellipse2D.Double(point.x - 0.25, point.y - 0.25, 0.5, 0.5);
-                g.fill(shape);
+                if (i >= 50) {
+                    Shape shape = new Ellipse2D.Double(point.x - 0.25, point.y - 0.25, 0.5, 0.5);
+                    g.fill(shape);
+                }
             }
         }
     }
