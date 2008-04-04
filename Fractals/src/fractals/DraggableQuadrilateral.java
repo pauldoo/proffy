@@ -33,6 +33,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 
@@ -53,10 +54,10 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
     /// Stroke used to render an outline shape used for selection.
     private static final Stroke SELECTING_STROKE = new BasicStroke((float)SELECTING_FUZZ);
     
-    private Point2D.Double cornerA = new Point2D.Double(100, 100);
-    private Point2D.Double cornerB = new Point2D.Double(200, 100);
-    private Point2D.Double cornerC = new Point2D.Double(200, 200);
-    private Point2D.Double cornerD = new Point2D.Double(100, 200);
+    private Point2D.Double cornerA;
+    private Point2D.Double cornerB;
+    private Point2D.Double cornerC;
+    private Point2D.Double cornerD;
     
     private boolean isBeingHoveredOver = false;
     private Point dragStart = null;
@@ -70,6 +71,12 @@ final class DraggableQuadrilateral extends JComponent implements MouseListener, 
      
     DraggableQuadrilateral()
     {
+        Random rng = new Random();
+        cornerA = new Point2D.Double(100 + rng.nextInt(100), 100 + rng.nextInt(100));
+        cornerB = new Point2D.Double(300 + rng.nextInt(100), 100 + rng.nextInt(100));
+        cornerC = new Point2D.Double(300 + rng.nextInt(100), 300 + rng.nextInt(100));
+        cornerD = new Point2D.Double(100 + rng.nextInt(100), 300 + rng.nextInt(100));
+        
         setOpaque(false);
         setRequestFocusEnabled(true);
         addMouseListener(this);

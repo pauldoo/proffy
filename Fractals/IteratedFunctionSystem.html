@@ -3,13 +3,48 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Iterated Function System</title>
+        <style>
+            #outer{
+                width:800px;
+                margin:0 auto;
+                background-color:#dddddd;
+                padding:30px;
+                font-family:Verdana, Arial, Helvetica, Sans-Serif;
+                font-size:0.8em;
+                color:#333333;
+             }
+             
+             h1{
+                 margin-top:0;
+                 font-size:1.4em;
+                 border-bottom:1px solid #333333;
+                 clear:both;
+                 }
+                 
+                .example{
+                     width:390px;
+                     float:left;
+                     margin:2px;
+                    
+                     text-align:center;
+                     font-size:0.8em;
+                     }
+                     
+                    .example p{
+                        margin-top:0;
+                        }
+        </style>
     </head>
     <body>
+        <div id="outer">
+            <h1>Iterated Function System</h1>
         <p>Before you begin, see these examples for ideas.</p>
-        <p>Sierpiński triangle, created with 3 transforms:<br/><img src="images/ifs_triangle.png"/></p>
-        <p>Sierpiński gasket, created with 8 transforms:<br/><img src="images/ifs_gasket.png"/></p>
-        <p>Fern, created with 4 transforms:<br/><img src="images/ifs_fern.png"/></p>
-        <p>
+        <div class="example"><img src="images/ifs_triangle.png"/><p>Sierpiński triangle, created with 3 transforms</p></div>
+        <div class="example"><img src="images/ifs_gasket.png"/><p>Sierpiński gasket, created with 8 transforms</p></div>
+        <div class="example"><img src="images/ifs_fern.png"/><p>Fern, created with 4 transforms</p></div>
+        <div class="example"><img src="images/ifs_feather.png"/><p>Feathers, created with 2 transforms</p></div>
+        <h1>Give it a go...</h1>
+        <p><strong>Add transforms to the view and manipulate them by dragging their corners or edges.</strong></p>
             <object
                 classid = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
                 width = "800" height = "600" >
@@ -33,9 +68,10 @@
                     </embed>
                 </comment>
             </object>
-        </p>
-        <p><em>Wiki page for comments:</em> <a href="http://pauldoo.dyndns.org/Programs/wiki/Iterated%20Function%20System">http://pauldoo.dyndns.org/Programs/wiki/Julia%20Fractal%20Applet</a></p>
+        
+        <p><em>Wiki page for comments:</em> <a href="http://pauldoo.dyndns.org/Programs/wiki/Iterated%20Function%20System">http://pauldoo.dyndns.org/Programs/wiki/Iterated%20Function%20System</a></p>
 
-        <p>Add transforms to the view and manipulate them by dragging their corners or edges.</p>
+        
+    </div>
     </body>
 </html>

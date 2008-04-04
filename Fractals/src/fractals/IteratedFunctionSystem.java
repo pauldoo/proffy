@@ -69,10 +69,8 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
         JPanel buttonPanel = ifs.createButtonPanel();
         root.add(buttonPanel, BorderLayout.NORTH);
 
-        DraggableQuadrilateral quad = new DraggableQuadrilateral();
-        quad.addListener(ifs);
-        nestedPanel.add(quad);
-
+        ifs.removeAllDraggableQuadrilaterals();
+        
         return root;
     }
 

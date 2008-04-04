@@ -95,6 +95,9 @@ abstract class BackgroundRenderingComponent extends JComponent
             {
                 Graphics2D g = null;
                 try {
+                    if (getWidth() == 0 || getHeight() == 0) {
+                        return;
+                    }
                     buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
                     if (Thread.interrupted()) throw new InterruptedException();
                     g = (Graphics2D)buffer.getGraphics();
