@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Iterated Function System</title>
+        <style>
+            #outer{
+                width:800px;
+                margin:0 auto;
+                background-color:#dddddd;
+                padding:30px;
+                font-family:Verdana, Arial, Helvetica, Sans-Serif;
+                font-size:0.8em;
+                color:#333333;
+             }
+
+             h1{
+                 margin-top:0;
+                 font-size:1.4em;
+                 border-bottom:1px solid #333333;
+                 clear:both;
+                 }
+
+                .example{
+                     width:390px;
+                     float:left;
+
+                     text-align:center;
+                     font-size:0.8em;
+                     }
+
+                    .example p{
+                        margin-top:0;
+                        }
+        </style>
+    </head>
+    <body>
+        <div id="outer">
+            <h1>Iterated Function System</h1>
+        <p>Before you begin, see these examples for ideas.</p>
+        <div class="example"><img src="images/ifs_triangle.png"/><p>Sierpiński triangle, created with 3 transforms</p></div>
+        <div class="example"><img src="images/ifs_gasket.png"/><p>Sierpiński gasket, created with 8 transforms</p></div>
+        <div class="example"><img src="images/ifs_fern.png"/><p>Fern, created with 4 transforms</p></div>
+        <div class="example"><img src="images/ifs_feather.png"/><p>Feathers, created with 2 transforms</p></div>
+        <h1>Give it a go...</h1>
+        <p><strong>Add transforms to the view and manipulate them by dragging their corners or edges.</strong></p>
+            <object
+                classid = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+                width = "800" height = "600" >
+                <param name = "code" value = "fractals.MainApplet.class" />
+                <param name = "archive" value = "dist/Fractals.jar" />
+                <param name = "type" value = "application/x-java-applet;version=1.5" />
+                <param name = "scriptable" value = "false" />
+                <param name = "FractalType" value="IteratedFunctionSystem" />
+                <comment>
+                    <embed
+                        type = "application/x-java-applet;version=1.5"
+                        code = "fractals.MainApplet.class"
+                        archive = "dist/Fractals.jar"
+                        width = "800"
+                        height = "600"
+                        FractalType ="IteratedFunctionSystem"
+                        scriptable = false >
+                        <noembed>
+                            Your browser must support Java Applets for this page to work.
+                        </noembed>
+                    </embed>
+                </comment>
+            </object>
+
+        <p><em>Wiki page for comments:</em> <a href="http://pauldoo.dyndns.org/Programs/wiki/Iterated%20Function%20System">http://pauldoo.dyndns.org/Programs/wiki/Iterated%20Function%20System</a></p>
+
+
+    </div>
+    </body>
+</html>
