@@ -35,7 +35,7 @@ public final class MainApplet extends JApplet
     private static final long serialVersionUID = 1011945883208164505L;
     
     @Override
-    public void start()
+    public void init()
     {
         super.start();
         try {
