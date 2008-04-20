@@ -19,7 +19,8 @@ package fractals;
 
 import junit.framework.TestCase;
 
-public class ComplexTest extends TestCase {
+public final class ComplexTest extends TestCase
+{
 
     private final Complex a = new Complex(2, 3);
     private final Complex b = new Complex(4, -5);
