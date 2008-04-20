@@ -73,7 +73,9 @@ public final class MainApplet extends JApplet
         } else if (fractalType.equals("JuliaSet")) {
             panel.add(BackwardsIterationJuliaView.createView(), BorderLayout.CENTER);
         } else if (fractalType.equals("IteratedFunctionSystem")) {
-            panel.add(IteratedFunctionSystem.createView());
+            panel.add(IteratedFunctionSystem.createView(), BorderLayout.CENTER);
+        } else if (fractalType.equals("DiffusionLimitedAggregation")) {
+            panel.add(DiffusionLimitedAggregation.createView(), BorderLayout.CENTER);
         } else {
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
@@ -86,7 +88,7 @@ public final class MainApplet extends JApplet
     {
         Map<String, String> parameters = new HashMap<String, String>();
         //parameters.put("FractalType", "MandelbrotSet");
-        parameters.put("FractalType", "IteratedFunctionSystem");
+        parameters.put("FractalType", "DiffusionLimitedAggregation");
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
