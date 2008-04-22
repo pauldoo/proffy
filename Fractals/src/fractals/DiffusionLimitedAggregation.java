@@ -45,12 +45,12 @@ final class DiffusionLimitedAggregation extends BackgroundRenderingComponent
     {
         Utilities.setGraphicsToHighQuality(g);
         g.setColor(Color.RED);
-        final PointSet pointSet = new PointSet();
+        PointSet pointSet = new SimplePointSet();
         
         final double width = getWidth();
         final double height = getHeight();
         final Point2D.Double center = new Point2D.Double(width/2, height/2);
-        fixatePoint(center, g, pointSet);
+        pointSet = fixatePoint(center, g, pointSet);
         
         double currentReleaseRadius = RELEASE_GAP;        
         
@@ -66,7 +66,7 @@ final class DiffusionLimitedAggregation extends BackgroundRenderingComponent
                 
                 if (closestPointDistance <= PARTICLE_RADIUS * 2.0) {
                     if (Math.random() < STICKINESS) {
-                        fixatePoint(p, g, pointSet);
+                        pointSet = fixatePoint(p, g, pointSet);
                         currentReleaseRadius = Math.max(
                                 currentReleaseRadius,
                                 p.distance(center) + RELEASE_GAP);
@@ -85,10 +85,10 @@ final class DiffusionLimitedAggregation extends BackgroundRenderingComponent
         }
     }
     
-    private static void fixatePoint(Point2D.Double point, Graphics2D g, PointSet pointSet)
+    private static PointSet fixatePoint(Point2D.Double point, Graphics2D g, PointSet pointSet)
     {
         g.fill(new Ellipse2D.Double(point.getX() - PARTICLE_RADIUS, point.getY() - PARTICLE_RADIUS, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 2));
-        pointSet.add(point);
+        return pointSet.add(point);
     }
     
     private static Point2D.Double generateRandomStartPoint(Point2D.Double center, double releaseRadius)

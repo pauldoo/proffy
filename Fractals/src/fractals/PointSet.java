@@ -18,36 +18,13 @@
 package fractals;
 
 import java.awt.geom.Point2D;
-import java.util.HashSet;
 
 /**
     A set of points in 2D space.
- 
-    Ideally this class would be implemented using a PR Quadtree but for now
-    it's a simple Hash.
 */
-final class PointSet
+interface PointSet
 {
-    private final HashSet<Point2D.Double> set;
+    PointSet add(Point2D.Double point);
     
-    PointSet()
-    {
-        this.set = new HashSet<Point2D.Double>();
-    }
-    
-    void add(Point2D.Double point)
-    {
-        set.add((Point2D.Double)point.clone());
-    }
-    
-    Point2D.Double findClosest(Point2D.Double point)
-    {
-        Point2D.Double result = null;
-        for (Point2D.Double p: set) {
-            if (result == null || point.distanceSq(p) < point.distanceSq(result)) {
-                result = p;
-            }
-        }
-        return (Point2D.Double)result.clone();
-    }
+    Point2D.Double findClosest(Point2D.Double point);
 }
