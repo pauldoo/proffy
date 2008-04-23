@@ -38,12 +38,16 @@ final class QuadTreePointSet implements PointSet
     
     public PointSet add(Point2D.Double point)
     {
-        return new QuadTreePointSet(rootNode.add(point));
+        return new QuadTreePointSet(rootNode.addInside((Point2D.Double)point.clone()));
     }
 
     public Point2D.Double findClosest(Point2D.Double point)
     {
-        return rootNode.findClosest(point);
+        Point2D.Double result = rootNode.findClosest(point);
+        if (result != null) {
+            result = (Point2D.Double)result.clone();
+        }
+        return result;
     }
     
     /**
@@ -65,12 +69,14 @@ final class QuadTreePointSet implements PointSet
         {
             this.min = min;
             this.max = max;
-            assert max.x > min.x;
-            assert ((max.x + min.x) / 2) != min.x;
-            assert ((max.x + min.x) / 2) != max.x;
-            assert max.y > min.y;
-            assert ((max.y + min.y) / 2) != min.y;
-            assert ((max.y + min.y) / 2) != max.y;
+            if (((max.x > min.x) &&
+                (((max.x + min.x) / 2) != min.x) &&
+                (((max.x + min.x) / 2) != max.x) &&
+                (max.y > min.y) &&
+                (((max.y + min.y) / 2) != min.y) &&
+                (((max.y + min.y) / 2) != max.y)) == false) {
+                throw new RuntimeException();
+            }
         }
         
         /**
@@ -104,6 +110,17 @@ final class QuadTreePointSet implements PointSet
         {
             return new Point2D.Double((min.x + max.x) / 2, (min.y + max.y) / 2);
         }
+        
+        /**
+            Returns the lower bound distance of this node to a given point.
+        */
+        protected double distanceToPoint(Point2D.Double point)
+        {
+            Point2D.Double clampedPoint = new Point2D.Double(
+                    Math.max(min.x, Math.min(max.x, point.x)),
+                    Math.max(min.y, Math.min(max.y, point.y)));
+            return clampedPoint.distance(point);
+        }
     }
     
     /**
@@ -132,7 +149,7 @@ final class QuadTreePointSet implements PointSet
         @Override
         Point2D.Double findClosest(Point2D.Double point)
         {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null;
         }
     }
     
@@ -203,10 +220,46 @@ final class QuadTreePointSet implements PointSet
             }
         }
 
+        private Node getSubNode(Quadrant quadrant)
+        {
+            switch (quadrant) {
+                case A:
+                    return subNodeA;
+                case B:
+                    return subNodeB;
+                case C:
+                    return subNodeC;
+                case D:
+                    return subNodeD;
+                default:
+                    throw new RuntimeException();
+            }
+        }
+        
         @Override
         Point2D.Double findClosest(Point2D.Double point)
         {
-            throw new UnsupportedOperationException("Not supported yet.");
+            final double dx = Math.abs(getCenter().x - point.x);
+            final double dy = Math.abs(getCenter().y - point.y);
+            final Quadrant[] quadrantList = new Quadrant[4];
+            quadrantList[0] = Utilities.quadrant(getCenter(), point);
+            quadrantList[1] = (dx <= dy) ? Utilities.neighbourAlongX(quadrantList[0]) : Utilities.neighbourAlongY(quadrantList[0]);
+            quadrantList[2] = (dx <= dy) ? Utilities.neighbourAlongY(quadrantList[0]) : Utilities.neighbourAlongX(quadrantList[0]);
+            quadrantList[3] = Utilities.diagonallyOpposite(quadrantList[0]);
+
+            Point2D.Double result = null;
+            for (Quadrant q: quadrantList) {
+                final Node subNode = getSubNode(q);
+                if (result == null || subNode.distanceToPoint(point) <= result.distance(point)) {
+                    Point2D.Double newCandidate = subNode.findClosest(point);
+                    if (newCandidate != null && (result == null || newCandidate.distance(point) < result.distance(point))) {
+                        result = newCandidate;
+                    }
+                } else {
+                    break;
+                }
+            }
+            return result;
         }
     }
     
@@ -221,7 +274,9 @@ final class QuadTreePointSet implements PointSet
         {
             super(min, max);
             this.point = point;
-            assert isPointWithinBounds(point);
+            if (isPointWithinBounds(point) == false) {
+                throw new RuntimeException("Point is outside of leaf bounds");
+            }
         }
         
         @Override
@@ -239,7 +294,7 @@ final class QuadTreePointSet implements PointSet
         @Override
         Point2D.Double findClosest(Point2D.Double point)
         {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return this.point;
         }
     }
     
@@ -255,18 +310,55 @@ final class QuadTreePointSet implements PointSet
         
         static Quadrant quadrant(Point2D.Double origin, Point2D.Double point)
         {
-            final int quadrant =
+            final int quadrantIndex =
                     ((point.getX() >= origin.getX()) ? 1 : 0) +
                     ((point.getY() >= origin.getY()) ? 2 : 0);
-            switch (quadrant) {
-                case 0:
-                    return Quadrant.A;
-                case 1:
-                    return Quadrant.B;
-                case 2:
-                    return Quadrant.C;
-                case 3:
+            return Quadrant.values()[quadrantIndex];
+        }
+        
+        static Quadrant diagonallyOpposite(Quadrant q)
+        {
+            switch (q) {
+                case A:
                     return Quadrant.D;
+                case B:
+                    return Quadrant.C;
+                case C:
+                    return Quadrant.B;
+                case D:
+                    return Quadrant.A;
+                default:
+                    throw new RuntimeException();
+            }
+        }
+        
+        static Quadrant neighbourAlongX(Quadrant q)
+        {
+            switch (q) {
+                case A:
+                    return Quadrant.B;
+                case B:
+                    return Quadrant.A;
+                case C:
+                    return Quadrant.D;
+                case D:
+                    return Quadrant.C;
+                default:
+                    throw new RuntimeException();
+            }
+        }
+        
+        static Quadrant neighbourAlongY(Quadrant q)
+        {
+            switch (q) {
+                case A:
+                    return Quadrant.C;
+                case B:
+                    return Quadrant.D;
+                case C:
+                    return Quadrant.A;
+                case D:
+                    return Quadrant.B;
                 default:
                     throw new RuntimeException();
             }
