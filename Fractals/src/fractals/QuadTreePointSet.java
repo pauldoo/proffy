@@ -38,7 +38,7 @@ final class QuadTreePointSet implements PointSet
     
     public PointSet add(Point2D.Double point)
     {
-        return new QuadTreePointSet(rootNode.addInside((Point2D.Double)point.clone()));
+        return new QuadTreePointSet(rootNode.add((Point2D.Double)point.clone()));
     }
 
     public Point2D.Double findClosest(Point2D.Double point)
@@ -83,7 +83,26 @@ final class QuadTreePointSet implements PointSet
             Adds a point to the quadtree, possibly extending
             the quadtree in the process.
         */
-        abstract Node add(Point2D.Double point);
+        final Node add(Point2D.Double point)
+        {
+            if (isPointWithinBounds(point)) {
+                return addInside(point);
+            } else {
+                final double dx = point.x - getCenter().x;
+                final double dy = point.y - getCenter().y;
+                final double width = max.x - min.x;
+                final double height = max.y - min.y;
+                Point2D.Double newMin = new Point2D.Double(
+                        (dx < 0) ? (min.x - width) : (min.x),
+                        (dy < 0) ? (min.y - height) : (min.y));
+                Point2D.Double newMax = new Point2D.Double(
+                        (dx < 0) ? (max.x) : (max.x + width),
+                        (dy < 0) ? (max.y) : (max.y + height));
+                
+                Quadrant expandDirection = Utilities.quadrant(getCenter(), point);
+                return (new InnerNode(newMin, newMax)).repReplaceSubNode(Utilities.diagonallyOpposite(expandDirection), this).add(point);
+            }
+        }
         
         /**
             Adds a point to the quadtree, never extending
@@ -132,12 +151,6 @@ final class QuadTreePointSet implements PointSet
         EmptyNode(Point2D.Double min, Point2D.Double max)
         {
             super(min, max);
-        }
-
-        @Override
-        Node add(Point2D.Double point)
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
         
         @Override
@@ -198,26 +211,10 @@ final class QuadTreePointSet implements PointSet
         }
         
         @Override
-        Node add(Point2D.Double point)
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        
-        @Override
         Node addInside(Point2D.Double point)
         {
-            switch (Utilities.quadrant(getCenter(), point)) {
-                case A:
-                    return new InnerNode(min, max, subNodeA.addInside(point), subNodeB, subNodeC, subNodeD);
-                case B:
-                    return new InnerNode(min, max, subNodeA, subNodeB.addInside(point), subNodeC, subNodeD);
-                case C:
-                    return new InnerNode(min, max, subNodeA, subNodeB, subNodeC.addInside(point), subNodeD);
-                case D:
-                    return new InnerNode(min, max, subNodeA, subNodeB, subNodeC, subNodeD.addInside(point));
-                default:
-                    throw new RuntimeException();
-            }
+            Quadrant q = Utilities.quadrant(getCenter(), point);
+            return repReplaceSubNode(q, getSubNode(q).addInside(point));
         }
 
         private Node getSubNode(Quadrant quadrant)
@@ -261,6 +258,22 @@ final class QuadTreePointSet implements PointSet
             }
             return result;
         }
+        
+        Node repReplaceSubNode(Quadrant q, Node replacementSubNode)
+        {
+            switch (q) {
+                case A:
+                    return new InnerNode(min, max, replacementSubNode, subNodeB, subNodeC, subNodeD);
+                case B:
+                    return new InnerNode(min, max, subNodeA, replacementSubNode, subNodeC, subNodeD);
+                case C:
+                    return new InnerNode(min, max, subNodeA, subNodeB, replacementSubNode, subNodeD);
+                case D:
+                    return new InnerNode(min, max, subNodeA, subNodeB, subNodeC, replacementSubNode);
+                default:
+                    throw new RuntimeException();
+            }
+        }
     }
     
     /**
@@ -277,12 +290,6 @@ final class QuadTreePointSet implements PointSet
             if (isPointWithinBounds(point) == false) {
                 throw new RuntimeException("Point is outside of leaf bounds");
             }
-        }
-        
-        @Override
-        Node add(Point2D.Double point)
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
         
         @Override

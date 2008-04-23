@@ -54,10 +54,14 @@ public final class QuadTreePointSetTest extends TestCase
         long timeAccumulationA = 0;
         long timeAccumulationB = 0;
         for (int i = 0; i < POINT_COUNT; i++) {
-            Point2D.Double randomPoint = new Point2D.Double(rng.nextDouble(), rng.nextDouble());
+            Point2D.Double randomPoint = new Point2D.Double(
+                    (rng.nextDouble() - 0.5) * Math.sqrt(i),
+                    (rng.nextDouble() - 0.5) * Math.sqrt(i));
             a = a.add(randomPoint);
             b = b.add(randomPoint);
-            Point2D.Double anotherRandomPoint = new Point2D.Double(rng.nextDouble(), rng.nextDouble());
+            Point2D.Double anotherRandomPoint = new Point2D.Double(
+                    (rng.nextDouble() - 0.5) * Math.sqrt(i),
+                    (rng.nextDouble() - 0.5) * Math.sqrt(i));
             final long timeA = System.currentTimeMillis();
             Point2D.Double resultA = a.findClosest(anotherRandomPoint);
             final long timeB = System.currentTimeMillis();

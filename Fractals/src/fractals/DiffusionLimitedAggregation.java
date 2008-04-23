@@ -45,7 +45,7 @@ final class DiffusionLimitedAggregation extends BackgroundRenderingComponent
     {
         Utilities.setGraphicsToHighQuality(g);
         g.setColor(Color.RED);
-        PointSet pointSet = new SimplePointSet();
+        PointSet pointSet = new QuadTreePointSet();
         
         final double width = getWidth();
         final double height = getHeight();
