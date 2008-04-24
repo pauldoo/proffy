@@ -1,2 +1,4 @@
 VC8 Win32:
 9.76563 GiB copied in 9.734 s, 1.00325 GiB/s
+GCC Mac OS X (32-bit)
+9.76562 GiB copied in 5.45657 s, 1.7897 GiB/s
