@@ -1,0 +1,2 @@
+VC8 Win32:
+9.76563 GiB copied in 9.734 s, 1.00325 GiB/s
