@@ -18,7 +18,9 @@
 package fractals;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
     Ideally this class would be implemented using a PR Quadtree but for now
@@ -48,5 +50,10 @@ final class SimplePointSet implements PointSet
             }
         }
         return (Point2D.Double)result.clone();
+    }
+
+    public Iterator<Point2D.Double> iterator()
+    {
+        return set.iterator();
     }
 }

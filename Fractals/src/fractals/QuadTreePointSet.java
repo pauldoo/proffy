@@ -18,6 +18,10 @@
 package fractals;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
     Implementation of the PointSet interface using PR Quadtrees.
@@ -48,6 +52,13 @@ final class QuadTreePointSet implements PointSet
             result = (Point2D.Double)result.clone();
         }
         return result;
+    }
+    
+    public Iterator<Point2D.Double> iterator()
+    {
+        Collection<Point2D.Double> collection = new ArrayList<Point2D.Double>();
+        rootNode.collectPoints(collection);
+        return collection.iterator();
     }
     
     /**
@@ -140,6 +151,8 @@ final class QuadTreePointSet implements PointSet
                     Math.max(min.y, Math.min(max.y, point.y)));
             return clampedPoint.distance(point);
         }
+        
+        abstract void collectPoints(Collection<Point2D.Double> collection);
     }
     
     /**
@@ -163,6 +176,11 @@ final class QuadTreePointSet implements PointSet
         Point2D.Double findClosest(Point2D.Double point)
         {
             return null;
+        }
+
+        @Override
+        void collectPoints(Collection<Double> collection)
+        {
         }
     }
     
@@ -274,6 +292,15 @@ final class QuadTreePointSet implements PointSet
                     throw new RuntimeException();
             }
         }
+
+        @Override
+        void collectPoints(Collection<Double> collection)
+        {
+            subNodeA.collectPoints(collection);
+            subNodeB.collectPoints(collection);
+            subNodeC.collectPoints(collection);
+            subNodeD.collectPoints(collection);
+        }
     }
     
     /**
@@ -302,6 +329,12 @@ final class QuadTreePointSet implements PointSet
         Point2D.Double findClosest(Point2D.Double point)
         {
             return this.point;
+        }
+
+        @Override
+        void collectPoints(Collection<Double> collection)
+        {
+            collection.add((Point2D.Double)point.clone());
         }
     }
     
@@ -370,5 +403,5 @@ final class QuadTreePointSet implements PointSet
                     throw new RuntimeException();
             }
         }
-    }    
+    }
 }

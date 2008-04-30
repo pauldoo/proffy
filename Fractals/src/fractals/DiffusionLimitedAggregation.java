@@ -27,37 +27,41 @@ import javax.swing.event.MouseInputListener;
 
 final class DiffusionLimitedAggregation
 {
-    private static final double PARTICLE_RADIUS = 0.25;
-    private static final double RELEASE_GAP = PARTICLE_RADIUS * 10;
+    private static final double PARTICLE_RADIUS = 0.75;
     private static final double STICKINESS = 1.0;
     
     private PointSet pointSet;
-    private Graphics2D graphics;
     private final double width;
     private final double height;
-    private final Point2D.Double center;
-    private double currentReleaseRadius = RELEASE_GAP;        
+    
+    private Point2D.Double currentReleasePoint = null;
     
     static JComponent createView()
     {
         return new DiffusionLimitedAggregationComponent();
     }
     
-    DiffusionLimitedAggregation(Graphics2D g, double width, double height)
+    DiffusionLimitedAggregation(double width, double height)
     {
         this.pointSet = new QuadTreePointSet();
-        this.graphics = g;
         this.width = width;
         this.height = height;
-        this.center = new Point2D.Double(width/2, height/2);
-
-        fixatePoint(center);
+        Point2D.Double center = new Point2D.Double(width/2, height/2);
+        fixatePoint(center, null);
     }
 
-    void render() throws InterruptedException
+    void render(Graphics2D graphics) throws InterruptedException
     {
-        while (currentReleaseRadius <= Math.min(width, height) / 2) {
-            Point2D.Double p = generateRandomStartPoint(center, currentReleaseRadius);
+        for (Point2D.Double p: pointSet) {
+            renderPoint(p, graphics);
+        }
+        while (true) {
+            //System.out.print(".");
+            Point2D.Double p = currentReleasePoint;
+            if (p == null) {
+                break;
+            }
+            p = (Point2D.Double)p.clone();
             while (true) {
                 if (Thread.interrupted()) {
                     throw new InterruptedException();
@@ -68,7 +72,7 @@ final class DiffusionLimitedAggregation
                 
                 if (closestPointDistance <= PARTICLE_RADIUS * 2.0) {
                     if (Math.random() < STICKINESS) {
-                        fixatePoint(p);
+                        fixatePoint(p, graphics);
                         break;
                     }
                 }
@@ -79,44 +83,44 @@ final class DiffusionLimitedAggregation
                         p.getX() + Math.cos(stepAngle) * stepSize,
                         p.getY() + Math.sin(stepAngle) * stepSize);
                 
-                p = clampRadius(center, p, currentReleaseRadius + RELEASE_GAP);
+                p = clampPosition(p);
             }
         }
     }
     
-    synchronized void fixatePoint(Point2D.Double point)
+    synchronized void setCurrentReleasePoint(Point2D.Double point)
+    {
+        this.currentReleasePoint = (point == null) ? null : (Point2D.Double)point.clone();
+    }
+    
+    private void fixatePoint(Point2D.Double point, Graphics2D graphics)
     {
         Point2D.Double closestExisting = pointSet.findClosest(point);
         if (closestExisting == null || closestExisting.distance(point) > 1e-6) {
-            graphics.setColor(Color.RED);
-            graphics.fill(new Ellipse2D.Double(point.getX() - PARTICLE_RADIUS, point.getY() - PARTICLE_RADIUS, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 2));
+            if (graphics != null) {
+                renderPoint(point, graphics);
+            }
             pointSet = pointSet.add(point);
-            currentReleaseRadius = Math.max(
-                    currentReleaseRadius,
-                    point.distance(center) + RELEASE_GAP);
         }
     }
     
-    private static Point2D.Double generateRandomStartPoint(Point2D.Double center, double releaseRadius)
+    private static void renderPoint(Point2D.Double point, Graphics2D graphics)
     {
-        double a = Math.random() * Math.PI * 2;
-        return new Point2D.Double(center.getX() + Math.cos(a) * releaseRadius, center.getY() + Math.sin(a) * releaseRadius);
+        graphics.setColor(Color.RED);
+        graphics.fill(new Ellipse2D.Double(point.getX() - PARTICLE_RADIUS, point.getY() - PARTICLE_RADIUS, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 2));
     }
     
     /**
         Clamps a point to be within a certain distance of a given center.
     */
-    private static Point2D.Double clampRadius(Point2D.Double center, Point2D.Double point, double maximumRadius)
+    private Point2D.Double clampPosition(Point2D.Double point)
     {
-        if (point.distance(center) > maximumRadius) {
-            double dx = point.getX() - center.getX();
-            double dy = point.getY() - center.getY();
-            double correction = maximumRadius / point.distance(center);
-            dx *= correction;
-            dy *= correction;
-            return new Point2D.Double(center.getX() + dx, center.getY() + dy);
-        } else {
+        if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
             return point;
+        } else {
+            return new Point2D.Double(
+                    Math.max(0, Math.min(point.x, width-1)),
+                    Math.max(0, Math.min(point.y, height-1)));
         }
     }
 }
@@ -137,22 +141,22 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
     protected void render(Graphics2D g) throws InterruptedException
     {
         Utilities.setGraphicsToHighQuality(g);
+        g.setBackground(Color.BLACK);
+        g.clearRect(0, 0, getWidth(), getHeight());
         
-        try {
-            dla = new DiffusionLimitedAggregation(g, getWidth(), getHeight());
-            dla.render();
-        } finally {
-            dla = null;
+        if (dla == null) {
+            dla = new DiffusionLimitedAggregation(getWidth(), getHeight());
         }
+        dla.render(g);
     }
     
-    private void addPointAtLocation(Point2D.Double p)
+    private void setReleaseLocation(Point2D.Double p)
     {
         final DiffusionLimitedAggregation localDla = this.dla;
         if (localDla != null) {
-            localDla.fixatePoint(p);
-            repaint();
+            localDla.setCurrentReleasePoint(p);
         }
+        rerender();
     }
     
     final class InputHandler implements MouseInputListener
@@ -164,12 +168,13 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
         public void mousePressed(MouseEvent e)
         {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                addPointAtLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
+                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
             }
         }
 
         public void mouseReleased(MouseEvent e)
         {
+            setReleaseLocation(null);
         }
 
         public void mouseEntered(MouseEvent e)
@@ -183,7 +188,7 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
         public void mouseDragged(MouseEvent e)
         {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                addPointAtLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
+                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
             }
         }
 

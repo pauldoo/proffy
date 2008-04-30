@@ -22,7 +22,7 @@ import java.awt.geom.Point2D;
 /**
     A set of points in 2D space.
 */
-interface PointSet
+interface PointSet extends Iterable<Point2D.Double>
 {
     PointSet add(Point2D.Double point);
     
