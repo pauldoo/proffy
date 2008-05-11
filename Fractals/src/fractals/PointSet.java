@@ -26,5 +26,9 @@ interface PointSet extends Iterable<Point2D.Double>
 {
     PointSet add(Point2D.Double point);
     
+    PointSet remove(Point2D.Double point);
+    
     Point2D.Double findClosest(Point2D.Double point);
+    
+    int size();
 }

@@ -35,6 +35,7 @@ final class DiffusionLimitedAggregation
     private final double height;
     
     private Point2D.Double currentReleasePoint = null;
+    private boolean releaseAntiParticles = false;
     
     static JComponent createView()
     {
@@ -56,13 +57,17 @@ final class DiffusionLimitedAggregation
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            renderPoint(p, graphics);
+            renderPoint(p, Color.YELLOW, graphics);
         }
     }
     
     void renderMore(Graphics2D graphics) throws InterruptedException
     {
         while (true) {
+            if (releaseAntiParticles && pointSet.size() <= 1) {
+                break;
+            }
+            
             //System.out.print(".");
             Point2D.Double p = currentReleasePoint;
             if (p == null) {
@@ -79,8 +84,13 @@ final class DiffusionLimitedAggregation
                 
                 if (closestPointDistance <= PARTICLE_RADIUS * 2.0) {
                     if (Math.random() < STICKINESS) {
-                        fixatePoint(p, graphics);
-                        break;
+                        if (releaseAntiParticles) {
+                            annihilatePoint(closestPoint, graphics);
+                            break;
+                        } else {
+                            fixatePoint(p, graphics);
+                            break;
+                        }
                     }
                 }
                 
@@ -95,25 +105,34 @@ final class DiffusionLimitedAggregation
         }
     }
     
-    synchronized void setCurrentReleasePoint(Point2D.Double point)
+    synchronized void setCurrentReleasePoint(Point2D.Double point, boolean releaseAntiParticles)
     {
         this.currentReleasePoint = (point == null) ? null : (Point2D.Double)point.clone();
+        this.releaseAntiParticles = releaseAntiParticles;
     }
     
+    private void annihilatePoint(Point2D.Double point, Graphics2D graphics)
+    {
+        if (graphics != null) {
+            renderPoint(point, Color.BLUE, graphics);
+        }
+        pointSet = pointSet.remove(point);
+    }
+
     private void fixatePoint(Point2D.Double point, Graphics2D graphics)
     {
         Point2D.Double closestExisting = pointSet.findClosest(point);
         if (closestExisting == null || closestExisting.distance(point) > 1e-6) {
             if (graphics != null) {
-                renderPoint(point, graphics);
+                renderPoint(point, Color.RED, graphics);
             }
             pointSet = pointSet.add(point);
         }
     }
     
-    private static void renderPoint(Point2D.Double point, Graphics2D graphics)
+    private static void renderPoint(Point2D.Double point, Color color, Graphics2D graphics)
     {
-        graphics.setColor(Color.RED);
+        graphics.setColor(color);
         graphics.fill(new Ellipse2D.Double(point.getX() - PARTICLE_RADIUS, point.getY() - PARTICLE_RADIUS, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 2));
     }
     
@@ -159,11 +178,11 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
         dla.renderMore(g);
     }
     
-    private void setReleaseLocation(Point2D.Double p)
+    private void setReleaseLocation(Point2D.Double p, boolean releaseAntiParticles)
     {
         final DiffusionLimitedAggregation localDla = this.dla;
         if (localDla != null) {
-            localDla.setCurrentReleasePoint(p);
+            localDla.setCurrentReleasePoint(p, releaseAntiParticles);
         }
         rerender();
     }
@@ -176,14 +195,15 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
 
         public void mousePressed(MouseEvent e)
         {
+            boolean anti = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0;
             if (e.getButton() == MouseEvent.BUTTON1) {
-                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
+                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()), anti);
             }
         }
 
         public void mouseReleased(MouseEvent e)
         {
-            setReleaseLocation(null);
+            setReleaseLocation(null, false);
         }
 
         public void mouseEntered(MouseEvent e)
@@ -196,8 +216,9 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
 
         public void mouseDragged(MouseEvent e)
         {
+            boolean anti = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0;
             if (e.getButton() == MouseEvent.BUTTON1) {
-                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()));
+                setReleaseLocation(new Point2D.Double(e.getPoint().getX(), e.getPoint().getY()), anti);
             }
         }
 

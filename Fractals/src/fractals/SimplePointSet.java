@@ -18,7 +18,6 @@
 package fractals;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -55,5 +54,18 @@ final class SimplePointSet implements PointSet
     public Iterator<Point2D.Double> iterator()
     {
         return set.iterator();
+    }
+
+    public PointSet remove(Point2D.Double point)
+    {
+        if (set.remove(point) == false) {
+            throw new IllegalArgumentException("Point did not exist in set");
+        }
+        return this;
+    }
+    
+    public int size()
+    {
+        return set.size();
     }
 }

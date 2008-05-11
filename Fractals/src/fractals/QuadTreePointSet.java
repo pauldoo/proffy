@@ -18,7 +18,6 @@
 package fractals;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,6 +43,11 @@ final class QuadTreePointSet implements PointSet
     {
         return new QuadTreePointSet(rootNode.add((Point2D.Double)point.clone()));
     }
+    
+    public PointSet remove(Point2D.Double point)
+    {
+        return new QuadTreePointSet(rootNode.remove(point));
+    }
 
     public Point2D.Double findClosest(Point2D.Double point)
     {
@@ -59,6 +63,11 @@ final class QuadTreePointSet implements PointSet
         Collection<Point2D.Double> collection = new ArrayList<Point2D.Double>();
         rootNode.collectPoints(collection);
         return collection.iterator();
+    }
+    
+    public int size()
+    {
+        return rootNode.numberOfPoints();
     }
     
     /**
@@ -121,6 +130,8 @@ final class QuadTreePointSet implements PointSet
         */
         abstract Node addInside(Point2D.Double point);
         
+        abstract Node remove(Point2D.Double point);
+        
         abstract Point2D.Double findClosest(Point2D.Double point);
 
         /**
@@ -153,6 +164,8 @@ final class QuadTreePointSet implements PointSet
         }
         
         abstract void collectPoints(Collection<Point2D.Double> collection);
+        
+        abstract int numberOfPoints();
     }
     
     /**
@@ -171,6 +184,12 @@ final class QuadTreePointSet implements PointSet
         {
             return new LeafNode(min, max, point);
         }
+        
+        @Override
+        Node remove(Point2D.Double point)
+        {
+            throw new IllegalArgumentException("Point does not exist");
+        }
 
         @Override
         Point2D.Double findClosest(Point2D.Double point)
@@ -179,8 +198,14 @@ final class QuadTreePointSet implements PointSet
         }
 
         @Override
-        void collectPoints(Collection<Double> collection)
+        void collectPoints(Collection<Point2D.Double> collection)
         {
+        }
+        
+        @Override
+        int numberOfPoints()
+        {
+            return 0;
         }
     }
     
@@ -234,6 +259,25 @@ final class QuadTreePointSet implements PointSet
             Quadrant q = Utilities.quadrant(getCenter(), point);
             return repReplaceSubNode(q, getSubNode(q).addInside(point));
         }
+        
+        @Override
+        Node remove(Point2D.Double point)
+        {
+            Quadrant q = Utilities.quadrant(getCenter(), point);
+            return repReplaceSubNode(q, getSubNode(q).remove(point)).normalizeForEmpty();
+        }
+        
+        private final Node normalizeForEmpty()
+        {
+            if (this.subNodeA instanceof EmptyNode &&
+                this.subNodeB instanceof EmptyNode &&
+                this.subNodeC instanceof EmptyNode &&
+                this.subNodeD instanceof EmptyNode) {
+                return new EmptyNode(min, max);
+            } else {
+                return this;
+            }
+        }
 
         private Node getSubNode(Quadrant quadrant)
         {
@@ -277,7 +321,7 @@ final class QuadTreePointSet implements PointSet
             return result;
         }
         
-        Node repReplaceSubNode(Quadrant q, Node replacementSubNode)
+        InnerNode repReplaceSubNode(Quadrant q, Node replacementSubNode)
         {
             switch (q) {
                 case A:
@@ -294,12 +338,22 @@ final class QuadTreePointSet implements PointSet
         }
 
         @Override
-        void collectPoints(Collection<Double> collection)
+        void collectPoints(Collection<Point2D.Double> collection)
         {
             subNodeA.collectPoints(collection);
             subNodeB.collectPoints(collection);
             subNodeC.collectPoints(collection);
             subNodeD.collectPoints(collection);
+        }
+        
+        @Override
+        int numberOfPoints()
+        {
+            return
+                subNodeA.numberOfPoints() +
+                subNodeB.numberOfPoints() +
+                subNodeC.numberOfPoints() +
+                subNodeD.numberOfPoints();
         }
     }
     
@@ -324,6 +378,16 @@ final class QuadTreePointSet implements PointSet
         {
             return (new InnerNode(min, max)).addInside(this.point).addInside(point);
         }
+        
+        @Override
+        Node remove(Point2D.Double point)
+        {
+            if (this.point.equals(point)) {
+                return new EmptyNode(min, max);
+            } else {
+                throw new IllegalArgumentException("Point does not exist");
+            }
+        }
 
         @Override
         Point2D.Double findClosest(Point2D.Double point)
@@ -332,9 +396,15 @@ final class QuadTreePointSet implements PointSet
         }
 
         @Override
-        void collectPoints(Collection<Double> collection)
+        void collectPoints(Collection<Point2D.Double> collection)
         {
             collection.add((Point2D.Double)point.clone());
+        }
+        
+        @Override
+        int numberOfPoints()
+        {
+            return 1;
         }
     }
     
