@@ -25,9 +25,10 @@ import javax.swing.JComponent;
 /**
     Abstract base class for components that want to do rendering in the
     background and not in their main paint method.
- 
+    <p>
     Useful for components that can't do a decent quality rendering at
-    interactive speed.
+    interactive speed or want to incrementally add more to their canvas
+    without having to worry about the threading.
 */
 abstract class BackgroundRenderingComponent extends JComponent
 {
@@ -43,6 +44,20 @@ abstract class BackgroundRenderingComponent extends JComponent
     private Thread backgroundThread = null;
     
     /**
+        Object used as an event for the bufferIsNowOkayToBlit method.
+     
+        @see #bufferIsNowOkayToBlit()
+    */
+    private Object bufferFirstBlitEventObject = null;
+
+    /**
+        Background thread that calls repaint in order to cause the buffer to
+        be reblitted.
+    */
+    private Thread repainterThread = null;
+    
+    
+    /**
         Copies the buffered image to the screen, and does so quickly.
     */
     @Override
@@ -54,6 +69,17 @@ abstract class BackgroundRenderingComponent extends JComponent
     private final void paintComponent(Graphics2D g)
     {
         final boolean repaintAgainLater = isRendering();
+        if (bufferFirstBlitEventObject != null) {
+            try {
+                synchronized (bufferFirstBlitEventObject) {
+                    bufferFirstBlitEventObject.wait(100);
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } finally {
+                bufferFirstBlitEventObject = null;
+            }
+        }
         if (buffer != null) {
             g.drawImage(buffer, 0, 0, null);
         }
@@ -61,25 +87,35 @@ abstract class BackgroundRenderingComponent extends JComponent
             rerender();
         }
         if (repaintAgainLater) {
-            new Thread(new Runnable(){
+            if (repainterThread != null) {
+                try {
+                    repainterThread.interrupt();
+                } catch (SecurityException ex) {
+                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4254486
+                }
+                repainterThread = null;
+            }
+            repainterThread = new Thread(new Runnable(){
                 public void run()
                 {
                     try {
-                        Thread.sleep(400);
+                        Thread.sleep(200);
                         repaint();
                     } catch (InterruptedException ex)
                     {
                     }
                 }
-            }).start();
+            });
+            repainterThread.start();
         }
     }
-    
+        
     /**
         Implementors of this class are expected to render progressively
         higher quality images to the graphics context.  Periodically the image
-        which is backed by this 
-     
+        which backs the Graphics2D is painted to the screen to make the
+        incremental rendering visible to the user.
+        <p>
         The implementor is expected to check Thread.interrupted() fairly regularly.
     */
     protected abstract void render(Graphics2D g) throws InterruptedException;
@@ -98,6 +134,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                     if (getWidth() == 0 || getHeight() == 0) {
                         return;
                     }
+                    bufferFirstBlitEventObject = new Object();
                     buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
                     if (Thread.interrupted()) throw new InterruptedException();
                     g = (Graphics2D)buffer.getGraphics();
@@ -142,5 +179,28 @@ abstract class BackgroundRenderingComponent extends JComponent
     {
         Thread t = backgroundThread;
         return t != null && t.isAlive();
+    }
+    
+    /**
+        To avoid certain types of flicker we don't blit the buffer within
+        "paintComponent()" until after the background thread has
+        signalled that it is now happy for the contents to be made visible.
+        <p>
+        Usually the background rendering thread will allow this as soon
+        as it has filled the canvas with the background colour and rendered
+        anything that is quick to do.
+        <p>
+        Called by the derrived class.
+        <p>
+        This is also just a hint, after a fixed time period this class will blit the
+        buffer regardless of whether the derrived class is ready for it or not.
+    */
+    protected final void bufferIsNowOkayToBlit()
+    {
+        if (bufferFirstBlitEventObject != null) {
+            synchronized (bufferFirstBlitEventObject) {
+                bufferFirstBlitEventObject.notifyAll();
+            }
+        }
     }
 }

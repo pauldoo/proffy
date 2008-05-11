@@ -141,6 +141,7 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
             g.setStroke(new BasicStroke());
             g.draw(border);
         }
+        super.bufferIsNowOkayToBlit();
 
         if (draggableQuadrilaterals.isEmpty()) {
             return;

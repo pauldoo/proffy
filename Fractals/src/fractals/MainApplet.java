@@ -88,6 +88,8 @@ public final class MainApplet extends JApplet
     {
         Map<String, String> parameters = new HashMap<String, String>();
         //parameters.put("FractalType", "MandelbrotSet");
+        //parameters.put("FractalType", "JuliaSet");
+        //parameters.put("FractalType", "IteratedFunctionSystem");
         parameters.put("FractalType", "DiffusionLimitedAggregation");
         
         JFrame frame = new JFrame();

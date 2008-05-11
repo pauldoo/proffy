@@ -50,11 +50,18 @@ final class DiffusionLimitedAggregation
         fixatePoint(center, null);
     }
 
-    void render(Graphics2D graphics) throws InterruptedException
+    void renderExisting(Graphics2D graphics) throws InterruptedException
     {
         for (Point2D.Double p: pointSet) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
             renderPoint(p, graphics);
         }
+    }
+    
+    void renderMore(Graphics2D graphics) throws InterruptedException
+    {
         while (true) {
             //System.out.print(".");
             Point2D.Double p = currentReleasePoint;
@@ -147,7 +154,9 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
         if (dla == null) {
             dla = new DiffusionLimitedAggregation(getWidth(), getHeight());
         }
-        dla.render(g);
+        dla.renderExisting(g);
+        super.bufferIsNowOkayToBlit();
+        dla.renderMore(g);
     }
     
     private void setReleaseLocation(Point2D.Double p)
