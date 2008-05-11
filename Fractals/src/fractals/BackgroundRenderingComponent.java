@@ -72,7 +72,7 @@ abstract class BackgroundRenderingComponent extends JComponent
         if (bufferFirstBlitEventObject != null) {
             try {
                 synchronized (bufferFirstBlitEventObject) {
-                    bufferFirstBlitEventObject.wait(100);
+                    bufferFirstBlitEventObject.wait(200);
                 }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
