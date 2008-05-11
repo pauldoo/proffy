@@ -30,6 +30,10 @@ final class DiffusionLimitedAggregation
     private static final double PARTICLE_RADIUS = 0.75;
     private static final double STICKINESS = 1.0;
     
+    private static final Color COLOR_EXISTING = new Color(0x606096);
+    private static final Color COLOR_ADDED = new Color(0x480266);
+    private static final Color COLOR_REMOVED = new Color(0x280266);
+    
     private PointSet pointSet;
     private final double width;
     private final double height;
@@ -57,7 +61,7 @@ final class DiffusionLimitedAggregation
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            renderPoint(p, Color.YELLOW, graphics);
+            renderPoint(p, COLOR_EXISTING, graphics);
         }
     }
     
@@ -114,7 +118,7 @@ final class DiffusionLimitedAggregation
     private void annihilatePoint(Point2D.Double point, Graphics2D graphics)
     {
         if (graphics != null) {
-            renderPoint(point, Color.BLUE, graphics);
+            renderPoint(point, COLOR_REMOVED, graphics);
         }
         pointSet = pointSet.remove(point);
     }
@@ -124,7 +128,7 @@ final class DiffusionLimitedAggregation
         Point2D.Double closestExisting = pointSet.findClosest(point);
         if (closestExisting == null || closestExisting.distance(point) > 1e-6) {
             if (graphics != null) {
-                renderPoint(point, Color.RED, graphics);
+                renderPoint(point, COLOR_ADDED, graphics);
             }
             pointSet = pointSet.add(point);
         }
