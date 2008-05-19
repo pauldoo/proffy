@@ -45,18 +45,25 @@ final class MandelbrotSet implements TileProvider<IntegerTile>
     
     private int iterateUntilEscapes(double cR, double cI)
     {
-        // z0 = c;
-        final Complex c = new Complex(cR, cI);
-        Complex z = c.clone();
+        return iterate4dSequence(0, 0, cR, cI, maxIterations);
+    }
+    
+    public static int iterate4dSequence(
+            final double a,
+            final double b,
+            final double c,
+            final double d,
+            final int maxIterations)
+    {
+        Complex z = new Complex(a, b);
+        final Complex constant = new Complex(c, d);
         
         int v;
         for (v = 0; v < maxIterations && z.magnitudeSquared() <= 4; v++) {
-            // z => z^2 + c
             Complex.multiplyReplace(z, z);
-            Complex.addReplace(z, c);
+            Complex.addReplace(z, constant);
         }
-        if (v == maxIterations) v = 0;
-        return v;
+        return v % maxIterations;
     }
     
     static BufferedImage quickRender(Complex min, Complex max, Dimension imageSize)

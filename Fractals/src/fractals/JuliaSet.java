@@ -44,14 +44,9 @@ class JuliaSet implements TileProvider<IntegerTile>
 
     private int iterateUntilEscapes(double zR, double zI)
     {
-        final Complex z = new Complex(zR, zI);
-        int v;
-        for (v = 0; v < maxIterations && z.magnitudeSquared() <= 4; v++) {
-            // z => z^2 + c
-            Complex.multiplyReplace(z, z);
-            Complex.addReplace(z, constant);
-        }
-        if (v == maxIterations) v = 0;
-        return v;
+        return MandelbrotSet.iterate4dSequence(
+                zR, zI,
+                constant.getReal(), constant.getImaginary(),
+                maxIterations);
     }
 }
