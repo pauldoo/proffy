@@ -20,13 +20,40 @@ package fractals;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
-
+/**
+    Mandelbrot and Julia sets, implemented by thinking about them both as
+    different cuts through the same 4D volume.
+*/
 final class MandelbrotSet implements TileProvider<IntegerTile>
 {
     private final int maxIterations;
+    private final Vector4 origin;
+    private final Vector4 dx;
+    private final Vector4 dy;
     
-    public MandelbrotSet(int maxIterations) {
+    private MandelbrotSet(int maxIterations, Vector4 origin, Vector4 dx, Vector4 dy) {
         this.maxIterations = maxIterations;
+        this.origin = origin;
+        this.dx = dx;
+        this.dy = dy;
+    }
+    
+    static MandelbrotSet createMandelbrotSet(int maxIterations)
+    {
+        return new MandelbrotSet(
+                maxIterations,
+                new Vector4(0, 0, 0, 0),
+                new Vector4(0, 0, 1, 0),
+                new Vector4(0, 0, 0, 1));
+    }
+    
+    static MandelbrotSet createJuliaSet(int maxIterations, Complex constant)
+    {
+        return new MandelbrotSet(
+                maxIterations,
+                new Vector4(0, 0, constant.getReal(), constant.getImaginary()),
+                new Vector4(1, 0, 0, 0),
+                new Vector4(0, 1, 0, 0));
     }
     
     public IntegerTile getTile(TilePosition pos)
@@ -43,20 +70,18 @@ final class MandelbrotSet implements TileProvider<IntegerTile>
         return tile;
     }
     
-    private int iterateUntilEscapes(double cR, double cI)
+    private int iterateUntilEscapes(double x, double y)
     {
-        return iterate4dSequence(0, 0, cR, cI, maxIterations);
+        Vector4 p = origin.add(dx.multiply(x)).add(dy.multiply(y));
+        return iterate4dSequence(p, maxIterations);
     }
     
-    public static int iterate4dSequence(
-            final double a,
-            final double b,
-            final double c,
-            final double d,
+    private static int iterate4dSequence(
+            final Vector4 p,
             final int maxIterations)
     {
-        Complex z = new Complex(a, b);
-        final Complex constant = new Complex(c, d);
+        Complex z = new Complex(p.getA(), p.getB());
+        final Complex constant = new Complex(p.getC(), p.getD());
         
         int v;
         for (v = 0; v < maxIterations && z.magnitudeSquared() <= 4; v++) {
@@ -66,10 +91,10 @@ final class MandelbrotSet implements TileProvider<IntegerTile>
         return v % maxIterations;
     }
     
-    static BufferedImage quickRender(Complex min, Complex max, Dimension imageSize)
+    static BufferedImage quickMandelbrotRender(Complex min, Complex max, Dimension imageSize)
     {
         BufferedImage result = new BufferedImage(imageSize.width, imageSize.height, BufferedImage.TYPE_BYTE_GRAY);
-        MandelbrotSet me = new MandelbrotSet(32);
+        MandelbrotSet me = createMandelbrotSet(32);
         for (int y = 0; y < imageSize.height; y++) {
             final double cI = ((y + 0.5) / imageSize.height) * (max.getImaginary() - min.getImaginary()) + min.getImaginary();
             for (int x = 0; x < imageSize.width; x++) {

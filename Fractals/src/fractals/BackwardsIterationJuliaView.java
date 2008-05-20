@@ -70,7 +70,7 @@ final class BackwardsIterationJuliaView extends JComponent
         
         layeredPane.setLayout(new SpecializedLayoutManager());
         
-        Image backgroundImage = MandelbrotSet.quickRender(viewMin, viewMax, new Dimension(600, 400));
+        Image backgroundImage = MandelbrotSet.quickMandelbrotRender(viewMin, viewMax, new Dimension(600, 400));
 
         BackwardsIterationJuliaView backwardsIterationJuliaView = new BackwardsIterationJuliaView();
         layeredPane.add(new StrechyImage(backgroundImage), new Integer(0));
@@ -337,7 +337,7 @@ final class ButtonListener implements ActionListener
         Complex c = backwardsIterationJuliaView.getConstant();
         
         TileProvider<RenderableTile> source = null;
-        source = new RenderFilter(new JuliaSet(1000, c), 0.02);
+        source = new RenderFilter(MandelbrotSet.createJuliaSet(1000, c), 0.02);
         JPanel statusPanel = new JPanel();
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         JLabel statusLabel = new JLabel();
