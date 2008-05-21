@@ -77,15 +77,15 @@ final class MandelbrotSet
         JPanel viewPanel = new JPanel();
         viewPanel.setLayout(new GridLayout(2, 3));
         
-        final MandelbrotSetBackroundRenderingComponent[] components = new MandelbrotSetBackroundRenderingComponent[]{
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0)),
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(1, 0, 0, 0), new Vector4(0, 0, 1, 0)),
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(1, 0, 0, 0), new Vector4(0, 0, 0, 1)),
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0)),
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(0, 1, 0, 0), new Vector4(0, 0, 0, 1)),
-                new MandelbrotSetBackroundRenderingComponent(new Vector4(0, 0, 1, 0), new Vector4(0, 0, 0, 1))
+        final MandelbrotSlice[] components = new MandelbrotSlice[]{
+                new MandelbrotSlice(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0)),
+                new MandelbrotSlice(new Vector4(1, 0, 0, 0), new Vector4(0, 0, 1, 0)),
+                new MandelbrotSlice(new Vector4(1, 0, 0, 0), new Vector4(0, 0, 0, 1)),
+                new MandelbrotSlice(new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0)),
+                new MandelbrotSlice(new Vector4(0, 1, 0, 0), new Vector4(0, 0, 0, 1)),
+                new MandelbrotSlice(new Vector4(0, 0, 1, 0), new Vector4(0, 0, 0, 1))
         };
-        for (MandelbrotSetBackroundRenderingComponent component: components) {
+        for (MandelbrotSlice component: components) {
             viewPanel.add(component);
         }
         
@@ -116,7 +116,7 @@ final class MandelbrotSet
                     } else {
                         throw new RuntimeException("Unreachable!");
                     }
-                    for (MandelbrotSetBackroundRenderingComponent component: components) {
+                    for (MandelbrotSlice component: components) {
                         component.setOrigin(origin);
                     }
                 }
@@ -196,7 +196,7 @@ final class MandelbrotSetTileProvider implements TileProvider<IntegerTile>
     }
 }
 
-final class MandelbrotSetBackroundRenderingComponent extends BackgroundRenderingComponent
+final class MandelbrotSlice extends BackgroundRenderingComponent
 {
     private static final long serialVersionUID = 1931567046579817883L;
     
@@ -204,7 +204,7 @@ final class MandelbrotSetBackroundRenderingComponent extends BackgroundRendering
     private final Vector4 dx;
     private final Vector4 dy;
     
-    MandelbrotSetBackroundRenderingComponent(Vector4 dx, Vector4 dy) {
+    MandelbrotSlice(Vector4 dx, Vector4 dy) {
         this.origin = new Vector4(0, 0, 0, 0);
         this.dx = dx;
         this.dy = dy;
