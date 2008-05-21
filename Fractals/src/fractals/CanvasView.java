@@ -59,16 +59,13 @@ public class CanvasView extends JComponent implements Runnable
     */
     private final Set<TilePosition> notToBeRenderedAgain = new HashSet<TilePosition>();
     
-    private final JLabel statusLabel;
-    
     private AffineTransform transform = new AffineTransform();
     
-    CanvasView(int width, int height, TileProvider<RenderableTile> source, JLabel statusLabel)
+    CanvasView(int width, int height, TileProvider<RenderableTile> source)
     {
         // Configure the canvas with 6 megapixels of cache
         this.canvas = new CollectionOfTiles((6 * 1000000) / (TilePosition.SIZE * TilePosition.SIZE));
         this.source = source;
-        this.statusLabel = statusLabel;
         
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         CanvasViewInputHandler listener = new CanvasViewInputHandler(this);
@@ -215,9 +212,7 @@ public class CanvasView extends JComponent implements Runnable
                 lockThing.notifyAll();
             }
         }
-        
-        statusLabel.setText("Remaining tiles: " + tileQueue.size() + " / " + canvas.getMaximumCapacity());
-        
+                
         //time += System.currentTimeMillis();
 //        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
     }

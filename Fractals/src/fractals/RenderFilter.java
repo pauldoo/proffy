@@ -36,7 +36,7 @@ final class RenderFilter implements TileProvider<RenderableTile>
         RenderableTile result = new RenderableTile(position);
         for (int y = position.getMinY(); y <= position.getMaxY(); y++) {
             for (int x = position.getMinX(); x <= position.getMaxX(); x++) {
-                float v = (float)(1.0 - Math.exp(-exposure * sourceTile.getValue(x, y)));
+                float v = (float)Utilities.expose(sourceTile.getValue(x, y), exposure);
                 result.setPixel(x, y, new Color(v, v, v).getRGB());
             }
         }

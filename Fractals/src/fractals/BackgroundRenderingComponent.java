@@ -139,6 +139,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                     if (Thread.interrupted()) throw new InterruptedException();
                     g = (Graphics2D)buffer.getGraphics();
                     render(g);
+                    bufferIsNowOkayToBlit();
                     repaint();
                 } catch (InterruptedException ex) {
                 } finally {

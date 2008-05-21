@@ -47,4 +47,12 @@ final class Utilities
         t.setPriority(currentPriority - 1);
         t.setDaemon(true);
     }
+    
+    /**
+        Simplistic exposure function that returns 1.0 - e^(-exposure * value).
+    */
+    static double expose(double value, double exposure)
+    {
+        return 1.0 - Math.exp(-exposure * value);
+    }
 }

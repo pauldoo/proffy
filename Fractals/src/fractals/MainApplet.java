@@ -25,10 +25,8 @@ import java.util.Map;
 import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 public final class MainApplet extends JApplet
 {
@@ -55,31 +53,20 @@ public final class MainApplet extends JApplet
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-
         String fractalType = parameters.get("FractalType");
         if (fractalType.equals("MandelbrotSet")) {
-            TileProvider<RenderableTile> source = null;
-            source = new RenderFilter(new MandelbrotSet(1000), 0.02);
-            JPanel statusPanel = new JPanel();
-            statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            JLabel statusLabel = new JLabel();
-            statusPanel.add(statusLabel);
-
-            CanvasView view = new CanvasView(800, 600, source, statusLabel);
-            view.startAllThreads();
-
-            panel.add(view, BorderLayout.CENTER);
-            //panel.add(statusPanel, BorderLayout.SOUTH);
+            panel.add(MandelbrotSet.createView(), BorderLayout.CENTER);
         } else if (fractalType.equals("JuliaSet")) {
             panel.add(BackwardsIterationJuliaView.createView(), BorderLayout.CENTER);
         } else if (fractalType.equals("IteratedFunctionSystem")) {
             panel.add(IteratedFunctionSystem.createView(), BorderLayout.CENTER);
         } else if (fractalType.equals("DiffusionLimitedAggregation")) {
             panel.add(DiffusionLimitedAggregation.createView(), BorderLayout.CENTER);
-        } else {
+        } else if (fractalType.equals("Mandelbrot4D")) {
+            panel.add(MandelbrotSet.createMandelbrot4dView(), BorderLayout.CENTER);
+        } else {            
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
-            
 
         return panel;
     }
@@ -90,7 +77,8 @@ public final class MainApplet extends JApplet
         //parameters.put("FractalType", "MandelbrotSet");
         //parameters.put("FractalType", "JuliaSet");
         //parameters.put("FractalType", "IteratedFunctionSystem");
-        parameters.put("FractalType", "DiffusionLimitedAggregation");
+        //parameters.put("FractalType", "DiffusionLimitedAggregation");
+        parameters.put("FractalType", "Mandelbrot4D");
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

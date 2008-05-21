@@ -343,7 +343,7 @@ final class ButtonListener implements ActionListener
         JLabel statusLabel = new JLabel();
         statusPanel.add(statusLabel);
 
-        CanvasView view = new CanvasView(800, 600, source, statusLabel);
+        CanvasView view = new CanvasView(800, 600, source);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
