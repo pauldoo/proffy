@@ -3,52 +3,24 @@
 namespace {
     class MyClass
     {
-    public:
-	MyClass()
-	{
-	}
-
-    public:
-	MyClass(const MyClass& v)
-	{
-	    std::cout << " * Reached normal copy constructor.\n";
-	}
-
-    public:
-	MyClass(MyClass&& v)
-	{
-	    std::cout << " * Reached special r-value constructor.\n";
-	}
-
-    private:	
-        MyClass& operator=(const MyClass& v);
     };
     
-    const MyClass SomeFunctionA()
+    bool is_r_value(MyClass&& v)
     {
-	return MyClass();
+        return true;
     }
-    
-    MyClass&& SomeFunctionB()
+    bool is_r_value(const MyClass&)
     {
-        return MyClass();
+        return false;
     }
 }
 
 int main(void)
 {
-    std::cout << "Construct a.\n";
-    MyClass a;
+    const MyClass a = MyClass();
+    MyClass b = MyClass();
 
-    std::cout << "Construct c & d.\n";
-    MyClass c = a;
-    MyClass d(a);
-    
-    std::cout << "Construct e & f.\n";
-    MyClass e = SomeFunctionA();
-    MyClass f(SomeFunctionA());
-    
-    std::cout << "Construct g & h.\n";
-    MyClass g = SomeFunctionB();
-    MyClass h(SomeFunctionB());
+    std::cout << "a: " << is_r_value(a) << "\n";
+    std::cout << "b: " << is_r_value(b) << "\n";
+    std::cout << "MyClass(): " << is_r_value(MyClass()) << "\n";
 }
