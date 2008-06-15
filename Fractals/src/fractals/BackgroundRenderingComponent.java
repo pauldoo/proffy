@@ -20,6 +20,8 @@ package fractals;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JComponent;
 
 /**
@@ -39,9 +41,9 @@ abstract class BackgroundRenderingComponent extends JComponent
     private BufferedImage buffer = null;
     
     /**
-        The background thread for rendering.
+        Future object kept in order to cancel the background thread.
     */
-    private Thread backgroundThread = null;
+    private Future renderer = null;
     
     /**
         Object used as an event for the bufferIsNowOkayToBlit method.
@@ -51,10 +53,10 @@ abstract class BackgroundRenderingComponent extends JComponent
     private Object bufferFirstBlitEventObject = null;
 
     /**
-        Background thread that calls repaint in order to cause the buffer to
-        be reblitted.
+        Future object kept in order to cancel the background thread
+        that calls repaint in order to cause the buffer to be reblitted.
     */
-    private Thread repainterThread = null;
+    private Future repainter = null;
     
     
     /**
@@ -87,26 +89,17 @@ abstract class BackgroundRenderingComponent extends JComponent
             rerender();
         }
         if (repaintAgainLater) {
-            if (repainterThread != null) {
-                try {
-                    repainterThread.interrupt();
-                } catch (SecurityException ex) {
-                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4254486
-                }
-                repainterThread = null;
+            if (repainter != null) {
+                repainter.cancel(false);
+                repainter = null;
             }
-            repainterThread = new Thread(new Runnable(){
+            Runnable runnable = new Runnable(){
                 public void run()
                 {
-                    try {
-                        Thread.sleep(200);
-                        repaint();
-                    } catch (InterruptedException ex)
-                    {
-                    }
+                    repaint();
                 }
-            });
-            repainterThread.start();
+            };
+            repainter = Utilities.getThreadPool().schedule(runnable, 200, TimeUnit.MILLISECONDS);
         }
     }
         
@@ -146,30 +139,21 @@ abstract class BackgroundRenderingComponent extends JComponent
                     if (g != null) {
                         g.dispose();
                     }
-                    backgroundThread = null;
                 }
             }
         };
-        if (backgroundThread != null) {
+        if (renderer != null) {
             throw new IllegalStateException("There should be no background thread");
         }
-        backgroundThread = new Thread(runner);
-        Utilities.setToBackgroundThread(backgroundThread);
-        backgroundThread.start();
+        renderer = Utilities.getThreadPool().submit(runner);
         repaint();
     }
     
     public final void stopBackgroundThread()
     {
-        Thread t = backgroundThread;
-        try {
-            if (t != null) {
-                t.interrupt();
-                t.join();
-            }
-            backgroundThread = null;
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
+        if (renderer != null) {
+            renderer.cancel(true);
+            renderer = null;
         }
     }
     
@@ -178,8 +162,7 @@ abstract class BackgroundRenderingComponent extends JComponent
     */
     private final boolean isRendering()
     {
-        Thread t = backgroundThread;
-        return t != null && t.isAlive();
+        return renderer != null && renderer.isDone() == false;
     }
     
     /**

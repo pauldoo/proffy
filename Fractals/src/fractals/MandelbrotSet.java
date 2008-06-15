@@ -216,18 +216,18 @@ final class MandelbrotSlice extends BackgroundRenderingComponent
         double width = getWidth();
         double height = getHeight();
         final MandelbrotSet source = new MandelbrotSet(origin, dx, dy);
-        for (int y = 0; y < height; y+=10) {
-            for (int x = 0; x < width; x+=10) {
+        for (int y = 0; y < height; y+=1) {
+            for (int x = 0; x < width; x+=1) {
                 double xAsFraction = ((x + 0.5) / width) * 4 - 2;
                 double yAsFraction = ((y + 0.5) / height) * 4 - 2;
                 int count = source.iterateUntilEscapes(xAsFraction, yAsFraction, 32);
                 float v = (float)Utilities.expose(count, 0.1);
                 g.setColor(new Color(v, v, v));
-                g.fillRect(x, y, 10, 10);
+                g.fillRect(x, y, 1, 1);
                 //Thread.sleep(1);
-                if (Thread.interrupted()) {
-                    throw new InterruptedException();
-                }
+            }
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
             }
         }
     }

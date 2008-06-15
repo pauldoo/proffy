@@ -19,9 +19,27 @@ package fractals;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 
 final class Utilities
 {
+    private static final ScheduledExecutorService threadPool;
+    static {
+        final int threadCount = 10;
+
+        final ThreadFactory threadFactory = new ThreadFactory(){
+            public Thread newThread(Runnable r) {
+                Thread result = new Thread(r);
+                setToBackgroundThread(result);
+                return result;
+            }
+        };
+
+        threadPool = new ScheduledThreadPoolExecutor(threadCount, threadFactory);
+    }
+    
     private Utilities()
     {
     }
@@ -54,5 +72,10 @@ final class Utilities
     static double expose(double value, double exposure)
     {
         return 1.0 - Math.exp(-exposure * value);
+    }
+    
+    static ScheduledExecutorService getThreadPool()
+    {
+        return threadPool;
     }
 }
