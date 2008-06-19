@@ -41,8 +41,8 @@ final class ColorAndExposeFilter implements TileProvider<RenderableTile>
             for (int x = position.getMinX(); x <= position.getMaxX(); x++) {
                 final int integerValue = sourceTile.getValue(x, y);
                 final float hue = ((float)(integerValue % numberOfColors)) / numberOfColors;
-                final float brightness = (float)Utilities.expose(integerValue / numberOfColors, exposure);
-                result.setPixel(x, y, Color.HSBtoRGB(hue, 1.0f, brightness));
+                final float v = (float)(Utilities.expose(integerValue / numberOfColors, exposure));
+                result.setPixel(x, y, Color.HSBtoRGB(hue, 1.0f, v));
             }
         }
         return result;
