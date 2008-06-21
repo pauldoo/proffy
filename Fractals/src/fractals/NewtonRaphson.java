@@ -19,11 +19,25 @@ package fractals;
 
 import javax.swing.JComponent;
 
+/**
+    Hardcoded to render the newton raphson fractal for z^4 + z^3 - 1 = 0.
+*/
 final class NewtonRaphson implements TileProvider<IntegerTile>
 {
-    final static Complex one = new Complex(1.0, 0.0);
-    final static Complex two = new Complex(2.0, 0.0);
-    final static Complex three = new Complex(3.0, 0.0);
+    /**
+        These have been precomputed using maxima:
+
+        (%i14) float(solve(z^4 + z^3 - 1));<br/>
+        (%o14) [z = - 1.380277569097613, z = .8191725133961627,<br/> 
+        z = - .9144736629677245 %i - 0.219447472149275,<br/>
+        z = .9144736629677245 %i - 0.219447472149275]<br/>
+    */
+    static final Complex[] roots = new Complex[]{
+        new Complex(- 1.380277569097613, 0.0),
+        new Complex(.8191725133961627, 0.0),
+        new Complex(- 0.219447472149275, - .9144736629677245),
+        new Complex(0.219447472149275, .9144736629677245)
+    };
 
     final int maxIterations;
     
@@ -34,7 +48,7 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
     
     static JComponent createView()
     {
-        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(1000), 3, 0.08);
+        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(1000), roots.length, 0.05);
         CanvasView view = new CanvasView(800, 600, source);
         view.startAllThreads();
         return view;
@@ -45,36 +59,31 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
         Complex z = new Complex(x, y);
         int i;
         for (i = 0; i < maxIterations; i++) {
-            Complex step = f(z).divide(fPrime(z));
-            if (step.magnitude() <= 1e-6) {
-                break;
+            for (int j = 0; j < roots.length; j++) {
+                final Complex root = roots[j];
+                if (root.subtract(z).magnitude() <= 1e-6) {
+                    return i * roots.length + j;
+                }
             }
+            Complex step = f(z).divide(fPrime(z));
             Complex.subtractReplace(z, step);
         }
-        if (i == maxIterations) {
-            return 0;
-        }
-        
-        if (z.getReal() >= 0) {
-            return i * 3 + 0;
-        }
-        if (z.getImaginary() >= 0) {
-            return i * 3 + 1;
-        }
-        if (z.getImaginary() <= 0) {
-            return i * 3 + 2;
-        }
-        throw new IllegalStateException("Unrecognized root");
+        return 0;
     }
     
     private static Complex f(final Complex x)
     {
-        return x.power(three).subtract(one);
+        // z^4 + z^3 - 1
+        return x.power(new Complex(4.0, 0.0)).add(
+                x.power(new Complex(3.0, 0.0))).subtract(
+                new Complex(1.0, 0.0));
+
     }
     
     private static Complex fPrime(final Complex x)
     {
-        return three.multiply(x.power(two));
+        return (new Complex(4.0, 0.0)).multiply(x.power(new Complex(3.0, 0.0))).add(
+                (new Complex(3.0, 0.0)).multiply(x.power(new Complex(2.0, 0.0))));
     }
     
     public IntegerTile getTile(TilePosition pos)
