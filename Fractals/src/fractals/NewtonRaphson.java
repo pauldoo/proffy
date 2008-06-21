@@ -32,12 +32,17 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
         z = - .9144736629677245 %i - 0.219447472149275,<br/>
         z = .9144736629677245 %i - 0.219447472149275]<br/>
     */
-    static final Complex[] roots = new Complex[]{
+    private static final Complex[] roots = new Complex[]{
         new Complex(- 1.380277569097613, 0.0),
         new Complex(.8191725133961627, 0.0),
         new Complex(- 0.219447472149275, - .9144736629677245),
         new Complex(0.219447472149275, .9144736629677245)
     };
+    
+    private static final Complex one = new Complex(1.0, 0.0);
+    private static final Complex two = new Complex(2.0, 0.0);
+    private static final Complex three = new Complex(3.0, 0.0);
+    private static final Complex four = new Complex(4.0, 0.0);
 
     final int maxIterations;
     
@@ -48,7 +53,7 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
     
     static JComponent createView()
     {
-        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(1000), roots.length, 0.05);
+        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(100), roots.length, 0.08);
         CanvasView view = new CanvasView(800, 600, source);
         view.startAllThreads();
         return view;
@@ -66,6 +71,9 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
                 }
             }
             Complex step = f(z).divide(fPrime(z));
+            if (step.magnitude() < 1e-6) {
+                break;
+            }
             Complex.subtractReplace(z, step);
         }
         return 0;
@@ -74,16 +82,16 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
     private static Complex f(final Complex x)
     {
         // z^4 + z^3 - 1
-        return x.power(new Complex(4.0, 0.0)).add(
-                x.power(new Complex(3.0, 0.0))).subtract(
-                new Complex(1.0, 0.0));
+        return x.power(four).add(
+                x.power(three)).subtract(
+                one);
 
     }
     
     private static Complex fPrime(final Complex x)
     {
-        return (new Complex(4.0, 0.0)).multiply(x.power(new Complex(3.0, 0.0))).add(
-                (new Complex(3.0, 0.0)).multiply(x.power(new Complex(2.0, 0.0))));
+        return four.multiply(x.power(three)).add(
+                three.multiply(x.power(two)));
     }
     
     public IntegerTile getTile(TilePosition pos)
