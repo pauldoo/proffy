@@ -218,11 +218,17 @@ final class Complex implements Cloneable
         return multiply(this, b);
     }
 
+    public static void divideReplace(Complex a, double b)
+    {
+        a.setReal(a.R() / b);
+        a.setImaginary(a.I() / b);
+    }
+    
     public static Complex divide(Complex a, double b)
     {
-        return new Complex(
-                a.R() / b,
-                a.I() / b);
+        Complex result = a.clone();
+        divideReplace(result, b);
+        return result;
     }
     
     public Complex divide(double b)
@@ -230,9 +236,17 @@ final class Complex implements Cloneable
         return divide(this, b);
     }
     
+    public static void divideReplace(Complex a, Complex b)
+    {
+        multiplyReplace(a, b.conjugate());
+        divideReplace(a, b.magnitudeSquared());
+    }
+
     public static Complex divide(Complex a, Complex b)
     {
-        return a.multiply(b.conjugate()).divide(b.magnitudeSquared());
+        Complex result = a.clone();
+        divideReplace(result, b);
+        return result;
     }
     
     public Complex divide(Complex b)

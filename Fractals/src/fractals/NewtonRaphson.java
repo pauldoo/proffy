@@ -39,7 +39,7 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
         new Complex(0.219447472149275, .9144736629677245)
     };
     
-    private static final Complex one = new Complex(1.0, 0.0);
+    private static final Complex minusOne = new Complex(-1.0, 0.0);
     private static final Complex two = new Complex(2.0, 0.0);
     private static final Complex three = new Complex(3.0, 0.0);
     private static final Complex four = new Complex(4.0, 0.0);
@@ -53,7 +53,7 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
     
     static JComponent createView()
     {
-        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(100), roots.length, 0.08);
+        TileProvider<RenderableTile> source = new ColorAndExposeFilter(new NewtonRaphson(50), roots.length, 0.08);
         CanvasView view = new CanvasView(800, 600, source);
         view.startAllThreads();
         return view;
@@ -70,7 +70,7 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
                     return i * roots.length + j;
                 }
             }
-            Complex step = f(z).divide(fPrime(z));
+            Complex step = calculateStep(z);
             if (step.magnitude() < 1e-6) {
                 break;
             }
@@ -79,20 +79,26 @@ final class NewtonRaphson implements TileProvider<IntegerTile>
         return 0;
     }
     
-    private static Complex f(final Complex x)
+    private static Complex calculateStep(final Complex x)
     {
-        // z^4 + z^3 - 1
-        return x.power(four).add(
-                x.power(three)).subtract(
-                one);
+        // (z^4 + z^3 - 1) / (4x^3 + 3x^2)
+        Complex numerator = minusOne.clone();
 
+        Complex temp = x.multiply(x);
+        Complex denom = temp.multiply(three);
+        
+        Complex.multiplyReplace(temp, x);
+        Complex.addReplace(numerator, temp);
+        Complex.addReplace(denom, temp.multiply(four));
+        
+        Complex.multiplyReplace(temp, x);
+        Complex.addReplace(numerator, temp);
+
+        Complex.divideReplace(numerator, denom);
+        
+        return numerator;
     }
     
-    private static Complex fPrime(final Complex x)
-    {
-        return four.multiply(x.power(three)).add(
-                three.multiply(x.power(two)));
-    }
     
     public IntegerTile getTile(TilePosition pos)
     {

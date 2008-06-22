@@ -29,13 +29,15 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 
@@ -47,6 +49,7 @@ public class CanvasView extends JComponent implements Runnable
     private final TileProvider<RenderableTile> source;
     private final Object lockThing = new Object();
     private final Collection<Thread> threads = new ArrayList<Thread>();
+    private final Random random = new Random();
     
     /**
         Queue of tiles to render next.  Should not contain any tiles that are in the notToBeRenderedAgain set.
@@ -204,10 +207,12 @@ public class CanvasView extends JComponent implements Runnable
 //        System.out.println("\t" + g.getClipBounds());
         
         Collection<TilePosition> remainingTiles = canvas.blitImmediately(g);
+        List<TilePosition> shuffledRemainingTiles = new ArrayList<TilePosition>(remainingTiles);
+        Collections.shuffle(shuffledRemainingTiles, random);
         synchronized(lockThing) {
             remainingTiles.removeAll(notToBeRenderedAgain);
             tileQueue.clear();
-            tileQueue.addAll(remainingTiles);
+            tileQueue.addAll(shuffledRemainingTiles);
             if (!tileQueue.isEmpty()) {
                 lockThing.notifyAll();
             }
