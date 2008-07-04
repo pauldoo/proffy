@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- * Represents a racepoint.
- */
+    Represents a racepoint.
+*/
 public final class Racepoint implements Serializable, Comparable<Racepoint> {
 
     private static final long serialVersionUID = 5881572526657587494L;
@@ -43,14 +43,17 @@ public final class Racepoint implements Serializable, Comparable<Racepoint> {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return getName();
     }
 
+    @Override
     public int hashCode() {
         return name.hashCode();
     }
 
+    @Override
     public boolean equals(Object other) {
         return equals((Racepoint)other);
     }
@@ -63,6 +66,7 @@ public final class Racepoint implements Serializable, Comparable<Racepoint> {
         }
     }
 
+    @Override
     public int compareTo(Racepoint other) {
         if (this == other) {
             return 0;

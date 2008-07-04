@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Stores information about a race.
- *
- * Contains basic information like date, time, wind direction etc, along with a
- * list of the Clock objects (one per member).
- */
+    Stores information about a race.
+
+    Contains basic information like date, time, wind direction etc, along with a
+    list of the Clock objects (one per member).
+*/
 public final class Race implements Serializable, Comparable<Race> {
 
     private static final long serialVersionUID = 4311510053131167930L;
@@ -120,8 +120,14 @@ public final class Race implements Serializable, Comparable<Race> {
         return darknessEnds;
     }
 
+    @Override
     public boolean equals(Object other) {
         return equals((Race)other);
+    }
+
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException();
     }
 
     public boolean equals(Race other) {
@@ -133,6 +139,7 @@ public final class Race implements Serializable, Comparable<Race> {
                 racepoint.equals(other.racepoint);
     }
 
+    @Override
     public int compareTo(Race other) {
         if (this == other) {
             return 0;
@@ -163,6 +170,7 @@ public final class Race implements Serializable, Comparable<Race> {
         this.windDirection = windDirection.trim();
     }
 
+    @Override
     public String toString()
     {
         return racepoint + " (" + liberationDate + ")";

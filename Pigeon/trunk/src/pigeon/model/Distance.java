@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- * Stores a single distance (stored in metres) and provides accessors
- * to return the distance in imperial units.
- */
+    Stores a single distance (stored in metres) and provides accessors
+    to return the distance in imperial units.
+*/
 public final class Distance implements Serializable, Comparable<Distance> {
 
     private static final long serialVersionUID = 7289132359169706543L;
@@ -59,16 +59,24 @@ public final class Distance implements Serializable, Comparable<Distance> {
         return (int)Math.round(getYards()) % Constants.YARDS_PER_MILE;
     }
 
+    @Override
     public String toString() {
         int miles = getMiles();
         int yards = getYardsRemainder();
         return miles + " miles " + yards + " yards";
     }
 
+    @Override
     public int hashCode() {
         return new Double(distanceInMetres).hashCode();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int compareTo(Distance other) {
         return Double.compare(this.distanceInMetres, other.distanceInMetres);
     }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -156,9 +156,15 @@ public final class Clock implements Comparable<Clock>, Serializable
         this.member = member;
     }
 
+    @Override
     public boolean equals(Object other)
     {
         return equals((Clock)other);
+    }
+
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException();
     }
 
     public boolean equals(Clock other)
@@ -166,6 +172,7 @@ public final class Clock implements Comparable<Clock>, Serializable
         return this.member.equals(other.getMember());
     }
 
+    @Override
     public int compareTo(Clock other)
     {
         return this.member.compareTo(other.getMember());

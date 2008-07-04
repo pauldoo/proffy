@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,19 +20,18 @@ package pigeon.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Stores top level information about a racing organization (be that a federation or club).
- *
- * Maintains a list of members, racepoints, and distance entries.
- *
- * This final class was once called "Club", and sadly many places in the codebase still refer to
- * the old name.
- */
+    Stores top level information about a racing organization (be that a federation or club).
+
+    Maintains a list of members, racepoints, and distance entries.
+
+    This final class was once called "Club", and sadly many places in the codebase still refer to
+    the old name.
+*/
 public final class Organization implements Serializable
 {
     private static final long serialVersionUID = 5358293332608930714L;
@@ -57,6 +56,7 @@ public final class Organization implements Serializable
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return getName();
     }

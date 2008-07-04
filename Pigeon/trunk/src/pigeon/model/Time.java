@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -72,9 +72,15 @@ public final class Time implements Comparable<Time>, Serializable
         this.time = (int)time;
     }
 
+    @Override
     public boolean equals(Object other)
     {
         return equals((Time)other);
+    }
+
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException();
     }
 
     public boolean equals(Time other)
@@ -82,6 +88,7 @@ public final class Time implements Comparable<Time>, Serializable
         return this.getRingNumber().equals(other.getRingNumber());
     }
 
+    @Override
     public int compareTo(Time other)
     {
         return this.getRingNumber().compareTo(other.getRingNumber());

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 
 /**
- * Exception thrown when model data is inconsistent.
- */
+    Exception thrown when model data is inconsistent.
+*/
 public final class ValidationException extends Exception {
 
     private static final long serialVersionUID = 1525226081739583319L;
@@ -39,6 +39,7 @@ public final class ValidationException extends Exception {
         this.cause = cause;
     }
 
+    @Override
     public String toString() {
         return message;
     }

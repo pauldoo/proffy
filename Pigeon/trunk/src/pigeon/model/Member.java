@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- * Represents a single member within the organization.
- *
- * Equality and hashing are based only on the member's name.
- */
+    Represents a single member within the organization.
+
+    Equality and hashing are based only on the member's name.
+*/
 public final class Member implements Serializable, Comparable<Member> {
 
     private static final long serialVersionUID = 3235931567494968807L;
@@ -64,14 +64,17 @@ public final class Member implements Serializable, Comparable<Member> {
         return result.toString();
     }
 
+    @Override
     public String toString() {
         return getNameAndClubAndSection();
     }
 
+    @Override
     public int hashCode() {
         return name.hashCode();
     }
 
+    @Override
     public boolean equals(Object other) {
         return equals((Member)other);
     }
@@ -84,6 +87,7 @@ public final class Member implements Serializable, Comparable<Member> {
         }
     }
 
+    @Override
     public int compareTo(Member other) {
         if (this == other) {
             return 0;

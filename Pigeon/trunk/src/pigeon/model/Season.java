@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,17 +19,15 @@ package pigeon.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Stores information for a single season.
- *
- * Contains an Orgainzation object and a collecion of Race objects.
- * Organization objects should not be shared between seasons since the
- * set of members and racepoints might change from season to season.
- */
+    Stores information for a single season.
+
+    Contains an Orgainzation object and a collecion of Race objects.
+    Organization objects should not be shared between seasons since the
+    set of members and racepoints might change from season to season.
+*/
 public final class Season implements Serializable {
 
     private static final long serialVersionUID = 2185370002566545845L;

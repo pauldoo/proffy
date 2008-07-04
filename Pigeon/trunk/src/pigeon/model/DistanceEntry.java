@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ package pigeon.model;
 import java.io.Serializable;
 
 /**
- * Associates a distance measurement with a member and racepoint pair.
- */
+    Associates a distance measurement with a member and racepoint pair.
+*/
 public final class DistanceEntry implements Serializable, Comparable<DistanceEntry> {
 
     private static final long serialVersionUID = 8618199323315444879L;
@@ -36,10 +36,12 @@ public final class DistanceEntry implements Serializable, Comparable<DistanceEnt
         this.distance = distance;
     }
 
+    @Override
     public int hashCode() {
         return member.hashCode() ^ racepoint.hashCode();
     }
 
+    @Override
     public boolean equals(Object other) {
         return equals((DistanceEntry) other);
     }
@@ -52,6 +54,7 @@ public final class DistanceEntry implements Serializable, Comparable<DistanceEnt
         }
     }
 
+    @Override
     public int compareTo(DistanceEntry other) {
         int retval;
         retval = this.member.compareTo( other.member );
