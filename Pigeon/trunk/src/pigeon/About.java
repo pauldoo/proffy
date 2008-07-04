@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ public final class About
     {
         StringWriter string = new StringWriter();
         PrintWriter writer = new PrintWriter(string);
-        writer.println("Copyright (C) 2005, 2006, 2007  Paul Richards.");
+        writer.println("Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.");
         writer.println();
         writer.println("This program is free software: you can redistribute it and/or modify");
         writer.println("it under the terms of the GNU General Public License as published by");
