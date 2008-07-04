@@ -727,7 +727,11 @@ final class MainWindow extends javax.swing.JFrame {
     private void raceresultDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultDeleteButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
-        season.removeRace(race);
+        try {
+            season = season.repRemoveRace(race);
+        } catch (ValidationException ex) {
+            ex.displayErrorDialog(this.getContentPane());
+        }
         reloadRacesTable();
     }//GEN-LAST:event_raceresultDeleteButtonActionPerformed
 
@@ -745,13 +749,9 @@ final class MainWindow extends javax.swing.JFrame {
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
             Race race = RaceSummary.createRace(this, season.getOrganization(), configuration);
-            season.addRace( race );
-            try {
-                editResultsForRace( race );
-            } catch (UserCancelledException e) {
-                season.removeRace( race );
-                throw e;
-            }
+            Season newSeason = season.repAddRace( race );
+            editResultsForRace( race );
+            season = newSeason;
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);

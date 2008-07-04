@@ -45,23 +45,23 @@ public final class SeasonTest extends TestCase {
     public void testRemove() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
-        Season season = new Season();
+        Season season = Season.create();
 
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
         race1.setLiberationDate(liberationDate);
 
         assertEquals(season.getRaces().size(), 0);
-        season.addRace(race1);
+        season = season.repAddRace(race1);
         assertEquals(season.getRaces().size(), 1);
-        season.removeRace(race1);
+        season = season.repRemoveRace(race1);
         assertEquals(season.getRaces().size(), 0);
     }
 
     public void testClashes() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
-        Season season = new Season();
+        Season season = Season.create();
 
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
@@ -70,9 +70,9 @@ public final class SeasonTest extends TestCase {
         race2.setRacepoint(racepoint);
         race2.setLiberationDate(liberationDate);
 
-        season.addRace(race1);
+        season = season.repAddRace(race1);
         try {
-            season.addRace(race2);
+            season = season.repAddRace(race2);
             assertFalse("Should throw", true);
         } catch (ValidationException ex) {
             assertEquals("Race already exists", ex.toString());

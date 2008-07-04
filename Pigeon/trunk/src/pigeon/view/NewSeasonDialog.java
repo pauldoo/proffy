@@ -182,13 +182,13 @@ final class NewSeasonDialog extends javax.swing.JPanel {
     {
         NewSeasonDialog panel = new NewSeasonDialog();
         int result = JOptionPane.showOptionDialog(parent, panel, "New Season", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-        Season season = new Season();
+        Season season = Season.create();
 
         switch (result) {
             case JOptionPane.OK_OPTION:
                 if (panel.copyExistingRadio.isSelected()) {
                     Season previousSeason = Utilities.loadSeasonFromFile(new File(panel.previousFileName.getText()));
-                    season.setOrganization(previousSeason.getOrganization());
+                    season = season.repSetOrganization(previousSeason.getOrganization());
                 }
                 break;
             case JOptionPane.CANCEL_OPTION:

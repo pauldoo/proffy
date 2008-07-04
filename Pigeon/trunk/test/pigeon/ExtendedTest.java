@@ -98,8 +98,8 @@ public final class ExtendedTest extends TestCase
             }
         }
 
-        season = new Season();
-        season.setOrganization(createOraganization());
+        season = Season.create();
+        season = season.repSetOrganization(createOraganization());
         addRaces();
     }
 
@@ -235,7 +235,7 @@ public final class ExtendedTest extends TestCase
             }
             race.setPrizes(prizes);
             
-            season.addRace(race);
+            season = season.repAddRace(race);
         }
     }
 

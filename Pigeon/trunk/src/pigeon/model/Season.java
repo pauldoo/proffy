@@ -32,41 +32,66 @@ public final class Season implements Serializable {
 
     private static final long serialVersionUID = 2185370002566545845L;
 
-    private String name;
-    private Organization organization = new Organization();
-    private List<Race> races = new ArrayList<Race>();
+    private final String name;
+    private final Organization organization;
+    private final List<Race> races;
 
-    public Season() {
+    private Season(String name, Organization organization, List<Race> races) {
+        this.name = name;
+        this.organization = organization;
+        this.races = Utilities.unmodifiableSortedList(races);
+    }
+    
+    public static Season create() {
+        return new Season("", new Organization(), new ArrayList<Race>());
     }
 
     public Organization getOrganization() {
         return organization;
     }
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public Season repSetOrganization(Organization organization) {
+        return new Season(
+                this.name,
+                organization,
+                this.races);
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Season repSetName(String name) {
+        return new Season(
+                name,
+                this.organization,
+                this.races);
     }
 
-    public void addRace(Race race) throws ValidationException {
-        if (races.contains( race ) || !races.add( race )) {
+    public Season repAddRace(Race race) throws ValidationException {
+        List<Race> result = new ArrayList<Race>(this.races);
+        if (result.contains( race ) || !result.add( race )) {
             throw new ValidationException("Race already exists");
         }
+        return new Season(
+                this.name,
+                this.organization,
+                result);        
     }
 
-    public void removeRace(Race race) {
-        races.remove(race);
+    public Season repRemoveRace(Race race) throws ValidationException {
+        List<Race> result = new ArrayList<Race>(this.races);
+        if (result.remove( race ) == false) {
+            throw new ValidationException("Race not found");
+        }
+        return new Season(
+                this.name,
+                this.organization,
+                result);
     }
 
     public List<Race> getRaces() {
-        return Utilities.unmodifiableSortedList(races);
+        return this.races;
     }
 
 }
