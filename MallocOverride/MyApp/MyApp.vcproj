@@ -166,6 +166,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\FoobarOverride.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\Main.cpp"
 			>
 		</File>
