@@ -5,7 +5,7 @@
 
 namespace MyLib
 {
-	void Foobar()
+	void Foobar(void)
 	{
 		void* p = malloc(10);
 		assert(p);
