@@ -68,8 +68,16 @@ final class CurveEditor implements ComponentListener, MouseInputListener
         for (int i = 0; i < controlPointValues.length; i++) {
             double x = ((i + 0.5) / controlPointValues.length) * panel.getWidth();
             double y = (1.0 - controlPointValues[i]) * panel.getHeight();
-            layers.add(new ShapeComponent(new Ellipse2D.Double(x, y, 10, 10), Color.RED), JLayeredPane.DEFAULT_LAYER);
+            layers.add(new ShapeComponent(new Ellipse2D.Double(x - 5, y - 5, 10, 10), Color.RED), JLayeredPane.DEFAULT_LAYER);
         }
+        
+        InterpolatingCubicSpline spline = new InterpolatingCubicSpline(controlPointValues);
+        for (int i = 0; i < panel.getWidth(); i+=4) {
+            double x = ((i + 0.5) / panel.getWidth()) * controlPointValues.length - 0.5;
+            double y = (1.0 - spline.sample(x)) * panel.getHeight();
+            layers.add(new ShapeComponent(new Ellipse2D.Double(i + 0.5 - 1, y - 1, 2, 2), Color.BLACK), JLayeredPane.DEFAULT_LAYER);
+        }
+        
         JRootPane rootPane = panel.getRootPane();
         if (rootPane != null) {
             rootPane.validate();
@@ -78,6 +86,7 @@ final class CurveEditor implements ComponentListener, MouseInputListener
     
     private void updateControlPoint(Point p) {
         int index = (int)Math.floor((double)p.getX() * controlPointValues.length / panel.getWidth());
+        index = Utilities.clamp(0, index, controlPointValues.length-1);
         controlPointValues[index] = 1.0 - ((double)p.getY() / panel.getHeight());
         repopulatePanel();
     }

@@ -78,4 +78,15 @@ final class Utilities
     {
         return threadPool;
     }
+    
+    /**
+        Clamps the value 'x' to be in the range [min, max].
+    */
+    static int clamp(final int min, final int x, final int max)
+    {
+        if (max < min) {
+            throw new IllegalArgumentException("Max is less than min");
+        }
+        return Math.max(min, Math.min(max, x));
+    }
 }
