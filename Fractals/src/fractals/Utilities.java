@@ -25,19 +25,32 @@ import java.util.concurrent.ThreadFactory;
 
 final class Utilities
 {
-    private static final ScheduledExecutorService threadPool;
+    private static final ScheduledExecutorService lightThreadPool;
+    private static final ScheduledExecutorService heavyThreadPool;
+    
     static {
-        final int threadCount = 10;
-
-        final ThreadFactory threadFactory = new ThreadFactory(){
+        final int lightThreadCount = 2;
+        final ThreadFactory lightThreadFactory = new ThreadFactory(){
             public Thread newThread(Runnable r) {
                 Thread result = new Thread(r);
-                setToBackgroundThread(result);
+                result.setDaemon(true);
                 return result;
             }
         };
-
-        threadPool = new ScheduledThreadPoolExecutor(threadCount, threadFactory);
+        lightThreadPool = new ScheduledThreadPoolExecutor(lightThreadCount, lightThreadFactory);
+    }
+    
+    static {
+        final int heavyThreadCount = Runtime.getRuntime().availableProcessors();
+        final ThreadFactory heavyThreadFactory = new ThreadFactory(){
+            public Thread newThread(Runnable r) {
+                Thread result = new Thread(r);
+                result.setDaemon(true);
+                result.setPriority(Thread.MIN_PRIORITY);
+                return result;
+            }
+        };
+        heavyThreadPool = new ScheduledThreadPoolExecutor(heavyThreadCount, heavyThreadFactory);
     }
     
     private Utilities()
@@ -57,16 +70,6 @@ final class Utilities
     }
     
     /**
-        Lowers the priority of the thread and sets it to be a daemon thread.
-    */
-    static void setToBackgroundThread(Thread t)
-    {
-        int currentPriority = t.getPriority();
-        t.setPriority(currentPriority - 1);
-        t.setDaemon(true);
-    }
-    
-    /**
         Simplistic exposure function that returns 1.0 - e^(-exposure * value).
     */
     static double expose(double value, double exposure)
@@ -74,9 +77,20 @@ final class Utilities
         return 1.0 - Math.exp(-exposure * value);
     }
     
-    static ScheduledExecutorService getThreadPool()
+    /**
+        A thread pool intended for light background tasks (e.g. to triggering repaints).
+    */
+    static ScheduledExecutorService getLightThreadPool()
     {
-        return threadPool;
+        return lightThreadPool;
+    }
+    
+    /**
+        A thread pool intended for heavy background tasks (e.g. rendering).
+    */
+    static ScheduledExecutorService getHeavyThreadPool()
+    {
+        return heavyThreadPool;
     }
     
     /**

@@ -99,7 +99,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                     repaint();
                 }
             };
-            repainter = Utilities.getThreadPool().schedule(runnable, 200, TimeUnit.MILLISECONDS);
+            repainter = Utilities.getLightThreadPool().schedule(runnable, 200, TimeUnit.MILLISECONDS);
         }
     }
         
@@ -145,7 +145,7 @@ abstract class BackgroundRenderingComponent extends JComponent
         if (renderer != null) {
             throw new IllegalStateException("There should be no background thread");
         }
-        renderer = Utilities.getThreadPool().submit(runner);
+        renderer = Utilities.getHeavyThreadPool().submit(runner);
         repaint();
     }
     

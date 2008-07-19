@@ -25,42 +25,40 @@ import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 
-public class CanvasView extends JComponent implements Runnable
+public class CanvasView extends JComponent
 {
     private static final long serialVersionUID = 6622327481400970118L;
     
     private final CollectionOfTiles canvas;
     private final TileProvider<RenderableTile> source;
-    private final Object lockThing = new Object();
-    private final Collection<Thread> threads = new ArrayList<Thread>();
-    private final Random random = new Random();
     
     /**
-        Queue of tiles to render next.  Should not contain any tiles that are in the notToBeRenderedAgain set.
+        Mutex for modifying the renderingTasks map.
     */
-    private final Queue<TilePosition> tileQueue = new LinkedList<TilePosition>();
-
+    private final Object lockThing = new Object();
+    
     /**
-        All tile positions that are either in the process of being rendered, or have already been rendered.
-        Does not include those tile positions that may be waiting in the queue.
+        All tiles that have ever been submitted to the thread pool gizmo for
+        rendering.  Entries are not removed after the rendering has finished,
+        and are instead only removed once the tile has been evicted from the
+        cache.
     */
-    private final Set<TilePosition> notToBeRenderedAgain = new HashSet<TilePosition>();
+    private final Map<TilePosition, Future> renderingTasks = new HashMap<TilePosition, Future>();
+    
+    /**
+        Periodic repaint task.
+    */
+    private Future updateTask;
     
     private AffineTransform transform = new AffineTransform();
     
@@ -81,77 +79,38 @@ public class CanvasView extends JComponent implements Runnable
         this.setDoubleBuffered(true);
     }
     
-    private Collection<Thread> startRenderingThreads()
-    {
-        Collection<Thread> result = new ArrayList<Thread>();
-        int threadCount = Runtime.getRuntime().availableProcessors();
-        for (int i = 1; i <= threadCount; i++) {
-            Thread t = new Thread(this);
-            Utilities.setToBackgroundThread(t);
-            //System.out.println("Before: " + currentPriority + " ... After: " + t.getPriority());
-            t.start();
-            result.add(t);
-        }
-        return result;
-        //System.out.println("Main thread: " + Thread.currentThread().getPriority());
-    }
-    
-    private Thread startUpdateThread()
+    private ScheduledFuture startUpdateTask()
     {
         final CanvasView self = this;
         Runnable r = new Runnable() {
             public void run() {
-                try {
-                    while(true) {
-                        Thread.sleep(500);
-                        if (canvas.wouldLookBetterWithAnotherBlit()) {
-                            self.repaint();
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    System.out.println(Thread.currentThread().toString() + ": Terminating normally.");
-                } catch (Exception e) {
-                    StringWriter message = new StringWriter();
-                    e.printStackTrace(new PrintWriter(message));
-                    JOptionPane.showInternalMessageDialog(self, message.toString(), e.toString(), JOptionPane.ERROR_MESSAGE);
+                if (canvas.wouldLookBetterWithAnotherBlit()) {
+                    self.repaint();
                 }
             }
         };
-        
-        Thread result = new Thread(r);
-        result.start();
-        return result;
+
+        return Utilities.getLightThreadPool().scheduleWithFixedDelay(r, 500, 500, TimeUnit.MILLISECONDS);
     }
     
-    public void run()
+    private final class RenderTileRunner implements Runnable
     {
-        try {
-            while(true) {
-                TilePosition pos = null;
+        private final TilePosition position;
+        
+        RenderTileRunner(TilePosition position)
+        {
+            this.position = position;
+        }
+        
+        public void run()
+        {
+            RenderableTile t = source.getTile(position);
+            TilePosition removed = canvas.addTile(t);
+            if (removed != null) {
                 synchronized(lockThing) {
-                    while (pos == null) {
-                        try {
-                            pos = tileQueue.remove();
-                        } catch (NoSuchElementException e) {
-                            lockThing.wait();
-                        }
-                    }
-                    notToBeRenderedAgain.add(pos);
-                }
-                RenderableTile t = source.getTile(pos);
-                TilePosition removed = canvas.addTile(t);
-                if (removed != null) {
-                    synchronized(lockThing) {
-                        notToBeRenderedAgain.remove(removed);
-                    }
+                    renderingTasks.remove(removed);
                 }
             }
-        } catch (InterruptedException e) {
-            System.out.println(Thread.currentThread().toString() + ": Terminating normally.");
-        } catch (Exception e) {
-            StringWriter message = new StringWriter();
-            e.printStackTrace(new PrintWriter(message));
-            JOptionPane.showInternalMessageDialog(this, message.toString(), e.toString(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -192,51 +151,47 @@ public class CanvasView extends JComponent implements Runnable
 
     public void paint(Graphics2D g)
     {
-        //System.out.println("Paint thread: " + Thread.currentThread().getPriority());
-        //long time = -System.currentTimeMillis();
         Rectangle bounds = g.getClipBounds();
         g.setColor(Color.ORANGE);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-//        System.out.println("Before:");
-//        System.out.println("\t" + g.getTransform());
-//        System.out.println("\t" + g.getClipBounds());
         g.transform(transform);
-//        System.out.println("After:");
-//        System.out.println("\t" + g.getTransform());
-//        System.out.println("\t" + g.getClipBounds());
-        
-        Collection<TilePosition> remainingTiles = canvas.blitImmediately(g);
-        List<TilePosition> shuffledRemainingTiles = new ArrayList<TilePosition>(remainingTiles);
-        Collections.shuffle(shuffledRemainingTiles, random);
+        final Set<TilePosition> neededTiles = canvas.blitImmediately(g);
+
         synchronized(lockThing) {
-            remainingTiles.removeAll(notToBeRenderedAgain);
-            tileQueue.clear();
-            tileQueue.addAll(shuffledRemainingTiles);
-            if (!tileQueue.isEmpty()) {
-                lockThing.notifyAll();
+            for (Iterator<Map.Entry<TilePosition, Future> > i = renderingTasks.entrySet().iterator(); i.hasNext(); ) {
+                final Map.Entry<TilePosition, Future> entry = i.next();
+                
+                if (neededTiles.contains(entry.getKey())) {
+                    // A tile we have already queued for rendering has been requested again,
+                    // so don't requeue.
+                    neededTiles.remove(entry.getKey());
+                } else {
+                    if (entry.getValue().isDone() == false) {
+                        // A tile we have queued but hasn't yet rendered is no longer required.
+                        entry.getValue().cancel(true);
+                        i.remove();
+                    }
+                }
+            }
+            for (TilePosition pos: neededTiles) {
+                renderingTasks.put(pos, Utilities.getHeavyThreadPool().submit(new RenderTileRunner(pos)));
             }
         }
-                
-        //time += System.currentTimeMillis();
-//        System.out.println(this.getClass().getName() + ".paint() took: " + time + "ms");
     }
     
     synchronized void stopAllThreads()
     {
-        for (Thread t: threads) {
-            t.interrupt();
+        updateTask.cancel(false);
+        updateTask = null;
+        for (Future f: renderingTasks.values()) {
+            f.cancel(true);
         }
-        threads.clear();
+        renderingTasks.clear();
     }
     
     synchronized void startAllThreads()
     {
-        if (threads.isEmpty() == false) {
-            stopAllThreads();
-        }
-        threads.addAll(startRenderingThreads());
-        threads.add(startUpdateThread());
+        updateTask = startUpdateTask();
     }
     
     /**
