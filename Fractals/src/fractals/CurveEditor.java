@@ -38,16 +38,16 @@ import javax.swing.event.MouseInputListener;
 final class CurveEditor implements ComponentListener, MouseInputListener
 {
     private final JPanel panel = new JPanel();
-    private final double[] controlPointValues = new double[30];
+    private final double[] controlPointValues;
     
-    CurveEditor()
+    CurveEditor(double[] values)
     {
+        this.controlPointValues = Utilities.copyDoubleArray(values);
+        
         panel.addComponentListener(this);
         panel.addMouseMotionListener(this);
         panel.addMouseListener(this);
-        for (int i = 0; i < controlPointValues.length; i++) {
-            controlPointValues[i] = 0.5;
-        }
+
         repopulatePanel();
     }
     

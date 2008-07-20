@@ -24,8 +24,7 @@ final class InterpolatingCubicSpline
     
     InterpolatingCubicSpline(double[] samples)
     {
-        this.samples = new double[samples.length];
-        System.arraycopy(samples, 0, this.samples, 0, samples.length);
+        this.samples = Utilities.copyDoubleArray(samples);
         this.coefficients = computeCoefficients(this.samples);
         if (this.samples.length != this.coefficients.length+1) {
             throw new IllegalArgumentException("Coefficients array should be exactly one element shorter than the samples array");

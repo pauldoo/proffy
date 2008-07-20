@@ -103,4 +103,14 @@ final class Utilities
         }
         return Math.max(min, Math.min(max, x));
     }
+    
+    /**
+        Copies an array of doubles, returns the new copy.
+    */
+    static double[] copyDoubleArray(double[] source)
+    {
+        final double[] result = new double[source.length];
+        System.arraycopy(source, 0, result, 0, source.length);
+        return result;
+    }
 }

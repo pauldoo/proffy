@@ -66,6 +66,8 @@ public final class MainApplet extends JApplet
             panel.add(MandelbrotSet.createMandelbrot4dView(), BorderLayout.CENTER);
         } else if (fractalType.equals("NewtonRaphson")) {
             panel.add(NewtonRaphson.createView(), BorderLayout.CENTER);
+        } else if (fractalType.equals("BifurcationDiagram")) {
+            panel.add(BifurcationDiagram.createComponent(), BorderLayout.CENTER);
         } else {            
             throw new IllegalArgumentException("Unknown fractal type: " + fractalType);
         }
@@ -81,7 +83,8 @@ public final class MainApplet extends JApplet
         //parameters.put("FractalType", "IteratedFunctionSystem");
         //parameters.put("FractalType", "DiffusionLimitedAggregation");
         //parameters.put("FractalType", "Mandelbrot4D");
-        parameters.put("FractalType", "NewtonRaphson");
+        //parameters.put("FractalType", "NewtonRaphson");
+        parameters.put("FractalType", "BifurcationDiagram");
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
