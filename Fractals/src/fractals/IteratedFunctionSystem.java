@@ -76,6 +76,7 @@ final class IteratedFunctionSystem extends BackgroundRenderingComponent implemen
 
     IteratedFunctionSystem(JLayeredPane containerPane)
     {
+        super(1);
         this.quadrilateralsPane = containerPane;
         setOpaque(false);
     }

@@ -205,6 +205,7 @@ final class MandelbrotSlice extends BackgroundRenderingComponent
     private final Vector4 dy;
     
     MandelbrotSlice(Vector4 dx, Vector4 dy) {
+        super(1);
         this.origin = new Vector4(0, 0, 0, 0);
         this.dx = dx;
         this.dy = dy;

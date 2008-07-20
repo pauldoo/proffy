@@ -28,6 +28,11 @@ final class BifurcationDiagram extends BackgroundRenderingComponent
     
     private final double[] controlPointValues = defaultControlPointValues();
     
+    BifurcationDiagram()
+    {
+        super(2);
+    }
+    
     static JComponent createComponent()
     {
         return new BifurcationDiagram();
@@ -37,19 +42,19 @@ final class BifurcationDiagram extends BackgroundRenderingComponent
     protected void render(Graphics2D g) throws InterruptedException
     {
         g.setBackground(Color.BLACK);
-        g.clearRect(0, 0, getWidth(), getHeight());
+        g.clearRect(0, 0, getSupersampledWidth(), getSupersampledHeight());
         super.bufferIsNowOkayToBlit();
         g.setColor(Color.WHITE);
         
         final InterpolatingCubicSpline spline = new InterpolatingCubicSpline(controlPointValues);
-        for (int xInt = 0; xInt < getWidth(); xInt++) {
-            final double x = ((xInt + 0.5) / getWidth()) * 1.2 + 2.8;
+        for (int xInt = 0; xInt < getSupersampledWidth(); xInt++) {
+            final double x = ((xInt + 0.5) / getSupersampledWidth()) * 1.2 + 2.8;
             double y = 0.5;
             for (int i = 0; i < 1000; i++) {
                 y = x * spline.sample(y * controlPointValues.length);
                 if (i > 100) {
-                    final int yInt = (int)Math.round(y * getHeight());
-                    if (yInt >= 0 && yInt < getHeight()) {
+                    final int yInt = (int)Math.round(y * getSupersampledHeight());
+                    if (yInt >= 0 && yInt < getSupersampledHeight()) {
                         g.fillRect(xInt, yInt, 1, 1);
                     }
                 }

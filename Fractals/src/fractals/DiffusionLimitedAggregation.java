@@ -163,6 +163,7 @@ final class DiffusionLimitedAggregationComponent extends BackgroundRenderingComp
 
     DiffusionLimitedAggregationComponent()
     {
+        super(1);
         addMouseListener(new InputHandler());
         addMouseMotionListener(new InputHandler());
     }

@@ -19,6 +19,7 @@ package fractals;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +35,11 @@ import javax.swing.JComponent;
 */
 abstract class BackgroundRenderingComponent extends JComponent
 {
+    /**
+        Supersample by this amount in both x and y.
+    */
+    private final int supersamplingFactor;
+    
     /**
         The current buffer that "paint()" will use.  Is being concurrently
         written to by the background rendering thread.
@@ -58,6 +64,10 @@ abstract class BackgroundRenderingComponent extends JComponent
     */
     private Future repainter = null;
     
+    protected BackgroundRenderingComponent(int supersamplingFactor)
+    {
+        this.supersamplingFactor = supersamplingFactor;
+    }
     
     /**
         Copies the buffered image to the screen, and does so quickly.
@@ -70,6 +80,7 @@ abstract class BackgroundRenderingComponent extends JComponent
     
     private final void paintComponent(Graphics2D g)
     {
+        Utilities.setGraphicsToHighQuality(g);
         final boolean repaintAgainLater = isRendering();
         if (bufferFirstBlitEventObject != null) {
             try {
@@ -83,9 +94,10 @@ abstract class BackgroundRenderingComponent extends JComponent
             }
         }
         if (buffer != null) {
-            g.drawImage(buffer, 0, 0, null);
+            AffineTransform transform = AffineTransform.getScaleInstance(1.0 / supersamplingFactor, 1.0 / supersamplingFactor);
+            g.drawRenderedImage(buffer, transform);
         }
-        if (buffer == null || buffer.getWidth() != getWidth() || buffer.getHeight() != getHeight()) {
+        if (buffer == null || buffer.getWidth() != getSupersampledWidth() || buffer.getHeight() != getSupersampledHeight()) {
             rerender();
         }
         if (repaintAgainLater) {
@@ -128,7 +140,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                         return;
                     }
                     bufferFirstBlitEventObject = new Object();
-                    buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    buffer = new BufferedImage(getSupersampledWidth(), getSupersampledHeight(), BufferedImage.TYPE_INT_ARGB);
                     if (Thread.interrupted()) throw new InterruptedException();
                     g = (Graphics2D)buffer.getGraphics();
                     render(g);
@@ -186,5 +198,25 @@ abstract class BackgroundRenderingComponent extends JComponent
                 bufferFirstBlitEventObject.notifyAll();
             }
         }
+    }
+    
+    /**
+        Width of the offscreen buffer to which the render method is drawing.
+        May be larger than the width of the component on screen due to
+        supersampling.
+    */
+    protected final int getSupersampledWidth()
+    {
+        return getWidth() * supersamplingFactor;
+    }
+
+    /**
+        Height of the offscreen buffer to which the render method is drawing.
+        May be larger than the height of the component on screen due to
+        supersampling.
+    */
+    protected final int getSupersampledHeight()
+    {
+        return getHeight() * supersamplingFactor;
     }
 }
