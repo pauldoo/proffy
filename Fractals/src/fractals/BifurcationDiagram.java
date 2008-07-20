@@ -84,9 +84,9 @@ final class BifurcationDiagram extends BackgroundRenderingComponent
         for (int xInt = 0; xInt < getSupersampledWidth(); xInt++) {
             final double x = ((xInt + 0.5) / getSupersampledWidth()) + 0.5;
             double y = 0.5;
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 2000; i++) {
                 y = x * spline.sample(y * controlPointValues.length);
-                if (i > 100) {
+                if (i > 200) {
                     final int yInt = (int)Math.round(y * getSupersampledHeight());
                     if (yInt >= 0 && yInt < getSupersampledHeight()) {
                         g.fillRect(xInt, yInt, 1, 1);
