@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>Bifurcation Diagram Applet</title>
+		<style>
+			#outer{
+                width:800px;
+                margin:0 auto;
+                background-color:#dddddd;
+                padding:30px;
+                font-family:Verdana, Arial, Helvetica, Sans-Serif;
+                font-size:0.8em;
+                color:#333333;
+             }
+			  h1{
+                 margin-top:0;
+                 font-size:1.4em;
+                 border-bottom:1px solid #333333;
+                 clear:both;
+                 }
+				 a{
+				 	color:#333333;
+				 }
+				 a:hover{
+				 	color:#990000;
+				 }
+
+		</style>
+    </head>
+    <body>
+		<div id="outer">
+        <h1>Bifurcation Diagram</h1>
+		<p>
+            A bifurcation diagram is a pretty fractal that demonstrates how very simple functions can give rise to chaotic behaviour.
+        </p>
+        <p>
+            In this applet we take a function <strong><em>f</em></strong> and iterate it to form a series:
+            <blockquote><strong><em>
+                y<sub>0</sub> = 0.5<br/>
+                y<sub>n+1</sub> = r * f(y<sub>n</sub>)
+            </em></strong></blockquote>
+            Moving horizontally through the image the constant <strong><em>r</em></strong> is slowly varied and for that vertical
+            slice a new series of <strong><em>y</em></strong> values is calculated and plotted.
+        </p>
+        <p>
+            If you pick <strong><em>f(x) = x * (1 - x)</em></strong> then you'll end up with the Logistic Equation version of the bifurcation diagram.
+            This applet starts with this funciton, but by clicking the "Edit Function" button you can edit the plot of <strong><em>f</em></strong> and create
+            your own bifurcation diagram.
+        </p>
+        <p>
+            The interesting thing about this fractal is that a whole range of functions give rise to chaotic behaviour.
+        </p>            
+        <p>
+            More details:
+            <a href="http://en.wikipedia.org/wiki/Bifurcation_diagram">Wikipedia</a>,
+            <a href="http://local.wasp.uwa.edu.au/~pbourke/fractals/logistic/">Paul Bourke</a>.
+        </p>
+        <p>
+            <object
+                classid = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+                width = "800" height = "600" >
+                <param name = "code" value = "fractals.MainApplet.class" />
+                <param name = "archive" value = "dist/Fractals.jar" />
+                <param name = "type" value = "application/x-java-applet;version=1.5" />
+                <param name = "scriptable" value = "false" />
+                <param name = "FractalType" value="BifurcationDiagram" />
+                <comment>
+                    <embed
+                        type = "application/x-java-applet;version=1.5"
+                        code = "fractals.MainApplet.class"
+                        archive = "dist/Fractals.jar"
+                        width = "800"
+                        height = "600"
+                        FractalType ="BifurcationDiagram"
+                        scriptable = false >
+                        <noembed>
+                            Your browser must support Java Applets for this page to work.
+                        </noembed>
+                    </embed>
+                </comment>
+            </object>
+        </p>
+        <p><em>Wiki page for comments:</em> <a href="http://pauldoo.dyndns.org/Programs/wiki/Bifurcation%20Diagram%20Applet">http://pauldoo.dyndns.org/Programs/wiki/Bifurcation%20Diagram%20Applet</a></p>
+		</div>
+    </body>
+</html>
