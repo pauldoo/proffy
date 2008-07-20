@@ -19,11 +19,14 @@ package fractals;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -56,6 +59,11 @@ final class CurveEditor implements ComponentListener, MouseInputListener
         return panel;
     }
     
+    double[] getControlPointValues()
+    {
+        return Utilities.copyDoubleArray(controlPointValues);
+    }
+    
     private void repopulatePanel()
     {
         panel.removeAll();
@@ -64,11 +72,10 @@ final class CurveEditor implements ComponentListener, MouseInputListener
         panel.add(layers);
         layers.setLayout(new OverlayLayout(layers));
                 
-        //panel.add(new ShapeComponent(new Ellipse2D.Double(10, 20, 30, 40), Color.RED));
         for (int i = 0; i < controlPointValues.length; i++) {
             double x = ((i + 0.5) / controlPointValues.length) * panel.getWidth();
             double y = (1.0 - controlPointValues[i]) * panel.getHeight();
-            layers.add(new ShapeComponent(new Ellipse2D.Double(x - 5, y - 5, 10, 10), Color.RED), JLayeredPane.DEFAULT_LAYER);
+            layers.add(new ShapeComponent(new Ellipse2D.Double(x - 4, y - 4, 8, 8), Color.RED), JLayeredPane.DEFAULT_LAYER);
         }
         
         InterpolatingCubicSpline spline = new InterpolatingCubicSpline(controlPointValues);
@@ -77,7 +84,18 @@ final class CurveEditor implements ComponentListener, MouseInputListener
             double y = (1.0 - spline.sample(x)) * panel.getHeight();
             layers.add(new ShapeComponent(new Ellipse2D.Double(i + 0.5 - 1, y - 1, 2, 2), Color.BLACK), JLayeredPane.DEFAULT_LAYER);
         }
+
+        for (int i = 1; i <= 9; i++) {
+            double f = i / 10.0;
+            layers.add(new ShapeComponent(new Line2D.Double(0, f * panel.getHeight(), panel.getWidth(), f * panel.getHeight()), Color.LIGHT_GRAY), JLayeredPane.DEFAULT_LAYER);
+            layers.add(new ShapeComponent(new Line2D.Double(f * panel.getWidth(), 0, f * panel.getWidth(), panel.getHeight()), Color.LIGHT_GRAY), JLayeredPane.DEFAULT_LAYER);
+        }
         
+        layers.add(new ShapeComponent(new Rectangle2D.Double(0, 0, panel.getWidth(), panel.getHeight()), Color.WHITE), JLayeredPane.DEFAULT_LAYER);
+        
+        layers.setMinimumSize(new Dimension(400, 400));
+        layers.setPreferredSize(new Dimension(400, 400));
+
         JRootPane rootPane = panel.getRootPane();
         if (rootPane != null) {
             rootPane.validate();

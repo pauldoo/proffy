@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.Line2D;
 import javax.swing.JComponent;
 
 /**
@@ -49,6 +50,10 @@ final class ShapeComponent extends JComponent
     {
         Utilities.setGraphicsToHighQuality(g);
         g.setColor(color);
-        g.fill(shape);
+        if (shape instanceof Line2D) {
+            g.draw(shape);
+        } else {
+            g.fill(shape);
+        }
     }
 }
