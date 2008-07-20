@@ -111,7 +111,7 @@ abstract class BackgroundRenderingComponent extends JComponent
                     repaint();
                 }
             };
-            repainter = Utilities.getLightThreadPool().schedule(runnable, 200, TimeUnit.MILLISECONDS);
+            repainter = Utilities.getLightThreadPool().schedule(runnable, 250, TimeUnit.MILLISECONDS);
         }
     }
         
