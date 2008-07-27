@@ -45,6 +45,13 @@ public final class DateTimeComponent extends javax.swing.JPanel
         textField.addFocusListener(new BeepingFocusListener());
         setMode(DateTimeDisplayMode.DATE_HOURS_MINUTES_SECONDS);
     }
+    
+    @Override
+    public void setEnabled(boolean enabled)
+    {
+        super.setEnabled(enabled);
+        textField.setEnabled(enabled);
+    }
 
     public DateTimeDisplayMode getMode()
     {
