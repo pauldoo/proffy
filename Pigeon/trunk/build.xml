@@ -81,6 +81,10 @@
         <copy todir="${dist.dir}">
             <fileset file="COPYING.txt"/>
         </copy>
+        <zip destfile="${dist.dir}/RacePoint.zip">
+            <fileset file="${dist.dir}/COPYING.txt"/>
+            <fileset file="${dist.dir}/RacePoint.jar"/>
+        </zip>
     </target>
 
     <target name="BuildID" description="Print svnversion as build id">
