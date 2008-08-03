@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,15 +40,16 @@ public final class MembersReporter extends Reporter
         this.mode = mode;
     }
 
+    @Override
     public void write() throws IOException
     {
         final OutputStream stream = createNewStream("Members");
         PrintStream out = Utilities.writeHtmlHeader(stream, "Members for " + organization);
-        out.print("<div class='outer'>\n");
-        out.print("<h1>" + organization + "</h1>\n");
-        out.print("<h2>Members</h2>\n");
+        out.println("<div class='outer'>");
+        out.println("<h1>" + organization + "</h1>");
+        out.println("<h2>Members</h2>");
 
-        out.print("<table>\n");
+        out.println("<table>");
         out.print("<tr>");
         out.print("<th>Name</th>");
         if (mode == Configuration.Mode.CLUB) {
@@ -61,7 +62,7 @@ public final class MembersReporter extends Reporter
         out.print("<th>Address</th>");
         out.print("<th>Telephone</th>");
         out.print("<th>SHU Number</th>");
-        out.print("</tr>\n");
+        out.println("</tr>");
 
         for (Member member: members) {
             out.print("<tr>");
@@ -76,11 +77,11 @@ public final class MembersReporter extends Reporter
             out.print("<td>" + Utilities.insertBrTags(member.getAddress()) + "</td>");
             out.print("<td>" + member.getTelephone() + "</td>");
             out.print("<td>" + member.getSHUNumber() + "</td>");
-            out.print("</tr>\n");
+            out.println("</tr>");
         }
 
-        out.print("</table>\n");
-        out.print("</div>\n");
+        out.println("</table>");
+        out.println("</div>");
         Utilities.writeHtmlFooter(out);
     }
 }

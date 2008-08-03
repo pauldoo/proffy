@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -63,6 +63,7 @@ public final class RaceReporter extends Reporter {
         this.resultsFooter = resultsFooter;
     }
 
+    @Override
     public void write() throws IOException
     {
         final OutputStream raceReportStream = createNewStream("Race");
@@ -79,17 +80,17 @@ public final class RaceReporter extends Reporter {
             for (String section: sections) {
                 final String sectionNotNull = (section == null) ? "Open" : section;
                 if (section != sections.get(sections.size() - 1)) {
-                    out.print("<div class=\"outer\">\n");
+                    out.println("<div class=\"outer\">");
                 } else {
-                    out.print("<div class=\"outer last\">\n");
+                    out.println("<div class=\"outer last\">");
                 }
 
-                out.print("<h1>" + club.getName() + "</h1>\n");
+                out.println("<h1>" + club.getName() + "</h1>");
                 if (section != null) {
-                    out.print("<h2>Section: " + section + "</h2>\n");
+                    out.println("<h2>Section: " + section + "</h2>");
                 }
-                out.print("<h2>Race from " + race.getRacepoint().toString() + "</h2>\n");
-                out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
+                out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
+                out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
                 SortedSet<BirdResult> results = new TreeSet<BirdResult>();
 
                 for (Clock clock: race.getClocks()) {
@@ -130,8 +131,8 @@ public final class RaceReporter extends Reporter {
                     memberCount = race.getTotalNumberOfMembersEntered();
                     birdCount = race.getTotalNumberOfBirdsEntered();
                 }
-                out.print("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>\n");
-                out.print("<table>\n");
+                out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
+                out.println("<table>");
                 out.print("<tr><th>Pos.</th><th>Member</th>");
                 if (listClubNames) {
                     out.print("<th>Club</th>");
@@ -144,7 +145,7 @@ public final class RaceReporter extends Reporter {
                 if (section != null) {
                     out.print("<th class='numeric'>Prize</th>");
                 }
-                out.print("<th class='numeric'>Velocity</th></tr>\n");
+                out.println("<th class='numeric'>Velocity</th></tr>");
 
                 // For each competition name keep a track of how many of the winners we have found.
                 Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
@@ -210,13 +211,13 @@ public final class RaceReporter extends Reporter {
                     row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
 
                     out.print(row.html.toString());
-                    out.print("</tr>\n");
+                    out.println("</tr>");
                 }
-                out.print("</table>\n");
-                out.print("</div>\n");
+                out.println("</table>");
+                out.println("</div>");
             }
             if (resultsFooter != null) {
-                out.print("<h4>" + resultsFooter + "</h4>\n");
+                out.println("<h4>" + resultsFooter + "</h4>");
             }
             Utilities.writeHtmlFooter(out);
         }
@@ -233,19 +234,19 @@ public final class RaceReporter extends Reporter {
                 final String sectionNotNull = (section == null) ? "Open" : section;
 
                 if (section != sections.get(sections.size() - 1)) {
-                    out.print("<div class=\"outer\">\n");
+                    out.println("<div class=\"outer\">");
                 } else {
-                    out.print("<div class=\"outer last\">\n");
+                    out.println("<div class=\"outer last\">");
                 }
 
-                out.print("<h1>" + club.getName() + "</h1>\n");
+                out.println("<h1>" + club.getName() + "</h1>");
                 if (section != null) {
-                    out.print("<h2>Section: " + section + "</h2>\n");
+                    out.println("<h2>Section: " + section + "</h2>");
                 } else {
-                    out.print("<h2>Open</h2>\n");
+                    out.println("<h2>Open</h2>");
                 }
-                out.print("<h2>Race from " + race.getRacepoint().toString() + "</h2>\n");
-                out.print("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>\n");
+                out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
+                out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
                 int memberCount = 0;
                 int birdCount = 0;
                 SortedSet<BirdResult> results = new TreeSet<BirdResult>();
@@ -268,7 +269,7 @@ public final class RaceReporter extends Reporter {
                     }
                 }
 
-                out.print("<table>\n");
+                out.println("<table>");
                 out.print("<tr><th>Member</th>");
                 if (listClubNames) {
                     out.print("<th>Club</th>");
@@ -280,7 +281,7 @@ public final class RaceReporter extends Reporter {
                     }
                 }
                 out.print("<th class='numeric'>Total</th>");
-                out.print("</tr>\n");
+                out.println("</tr>");
 
                 // For each competition name keep a track of how many of the winners we have found.
                 Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
@@ -329,10 +330,10 @@ public final class RaceReporter extends Reporter {
                     }
                     if (totalPrizeWonByThisBird > 0) {
                         // If this member has taken a place in any competition, print their line.
-                        out.print("<tr>\n");
+                        out.println("<tr>");
                         out.print(row.html.toString());
                         out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
-                        out.print("</tr>\n");
+                        out.println("</tr>");
                     }
                 }
 
@@ -354,7 +355,7 @@ public final class RaceReporter extends Reporter {
                         }
                     }
                     out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
-                    out.print("</tr>\n");
+                    out.println("</tr>");
                 }
 
                 {
@@ -370,7 +371,7 @@ public final class RaceReporter extends Reporter {
                         }
                     }
                     out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
-                    out.print("</tr>\n");
+                    out.println("</tr>");
                 }
 
                 {
@@ -386,7 +387,7 @@ public final class RaceReporter extends Reporter {
                         }
                     }
                     out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
-                    out.print("</tr>\n");
+                    out.println("</tr>");
                 }
 
                 {
@@ -402,15 +403,15 @@ public final class RaceReporter extends Reporter {
                         }
                     }
                     out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
-                    out.print("</tr>\n");
+                    out.println("</tr>");
                 }
 
                 // Done!
-                out.print("</table>\n");
-                out.print("</div>\n");
+                out.println("</table>");
+                out.println("</div>");
             }
             if (resultsFooter != null) {
-                out.print("<h4>" + resultsFooter + "</h4>\n");
+                out.println("<h4>" + resultsFooter + "</h4>");
             }
             Utilities.writeHtmlFooter(out);
         }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -51,41 +51,41 @@ public final class Utilities
     {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
 
-        out.print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-        out.print("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n");
-        out.print("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-        out.print("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
-        out.print("<head>\n");
-        out.print("  <title>" + title + "</title>\n");
-        out.print("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n");
-        out.print("  <style type=\"text/css\" media=\"screen\">\n");
-        out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; }\n");
-        out.print("    .outer { text-align:center; page-break-after: always; }\n");
-        out.print("    .outer.last { page-break-after: auto; }\n");
-        out.print("    h1 { margin-bottom:10px; font-size:18pt; }\n");
-        out.print("    h2 { font-size:16pt; }\n");
-        out.print("    h3 { font-size:14pt; }\n");
-        out.print("    h2, h3 { margin-top:0; margin-bottom:5px; }\n");
-        out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }\n");
-        out.print("    th { border-bottom:3px solid #000000; text-align: left; }\n");
-        out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }\n");
-        out.print("    .numeric { text-align: right; }\n");
-        out.print("  </style>\n");
-        out.print("  <style type=\"text/css\" media=\"print\">\n");
-        out.print("    body { font-family: Verdana, sans-serif; white-space: nowrap; }\n");
-        out.print("    .outer { text-align:center; page-break-after: always; }\n");
-        out.print("    .outer.last { page-break-after: auto; }\n");
-        out.print("    h1 { margin-bottom:10px; font-size:18pt; }\n");
-        out.print("    h2 { font-size:16pt; }\n");
-        out.print("    h3 { font-size:14pt; }\n");
-        out.print("    h2, h3 { margin-top:0; margin-bottom:5px; }\n");
-        out.print("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }\n");
-        out.print("    th { border-bottom:3px solid #000000; text-align: left; }\n");
-        out.print("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }\n");
-        out.print("    .numeric { text-align: right; }\n");
-        out.print("  </style>\n");
-        out.print("</head>\n");
-        out.print("<body>\n");
+        out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"");
+        out.println("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+        out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+        out.println("<head>");
+        out.println("  <title>" + title + "</title>");
+        out.println("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
+        out.println("  <style type=\"text/css\" media=\"screen\">");
+        out.println("    body { font-family: Verdana, sans-serif; white-space: nowrap; }");
+        out.println("    .outer { text-align:center; page-break-after: always; }");
+        out.println("    .outer.last { page-break-after: auto; }");
+        out.println("    h1 { margin-bottom:10px; font-size:18pt; }");
+        out.println("    h2 { font-size:16pt; }");
+        out.println("    h3 { font-size:14pt; }");
+        out.println("    h2, h3 { margin-top:0; margin-bottom:5px; }");
+        out.println("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }");
+        out.println("    th { border-bottom:3px solid #000000; text-align: left; }");
+        out.println("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }");
+        out.println("    .numeric { text-align: right; }");
+        out.println("  </style>");
+        out.println("  <style type=\"text/css\" media=\"print\">");
+        out.println("    body { font-family: Verdana, sans-serif; white-space: nowrap; }");
+        out.println("    .outer { text-align:center; page-break-after: always; }");
+        out.println("    .outer.last { page-break-after: auto; }");
+        out.println("    h1 { margin-bottom:10px; font-size:18pt; }");
+        out.println("    h2 { font-size:16pt; }");
+        out.println("    h3 { font-size:14pt; }");
+        out.println("    h2, h3 { margin-top:0; margin-bottom:5px; }");
+        out.println("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }");
+        out.println("    th { border-bottom:3px solid #000000; text-align: left; }");
+        out.println("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }");
+        out.println("    .numeric { text-align: right; }");
+        out.println("  </style>");
+        out.println("</head>");
+        out.println("<body>");
         if (out.checkError()) {
             throw new IOException();
         }
@@ -95,8 +95,8 @@ public final class Utilities
 
     public static void writeHtmlFooter(PrintStream out) throws IOException
     {
-        out.print("</body>\n");
-        out.print("</html>\n");
+        out.println("</body>");
+        out.println("</html>");
         out.flush();
         if (out.checkError()) {
             throw new IOException();
@@ -127,7 +127,7 @@ public final class Utilities
             return buffer.toString();
     }
 
-    public static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
+    static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
     {
         Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
         int nightsSpentSleeping = (int)(time.getMemberTime() / Constants.MILLISECONDS_PER_DAY);
