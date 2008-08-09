@@ -17,13 +17,20 @@
 
 package pigeon.report;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -161,6 +168,49 @@ public final class Utilities
             return result.toString();
         } catch (IOException e) {
             throw new IllegalArgumentException("Not expecting any IOExceptions");
+        }
+    }
+    
+    public static void copyFile(File source, File destination) throws FileNotFoundException, IOException
+    {
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(destination).getChannel();
+            final long bytesToCopy = inputChannel.size();
+            final long bytesCopied = inputChannel.transferTo(0, bytesToCopy, outputChannel);
+            if (bytesToCopy != bytesCopied) {
+                throw new IOException("FileChannel.transferTo() failed");
+            }
+        } finally {
+            if (inputChannel != null) {
+                inputChannel.close();
+            }
+            if (outputChannel != null) {
+                outputChannel.close(); 
+            }
+        }
+    }
+    
+    public static void copyStreamToFile(InputStream source, File destination) throws IOException
+    {
+        OutputStream out = null;
+        try {
+            out = new BufferedOutputStream(new FileOutputStream(destination));
+            byte[] buffer = new byte[1024];
+            while (true) {
+                int bytesRead = source.read(buffer);
+                if (bytesRead != -1) {
+                    out.write(buffer, 0, bytesRead);
+                } else {
+                    break;
+                }
+            }
+        } finally {
+            if (out != null) {
+                out.close();
+            }
         }
     }
 }
