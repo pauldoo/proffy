@@ -28,8 +28,14 @@ import java.util.LinkedList;
 
 public final class DefaultStreamProvider implements StreamProvider
 {
+    private final File outputDirectory;; 
     private final Collection<File> files = new LinkedList<File>();
     private final Collection<OutputStream> streams = new LinkedList<OutputStream>();
+
+    public DefaultStreamProvider() throws IOException
+    {
+        outputDirectory = Utilities.createTemporaryDirectory("RacePoint");
+    }
     
     public void closeAllStreams() throws IOException
     {
@@ -42,12 +48,16 @@ public final class DefaultStreamProvider implements StreamProvider
     {
         return Collections.unmodifiableCollection(files);
     }
-    
+
     @Override
     public OutputStream createNewStream(String name) throws IOException
     {
         OutputStream result;
-        File outputFile = File.createTempFile(name, "");
+        File outputFile = new File(outputDirectory, name);
+        if (outputFile.createNewFile() != true) {
+            throw new IOException("Unable to create new file: " + outputFile.toString());
+        }
+
         FileOutputStream fileOut = new FileOutputStream(outputFile);
         files.add(outputFile);
         result = new BufferedOutputStream(fileOut);
