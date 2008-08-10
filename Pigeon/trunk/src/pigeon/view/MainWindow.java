@@ -41,6 +41,7 @@ import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
+import pigeon.report.DefaultStreamProvider;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -600,12 +601,13 @@ final class MainWindow extends javax.swing.JFrame {
     private void writeReport(Reporter reporter)
     {
         try {
+            DefaultStreamProvider streamProvider = new DefaultStreamProvider();
             try {
-                reporter.write();
+                reporter.write(streamProvider);
             } finally {
-                reporter.closeAllStreams();
+                streamProvider.closeAllStreams();
             }
-            for (File outputFile: reporter.getFiles()) {
+            for (File outputFile: streamProvider.getFiles()) {
                 java.awt.Desktop.getDesktop().open(outputFile);
             }
         } catch (IOException e) {

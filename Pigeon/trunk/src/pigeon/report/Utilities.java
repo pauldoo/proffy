@@ -171,7 +171,7 @@ public final class Utilities
         }
     }
     
-    public static void copyFile(File source, File destination) throws FileNotFoundException, IOException
+    private static void copyFile(File source, File destination) throws FileNotFoundException, IOException
     {
         FileChannel inputChannel = null;
         FileChannel outputChannel = null;
@@ -193,24 +193,28 @@ public final class Utilities
         }
     }
     
-    public static void copyStreamToFile(InputStream source, File destination) throws IOException
+    public static void copyStream(InputStream in, OutputStream out) throws IOException
     {
-        OutputStream out = null;
-        try {
-            out = new BufferedOutputStream(new FileOutputStream(destination));
-            byte[] buffer = new byte[1024];
-            while (true) {
-                int bytesRead = source.read(buffer);
-                if (bytesRead != -1) {
-                    out.write(buffer, 0, bytesRead);
-                } else {
-                    break;
-                }
-            }
-        } finally {
-            if (out != null) {
-                out.close();
+        final byte[] buffer = new byte[1024];
+        while (true) {
+            int bytesRead = in.read(buffer);
+            if (bytesRead != -1) {
+                out.write(buffer, 0, bytesRead);
+            } else {
+                break;
             }
         }
+    }
+    
+    public static File createTemporaryDirectory(final String prefix) throws IOException
+    {
+        File result = File.createTempFile(prefix, "");
+        if (result.delete() == false) {
+            throw new IOException("Failed to delete temporary file.");
+        }
+        if (result.mkdir() == false) {
+            throw new IOException("Failed to create temporary directory.");
+        }
+        return result;
     }
 }

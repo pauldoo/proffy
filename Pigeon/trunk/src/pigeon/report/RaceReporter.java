@@ -38,7 +38,7 @@ import pigeon.model.Time;
 
     Federation and section results are generated on the same page.
 */
-public final class RaceReporter extends Reporter {
+public final class RaceReporter implements Reporter {
 
     private final Organization club;
     private final Race race;
@@ -64,10 +64,10 @@ public final class RaceReporter extends Reporter {
     }
 
     @Override
-    public void write() throws IOException
+    public void write(StreamProvider streamProvider) throws IOException
     {
-        final OutputStream raceReportStream = createNewStream("Race");
-        final OutputStream competitionReportStream = createNewStream("Pools");
+        final OutputStream raceReportStream = streamProvider.createNewStream("Race.html");
+        final OutputStream competitionReportStream = streamProvider.createNewStream("Pools.html");
         {
             String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
             String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());

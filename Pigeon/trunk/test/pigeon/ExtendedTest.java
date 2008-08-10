@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -86,6 +87,7 @@ public final class ExtendedTest extends TestCase
         return suite;
     }
 
+    @Override
     protected void setUp() throws ValidationException, IOException
     {
         BufferedInputStream configIn = null;
@@ -284,6 +286,7 @@ public final class ExtendedTest extends TestCase
         return org;
     }
 
+    @Override
     protected void tearDown()
     {
     }
@@ -293,7 +296,7 @@ public final class ExtendedTest extends TestCase
         final File tmpFile = new File("regression/" + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
         final File okFile = new File("regression/" + name + ".ok");
 
-        FileOutputStream tmpOut = new FileOutputStream(tmpFile);
+        OutputStream tmpOut = new FileOutputStream(tmpFile);
         try {
             tmpOut.write(tmpData);
         } finally {
@@ -301,7 +304,7 @@ public final class ExtendedTest extends TestCase
         }
 
         final byte[] okData = new byte[(int)okFile.length()];
-        FileInputStream okIn = new FileInputStream(okFile);
+        InputStream okIn = new FileInputStream(okFile);
         try {
             okIn.read(okData);
         } finally {
@@ -354,13 +357,10 @@ public final class ExtendedTest extends TestCase
                 member.toString(),
                 "Racepoint",
                 season.getOrganization().getDistancesForMember(member));
-
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.forceOutputStream(out);
-            reporter.write();
-            out.close();
-
-            checkRegression(out.toByteArray(), "Distance_" + member.getName());
+            
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+            checkRegression(streamProvider.getBytes(), "Distance_" + member.getName());
         }
     }
 
@@ -373,12 +373,9 @@ public final class ExtendedTest extends TestCase
                 "Member",
                 season.getOrganization().getDistancesForRacepoint(racepoint));
 
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.forceOutputStream(out);
-            reporter.write();
-            out.close();
-
-            checkRegression(out.toByteArray(), "Distance_" + racepoint.getName());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+            checkRegression(streamProvider.getBytes(), "Distance_" + racepoint.getName());
         }
     }
 
@@ -386,13 +383,10 @@ public final class ExtendedTest extends TestCase
     {
         for (Race race: season.getRaces()) {
             RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.forceOutputStream(out);
-            reporter.forceOutputStream(new ByteArrayOutputStream());
-            reporter.write();
-            out.close();
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
 
-            checkRegression(out.toByteArray(), "Race_" + race.getRacepoint());
+            checkRegression(streamProvider.getBytes("Race.html"), "Race_" + race.getRacepoint());
         }
     }
 
@@ -400,28 +394,34 @@ public final class ExtendedTest extends TestCase
     {
         for (Race race: season.getRaces()) {
             RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            reporter.forceOutputStream(new ByteArrayOutputStream());
-            reporter.forceOutputStream(out);
-            reporter.write();
-            out.close();
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
 
-            checkRegression(out.toByteArray(), "Pools_" + race.getRacepoint());
+            checkRegression(streamProvider.getBytes("Pools.html"), "Pools_" + race.getRacepoint());
         }
     }
 
     public void testMembersReport() throws IOException
     {
-        MembersReporter reporter = new MembersReporter(
-            season.getOrganization().getName(),
-            season.getOrganization().getMembers(),
-            configuration.getMode()
-        );
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        reporter.forceOutputStream(out);
-        reporter.write();
-        out.close();
+        {
+            MembersReporter reporter = new MembersReporter(
+                season.getOrganization().getName(),
+                season.getOrganization().getMembers(),
+                configuration.getMode());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
 
-        checkRegression(out.toByteArray(), "Members");
+            checkRegression(streamProvider.getBytes(), "Members");
+        }
+        {
+            pigeon.report2.MembersReporter reporter = new pigeon.report2.MembersReporter(
+                season.getOrganization().getName(),
+                season.getOrganization().getMembers(),
+                configuration.getMode());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+            
+            checkRegression(streamProvider.getBytes("members.xml"), "MembersXml");
+        }
     }
 }

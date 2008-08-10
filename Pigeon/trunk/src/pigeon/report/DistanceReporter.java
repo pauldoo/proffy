@@ -26,7 +26,7 @@ import pigeon.model.Distance;
 /**
     Produces an HTML report of the distances for a member or racepoint.
 */
-public final class DistanceReporter<Target> extends Reporter
+public final class DistanceReporter<Target> implements Reporter
 {
     final String organization;
     final String source;
@@ -42,9 +42,9 @@ public final class DistanceReporter<Target> extends Reporter
     }
 
     @Override
-    public void write() throws IOException
+    public void write(StreamProvider streamProvider) throws IOException
     {
-        final OutputStream stream = createNewStream("Distances");
+        final OutputStream stream = streamProvider.createNewStream("Distances.html");
         PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source);
         out.println("<div class='outer'>");
         out.println("<h1>" + organization + "</h1>");

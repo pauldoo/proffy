@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
+    Copyright (C) 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,11 +18,20 @@
 package pigeon.report;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
-    Interface implemented by all the HTML reporters.
+    Reporters call onto this instace to obtain OutputStream
+    instances for writing out the report files.  This interface
+    is useful for unit tests, which want to capture the output
+    of the reporters to an in memory buffer.
 */
-public abstract interface Reporter
+public interface StreamProvider
 {
-    public void write(StreamProvider streamProvider) throws IOException;
+    /**
+        Called by the reporter when it wants to write a file.  The name of the file
+        (e.g. "members.xml") is passed as a hint as to what the file should be
+        named.
+    */
+    OutputStream createNewStream(String filename) throws IOException;
 }
