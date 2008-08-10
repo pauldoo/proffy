@@ -607,7 +607,7 @@ final class MainWindow extends javax.swing.JFrame {
             } finally {
                 streamProvider.closeAllStreams();
             }
-            for (File outputFile: streamProvider.getFiles()) {
+            for (File outputFile: streamProvider.getFilesToShow()) {
                 java.awt.Desktop.getDesktop().open(outputFile);
             }
         } catch (IOException e) {

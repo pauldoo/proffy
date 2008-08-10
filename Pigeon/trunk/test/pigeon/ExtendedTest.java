@@ -445,7 +445,7 @@ public final class ExtendedTest extends TestCase
 
                     xslTransformer.transform(
                             new StreamSource(new ByteArrayInputStream(xmlFile)),
-                            new StreamResult(streams.createNewStream(outputFilename)));
+                            new StreamResult(streams.createNewStream(outputFilename, false)));
                 }
             }
         } catch (TransformerFactoryConfigurationError e) {

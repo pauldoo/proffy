@@ -32,10 +32,14 @@ final class RegressionStreamProvider implements StreamProvider
     final SortedMap<String, ByteArrayOutputStream> streams = new TreeMap<String, ByteArrayOutputStream>();
 
     @Override
-    public OutputStream createNewStream(String filename) throws IOException {
+    public OutputStream createNewStream(String filename, boolean showToUser) throws IOException {
         if (streams.containsKey(filename)) {
             throw new IOException("Duplicate filename");
         }
+        if ((filename.endsWith(".html") || filename.endsWith(".xml")) != showToUser) {
+            throw new IOException("Only .html and .xml files should be shown to the user");
+        }
+            
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         streams.put(filename, result);
         return result;

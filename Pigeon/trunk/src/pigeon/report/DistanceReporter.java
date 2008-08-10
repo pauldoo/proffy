@@ -44,7 +44,7 @@ public final class DistanceReporter<Target> implements Reporter
     @Override
     public void write(StreamProvider streamProvider) throws IOException
     {
-        final OutputStream stream = streamProvider.createNewStream("Distances.html");
+        final OutputStream stream = streamProvider.createNewStream("Distances.html", true);
         PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source);
         out.println("<div class='outer'>");
         out.println("<h1>" + organization + "</h1>");

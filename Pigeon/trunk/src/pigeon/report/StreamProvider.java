@@ -33,5 +33,5 @@ public interface StreamProvider
         (e.g. "members.xml") is passed as a hint as to what the file should be
         named.
     */
-    OutputStream createNewStream(String filename) throws IOException;
+    OutputStream createNewStream(String filename, boolean showToUser) throws IOException;
 }

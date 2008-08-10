@@ -29,7 +29,7 @@ import java.util.LinkedList;
 public final class DefaultStreamProvider implements StreamProvider
 {
     private final File outputDirectory;; 
-    private final Collection<File> files = new LinkedList<File>();
+    private final Collection<File> filesToShow = new LinkedList<File>();
     private final Collection<OutputStream> streams = new LinkedList<OutputStream>();
 
     public DefaultStreamProvider() throws IOException
@@ -44,13 +44,13 @@ public final class DefaultStreamProvider implements StreamProvider
         }
     }
     
-    public Collection<File> getFiles()
+    public Collection<File> getFilesToShow()
     {
-        return Collections.unmodifiableCollection(files);
+        return Collections.unmodifiableCollection(filesToShow);
     }
 
     @Override
-    public OutputStream createNewStream(String name) throws IOException
+    public OutputStream createNewStream(String name, boolean showToUser) throws IOException
     {
         OutputStream result;
         File outputFile = new File(outputDirectory, name);
@@ -59,7 +59,9 @@ public final class DefaultStreamProvider implements StreamProvider
         }
 
         FileOutputStream fileOut = new FileOutputStream(outputFile);
-        files.add(outputFile);
+        if (showToUser) {
+            filesToShow.add(outputFile);
+        }
         result = new BufferedOutputStream(fileOut);
         streams.add(result);
         return result;

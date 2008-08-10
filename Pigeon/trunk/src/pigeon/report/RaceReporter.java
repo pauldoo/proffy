@@ -66,8 +66,8 @@ public final class RaceReporter implements Reporter {
     @Override
     public void write(StreamProvider streamProvider) throws IOException
     {
-        final OutputStream raceReportStream = streamProvider.createNewStream("Race.html");
-        final OutputStream competitionReportStream = streamProvider.createNewStream("Pools.html");
+        final OutputStream raceReportStream = streamProvider.createNewStream("Race.html", true);
+        final OutputStream competitionReportStream = streamProvider.createNewStream("Pools.html", true);
         {
             String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
             String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());

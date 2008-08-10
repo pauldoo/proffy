@@ -97,11 +97,11 @@ final public class MembersReporter implements Reporter
             
             transformer.transform(
                     new DOMSource(document),
-                    new StreamResult(streamProvider.createNewStream("members.xml")));
+                    new StreamResult(streamProvider.createNewStream("members.xml", true)));
 
             pigeon.report.Utilities.copyStream(
                     new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/racepoint.xsl")),
-                    streamProvider.createNewStream("racepoint.xsl"));
+                    streamProvider.createNewStream("racepoint.xsl", false));
             
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException(e);
