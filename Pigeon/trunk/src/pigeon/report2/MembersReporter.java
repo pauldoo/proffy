@@ -46,19 +46,45 @@ final public class MembersReporter implements Reporter
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             document.appendChild(document.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"racepoint.xsl\""));
 
-            final Element memberListElement = document.createElement("members");
+            final Element rootElement = document.createElement("MembersReport");
 
+            final Element organisationElement = document.createElement("Organisation");
+            organisationElement.setTextContent(organization);
+            rootElement.appendChild(organisationElement);
+            
+            final Element memberListElement = document.createElement("MemberList");
             for (Member member: members) {
-                final Element nameElement = document.createElement("name");
+                final Element memberElement = document.createElement("Member");
+
+                final Element nameElement = document.createElement("Name");
                 nameElement.setTextContent(member.getName());
-
-                final Element memberElement = document.createElement("member");
                 memberElement.appendChild(nameElement);
-
+                final Element addressElement = document.createElement("Address");
+                addressElement.setTextContent(member.getAddress());
+                memberElement.appendChild(addressElement);
+                final Element telephoneElement = document.createElement("Telephone");
+                telephoneElement.setTextContent(member.getTelephone());
+                memberElement.appendChild(telephoneElement);
+                final Element shuNumberElement = document.createElement("ShuNumber");
+                shuNumberElement.setTextContent(member.getSHUNumber());
+                memberElement.appendChild(shuNumberElement);
+                
+                switch (mode) {
+                    case CLUB:
+                        break;
+                    case FEDERATION:
+                        final Element clubElement = document.createElement("Club");
+                        clubElement.setTextContent(member.getClub());
+                        memberElement.appendChild(clubElement);
+                        final Element sectionElement = document.createElement("Section");
+                        sectionElement.setTextContent(member.getSection());
+                        memberElement.appendChild(sectionElement);
+                }
+                
                 memberListElement.appendChild(memberElement);
             }
-
-            document.appendChild(memberListElement);        
+            rootElement.appendChild(memberListElement);
+            document.appendChild(rootElement);
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
