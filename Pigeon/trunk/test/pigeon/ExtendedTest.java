@@ -37,11 +37,24 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.GZIPOutputStream;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+import org.xml.sax.SAXException;
 import pigeon.competitions.Competition;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
@@ -422,6 +435,64 @@ public final class ExtendedTest extends TestCase
             reporter.write(streamProvider);
             
             checkRegression(streamProvider.getBytes("members.xml"), "MembersXml");
+            
+            applyXslTransforms(streamProvider);
+            checkRegression(streamProvider.getBytes("members.xhtml"), "MembersXmlToXhtml");
+        }
+    }
+    
+    private static void applyXslTransforms(RegressionStreamProvider streams) throws IOException
+    {
+        try {
+            Set<String> filenames = streams.getFilenames();
+            for (String filename: filenames) {
+                if (filename.endsWith(".xml")) {
+                    byte[] xmlFile = streams.getBytes(filename);
+                    verifyXmlStylesheet(xmlFile);
+                    byte[] xslFile = streams.getBytes("racepoint.xsl");
+
+                    Transformer xslTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new ByteArrayInputStream(xslFile)));
+
+                    String outputFilename = filename.substring(0, filename.length() - 4) + ".xhtml";
+
+                    xslTransformer.transform(
+                            new StreamSource(new ByteArrayInputStream(xmlFile)),
+                            new StreamResult(streams.createNewStream(outputFilename)));
+                }
+            }
+        } catch (TransformerFactoryConfigurationError e) {
+            throw new RuntimeException(e);
+        } catch (TransformerException e) {
+            throw new IOException(e);
+        }
+    }
+    
+    private static void verifyXmlStylesheet(byte[] xmlFile) throws IOException
+    {
+        try {
+            InputStream xmlStream = new ByteArrayInputStream(xmlFile);
+            Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlStream);
+
+            Node child = xmlDocument.getFirstChild();
+            while (child != null) {
+                if (child instanceof ProcessingInstruction) {
+                    ProcessingInstruction pi = (ProcessingInstruction)child;
+                    if (pi.getTarget().equals("xml-stylesheet")) {
+                        if (pi.getData().equals("type=\"text/xsl\" href=\"racepoint.xsl\"")) {
+                            return;
+                        } else {
+                            throw new IOException("xml-stylesheet processing instrction is incorrect");
+                        }
+                    }
+                }
+                child = child.getNextSibling();
+            }
+
+            throw new IOException("xml-stylesheet processing instruction is missing");
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            throw new IOException(e);
         }
     }
 }

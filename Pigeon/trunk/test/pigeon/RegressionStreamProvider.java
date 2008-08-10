@@ -20,8 +20,11 @@ package pigeon;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import pigeon.report.StreamProvider;
 
 final class RegressionStreamProvider implements StreamProvider
@@ -49,5 +52,10 @@ final class RegressionStreamProvider implements StreamProvider
     public byte[] getBytes(String filename)
     {
         return streams.get(filename).toByteArray();
+    }
+    
+    public Set<String> getFilenames()
+    {
+        return Collections.unmodifiableSet(new TreeSet<String>(streams.keySet()));
     }
 }
