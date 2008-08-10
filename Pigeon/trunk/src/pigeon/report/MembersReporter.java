@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
+    Copyright (C) 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,71 +17,96 @@
 
 package pigeon.report;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Collection;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import pigeon.model.Member;
 import pigeon.view.Configuration;
 
-/**
-    Produces a table of all the member details.
-*/
-public final class MembersReporter implements Reporter
+final public class MembersReporter implements Reporter
 {
-    private final String organization;
-    private final Collection<Member> members;
-    private final Configuration.Mode mode;
-
-    public MembersReporter(final String organization, final Collection<Member> members, Configuration.Mode mode)
+    private final Document document;
+    
+    public MembersReporter(String organization, Collection<Member> members, Configuration.Mode mode)
     {
-        this.organization = organization;
-        this.members = members;
-        this.mode = mode;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            document.appendChild(document.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"racepoint.xsl\""));
+
+            final Element rootElement = document.createElement("MembersReport");
+
+            final Element organisationElement = document.createElement("Organisation");
+            organisationElement.setTextContent(organization);
+            rootElement.appendChild(organisationElement);
+            
+            final Element memberListElement = document.createElement("MemberList");
+            for (Member member: members) {
+                final Element memberElement = document.createElement("Member");
+
+                final Element nameElement = document.createElement("Name");
+                nameElement.setTextContent(member.getName());
+                memberElement.appendChild(nameElement);
+                final Element addressElement = document.createElement("Address");
+                addressElement.setTextContent(member.getAddress());
+                memberElement.appendChild(addressElement);
+                final Element telephoneElement = document.createElement("Telephone");
+                telephoneElement.setTextContent(member.getTelephone());
+                memberElement.appendChild(telephoneElement);
+                final Element shuNumberElement = document.createElement("ShuNumber");
+                shuNumberElement.setTextContent(member.getSHUNumber());
+                memberElement.appendChild(shuNumberElement);
+                
+                switch (mode) {
+                    case CLUB:
+                        break;
+                    case FEDERATION:
+                        final Element clubElement = document.createElement("Club");
+                        clubElement.setTextContent(member.getClub());
+                        memberElement.appendChild(clubElement);
+                        final Element sectionElement = document.createElement("Section");
+                        sectionElement.setTextContent(member.getSection());
+                        memberElement.appendChild(sectionElement);
+                }
+                
+                memberListElement.appendChild(memberElement);
+            }
+            rootElement.appendChild(memberListElement);
+            document.appendChild(rootElement);
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void write(StreamProvider streamProvider) throws IOException
     {
-        final OutputStream stream = streamProvider.createNewStream("Members.html");
-        PrintStream out = Utilities.writeHtmlHeader(stream, "Members for " + organization);
-        out.println("<div class='outer'>");
-        out.println("<h1>" + organization + "</h1>");
-        out.println("<h2>Members</h2>");
+        try {
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
+            transformer.transform(
+                    new DOMSource(document),
+                    new StreamResult(streamProvider.createNewStream("members.xml")));
 
-        out.println("<table>");
-        out.print("<tr>");
-        out.print("<th>Name</th>");
-        if (mode == Configuration.Mode.CLUB) {
-        } else if (mode == Configuration.Mode.FEDERATION) {
-            out.print("<th>Club</th>");
-            out.print("<th>Section</th>");
-        } else {
-            throw new IllegalArgumentException("Unexpected application mode");
+            pigeon.report.Utilities.copyStream(
+                    new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/racepoint.xsl")),
+                    streamProvider.createNewStream("racepoint.xsl"));
+            
+        } catch (TransformerConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (TransformerException e) {
+            throw new IOException(e);
         }
-        out.print("<th>Address</th>");
-        out.print("<th>Telephone</th>");
-        out.print("<th>SHU Number</th>");
-        out.println("</tr>");
-
-        for (Member member: members) {
-            out.print("<tr>");
-            out.print("<td>" + member.getName() + "</td>");
-            if (mode == Configuration.Mode.CLUB) {
-            } else if (mode == Configuration.Mode.FEDERATION) {
-                out.print("<td>" + member.getClub() + "</td>");
-                out.print("<td>" + member.getSection() + "</td>");
-            } else {
-                throw new IllegalArgumentException("Unexpected application mode");
-            }
-            out.print("<td>" + Utilities.insertBrTags(member.getAddress()) + "</td>");
-            out.print("<td>" + member.getTelephone() + "</td>");
-            out.print("<td>" + member.getSHUNumber() + "</td>");
-            out.println("</tr>");
-        }
-
-        out.println("</table>");
-        out.println("</div>");
-        Utilities.writeHtmlFooter(out);
     }
 }

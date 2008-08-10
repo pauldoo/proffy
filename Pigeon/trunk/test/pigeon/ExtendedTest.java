@@ -416,29 +416,17 @@ public final class ExtendedTest extends TestCase
 
     public void testMembersReport() throws IOException
     {
-        {
-            MembersReporter reporter = new MembersReporter(
-                season.getOrganization().getName(),
-                season.getOrganization().getMembers(),
-                configuration.getMode());
-            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
-            reporter.write(streamProvider);
+        MembersReporter reporter = new MembersReporter(
+            season.getOrganization().getName(),
+            season.getOrganization().getMembers(),
+            configuration.getMode());
+        RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+        reporter.write(streamProvider);
 
-            checkRegression(streamProvider.getBytes(), "Members");
-        }
-        {
-            pigeon.report2.MembersReporter reporter = new pigeon.report2.MembersReporter(
-                season.getOrganization().getName(),
-                season.getOrganization().getMembers(),
-                configuration.getMode());
-            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
-            reporter.write(streamProvider);
-            
-            checkRegression(streamProvider.getBytes("members.xml"), "MembersXml");
-            
-            applyXslTransforms(streamProvider);
-            checkRegression(streamProvider.getBytes("members.xhtml"), "MembersXmlToXhtml");
-        }
+        checkRegression(streamProvider.getBytes("members.xml"), "MembersXml");
+
+        applyXslTransforms(streamProvider);
+        checkRegression(streamProvider.getBytes("members.xhtml"), "MembersXhtml");
     }
     
     private static void applyXslTransforms(RegressionStreamProvider streams) throws IOException
