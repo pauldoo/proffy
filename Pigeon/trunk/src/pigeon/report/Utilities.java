@@ -17,7 +17,6 @@
 
 package pigeon.report;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +35,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
@@ -216,5 +217,20 @@ public final class Utilities
             throw new IOException("Failed to create temporary directory.");
         }
         return result;
+    }
+    
+    static void appendLineElements(Element parentElement, String textWithMultipleLines, Document document)
+    {
+        BufferedReader reader = new BufferedReader(new StringReader(textWithMultipleLines));
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                Element lineElement = document.createElement("Line");
+                lineElement.setTextContent(line);
+                parentElement.appendChild(lineElement);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

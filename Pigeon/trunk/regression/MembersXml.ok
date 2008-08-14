@@ -6,8 +6,10 @@
 <MemberList>
 <Member>
 <Name>Member #0</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>0</Telephone>
 <ShuNumber>SHU0</ShuNumber>
 <Club>Club #6</Club>
@@ -15,8 +17,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #1</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>11</Telephone>
 <ShuNumber>SHU7</ShuNumber>
 <Club>Club #3</Club>
@@ -24,8 +28,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #10</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>110</Telephone>
 <ShuNumber>SHU70</ShuNumber>
 <Club>Club #9</Club>
@@ -33,8 +39,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #11</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>121</Telephone>
 <ShuNumber>SHU77</ShuNumber>
 <Club>Club #2</Club>
@@ -42,8 +50,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #12</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>132</Telephone>
 <ShuNumber>SHU84</ShuNumber>
 <Club>Club #4</Club>
@@ -51,8 +61,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #13</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>143</Telephone>
 <ShuNumber>SHU91</ShuNumber>
 <Club>Club #10</Club>
@@ -60,8 +72,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #14</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>154</Telephone>
 <ShuNumber>SHU98</ShuNumber>
 <Club>Club #12</Club>
@@ -69,8 +83,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #15</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>165</Telephone>
 <ShuNumber>SHU105</ShuNumber>
 <Club>Club #10</Club>
@@ -78,8 +94,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #16</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>176</Telephone>
 <ShuNumber>SHU112</ShuNumber>
 <Club>Club #5</Club>
@@ -87,8 +105,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #17</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>187</Telephone>
 <ShuNumber>SHU119</ShuNumber>
 <Club>Club #4</Club>
@@ -96,8 +116,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #18</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>198</Telephone>
 <ShuNumber>SHU126</ShuNumber>
 <Club>Club #3</Club>
@@ -105,8 +127,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #19</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>209</Telephone>
 <ShuNumber>SHU133</ShuNumber>
 <Club>Club #15</Club>
@@ -114,8 +138,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #2</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>22</Telephone>
 <ShuNumber>SHU14</ShuNumber>
 <Club>Club #6</Club>
@@ -123,8 +149,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #20</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>220</Telephone>
 <ShuNumber>SHU140</ShuNumber>
 <Club>Club #11</Club>
@@ -132,8 +160,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #21</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>231</Telephone>
 <ShuNumber>SHU147</ShuNumber>
 <Club>Club #1</Club>
@@ -141,8 +171,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #22</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>242</Telephone>
 <ShuNumber>SHU154</ShuNumber>
 <Club>Club #9</Club>
@@ -150,8 +182,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #3</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>33</Telephone>
 <ShuNumber>SHU21</ShuNumber>
 <Club>Club #13</Club>
@@ -159,8 +193,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #4</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>44</Telephone>
 <ShuNumber>SHU28</ShuNumber>
 <Club>Club #13</Club>
@@ -168,8 +204,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #5</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>55</Telephone>
 <ShuNumber>SHU35</ShuNumber>
 <Club>Club #1</Club>
@@ -177,8 +215,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #6</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>66</Telephone>
 <ShuNumber>SHU42</ShuNumber>
 <Club>Club #16</Club>
@@ -186,8 +226,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #7</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>77</Telephone>
 <ShuNumber>SHU49</ShuNumber>
 <Club>Club #3</Club>
@@ -195,8 +237,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #8</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>88</Telephone>
 <ShuNumber>SHU56</ShuNumber>
 <Club>Club #15</Club>
@@ -204,8 +248,10 @@ Line 2</Address>
 </Member>
 <Member>
 <Name>Member #9</Name>
-<Address>Line 1
-Line 2</Address>
+<Address>
+<Line>Line 1</Line>
+<Line>Line 2</Line>
+</Address>
 <Telephone>99</Telephone>
 <ShuNumber>SHU63</ShuNumber>
 <Club>Club #3</Club>

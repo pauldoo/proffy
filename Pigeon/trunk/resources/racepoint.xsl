@@ -102,20 +102,7 @@
         </tr>
     </xsl:template>
     
-    <xsl:template name="SplitLines" match="text()">
-        <xsl:param name="textToSplit" select="."/>
-        <xsl:variable name="splitToken" select="'&#xA;'"/>
-        <xsl:choose>
-            <xsl:when test="contains($textToSplit, $splitToken)">
-                <xsl:value-of select="substring-before($textToSplit, $splitToken)"/><br/>
-                <xsl:call-template name="SplitLines">
-                    <xsl:with-param name="textToSplit" select="substring-after($textToSplit, $splitToken)"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="$textToSplit"/>
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template match="Line">
+        <xsl:value-of select="."/><br/>
     </xsl:template>
-
 </xsl:stylesheet>

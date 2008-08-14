@@ -58,7 +58,7 @@ final public class MembersReporter implements Reporter
                 nameElement.setTextContent(member.getName());
                 memberElement.appendChild(nameElement);
                 final Element addressElement = document.createElement("Address");
-                addressElement.setTextContent(member.getAddress());
+                Utilities.appendLineElements(addressElement, member.getAddress(), document);
                 memberElement.appendChild(addressElement);
                 final Element telephoneElement = document.createElement("Telephone");
                 telephoneElement.setTextContent(member.getTelephone());
