@@ -42,7 +42,7 @@ final public class MembersReporter implements Reporter
     {
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            document.appendChild(document.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"racepoint.xsl\""));
+            document.appendChild(document.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + Constants.XSL_FOR_XHTML_FILENAME + "\""));
 
             final Element rootElement = document.createElement("MembersReport");
 
@@ -100,8 +100,8 @@ final public class MembersReporter implements Reporter
                     new StreamResult(streamProvider.createNewStream("members.xml", true)));
 
             pigeon.report.Utilities.copyStream(
-                    new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/racepoint.xsl")),
-                    streamProvider.createNewStream("racepoint.xsl", false));
+                    new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_XHTML_FILENAME)),
+                    streamProvider.createNewStream(Constants.XSL_FOR_XHTML_FILENAME, false));
             
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException(e);

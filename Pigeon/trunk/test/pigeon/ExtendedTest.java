@@ -437,7 +437,7 @@ public final class ExtendedTest extends TestCase
                 if (filename.endsWith(".xml")) {
                     byte[] xmlFile = streams.getBytes(filename);
                     verifyXmlStylesheet(xmlFile);
-                    byte[] xslFile = streams.getBytes("racepoint.xsl");
+                    byte[] xslFile = streams.getBytes(pigeon.report.Constants.XSL_FOR_XHTML_FILENAME);
 
                     Transformer xslTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new ByteArrayInputStream(xslFile)));
 
@@ -466,7 +466,7 @@ public final class ExtendedTest extends TestCase
                 if (child instanceof ProcessingInstruction) {
                     ProcessingInstruction pi = (ProcessingInstruction)child;
                     if (pi.getTarget().equals("xml-stylesheet")) {
-                        if (pi.getData().equals("type=\"text/xsl\" href=\"racepoint.xsl\"")) {
+                        if (pi.getData().equals("type=\"text/xsl\" href=\"" + pigeon.report.Constants.XSL_FOR_XHTML_FILENAME + "\"")) {
                             return;
                         } else {
                             throw new IOException("xml-stylesheet processing instrction is incorrect");
