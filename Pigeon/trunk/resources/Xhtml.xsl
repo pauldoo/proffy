@@ -103,6 +103,7 @@
     </xsl:template>
     
     <xsl:template match="Line">
-        <xsl:value-of select="."/><br/>
+        <xsl:value-of select="."/>
+        <xsl:if test="count(following-sibling::Line) > 0"><br/></xsl:if>
     </xsl:template>
 </xsl:stylesheet>

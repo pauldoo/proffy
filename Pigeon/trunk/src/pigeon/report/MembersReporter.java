@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import pigeon.model.Member;
@@ -92,17 +93,25 @@ final public class MembersReporter implements Reporter
     public void write(StreamProvider streamProvider) throws IOException
     {
         try {
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            final Transformer xmlOutputTransformer = TransformerFactory.newInstance().newTransformer();
+            xmlOutputTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
             
-            transformer.transform(
+            xmlOutputTransformer.transform(
                     new DOMSource(document),
                     new StreamResult(streamProvider.createNewStream("members.xml", true)));
+            
+            Transformer csvOutputTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_CSV_FILENAME)));
+            csvOutputTransformer.transform(
+                    new DOMSource(document),
+                    new StreamResult(streamProvider.createNewStream("members.csv", false)));
 
             pigeon.report.Utilities.copyStream(
                     new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_XHTML_FILENAME)),
                     streamProvider.createNewStream(Constants.XSL_FOR_XHTML_FILENAME, false));
             
+            pigeon.report.Utilities.copyStream(
+                    new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_CSV_FILENAME)),
+                    streamProvider.createNewStream(Constants.XSL_FOR_CSV_FILENAME, false));         
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException(e);
         } catch (TransformerException e) {

@@ -21,5 +21,5 @@ package pigeon.report;
 public final class Constants
 {
     public static final String XSL_FOR_XHTML_FILENAME = "Xhtml.xsl";
-
+    public static final String XSL_FOR_CSV_FILENAME = "Csv.xsl";
 }
