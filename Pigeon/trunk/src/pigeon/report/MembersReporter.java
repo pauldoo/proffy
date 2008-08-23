@@ -100,7 +100,7 @@ final public class MembersReporter implements Reporter
                     new DOMSource(document),
                     new StreamResult(streamProvider.createNewStream("members.xml", true)));
             
-            Transformer csvOutputTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_CSV_FILENAME)));
+            final Transformer csvOutputTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_CSV_FILENAME)));
             csvOutputTransformer.transform(
                     new DOMSource(document),
                     new StreamResult(streamProvider.createNewStream("members.csv", false)));
@@ -108,10 +108,6 @@ final public class MembersReporter implements Reporter
             pigeon.report.Utilities.copyStream(
                     new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_XHTML_FILENAME)),
                     streamProvider.createNewStream(Constants.XSL_FOR_XHTML_FILENAME, false));
-            
-            pigeon.report.Utilities.copyStream(
-                    new BufferedInputStream(ClassLoader.getSystemResourceAsStream("resources/" + Constants.XSL_FOR_CSV_FILENAME)),
-                    streamProvider.createNewStream(Constants.XSL_FOR_CSV_FILENAME, false));         
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException(e);
         } catch (TransformerException e) {

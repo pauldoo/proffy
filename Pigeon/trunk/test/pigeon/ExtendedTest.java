@@ -424,10 +424,10 @@ public final class ExtendedTest extends TestCase
         reporter.write(streamProvider);
 
         checkRegression(streamProvider.getBytes("members.xml"), "MembersXml");
+        checkRegression(streamProvider.getBytes("members.csv"), "MembersCsv");
 
         applyXslTransforms(streamProvider);
         checkRegression(streamProvider.getBytes("members.xhtml"), "MembersXhtml");
-        checkRegression(streamProvider.getBytes("members.csv"), "MembersCsv");
     }
     
     private static void applyXslTransforms(RegressionStreamProvider streams) throws IOException
@@ -437,29 +437,16 @@ public final class ExtendedTest extends TestCase
             for (String filename: filenames) {
                 if (filename.endsWith(".xml")) {
                     byte[] xmlFile = streams.getBytes(filename);
-                    {
-                        verifyXmlStylesheet(xmlFile);
-                        byte[] xslFile = streams.getBytes(pigeon.report.Constants.XSL_FOR_XHTML_FILENAME);
+                    verifyXmlStylesheet(xmlFile);
+                    byte[] xslFile = streams.getBytes(pigeon.report.Constants.XSL_FOR_XHTML_FILENAME);
 
-                        Transformer xslTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new ByteArrayInputStream(xslFile)));
+                    Transformer xslTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new ByteArrayInputStream(xslFile)));
 
-                        String outputFilename = filename.substring(0, filename.length() - 4) + ".xhtml";
+                    String outputFilename = filename.substring(0, filename.length() - 4) + ".xhtml";
 
-                        xslTransformer.transform(
-                                new StreamSource(new ByteArrayInputStream(xmlFile)),
-                                new StreamResult(streams.createNewStream(outputFilename, false)));
-                    }
-                    {
-                        byte[] xslFile = streams.getBytes(pigeon.report.Constants.XSL_FOR_CSV_FILENAME);
-
-                        Transformer xslTransformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new ByteArrayInputStream(xslFile)));
-
-                        String outputFilename = filename.substring(0, filename.length() - 4) + ".csv";
-
-                        xslTransformer.transform(
-                                new StreamSource(new ByteArrayInputStream(xmlFile)),
-                                new StreamResult(streams.createNewStream(outputFilename, false)));
-                    }
+                    xslTransformer.transform(
+                            new StreamSource(new ByteArrayInputStream(xmlFile)),
+                            new StreamResult(streams.createNewStream(outputFilename, false)));
                 }
             }
         } catch (TransformerFactoryConfigurationError e) {
