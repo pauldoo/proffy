@@ -28,7 +28,7 @@ public final class DistanceEntry implements Serializable, Comparable<DistanceEnt
 
     private final Member member;
     private final Racepoint racepoint;
-    private Distance distance;
+    private final Distance distance;
 
     public DistanceEntry(Member member, Racepoint racepoint, Distance distance) {
         this.member = member;
@@ -80,8 +80,8 @@ public final class DistanceEntry implements Serializable, Comparable<DistanceEnt
         return distance;
     }
 
-    public void setDistance(Distance distance) {
-        this.distance = distance;
+    public DistanceEntry repSetDistance(Distance distance)
+    {
+        return new DistanceEntry(member, racepoint, distance);
     }
-
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ public final class ClubTest extends TestCase {
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException, ValidationException {
-        Organization club = new Organization();
+        Organization club = Organization.createEmpty();
         {
             List<Member> members = new ArrayList<Member>();
             List<Racepoint> racepoints = new ArrayList<Racepoint>();
@@ -62,12 +62,12 @@ public final class ClubTest extends TestCase {
                 Member m = new Member();
                 m.setName("member_" + i);
                 members.add( m );
-                club.addMember( m );
+                club = club.repAddMember(m);
 
                 Racepoint r = new Racepoint();
                 r.setName("racepoint_" + i);
                 racepoints.add( r );
-                club.addRacepoint( r );
+                club = club.repAddRacepoint(r);
             }
         }
 
@@ -104,22 +104,22 @@ public final class ClubTest extends TestCase {
     }
 
     public void testClashes() throws ValidationException {
-        Organization club = new Organization();
+        Organization club = Organization.createEmpty();
         {
             Member m = new Member();
             m.setName("foo");
-            club.addMember(m);
+            club = club.repAddMember(m);
         }
         {
             Member m = new Member();
             m.setName("bar");
-            club.addMember(m);
+            club = club.repAddMember(m);
         }
         {
             Member m = new Member();
             m.setName("foo");
             try {
-                club.addMember(m);
+                club.repAddMember(m);
                 assertTrue("Expected exception", false);
             } catch (ValidationException ex) {
                 assertEquals("Exception contents as expected", "Member already exists", ex.toString());

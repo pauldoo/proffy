@@ -192,7 +192,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public List<Clock> getClocks()
     {
-        return Utilities.unmodifiableSortedList(clocks);
+        return Utilities.unmodifiableSortedCopy(clocks);
     }
 
     public Date liberationDayOffset()

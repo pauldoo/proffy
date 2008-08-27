@@ -18,7 +18,6 @@
 package pigeon.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,11 +38,11 @@ public final class Season implements Serializable {
     private Season(String name, Organization organization, List<Race> races) {
         this.name = name;
         this.organization = organization;
-        this.races = Utilities.unmodifiableSortedList(races);
+        this.races = Utilities.unmodifiableSortedCopy(races);
     }
     
-    public static Season create() {
-        return new Season("", new Organization(), new ArrayList<Race>());
+    public static Season createEmpty() {
+        return new Season("", Organization.createEmpty(), Utilities.createEmpty(Race.class));
     }
 
     public Organization getOrganization() {
@@ -69,29 +68,20 @@ public final class Season implements Serializable {
     }
 
     public Season repAddRace(Race race) throws ValidationException {
-        List<Race> result = new ArrayList<Race>(this.races);
-        if (result.contains( race ) || !result.add( race )) {
-            throw new ValidationException("Race already exists");
-        }
         return new Season(
                 this.name,
                 this.organization,
-                result);        
+                Utilities.replicateAdd(this.races, race));        
     }
 
     public Season repRemoveRace(Race race) throws ValidationException {
-        List<Race> result = new ArrayList<Race>(this.races);
-        if (result.remove( race ) == false) {
-            throw new ValidationException("Race not found");
-        }
         return new Season(
                 this.name,
                 this.organization,
-                result);
+                Utilities.replicateRemove(this.races, race));
     }
 
     public List<Race> getRaces() {
         return this.races;
     }
-
 }

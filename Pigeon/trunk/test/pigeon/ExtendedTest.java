@@ -113,7 +113,7 @@ public final class ExtendedTest extends TestCase
             }
         }
 
-        season = Season.create();
+        season = Season.createEmpty();
         season = season.repSetOrganization(createOraganization());
         addRaces();
     }
@@ -256,8 +256,8 @@ public final class ExtendedTest extends TestCase
 
     private Organization createOraganization() throws ValidationException
     {
-        final Organization org = new Organization();
-        org.setName("Test fed");
+        Organization org = Organization.createEmpty();
+        org = org.repSetName("Test fed");
 
         final String[][] clubs = new String[CLUB_COUNT][];
         for (int i = 0; i < CLUB_COUNT; i++) {
@@ -278,13 +278,13 @@ public final class ExtendedTest extends TestCase
             int clubIndex = random.nextInt(clubs.length);
             m.setClub(clubs[clubIndex][0]);
             m.setSection(clubs[clubIndex][1]);
-            org.addMember(m);
+            org = org.repAddMember(m);
         }
 
         for (int i = 0; i < RACEPOINT_COUNT; i++) {
             Racepoint r = new Racepoint();
             r.setName("Racepoint #" + i);
-            org.addRacepoint(r);
+            org = org.repAddRacepoint(r);
         }
 
         for (Member m: org.getMembers()) {
@@ -292,7 +292,7 @@ public final class ExtendedTest extends TestCase
                 int miles = random.nextInt(200) + 600;
                 int yards = random.nextInt(Constants.YARDS_PER_MILE);
                 Distance d = Distance.createFromImperial(miles, yards);
-                org.setDistance(m, r, d);
+                org = org.repSetDistance(m, r, d);
             }
         }
 

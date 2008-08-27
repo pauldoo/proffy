@@ -18,8 +18,6 @@
 package pigeon.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,24 +34,41 @@ public final class Organization implements Serializable
 {
     private static final long serialVersionUID = 5358293332608930714L;
 
-    private String name;
-    private List<Member> members = new ArrayList<Member>();
-    private List<Racepoint> racepoints = new ArrayList<Racepoint>();
-    private Collection<DistanceEntry> distances = new ArrayList<DistanceEntry>();
+    private final String name;
+    private final List<Member> members;
+    private final List<Racepoint> racepoints;
+    private final List<DistanceEntry> distances;
 
-    public Organization() {
+    private Organization(
+            String name,
+            List<Member> members,
+            List<Racepoint> racepoints,
+            List<DistanceEntry> distances) {
+        this.name = name;
+        this.members = Utilities.unmodifiableSortedCopy(members);
+        this.racepoints = Utilities.unmodifiableSortedCopy(racepoints);
+        this.distances = Utilities.unmodifiableSortedCopy(distances);
     }
 
+    public static Organization createEmpty()
+    {
+        return new Organization(
+                "",
+                Utilities.createEmpty(Member.class),
+                Utilities.createEmpty(Racepoint.class),
+                Utilities.createEmpty(DistanceEntry.class));
+    }
+    
     public String getName() {
         return name;
     }
 
-    public void setName(String name) throws ValidationException {
+    public Organization repSetName(String name) throws ValidationException {
         name = name.trim();
         if (name.length() == 0) {
             throw new ValidationException("Organisation name is empty");
         }
-        this.name = name;
+        return new Organization(name, members, racepoints, distances);
     }
 
     @Override
@@ -62,59 +77,67 @@ public final class Organization implements Serializable
     }
 
     public List<Member> getMembers() {
-        return Utilities.unmodifiableSortedList(members);
+        return members;
     }
 
     public List<Racepoint> getRacepoints() {
-        return Utilities.unmodifiableSortedList(racepoints);
+        return racepoints;
     }
 
-    public void addMember(Member member) throws ValidationException {
-        if (members.contains( member ) || !members.add( member )) {
-            throw new ValidationException("Member already exists");
-        }
+    public Organization repAddMember(Member member) throws ValidationException {
+        List<Member> newMembers = Utilities.replicateAdd(this.members, member);
+        
+        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
-            if (distances.contains( entry ) || !distances.add(entry)) {
-                assert false : entry;
+            if (newDistances.contains(entry) || !newDistances.add(entry)) {
+                throw new IllegalStateException("Failed to add distance entries");
             }
         }
+        
+        return new Organization(name, newMembers, racepoints, newDistances);
     }
 
-    public void addRacepoint(Racepoint racepoint) throws ValidationException {
-        if (racepoints.contains( racepoint ) || !racepoints.add( racepoint )) {
-            throw new ValidationException("Racepoint already exists");
-        }
+    public Organization repAddRacepoint(Racepoint racepoint) throws ValidationException {
+        List<Racepoint> newRacepoints = Utilities.replicateAdd(this.racepoints, racepoint);
+        
+        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
-            if (distances.contains( entry ) || !distances.add(entry)) {
-                assert false : entry;
+            if (newDistances.contains(entry) || !newDistances.add(entry)) {
+                throw new IllegalStateException("Failed to add distance entries");
             }
         }
+        
+        return new Organization(name, members, newRacepoints, newDistances);
     }
 
-    public void removeMember(Member member) {
-        if (!members.contains( member ) || !members.remove( member )) {
-            throw new IllegalArgumentException("Member doesn't exist");
-        }
+    public Organization repRemoveMember(Member member) {
+        List<Member> newMembers = Utilities.replicateRemove(this.members, member);
+        
+        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
-            if (!distances.contains( entry ) || !distances.remove(entry)) {
-                assert false : entry;
+            if (!newDistances.contains( entry ) || !newDistances.remove(entry)) {
+                throw new IllegalStateException("Failed to remove distance entries");
             }
         }
+        
+        return new Organization(name, newMembers, racepoints, newDistances);
     }
 
-    public void removeRacepoint(Racepoint racepoint) {
-        if (!racepoints.contains( racepoint ) || !racepoints.remove( racepoint )) {
-            throw new IllegalArgumentException("Racepoint doesn't exist");
-        }
+    public Organization repRemoveRacepoint(Racepoint racepoint) {
+        List<Racepoint> newRacepoints = Utilities.replicateRemove(this.racepoints, racepoint);
+        
+        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
-            if (!distances.contains( entry ) || !distances.remove(entry)) {
-                assert false : entry;
+            if (!newDistances.contains( entry ) || !newDistances.remove(entry)) {
+                throw new IllegalStateException("Failed to remove distance entries");
             }
         }
+        
+        return new Organization(name, members, newRacepoints, newDistances);
     }
 
     public int getNumberOfMembers() {
@@ -139,8 +162,12 @@ public final class Organization implements Serializable
         return getDistanceEntry(member, racepoint).getDistance();
     }
 
-    public void setDistance(Member member, Racepoint racepoint, Distance distance) {
-        getDistanceEntry(member, racepoint).setDistance(distance);
+    public Organization repSetDistance(Member member, Racepoint racepoint, Distance distance)
+    {
+        DistanceEntry currentEntry = getDistanceEntry(member, racepoint);
+        DistanceEntry newEntry = currentEntry.repSetDistance(distance);
+        return new Organization(name, members, racepoints,
+                Utilities.replicateReplace(distances, currentEntry, newEntry));
     }
 
     public Map<Racepoint, Distance> getDistancesForMember(Member member) {
@@ -158,5 +185,4 @@ public final class Organization implements Serializable
         }
         return retval;
     }
-
 }

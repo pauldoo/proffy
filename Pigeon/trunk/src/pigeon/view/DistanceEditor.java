@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,13 +19,11 @@ package pigeon.view;
 
 import java.awt.Component;
 import java.util.Map;
-import java.util.SortedMap;
 import javax.swing.JOptionPane;
 import pigeon.model.Distance;
 import pigeon.model.Organization;
 import pigeon.model.Member;
 import pigeon.model.Racepoint;
-import pigeon.model.ValidationException;
 
 /**
  * Panel to let the user enter the distances (in the form of a table) for a single racepoint or member.
@@ -37,16 +35,16 @@ final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
     private Map<Target, Distance> distances;
     private DistancesTableModel<Target> distancesTableModel;
 
-    public static void editMemberDistances(Component parent, Member member, Organization club) throws UserCancelledException {
+    public static Organization editMemberDistances(Component parent, Member member, Organization club) throws UserCancelledException {
         Map<Racepoint, Distance> distances = club.getDistancesForMember(member);
-        if (distances.isEmpty()) return;
+        if (distances.isEmpty()) return club;
         DistanceEditor<Member, Racepoint> panel = new DistanceEditor<Member, Racepoint>(member, "Racepoint", distances);
         while (true) {
             Object[] options = {"Ok", "Cancel"};
             int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 for (Map.Entry<Racepoint, Distance> entry: distances.entrySet()) {
-                    club.setDistance(member, entry.getKey(), entry.getValue());
+                    club = club.repSetDistance(member, entry.getKey(), entry.getValue());
                 }
                 break;
             } else {
@@ -56,18 +54,19 @@ final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
                 }
             }
         }
+        return club;
     }
 
-    public static void editRacepointDistances(Component parent, Racepoint racepoint, Organization club) throws UserCancelledException {
+    public static Organization editRacepointDistances(Component parent, Racepoint racepoint, Organization club) throws UserCancelledException {
         Map<Member, Distance> distances = club.getDistancesForRacepoint(racepoint);
-        if (distances.isEmpty()) return;
+        if (distances.isEmpty()) return club;
         DistanceEditor<Racepoint, Member> panel = new DistanceEditor<Racepoint, Member>(racepoint, "Member", distances);
         while (true) {
             Object[] options = {"Ok", "Cancel"};
             int result = JOptionPane.showOptionDialog(parent, panel, "Distances", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (result == 0) {
                 for (Map.Entry<Member, Distance> entry: distances.entrySet()) {
-                    club.setDistance(entry.getKey(), racepoint, entry.getValue());
+                    club = club.repSetDistance(entry.getKey(), racepoint, entry.getValue());
                 }
                 break;
             } else {
@@ -77,6 +76,7 @@ final class DistanceEditor<Subject, Target> extends javax.swing.JPanel {
                 }
             }
         }
+        return club;
     }
 
     public DistanceEditor(Subject subject, String targetTitle, Map<Target, Distance> distances) {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -182,7 +182,7 @@ final class NewSeasonDialog extends javax.swing.JPanel {
     {
         NewSeasonDialog panel = new NewSeasonDialog();
         int result = JOptionPane.showOptionDialog(parent, panel, "New Season", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-        Season season = Season.create();
+        Season season = Season.createEmpty();
 
         switch (result) {
             case JOptionPane.OK_OPTION:

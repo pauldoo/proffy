@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pigeon.About;
 import pigeon.model.Member;
+import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
@@ -64,6 +65,7 @@ final class MainWindow extends javax.swing.JFrame {
         this.configuration = configuration;
         initComponents();
         raceresultsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 refreshButtons();
             }
@@ -678,7 +680,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
         try {
             String clubName = clubNameText.getText();
-            season.getOrganization().setName(clubName);
+            season = season.repSetOrganization(season.getOrganization().repSetName(clubName));
         } catch (ValidationException e) {
         }
     }//GEN-LAST:event_clubNameTextFocusLost
@@ -774,7 +776,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void finishedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishedButtonActionPerformed
         try {
             String clubName = clubNameText.getText();
-            season.getOrganization().setName(clubName);
+            season = season.repSetOrganization(season.getOrganization().repSetName(clubName));
             promptSaveSeason();
             switchToCard("viewingSeason");
         } catch (ValidationException e) {
@@ -860,7 +862,7 @@ final class MainWindow extends javax.swing.JFrame {
         Racepoint racepoint = (Racepoint)racepointsList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + racepoint + "' and all its distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            season.getOrganization().removeRacepoint( racepoint );
+            season = season.repSetOrganization(season.getOrganization().repRemoveRacepoint(racepoint));
             reloadRacepointsList();
         }
     }//GEN-LAST:event_racepointDeleteButtonActionPerformed
@@ -869,7 +871,7 @@ final class MainWindow extends javax.swing.JFrame {
         Member member = (Member)membersList.getSelectedValue();
         int result = JOptionPane.showConfirmDialog(this, "Really delete '" + member + "' and all their distances?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            season.getOrganization().removeMember( member );
+            season = season.repSetOrganization(season.getOrganization().repRemoveMember(member));
             reloadMembersList();
         }
     }//GEN-LAST:event_memberDeleteButtonActionPerformed
@@ -883,7 +885,7 @@ final class MainWindow extends javax.swing.JFrame {
                 String oldName = racepoint.getName();
                 racepoint.setName( name );
                 try {
-                    editDistancesForRacepoint( racepoint );
+                    season = season.repSetOrganization(editDistancesForRacepoint( this.getContentPane(), season.getOrganization(), racepoint ));
                 } catch (UserCancelledException e) {
                     racepoint.setName( oldName );
                     throw e;
@@ -901,7 +903,7 @@ final class MainWindow extends javax.swing.JFrame {
         Member member = season.getOrganization().getMembers().get(index);
         try {
             MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
-            editDistancesForMember( member );
+            season = season.repSetOrganization(editDistancesForMember( this.getContentPane(), season.getOrganization(),member ));
         } catch (UserCancelledException e) {
         }
         reloadMembersList();
@@ -913,13 +915,9 @@ final class MainWindow extends javax.swing.JFrame {
             try {
                 Racepoint racepoint = new Racepoint();
                 racepoint.setName(name);
-                season.getOrganization().addRacepoint( racepoint );
-                try {
-                    editDistancesForRacepoint( racepoint );
-                } catch (UserCancelledException e) {
-                    season.getOrganization().removeRacepoint(racepoint);
-                    throw e;
-                }
+                Organization newOrganization = season.getOrganization().repAddRacepoint(racepoint);
+                newOrganization = editDistancesForRacepoint(this.getContentPane(), newOrganization, racepoint);
+                season = season.repSetOrganization(newOrganization);
             } catch (UserCancelledException e) {
             } catch (ValidationException e) {
                 e.displayErrorDialog(this);
@@ -931,13 +929,9 @@ final class MainWindow extends javax.swing.JFrame {
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
             Member member = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
-            season.getOrganization().addMember( member );
-            try {
-                editDistancesForMember( member );
-            } catch (UserCancelledException e) {
-                season.getOrganization().removeMember( member );
-                throw e;
-            }
+            Organization newOrganization = season.getOrganization().repAddMember(member);
+            newOrganization = editDistancesForMember(this.getContentPane(), newOrganization, member);
+            season = season.repSetOrganization(newOrganization);
         } catch (UserCancelledException e) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
@@ -997,8 +991,7 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void newSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSeasonButtonActionPerformed
         try {
-            Season season = NewSeasonDialog.createNewSeason(this);
-            setSeason(season, "setupClub");
+            setSeason(NewSeasonDialog.createNewSeason(this), "setupClub");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, e.toString());
         } catch (IOException e) {
@@ -1009,14 +1002,12 @@ final class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_newSeasonButtonActionPerformed
 
-    private void editDistancesForMember(Member member) throws UserCancelledException {
-        Component parent = this.getContentPane();
-        DistanceEditor.editMemberDistances(parent, member, season.getOrganization());
+    private static Organization editDistancesForMember(Component parent, Organization organization, Member member) throws UserCancelledException {
+        return DistanceEditor.editMemberDistances(parent, member, organization);
     }
 
-    private void editDistancesForRacepoint(Racepoint racepoint) throws UserCancelledException {
-        Component parent = this.getContentPane();
-        DistanceEditor.editRacepointDistances(parent, racepoint, season.getOrganization());
+    private static Organization editDistancesForRacepoint(Component parent, Organization organization, Racepoint racepoint) throws UserCancelledException {
+        return DistanceEditor.editRacepointDistances(parent, racepoint, organization);
     }
 
     private static void delayForSplashScreen() throws InterruptedException

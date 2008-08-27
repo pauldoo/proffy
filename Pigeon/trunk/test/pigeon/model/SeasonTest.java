@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public final class SeasonTest extends TestCase {
     public void testRemove() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
-        Season season = Season.create();
+        Season season = Season.createEmpty();
 
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
@@ -61,7 +61,7 @@ public final class SeasonTest extends TestCase {
     public void testClashes() throws ValidationException {
         Racepoint racepoint = new Racepoint();
         Date liberationDate = new Date(1);
-        Season season = Season.create();
+        Season season = Season.createEmpty();
 
         Race race1 = new Race();
         race1.setRacepoint(racepoint);
