@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -59,9 +59,9 @@ public final class ClockTest extends TestCase {
         assertEquals(today + 3000, clock.getTimeOnMemberWhenSet().getTime());
         assertEquals(today + 10007000, clock.getTimeOnMemberWhenOpened().getTime());
 
-        Race race = new Race();
-        race.setLiberationDate(new Date(today));
-        race.setDaysCovered(1);
+        Race race = Race.createEmpty();
+        race = race.repSetLiberationDate(new Date(today));
+        race = race.repSetDaysCovered(1);
 
         assertEquals(today + 200, clock.convertMemberTimeToMasterTime(new Date(3000), race).getTime());
         assertEquals(today + 5000200, clock.convertMemberTimeToMasterTime(new Date(5005000), race).getTime());
@@ -82,9 +82,9 @@ public final class ClockTest extends TestCase {
             clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
             clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 43, 30)));
 
-            Race race = new Race();
-            race.setLiberationDate(new Date(today));
-            race.setDaysCovered(2);
+            Race race = Race.createEmpty();
+            race = race.repSetLiberationDate(new Date(today));
+            race = race.repSetDaysCovered(2);
 
             final long birdTime = toMs(1, 14, 30, 25);
             final long correctedTime = clock.convertMemberTimeToMasterTime(new Date(birdTime), race).getTime() - today;
@@ -98,9 +98,9 @@ public final class ClockTest extends TestCase {
             clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
             clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
 
-            Race race = new Race();
-            race.setLiberationDate(new Date(today));
-            race.setDaysCovered(2);
+            Race race = Race.createEmpty();
+            race = race.repSetLiberationDate(new Date(today));
+            race = race.repSetDaysCovered(2);
 
             final long birdTime = toMs(1, 14, 30, 25);
             final long correctedTime = clock.convertMemberTimeToMasterTime(new Date(birdTime), race).getTime() - today;
@@ -114,9 +114,9 @@ public final class ClockTest extends TestCase {
             clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
             clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 38, 10)));
 
-            Race race = new Race();
-            race.setLiberationDate(new Date(today));
-            race.setDaysCovered(2);
+            Race race = Race.createEmpty();
+            race = race.repSetLiberationDate(new Date(today));
+            race = race.repSetDaysCovered(2);
 
             final long birdTime = toMs(1, 14, 30, 25);
             final long correctedTime = clock.convertMemberTimeToMasterTime(new Date(birdTime), race).getTime() - today;
@@ -130,9 +130,9 @@ public final class ClockTest extends TestCase {
             clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
             clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 35, 50)));
 
-            Race race = new Race();
-            race.setLiberationDate(new Date(today));
-            race.setDaysCovered(2);
+            Race race = Race.createEmpty();
+            race = race.repSetLiberationDate(new Date(today));
+            race = race.repSetDaysCovered(2);
 
             final long birdTime = toMs(1, 14, 30, 25);
             final long correctedTime = clock.convertMemberTimeToMasterTime(new Date(birdTime), race).getTime() - today;
@@ -146,9 +146,9 @@ public final class ClockTest extends TestCase {
             clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
             clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 45, 50)));
 
-            Race race = new Race();
-            race.setLiberationDate(new Date(today));
-            race.setDaysCovered(2);
+            Race race = Race.createEmpty();
+            race = race.repSetLiberationDate(new Date(today));
+            race = race.repSetDaysCovered(2);
 
             final long birdTime = toMs(1, 14, 30, 25);
             final long correctedTime = clock.convertMemberTimeToMasterTime(new Date(birdTime), race).getTime() - today;

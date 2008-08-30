@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,18 +40,19 @@ final class RaceEditor extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 2521382654389072851L;
 
-    private final Race race;
-    Collection<Member> members;
-    private final Season season;
+    private Race race;
+    private Season season;
+    private final Collection<Member> members;
     private final Configuration configuration;
 
-    public RaceEditor(Race race, Season season, Configuration configuration) {
+    private RaceEditor(Race race, Season season, Configuration configuration) {
         this.race = race;
         this.members = season.getOrganization().getMembers();
-        this.season = season;
+        //this.season = season;
         this.configuration = configuration;
         initComponents();
         clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 refreshButtons();
             }
@@ -138,7 +139,7 @@ final class RaceEditor extends javax.swing.JPanel {
         int index = clocksTable.getSelectedRow();
         Clock clock = race.getClocks().get(index);
         try {
-            race.removeClock(clock);
+            race = race.repRemoveClock(clock);
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
         }
@@ -164,13 +165,9 @@ final class RaceEditor extends javax.swing.JPanel {
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
         try {
             Clock clock = ClockSummary.createClock(this, members);
-            race.addClock(clock);
-            try {
-                editResultsForClock( clock );
-            } catch (UserCancelledException e) {
-                race.removeClock( clock );
-                throw e;
-            }
+            Race newRace = race.repAddClock(clock);
+            editResultsForClock( clock );
+            race = newRace;
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
@@ -189,10 +186,11 @@ final class RaceEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    static public void editRaceResults(Component parent, Race race, Season season, Configuration configuration) {
+    static Race editRaceResults(Component parent, Race race, Season season, Configuration configuration) {
         RaceEditor panel = new RaceEditor(race, season, configuration);
         Object[] options = {"Ok"};
         int result = JOptionPane.showOptionDialog(parent, panel, "Clocks", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        return panel.race;
     }
 
     private void reloadClocksTable() {

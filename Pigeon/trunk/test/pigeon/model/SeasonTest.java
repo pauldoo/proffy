@@ -47,9 +47,9 @@ public final class SeasonTest extends TestCase {
         Date liberationDate = new Date(1);
         Season season = Season.createEmpty();
 
-        Race race1 = new Race();
-        race1.setRacepoint(racepoint);
-        race1.setLiberationDate(liberationDate);
+        Race race1 = Race.createEmpty();
+        race1 = race1.repSetRacepoint(racepoint);
+        race1 = race1.repSetLiberationDate(liberationDate);
 
         assertEquals(season.getRaces().size(), 0);
         season = season.repAddRace(race1);
@@ -63,12 +63,12 @@ public final class SeasonTest extends TestCase {
         Date liberationDate = new Date(1);
         Season season = Season.createEmpty();
 
-        Race race1 = new Race();
-        race1.setRacepoint(racepoint);
-        race1.setLiberationDate(liberationDate);
-        Race race2 = new Race();
-        race2.setRacepoint(racepoint);
-        race2.setLiberationDate(liberationDate);
+        Race race1 = Race.createEmpty();
+        race1 = race1.repSetRacepoint(racepoint);
+        race1 = race1.repSetLiberationDate(liberationDate);
+        Race race2 = Race.createEmpty();
+        race2 = race2.repSetRacepoint(racepoint);
+        race2 = race2.repSetLiberationDate(liberationDate);
 
         season = season.repAddRace(race1);
         try {

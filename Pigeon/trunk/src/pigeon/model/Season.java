@@ -38,11 +38,11 @@ public final class Season implements Serializable {
     private Season(String name, Organization organization, List<Race> races) {
         this.name = name;
         this.organization = organization;
-        this.races = Utilities.unmodifiableSortedCopy(races);
+        this.races = Utilities.unmodifiableSortedListCopy(races);
     }
     
     public static Season createEmpty() {
-        return new Season("", Organization.createEmpty(), Utilities.createEmpty(Race.class));
+        return new Season("", Organization.createEmpty(), Utilities.createEmptyList(Race.class));
     }
 
     public Organization getOrganization() {
@@ -71,14 +71,18 @@ public final class Season implements Serializable {
         return new Season(
                 this.name,
                 this.organization,
-                Utilities.replicateAdd(this.races, race));        
+                Utilities.replicateListAdd(this.races, race));        
     }
 
     public Season repRemoveRace(Race race) throws ValidationException {
         return new Season(
                 this.name,
                 this.organization,
-                Utilities.replicateRemove(this.races, race));
+                Utilities.replicateListRemove(this.races, race));
+    }
+    
+    public Season repReplaceRace(Race oldRace, Race newRace) throws ValidationException {
+        return repRemoveRace(oldRace).repAddRace(newRace);
     }
 
     public List<Race> getRaces() {

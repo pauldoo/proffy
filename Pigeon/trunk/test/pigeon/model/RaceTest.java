@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ public final class RaceTest extends TestCase {
     public void testClockOpenOffset() throws ValidationException {
         final long today = pigeon.model.Utilities.beginningOfCalendarDay(new Date()).getTime();
 
-        Race race = new Race();
-        race.setLiberationDate(new Date(today + 1000000));
-        race.setDaysCovered(2);
+        Race race = Race.createEmpty();
+        race = race.repSetLiberationDate(new Date(today + 1000000));
+        race = race.repSetDaysCovered(2);
         assertEquals(today, race.liberationDayOffset().getTime());
     }
 
@@ -64,26 +64,26 @@ public final class RaceTest extends TestCase {
         Racepoint racepointBar = new Racepoint();
         racepointBar.setName("Bar");
 
-        Race race1 = new Race();
-        race1.setLiberationDate(dateFoo);
-        race1.setRacepoint(racepointFoo);
+        Race race1 = Race.createEmpty();
+        race1 = race1.repSetLiberationDate(dateFoo);
+        race1 = race1.repSetRacepoint(racepointFoo);
 
         {
-            Race race2 = new Race();
-            race2.setLiberationDate(dateFoo);
-            race2.setRacepoint(racepointFoo);
+            Race race2 = Race.createEmpty();
+            race2 = race2.repSetLiberationDate(dateFoo);
+            race2 = race2.repSetRacepoint(racepointFoo);
             assertEquals(race1, race2);
         }
         {
-            Race race2 = new Race();
-            race2.setLiberationDate(dateFoo);
-            race2.setRacepoint(racepointBar);
+            Race race2 = Race.createEmpty();
+            race2 = race2.repSetLiberationDate(dateFoo);
+            race2 = race2.repSetRacepoint(racepointBar);
             assertFalse(race1.equals(race2));
         }
         {
-            Race race2 = new Race();
-            race2.setLiberationDate(dateBar);
-            race2.setRacepoint(racepointFoo);
+            Race race2 = Race.createEmpty();
+            race2 = race2.repSetLiberationDate(dateBar);
+            race2 = race2.repSetRacepoint(racepointFoo);
             assertFalse(race1.equals(race2));
         }
     }

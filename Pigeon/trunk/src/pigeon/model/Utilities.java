@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
     Utility functions for manipulating time.
@@ -81,6 +83,12 @@ public final class Utilities
         return ((time + ((time >= 0) ? 500 : -500)) / 1000) * 1000;
     }
 
+    static<T> List<T> unmodifiableListCopy(List<T> items)
+    {
+        List<T> result = new ArrayList<T>(items);
+        return Collections.unmodifiableList(result);
+    }
+    
     /**
         Creates an unmodifiable sorted copy of the given list.
         
@@ -88,11 +96,11 @@ public final class Utilities
         and not all elements within the container.
      */
     static <T extends Comparable<? super T>>
-    List<T> unmodifiableSortedCopy(List<T> items)
+    List<T> unmodifiableSortedListCopy(List<T> items)
     {
         List<T> result = new ArrayList<T>(items);
         Collections.sort(result);
-        return Collections.unmodifiableList(result);
+        return unmodifiableListCopy(result);
     }
     
     /**
@@ -102,7 +110,7 @@ public final class Utilities
         and not all elements within the container.
     */
     static <T>
-    List<T> modifiableCopy(List<T> items)
+    List<T> modifiableListCopy(List<T> items)
     {
         return new ArrayList<T>(items);
     }
@@ -112,7 +120,7 @@ public final class Utilities
         copy.  Throws IllegalArgumentException if an item of the same
         value already exists in the list.
     */
-    static<T> List<T> replicateAdd(List<T> items, T itemToAdd) throws ValidationException
+    static<T> List<T> replicateListAdd(List<T> items, T itemToAdd) throws ValidationException
     {
         List<T> result = new ArrayList<T>(items);
         if (result.contains(itemToAdd) || !result.add(itemToAdd)) {
@@ -126,18 +134,23 @@ public final class Utilities
         copy.  Throws IllegalArgumentException if the item did not exist
         in the list and coult not be removed.
     */
-    static <T> List<T> replicateRemove(List<T> items, T itemToRemove) throws IllegalArgumentException
+    static <T> List<T> replicateListRemove(List<T> items, T itemToRemove) throws IllegalArgumentException
     {
-        List<T> result = modifiableCopy(items);
+        List<T> result = modifiableListCopy(items);
         if (result.remove(itemToRemove) == false) {
             throw new IllegalArgumentException(itemToRemove.getClass().getSimpleName() + " does not exist");
         }
         return result;
     }    
     
-    static <T> List<T> createEmpty(Class<T> type)
+    static <T> List<T> createEmptyList(Class<T> type)
     {
         return new ArrayList<T>();
+    }
+    
+    static <T, U> Map<T, U> createEmptyMap(Class<T> typeT, Class<U> typeU)
+    {
+        return new TreeMap<T, U>();
     }
     
     /**
@@ -145,7 +158,7 @@ public final class Utilities
         "itemToAdd" added.  Throws IllegalArgumentException if "itemToRemove"
         could not be found or if (itemToRemove == itemToAdd || itemToRemove.equals(itemToAdd) == false).
     */
-    static<T> List<T> replicateReplace(List<T> items, T itemToRemove, T itemToAdd) throws IllegalArgumentException
+    static<T> List<T> replicateListReplace(List<T> items, T itemToRemove, T itemToAdd) throws IllegalArgumentException
     {
         if (itemToRemove == itemToAdd) {
             throw new IllegalArgumentException("Cannot replace item with itself.");
@@ -155,9 +168,33 @@ public final class Utilities
         }
         
         try {
-            return replicateAdd(replicateRemove(items, itemToRemove), itemToAdd);
+            return replicateListAdd(replicateListRemove(items, itemToRemove), itemToAdd);
         } catch (ValidationException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    static<T, U> Map<T, List<U> > unmodifiableMapListCopy(Map<T, List<U> > map)
+    {
+        Map<T, List<U> > result = new TreeMap<T, List<U> >();
+        for (Map.Entry<T, List<U>> e: map.entrySet()) {
+            result.put(e.getKey(), unmodifiableListCopy(e.getValue()));
+        }
+        return unmodifiableMapCopy(result);
+    }
+    
+    static<T, U, V> Map<T, Map<U, V> > unmodifiableMapMapCopy(Map<T, Map<U, V> > map)
+    {
+        Map<T, Map<U, V> > result = new TreeMap<T, Map<U, V> >();
+        for (Map.Entry<T, Map<U, V>> e: map.entrySet()) {
+            result.put(e.getKey(), unmodifiableMapCopy(e.getValue()));
+        }
+        return unmodifiableMapCopy(result);    
+    }
+
+    static<T, U> Map<T, U> unmodifiableMapCopy(Map<T, U> map)
+    {
+        Map<T, U> result = new TreeMap<T, U>(map);
+        return Collections.unmodifiableMap(result);
     }
 }

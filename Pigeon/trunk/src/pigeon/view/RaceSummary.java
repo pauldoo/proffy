@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,10 +25,8 @@ import java.awt.Rectangle;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,6 +49,7 @@ final class TopDownFocusTraversalPolicy extends SortingFocusTraversalPolicy
 {
     private static final class LocalComparator implements Comparator<Component>
     {
+        @Override
         public int compare(Component lhs, Component rhs)
         {
             Rectangle lhsRect = lhs.getBounds();
@@ -62,9 +61,15 @@ final class TopDownFocusTraversalPolicy extends SortingFocusTraversalPolicy
             return result;
         }
 
+        @Override
         public boolean equals(Object obj)
         {
             return (obj instanceof TopDownFocusTraversalPolicy);
+        }
+
+        @Override
+        public int hashCode() {
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -73,6 +78,7 @@ final class TopDownFocusTraversalPolicy extends SortingFocusTraversalPolicy
         super(new LocalComparator());
     }
 
+    @Override
     protected boolean accept(Component aComponent)
     {
         return !(aComponent instanceof JLabel);
@@ -86,7 +92,7 @@ final class RaceSummary extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 5181019751737997744L;
 
-    private final Race race;
+    private Race race;
     private final Map<String, JTextField[]> raceEntrantsCountFields = new TreeMap<String, JTextField[]>();
     private final Map<String, Map<String, JTextField>> poolEntrantsCountFields = new TreeMap<String, Map<String, JTextField>>();
     private final Map<String, List<JTextField>> prizeFields = new TreeMap<String, List<JTextField>>();
@@ -105,8 +111,6 @@ final class RaceSummary extends javax.swing.JPanel {
         darknessBegins.setMode(DateTimeDisplayMode.HOURS_MINUTES);
         darknessEnds.setMode(DateTimeDisplayMode.HOURS_MINUTES);
 
-        Calendar calendar = new GregorianCalendar();
-        
         liberationDate.setDate(race.getLiberationDate());
         daysCoveredCombo.setSelectedIndex(race.getDaysCovered() - 1);
         windDirectionText.setText(race.getWindDirection());
@@ -347,14 +351,14 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
     // End of variables declaration//GEN-END:variables
 
     private void updateRaceObject() throws ValidationException {
-        race.setRacepoint((Racepoint)racepointCombo.getSelectedItem());
+        race = race.repSetRacepoint((Racepoint)racepointCombo.getSelectedItem());
         try {
-            race.setLiberationDate(liberationDate.getDate());
+            race = race.repSetLiberationDate(liberationDate.getDate());
         } catch (ParseException e) {
             throw new ValidationException("Liberation date is invalid, " + liberationDate.getFormatPattern(), e);
         }
-        race.setDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
-        race.setWindDirection(windDirectionText.getText());
+        race = race.repSetDaysCovered(new Integer(daysCoveredCombo.getSelectedItem().toString()));
+        race = race.repSetWindDirection(windDirectionText.getText());
 
         if (hoursOfDarknessEnabled()) {
             long darknessBegins;
@@ -369,7 +373,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
             } catch (ParseException e) {
                 throw new ValidationException("Darkness end time is invalid, " + this.darknessEnds.getFormatPattern(), e);
             }
-            race.setHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
+            race = race.repSetHoursOfDarkness((int)darknessBegins, (int)darknessEnds);
         }
         
         {
@@ -379,8 +383,8 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                 membersEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[0].getText()));
                 birdsEntered.put(entry.getKey(), Integer.parseInt(entry.getValue()[1].getText()));
             }
-            race.setMembersEntered(membersEntered);
-            race.setBirdsEntered(birdsEntered);
+            race = race.repSetMembersEntered(membersEntered);
+            race = race.repSetBirdsEntered(birdsEntered);
         }
         
         {
@@ -391,7 +395,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                     entrantsCount.get(i.getKey()).put(j.getKey(), Integer.parseInt(j.getValue().getText()));
                 }
             }
-            race.setBirdsEnteredInPools(entrantsCount);
+            race = race.repSetBirdsEnteredInPools(entrantsCount);
         }
         
         {
@@ -403,11 +407,11 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                 }
                 prizes.put(i.getKey(), list);
             }
-            race.setPrizes(prizes);
+            race = race.repSetPrizes(prizes);
         }
     }
 
-    public static void editRace(Component parent, Race race, Organization club, Configuration configuration, boolean newRace) throws UserCancelledException {
+    public static Race editRace(Component parent, Race race, Organization club, Configuration configuration, boolean newRace) throws UserCancelledException {
         RaceSummary panel = new RaceSummary(race, club, configuration, true);
         while (true) {
             Object[] options = { (newRace ? "Add" : "Ok"), "Cancel" };
@@ -426,12 +430,12 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                 }
             }
         }
+        return panel.race;
     }
 
     public static Race createRace(Component parent, Organization club, Configuration configuration) throws UserCancelledException {
-        Race race = new Race();
-        editRace(parent, race, club, configuration, true);
-        return race;
+        Race race = Race.createEmpty();
+        return editRace(parent, race, club, configuration, true);
     }
     
     /**

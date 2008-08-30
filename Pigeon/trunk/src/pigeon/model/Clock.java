@@ -143,7 +143,7 @@ public final class Clock implements Comparable<Clock>, Serializable
 
     public List<Time> getTimes()
     {
-        return Utilities.unmodifiableSortedCopy(times);
+        return Utilities.unmodifiableSortedListCopy(times);
     }
 
     public Member getMember()

@@ -18,9 +18,7 @@
 package pigeon.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -37,49 +35,90 @@ public final class Race implements Serializable, Comparable<Race> {
 
     private static final long serialVersionUID = 4311510053131167930L;
 
-    private Racepoint racepoint;
-    private Date liberationDate;
-    private int daysCovered = 1;
-    private int darknessBegins;
-    private int darknessEnds;
-    private String windDirection;
-    private List<Clock> clocks = new ArrayList<Clock>();
+    private final Racepoint racepoint;
+    private final Date liberationDate;
+    private final int daysCovered;
+    private final int darknessBegins;
+    private final int darknessEnds;
+    private final String windDirection;
+    private final List<Clock> clocks;
     
     // Map from Section -> Member count
-    private Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+    private Map<String, Integer> membersEntered;
     
     // Map from Section -> Bird count
-    private Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+    private Map<String, Integer> birdsEntered;
     
     // Map from Section -> Pool name -> Bird count
-    private Map<String, Map<String, Integer>> birdsEnteredInPools = new TreeMap<String, Map<String, Integer>>();
+    private Map<String, Map<String, Integer>> birdsEnteredInPools;
     
     // Map from Section -> Prize list
-    private Map<String, List<Double>> prizes = new TreeMap<String, List<Double>>();
+    private Map<String, List<Double>> prizes;
+
+    private Race(
+            Racepoint racepoint,
+            Date liberationDate,
+            int daysCovered,
+            int darknessBegins, 
+            int darknessEnds, 
+            String windDirection,
+            List<Clock> clocks,
+            Map<String, Integer> membersEntered,
+            Map<String, Integer> birdsEntered,
+            Map<String, Map<String, Integer>> birdsEnteredInPools,
+            Map<String, List<Double>> prizes
+    ) {
+        this.racepoint = racepoint;
+        this.liberationDate = (Date)liberationDate.clone();
+        this.daysCovered = daysCovered;
+        this.darknessBegins = darknessBegins;
+        this.darknessEnds = darknessEnds;
+        this.windDirection = windDirection;
+        this.clocks = Utilities.unmodifiableSortedListCopy(clocks);
+        this.membersEntered = Utilities.unmodifiableMapCopy(membersEntered);
+        this.birdsEntered = Utilities.unmodifiableMapCopy(birdsEntered);
+        this.birdsEnteredInPools = Utilities.unmodifiableMapMapCopy(birdsEnteredInPools);
+        this.prizes = Utilities.unmodifiableMapListCopy(prizes);
+    }
     
-    public Race() {
+    public static Race createEmpty()
+    {
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH));
-        setLiberationDate(cal.getTime());
+        
+        //Class c = Integer.class;
+        
+        return new Race(
+                null,
+                cal.getTime(),
+                1,
+                0,
+                0,
+                null,
+                Utilities.createEmptyList(Clock.class),
+                Utilities.createEmptyMap(String.class, Integer.class),
+                Utilities.createEmptyMap(String.class, Integer.class),
+                new TreeMap<String, Map<String, Integer>>(),
+                new TreeMap<String, List<Double>>());
     }
 
     public Racepoint getRacepoint() {
         return racepoint;
     }
 
-    public void setRacepoint(Racepoint racepoint) {
-        this.racepoint = racepoint;
+    public Race repSetRacepoint(Racepoint racepoint) {
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     public Date getLiberationDate() {
         return liberationDate;
     }
 
-    public void setLiberationDate(Date date) {
-        this.liberationDate = date;
+    public Race repSetLiberationDate(Date liberationDate) {
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     public boolean hasHoursOfDarkness()
@@ -87,7 +126,7 @@ public final class Race implements Serializable, Comparable<Race> {
         return daysCovered > 1;
     }
 
-    public void setHoursOfDarkness(int begins, int ends) throws ValidationException
+    public Race repSetHoursOfDarkness(int begins, int ends) throws ValidationException
     {
         if (!hasHoursOfDarkness()) {
             throw new ValidationException("Hours of darkness not applicable for a 1 day race");
@@ -100,8 +139,7 @@ public final class Race implements Serializable, Comparable<Race> {
         if (ends < 0 || ends >= NOON) {
             throw new ValidationException("Darkness expected to end between midnight and 12-noon");
         }
-        this.darknessBegins = begins;
-        this.darknessEnds = ends;
+        return new Race(racepoint, liberationDate, daysCovered, begins, ends, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     public int getDarknessBegins()
@@ -155,19 +193,19 @@ public final class Race implements Serializable, Comparable<Race> {
         return daysCovered;
     }
 
-    public void setDaysCovered(int daysCovered) throws ValidationException {
+    public Race repSetDaysCovered(int daysCovered) throws ValidationException {
         if (!(daysCovered >= 1 && daysCovered <= 3)) {
             throw new ValidationException("Days covered should be between 1 and 3");
         }
-        this.daysCovered = daysCovered;
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     public String getWindDirection() {
         return windDirection;
     }
 
-    public void setWindDirection(String windDirection) {
-        this.windDirection = windDirection.trim();
+    public Race repSetWindDirection(String windDirection) {
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     @Override
@@ -176,23 +214,21 @@ public final class Race implements Serializable, Comparable<Race> {
         return racepoint + " (" + liberationDate + ")";
     }
 
-    public void addClock(Clock clock) throws ValidationException
+    public Race repAddClock(Clock clock) throws ValidationException
     {
-        if (clocks.contains( clock ) || !clocks.add( clock )) {
-            throw new ValidationException("Member clock already exists");
-        }
+        List<Clock> newClocks = Utilities.replicateListAdd(clocks, clock);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
-    public void removeClock(Clock clock) throws ValidationException
+    public Race repRemoveClock(Clock clock) throws ValidationException
     {
-        if (!clocks.contains( clock ) || !clocks.remove( clock )) {
-            throw new ValidationException("Member clock does not exists");
-        }
+        List<Clock> newClocks = Utilities.replicateListRemove(clocks, clock);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);        
     }
 
     public List<Clock> getClocks()
     {
-        return Utilities.unmodifiableSortedCopy(clocks);
+        return clocks;
     }
 
     public Date liberationDayOffset()
@@ -207,28 +243,30 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Map<String, Integer> getMembersEntered()
     {
-        if (membersEntered == null) {
-            setMembersEntered(new TreeMap<String, Integer>());
+        Map<String, Integer> result = membersEntered;
+        if (result == null) {
+            result = Utilities.unmodifiableMapCopy(new TreeMap<String, Integer>());
         }
-        return Collections.unmodifiableMap(membersEntered);
+        return result;
     }
 
-    public void setMembersEntered(Map<String, Integer> membersEntered)
+    public Race repSetMembersEntered(Map<String, Integer> membersEntered)
     {
-        this.membersEntered = new TreeMap<String, Integer>(membersEntered);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 
     public Map<String, Integer> getBirdsEntered()
     {
-        if (birdsEntered == null) {
-            setBirdsEntered(new TreeMap<String, Integer>());
+        Map<String, Integer> result = birdsEntered;
+        if (result == null) {
+            result = Utilities.unmodifiableMapCopy(new TreeMap<String, Integer>());
         }
-        return Collections.unmodifiableMap(birdsEntered);
+        return result;
     }
 
-    public void setBirdsEntered(Map<String, Integer> birdsEntered)
+    public Race repSetBirdsEntered(Map<String, Integer> birdsEntered)
     {
-        this.birdsEntered = new TreeMap<String, Integer>(birdsEntered);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
     
     public int getTotalNumberOfMembersEntered()
@@ -251,43 +289,29 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Map<String, Map<String, Integer>> getBirdsEnteredInPools()
     {
+        Map<String, Map<String, Integer>> result = birdsEnteredInPools;
         if (birdsEnteredInPools == null) {
-            setBirdsEnteredInPools(new TreeMap<String, Map<String, Integer>>());
+            result = Utilities.unmodifiableMapMapCopy(new TreeMap<String, Map<String, Integer>>());
         }
-        Map<String, Map<String, Integer>> result = new TreeMap<String, Map<String, Integer>>();
-        for (Map.Entry<String, Map<String, Integer>> e: birdsEnteredInPools.entrySet()) {
-            result.put(e.getKey(), Collections.unmodifiableMap(e.getValue()));
-        }
-        return Collections.unmodifiableMap(result);
+        return result;
     }
 
-    public void setBirdsEnteredInPools(Map<String, Map<String, Integer>> birdsEnteredInPools)
+    public Race repSetBirdsEnteredInPools(Map<String, Map<String, Integer>> birdsEnteredInPools)
     {
-        Map<String, Map<String, Integer>> result = new TreeMap<String, Map<String, Integer>>();
-        for (Map.Entry<String, Map<String, Integer>> e: birdsEnteredInPools.entrySet()) {
-            result.put(e.getKey(), new TreeMap<String, Integer>(e.getValue()));
-        }
-        this.birdsEnteredInPools = result;
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
     
     public Map<String, List<Double>> getPrizes()
     {
-        if (prizes == null) {
-            setPrizes(new TreeMap<String, List<Double>>());
+        Map<String, List<Double>> result = prizes;
+        if (result == null) {
+            result = Utilities.unmodifiableMapListCopy(new TreeMap<String, List<Double>>());
         }
-        Map<String, List<Double>> result = new TreeMap<String, List<Double>>();
-        for (Map.Entry<String, List<Double>> e: prizes.entrySet()) {
-            result.put(e.getKey(), Collections.unmodifiableList(e.getValue()));
-        }
-        return Collections.unmodifiableMap(result);
+        return result;
     }
     
-    public void setPrizes(Map<String, List<Double>> prizes)
+    public Race repSetPrizes(Map<String, List<Double>> prizes)
     {
-        Map<String, List<Double>> result = new TreeMap<String, List<Double>>();
-        for (Map.Entry<String, List<Double>> e: prizes.entrySet()) {
-            result.put(e.getKey(), new ArrayList<Double>(e.getValue()));
-        }
-        this.prizes = prizes;
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
 }

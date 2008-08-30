@@ -121,8 +121,8 @@ public final class ExtendedTest extends TestCase
     private void addRaces() throws ValidationException
     {
         for (Racepoint r: season.getOrganization().getRacepoints()) {
-            Race race = new Race();
-            race.setRacepoint(r);
+            Race race = Race.createEmpty();
+            race = race.repSetRacepoint(r);
             final int year = random.nextInt(10) + Utilities.YEAR_DISPLAY_START;
             final int month = random.nextInt(12) + GregorianCalendar.JANUARY;
             final int day = random.nextInt(20) + 1;
@@ -131,27 +131,27 @@ public final class ExtendedTest extends TestCase
             final int minute = random.nextInt(60);
 
             long liberation = new GregorianCalendar(year, month, day, hour, minute).getTimeInMillis();
-            race.setLiberationDate(new Date(liberation));
+            race = race.repSetLiberationDate(new Date(liberation));
             int daysCovered = random.nextInt(3) + 1; // 1, 2, or 3
-            race.setDaysCovered(daysCovered);
+            race = race.repSetDaysCovered(daysCovered);
 
             int darknessBegins = (int)((random.nextDouble() * 6 + 15) * Constants.MILLISECONDS_PER_HOUR);
             int darknessEnds = (int)((random.nextDouble() * 6 + 3) * Constants.MILLISECONDS_PER_HOUR);
             if (daysCovered >= 2) {
-                race.setHoursOfDarkness(darknessBegins, darknessEnds);
+                race = race.repSetHoursOfDarkness(darknessBegins, darknessEnds);
             }
             
             {
                 Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
                 membersEntered.put("East", random.nextInt(50) + 50);
                 membersEntered.put("West", random.nextInt(50) + 50);
-                race.setMembersEntered(membersEntered);
+                race = race.repSetMembersEntered(membersEntered);
             }
             {
                 Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
                 birdsEntered.put("East", random.nextInt(150) + 50);
                 birdsEntered.put("West", random.nextInt(150) + 50);
-                race.setBirdsEntered(birdsEntered);
+                race = race.repSetBirdsEntered(birdsEntered);
             }
 
             for (int i = 0; i < season.getOrganization().getNumberOfMembers(); i++) {
@@ -228,7 +228,7 @@ public final class ExtendedTest extends TestCase
 
                     clock.addTime(t);
                 }
-                race.addClock(clock);
+                race = race.repAddClock(clock);
             }
             // Need to randomly decide how many birds entered each pool.
             Map<String, Map<String, Integer>> entrantsCount = new TreeMap<String, Map<String, Integer>>();
@@ -239,7 +239,7 @@ public final class ExtendedTest extends TestCase
                     entrantsCount.get(section).put(pool.getName(), (int)((random.nextDouble()) * MEMBER_COUNT * BIRDS_PER_MEMBER));
                 }
             }
-            race.setBirdsEnteredInPools(entrantsCount);
+            race = race.repSetBirdsEnteredInPools(entrantsCount);
             
             Map<String, List<Double>> prizes = new TreeMap<String, List<Double>>();
             for (int s = 1; s < sections.length; s++) {
@@ -248,7 +248,7 @@ public final class ExtendedTest extends TestCase
                     prizes.get(sections[s]).add(new Double((20 - i) * s));
                 }
             }
-            race.setPrizes(prizes);
+            race = race.repSetPrizes(prizes);
             
             season = season.repAddRace(race);
         }

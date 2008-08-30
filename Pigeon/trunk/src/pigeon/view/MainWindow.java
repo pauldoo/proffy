@@ -743,19 +743,19 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         try {
-            RaceSummary.editRace(this, race, season.getOrganization(), configuration, false);
-            editResultsForRace( race );
+            Race newRace = RaceSummary.editRace(this, race, season.getOrganization(), configuration, false);
+            season = editResultsForRace(this.getContentPane(), newRace, season.repReplaceRace(race, newRace), configuration);
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
         reloadRacesTable();
     }//GEN-LAST:event_raceresultEditButtonActionPerformed
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race race = RaceSummary.createRace(this, season.getOrganization(), configuration);
-            Season newSeason = season.repAddRace( race );
-            editResultsForRace( race );
-            season = newSeason;
+            Race newRace = RaceSummary.createRace(this, season.getOrganization(), configuration);
+            season = editResultsForRace(this.getContentPane(), newRace, season.repAddRace(newRace), configuration);
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);
@@ -763,10 +763,13 @@ final class MainWindow extends javax.swing.JFrame {
         reloadRacesTable();
     }//GEN-LAST:event_raceresultAddButtonActionPerformed
 
-    private void editResultsForRace(Race race) throws UserCancelledException
+    /**
+        Brings up the window to add/edit/remove clocks from a race result, then returns
+        the modified Season object with the edited race object already inserted.
+    */
+    private static Season editResultsForRace(Component parent, Race race, Season season, Configuration configuration) throws UserCancelledException, ValidationException
     {
-        Component parent = this.getContentPane();
-        RaceEditor.editRaceResults(parent, race, season, configuration);
+        return season.repReplaceRace(race, RaceEditor.editRaceResults(parent, race, season, configuration));
     }
 
     private void loadSeasonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSeasonButtonActionPerformed

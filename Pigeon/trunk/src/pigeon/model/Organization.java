@@ -45,18 +45,18 @@ public final class Organization implements Serializable
             List<Racepoint> racepoints,
             List<DistanceEntry> distances) {
         this.name = name;
-        this.members = Utilities.unmodifiableSortedCopy(members);
-        this.racepoints = Utilities.unmodifiableSortedCopy(racepoints);
-        this.distances = Utilities.unmodifiableSortedCopy(distances);
+        this.members = Utilities.unmodifiableSortedListCopy(members);
+        this.racepoints = Utilities.unmodifiableSortedListCopy(racepoints);
+        this.distances = Utilities.unmodifiableSortedListCopy(distances);
     }
 
     public static Organization createEmpty()
     {
         return new Organization(
                 "",
-                Utilities.createEmpty(Member.class),
-                Utilities.createEmpty(Racepoint.class),
-                Utilities.createEmpty(DistanceEntry.class));
+                Utilities.createEmptyList(Member.class),
+                Utilities.createEmptyList(Racepoint.class),
+                Utilities.createEmptyList(DistanceEntry.class));
     }
     
     public String getName() {
@@ -85,9 +85,9 @@ public final class Organization implements Serializable
     }
 
     public Organization repAddMember(Member member) throws ValidationException {
-        List<Member> newMembers = Utilities.replicateAdd(this.members, member);
+        List<Member> newMembers = Utilities.replicateListAdd(this.members, member);
         
-        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
+        List<DistanceEntry> newDistances = Utilities.modifiableListCopy(distances);
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (newDistances.contains(entry) || !newDistances.add(entry)) {
@@ -99,9 +99,9 @@ public final class Organization implements Serializable
     }
 
     public Organization repAddRacepoint(Racepoint racepoint) throws ValidationException {
-        List<Racepoint> newRacepoints = Utilities.replicateAdd(this.racepoints, racepoint);
+        List<Racepoint> newRacepoints = Utilities.replicateListAdd(this.racepoints, racepoint);
         
-        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
+        List<DistanceEntry> newDistances = Utilities.modifiableListCopy(distances);
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (newDistances.contains(entry) || !newDistances.add(entry)) {
@@ -113,9 +113,9 @@ public final class Organization implements Serializable
     }
 
     public Organization repRemoveMember(Member member) {
-        List<Member> newMembers = Utilities.replicateRemove(this.members, member);
+        List<Member> newMembers = Utilities.replicateListRemove(this.members, member);
         
-        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
+        List<DistanceEntry> newDistances = Utilities.modifiableListCopy(distances);
         for (Racepoint racepoint: racepoints) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (!newDistances.contains( entry ) || !newDistances.remove(entry)) {
@@ -127,9 +127,9 @@ public final class Organization implements Serializable
     }
 
     public Organization repRemoveRacepoint(Racepoint racepoint) {
-        List<Racepoint> newRacepoints = Utilities.replicateRemove(this.racepoints, racepoint);
+        List<Racepoint> newRacepoints = Utilities.replicateListRemove(this.racepoints, racepoint);
         
-        List<DistanceEntry> newDistances = Utilities.modifiableCopy(distances);
+        List<DistanceEntry> newDistances = Utilities.modifiableListCopy(distances);
         for (Member member: members) {
             DistanceEntry entry = new DistanceEntry(member, racepoint, Distance.createFromMetric(0));
             if (!newDistances.contains( entry ) || !newDistances.remove(entry)) {
@@ -167,7 +167,7 @@ public final class Organization implements Serializable
         DistanceEntry currentEntry = getDistanceEntry(member, racepoint);
         DistanceEntry newEntry = currentEntry.repSetDistance(distance);
         return new Organization(name, members, racepoints,
-                Utilities.replicateReplace(distances, currentEntry, newEntry));
+                Utilities.replicateListReplace(distances, currentEntry, newEntry));
     }
 
     public Map<Racepoint, Distance> getDistancesForMember(Member member) {
