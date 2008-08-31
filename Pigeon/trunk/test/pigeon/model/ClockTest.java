@@ -30,9 +30,11 @@ public final class ClockTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -44,15 +46,16 @@ public final class ClockTest extends TestCase {
 
     /**
      * Test of ConvertMemberTimeToMasterTime method, of final class pigeon.model.Clock.
+     * @throws ValidationException 
      */
     public void testConvertMemberTimeToMasterTime() throws ValidationException {
         final long today = pigeon.model.Utilities.beginningOfCalendarDay(new Date()).getTime();
 
-        Clock clock = new Clock();
-        clock.setTimeOnMasterWhenSet(new Date(today + 200));
-        clock.setTimeOnMasterWhenOpened(new Date(today + 10000600));
-        clock.setTimeOnMemberWhenSet(new Date(today + 3000));
-        clock.setTimeOnMemberWhenOpened(new Date(today + 10007000));
+        Clock clock = Clock.createEmpty();
+        clock = clock.repSetTimeOnMasterWhenSet(new Date(today + 200));
+        clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + 10000600));
+        clock = clock.repSetTimeOnMemberWhenSet(new Date(today + 3000));
+        clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + 10007000));
 
         assertEquals(today + 200, clock.getTimeOnMasterWhenSet().getTime());
         assertEquals(today + 10000600, clock.getTimeOnMasterWhenOpened().getTime());
@@ -70,17 +73,18 @@ public final class ClockTest extends TestCase {
 
     /**
      * Test clock variation example in rulebook.
+     * @throws ValidationException 
      */
     public void testClockVariationCalculationExample() throws ValidationException {
         final long today = pigeon.model.Utilities.beginningOfCalendarDay(new Date()).getTime();
 
         {
             // Member clock gains 2m 40s
-            Clock clock = new Clock();
-            clock.setTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
-            clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 43, 30)));
+            Clock clock = Clock.createEmpty();
+            clock = clock.repSetTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 43, 30)));
 
             Race race = Race.createEmpty();
             race = race.repSetLiberationDate(new Date(today));
@@ -92,11 +96,11 @@ public final class ClockTest extends TestCase {
         }
         {
             // Member clock is spot on
-            Clock clock = new Clock();
-            clock.setTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
-            clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            Clock clock = Clock.createEmpty();
+            clock = clock.repSetTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
 
             Race race = Race.createEmpty();
             race = race.repSetLiberationDate(new Date(today));
@@ -108,11 +112,11 @@ public final class ClockTest extends TestCase {
         }
         {
             // Member clock loses 2m 40s
-            Clock clock = new Clock();
-            clock.setTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
-            clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 38, 10)));
+            Clock clock = Clock.createEmpty();
+            clock = clock.repSetTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 38, 10)));
 
             Race race = Race.createEmpty();
             race = race.repSetLiberationDate(new Date(today));
@@ -124,11 +128,11 @@ public final class ClockTest extends TestCase {
         }
         {
             // Member clock loses 5m (trigger double correction)
-            Clock clock = new Clock();
-            clock.setTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
-            clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 35, 50)));
+            Clock clock = Clock.createEmpty();
+            clock = clock.repSetTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 35, 50)));
 
             Race race = Race.createEmpty();
             race = race.repSetLiberationDate(new Date(today));
@@ -140,11 +144,11 @@ public final class ClockTest extends TestCase {
         }
         {
             // Member clock gains 5m (trigger no correction)
-            Clock clock = new Clock();
-            clock.setTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
-            clock.setTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
-            clock.setTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 45, 50)));
+            Clock clock = Clock.createEmpty();
+            clock = clock.repSetTimeOnMasterWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMemberWhenSet(new Date(today + toMs(0, 20, 55, 20)));
+            clock = clock.repSetTimeOnMasterWhenOpened(new Date(today + toMs(1, 21, 40, 50)));
+            clock = clock.repSetTimeOnMemberWhenOpened(new Date(today + toMs(1, 21, 45, 50)));
 
             Race race = Race.createEmpty();
             race = race.repSetLiberationDate(new Date(today));

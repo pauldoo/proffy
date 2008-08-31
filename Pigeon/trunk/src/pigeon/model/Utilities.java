@@ -24,7 +24,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
     Utility functions for manipulating time.
@@ -153,6 +155,11 @@ public final class Utilities
         return new TreeMap<T, U>();
     }
     
+    static <T> Set<T> createEmtpySet(Class<T> type)
+    {
+        return new TreeSet<T>();
+    }
+    
     /**
         Returns a copy of the given list with "itemToRemove" removed and
         "itemToAdd" added.  Throws IllegalArgumentException if "itemToRemove"
@@ -196,5 +203,10 @@ public final class Utilities
     {
         Map<T, U> result = new TreeMap<T, U>(map);
         return Collections.unmodifiableMap(result);
+    }
+    
+    static <T> Set<T> unmodifiableSetCopy(Set<T> set)
+    {
+        return Collections.unmodifiableSet(new TreeSet<T>(set));
     }
 }

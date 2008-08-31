@@ -48,7 +48,7 @@ final class RaceEditor extends javax.swing.JPanel {
     private RaceEditor(Race race, Season season, Configuration configuration) {
         this.race = race;
         this.members = season.getOrganization().getMembers();
-        //this.season = season;
+        this.season = season;
         this.configuration = configuration;
         initComponents();
         clocksTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
@@ -147,27 +147,25 @@ final class RaceEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteClockButtonActionPerformed
 
     private void editClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editClockButtonActionPerformed
-        int index = clocksTable.getSelectedRow();
-        Clock clock = race.getClocks().get(index);
         try {
-            ClockSummary.editClock(this, clock, members, false);
-            editResultsForClock( clock );
+            int index = clocksTable.getSelectedRow();
+            Clock clock = race.getClocks().get(index);            
+            race = race.repReplaceClock(clock, editResultsForClock(ClockSummary.editClock(this, clock, members, false)));
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
         reloadClocksTable();
     }//GEN-LAST:event_editClockButtonActionPerformed
 
-    private void editResultsForClock(Clock clock) throws UserCancelledException
+    private Clock editResultsForClock(Clock clock) throws UserCancelledException
     {
-        ClockEditor.editClockResults(this, clock, race.getDaysCovered(), season, configuration);
+        return ClockEditor.editClockResults(this, clock, race.getDaysCovered(), season, configuration);
     }
 
     private void addClockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClockButtonActionPerformed
         try {
-            Clock clock = ClockSummary.createClock(this, members);
-            Race newRace = race.repAddClock(clock);
-            editResultsForClock( clock );
-            race = newRace;
+            race = race.repAddClock(editResultsForClock(ClockSummary.createClock(this, members)));
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);

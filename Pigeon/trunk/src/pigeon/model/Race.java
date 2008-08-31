@@ -44,16 +44,16 @@ public final class Race implements Serializable, Comparable<Race> {
     private final List<Clock> clocks;
     
     // Map from Section -> Member count
-    private Map<String, Integer> membersEntered;
+    private final Map<String, Integer> membersEntered;
     
     // Map from Section -> Bird count
-    private Map<String, Integer> birdsEntered;
+    private final Map<String, Integer> birdsEntered;
     
     // Map from Section -> Pool name -> Bird count
-    private Map<String, Map<String, Integer>> birdsEnteredInPools;
+    private final Map<String, Map<String, Integer>> birdsEnteredInPools;
     
     // Map from Section -> Prize list
-    private Map<String, List<Double>> prizes;
+    private final Map<String, List<Double>> prizes;
 
     private Race(
             Racepoint racepoint,
@@ -224,6 +224,11 @@ public final class Race implements Serializable, Comparable<Race> {
     {
         List<Clock> newClocks = Utilities.replicateListRemove(clocks, clock);
         return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);        
+    }
+    
+    public Race repReplaceClock(Clock oldClock, Clock newClock) throws ValidationException
+    {
+        return repRemoveClock(oldClock).repAddClock(newClock);
     }
 
     public List<Clock> getClocks()

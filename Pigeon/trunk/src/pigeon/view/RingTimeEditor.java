@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 package pigeon.view;
 
 import java.awt.Component;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
@@ -39,7 +39,7 @@ final class RingTimeEditor extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 1436323402423205110L;
 
-    private final Time time;
+    private Time time;
     private final int numberOfDaysCovered;
     private final Season season;
     private final Configuration configuration;
@@ -100,9 +100,9 @@ final class RingTimeEditor extends javax.swing.JPanel
     /**
         Finds the names of all the checkboxes that have been ticked.
     */
-    private Collection<String> findSelectedBoxes(Map<String, JCheckBox> checkboxes)
+    private Set<String> findSelectedBoxes(Map<String, JCheckBox> checkboxes)
     {
-        Collection<String> result = new TreeSet<String>();
+        Set<String> result = new TreeSet<String>();
         for (Map.Entry<String, JCheckBox> entry: checkboxes.entrySet()) {
             if (entry.getValue().isSelected()) {
                 result.add(entry.getKey());
@@ -113,26 +113,26 @@ final class RingTimeEditor extends javax.swing.JPanel
 
     private void updateTimeObject() throws ValidationException
     {
-        time.setRingNumber(ringNumberText.getText());
+        time = time.repSetRingNumber(ringNumberText.getText());
         try {
             long memberTime =
                     ((new Integer(dayCombo.getSelectedItem().toString()) - 1) * Constants.MILLISECONDS_PER_DAY) +
                     clockTime.getDate().getTime();
-            time.setMemberTime(memberTime, numberOfDaysCovered);
+            time = time.repSetMemberTime(memberTime, numberOfDaysCovered);
         } catch (java.text.ParseException e) {
             throw new ValidationException("Clock in time is invalid, expecting " + clockTime.getFormatPattern(), e);
         }
-        time.setColor(((String)birdColorCombo.getSelectedItem()).trim());
-        time.setSex((Sex)birdSexCombo.getSelectedItem());
+        time = time.repSetColor(((String)birdColorCombo.getSelectedItem()).trim());
+        time = time.repSetSex((Sex)birdSexCombo.getSelectedItem());
         
 
         switch (configuration.getMode()) {
             case FEDERATION:
-                time.setOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
-                time.setSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
+                time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
+                time = time.repSetSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
                 break;
             case CLUB:
-                time.setOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
+                time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
                 break;
 
             default:
@@ -324,7 +324,7 @@ final class RingTimeEditor extends javax.swing.JPanel
     private javax.swing.JPanel sectionPoolsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private static void editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration, boolean newTime) throws UserCancelledException
+    private static Time editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration, boolean newTime) throws UserCancelledException
     {
         RingTimeEditor panel = new RingTimeEditor(time, numberOfDaysCovered, season, configuration);
         while (true)
@@ -352,18 +352,17 @@ final class RingTimeEditor extends javax.swing.JPanel
                 }
             }
         }
+        return panel.time;
     }
 
-    public static void editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration) throws UserCancelledException
+    public static Time editEntry(Component parent, Time time, int numberOfDaysCovered, Season season, Configuration configuration) throws UserCancelledException
     {
-        editEntry(parent, time, numberOfDaysCovered, season, configuration, false);
+        return editEntry(parent, time, numberOfDaysCovered, season, configuration, false);
     }
 
     public static Time createEntry(Component parent, int numberOfDaysCovered, Season season, Configuration configuration) throws UserCancelledException
     {
-        Time time = new Time();
-        editEntry(parent, time, numberOfDaysCovered, season, configuration, true);
-        return time;
+        return editEntry(parent, Time.createEmpty(), numberOfDaysCovered, season, configuration, true);
     }
 
     private void addCompetitions()

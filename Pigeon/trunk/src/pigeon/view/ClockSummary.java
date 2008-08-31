@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -256,9 +256,9 @@ final class ClockSummary extends javax.swing.JPanel {
 
     private void updateClockObject() throws ValidationException
     {
-        clock.setMember((Member)memberCombo.getSelectedItem());
+        clock = clock.repSetMember((Member)memberCombo.getSelectedItem());
         
-        Date setDate;
+        Date setDate = null;
         try {
             setDate = this.setDate.getDate();
         } catch (ParseException e) {
@@ -267,19 +267,19 @@ final class ClockSummary extends javax.swing.JPanel {
         
         try {
             Date masterSetDate = new Date(setDate.getTime() + masterSet.getDate().getTime());
-            clock.setTimeOnMasterWhenSet(masterSetDate);
+            clock = clock.repSetTimeOnMasterWhenSet(masterSetDate);
         } catch (ParseException e) {
             throw new ValidationException("Master set time is invalid, " + masterSet.getFormatPattern(), e);
         }
 
         try {
             Date memberSetDate = new Date(setDate.getTime() + memberSet.getDate().getTime());
-            clock.setTimeOnMemberWhenSet(memberSetDate);
+            clock = clock.repSetTimeOnMemberWhenSet(memberSetDate);
         } catch (ParseException e) {
             throw new ValidationException("Member set time is invalid, " + memberSet.getFormatPattern(), e);
         }
 
-        Date openDate;
+        Date openDate = null;
         try {
             openDate = this.openDate.getDate();
         } catch (ParseException e) {
@@ -288,20 +288,20 @@ final class ClockSummary extends javax.swing.JPanel {
 
         try {
             Date masterOpenDate = new Date(openDate.getTime() + masterOpen.getDate().getTime());
-            clock.setTimeOnMasterWhenOpened(masterOpenDate);
+            clock = clock.repSetTimeOnMasterWhenOpened(masterOpenDate);
         } catch (ParseException e) {
             throw new ValidationException("Master open time is invalid, " + masterOpen.getFormatPattern(), e);
         }
 
         try {
             Date memberOpenDate = new Date(openDate.getTime() + memberOpen.getDate().getTime());
-            clock.setTimeOnMemberWhenOpened(memberOpenDate);
+            clock = clock.repSetTimeOnMemberWhenOpened(memberOpenDate);
         } catch (ParseException e) {
             throw new ValidationException("Member open time is invalid, " + memberOpen.getFormatPattern(), e);
         }
     }
 
-    public static void editClock(Component parent, Clock clock, Collection<Member> members, boolean newClock) throws UserCancelledException {
+    public static Clock editClock(Component parent, Clock clock, Collection<Member> members, boolean newClock) throws UserCancelledException {
         ClockSummary panel = new ClockSummary(clock, members, true);
         while (true) {
             Object[] options = { (newClock ? "Add" : "Ok"), "Cancel" };
@@ -320,12 +320,11 @@ final class ClockSummary extends javax.swing.JPanel {
                 }
             }
         }
+        return panel.clock;
     }
 
     public static Clock createClock(Component parent, Collection<Member> members) throws UserCancelledException
     {
-        Clock clock = new Clock();
-        editClock(parent, clock, members, true);
-        return clock;
+        return editClock(parent, Clock.createEmpty(), members, true);
     }
 }

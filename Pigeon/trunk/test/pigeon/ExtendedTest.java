@@ -31,7 +31,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -39,6 +38,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -156,35 +156,35 @@ public final class ExtendedTest extends TestCase
 
             for (int i = 0; i < season.getOrganization().getNumberOfMembers(); i++) {
                 Member m = season.getOrganization().getMembers().get(i);
-                Clock clock = new Clock();
-                clock.setMember(m);
+                Clock clock = Clock.createEmpty();
+                clock = clock.repSetMember(m);
 
                 long setTime = liberation - random.nextInt((int)Constants.MILLISECONDS_PER_DAY);
-                clock.setTimeOnMasterWhenSet(new Date(setTime));
-                clock.setTimeOnMemberWhenSet(new Date(setTime));
+                clock = clock.repSetTimeOnMasterWhenSet(new Date(setTime));
+                clock = clock.repSetTimeOnMemberWhenSet(new Date(setTime));
 
                 long masterOpenTime = (long)(liberation + (daysCovered + random.nextDouble()) * Constants.MILLISECONDS_PER_DAY);
-                clock.setTimeOnMasterWhenOpened(new Date(masterOpenTime));
+                clock = clock.repSetTimeOnMasterWhenOpened(new Date(masterOpenTime));
 
                 long memberOpenTime = (long)(masterOpenTime + (random.nextDouble() - 0.5) * Constants.MILLISECONDS_PER_MINUTE);
-                clock.setTimeOnMemberWhenOpened(new Date(memberOpenTime));
+                clock = clock.repSetTimeOnMemberWhenOpened(new Date(memberOpenTime));
 
-                clock.setBirdsEntered(30);
+                clock = clock.repSetBirdsEntered(30);
 
                 for (int j = 0; j < BIRDS_PER_MEMBER; j++) {
-                    Time t = new Time();
+                    Time t = Time.createEmpty();
                     String ringNumber = "M" + i + "B" + j;
-                    t.setRingNumber(ringNumber);
+                    t = t.repSetRingNumber(ringNumber);
 
                     long clockInTime = (long)(
                         random.nextInt(daysCovered) * Constants.MILLISECONDS_PER_DAY +
                         (random.nextDouble() * 6 + 9) * Constants.MILLISECONDS_PER_HOUR);
                     assert(setTime + clockInTime <= masterOpenTime);
-                    t.setMemberTime(clockInTime, daysCovered);
+                    t = t.repSetMemberTime(clockInTime, daysCovered);
                     Time previous = Utilities.findBirdEntry(season, ringNumber);
                     if (previous != null) {
-                        t.setColor(previous.getColor());
-                        t.setSex(previous.getSex());
+                        t = t.repSetColor(previous.getColor());
+                        t = t.repSetSex(previous.getSex());
                     } else {
                         String color;
                         int colorCode = random.nextInt(5);
@@ -207,26 +207,26 @@ public final class ExtendedTest extends TestCase
                             default:
                                 throw new IllegalArgumentException("Bug in test: " + colorCode);
                         }
-                        t.setColor(color);
-                        t.setSex(Sex.values()[random.nextInt(Sex.values().length)]);
+                        t = t.repSetColor(color);
+                        t = t.repSetSex(Sex.values()[random.nextInt(Sex.values().length)]);
                     }
 
                     for (Competition c: configuration.getCompetitions()) {
                         if (random.nextBoolean()) {
                             if (c.isAvailableInOpen()) {
-                                Collection<String> set = new ArrayList<String>(t.getOpenCompetitionsEntered());
+                                Set<String> set = new TreeSet<String>(t.getOpenCompetitionsEntered());
                                 set.add(c.getName());
-                                t.setOpenCompetitionsEntered(set);
+                                t = t.repSetOpenCompetitionsEntered(set);
                             }
                         }
                         if (random.nextBoolean()) {
-                            Collection<String> set = new ArrayList<String>(t.getSectionCompetitionsEntered());
+                            Set<String> set = new TreeSet<String>(t.getSectionCompetitionsEntered());
                             set.add(c.getName());
-                            t.setSectionCompetitionsEntered(set);
+                            t = t.repSetSectionCompetitionsEntered(set);
                         }
                     }
 
-                    clock.addTime(t);
+                    clock = clock.repAddTime(t);
                 }
                 race = race.repAddClock(clock);
             }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,33 +46,33 @@ public final class TimeTest extends TestCase {
         String ringNumberBar = "bar";
         final int days = 3;
 
-        Time result1 = new Time();
-        result1.setRingNumber(ringNumberFoo);
-        result1.setMemberTime(1, days);
+        Time result1 = Time.createEmpty();
+        result1 = result1.repSetRingNumber(ringNumberFoo);
+        result1 = result1.repSetMemberTime(1, days);
 
         {
-            Time result2 = new Time();
-            result2.setRingNumber(ringNumberFoo);
-            result2.setMemberTime(1, days);
+            Time result2 = Time.createEmpty();
+            result2 = result2.repSetRingNumber(ringNumberFoo);
+            result2 = result2.repSetMemberTime(1, days);
             assertEquals(result1, result2);
         }
         {
-            Time result2 = new Time();
-            result2.setRingNumber(ringNumberFoo);
-            result2.setMemberTime(2, days);
+            Time result2 = Time.createEmpty();
+            result2 = result2.repSetRingNumber(ringNumberFoo);
+            result2 = result2.repSetMemberTime(2, days);
             assertEquals(result1, result2);
         }
 
         {
-            Time result2 = new Time();
-            result2.setRingNumber(ringNumberBar);
-            result2.setMemberTime(1, days);
+            Time result2 = Time.createEmpty();
+            result2 = result2.repSetRingNumber(ringNumberBar);
+            result2 = result2.repSetMemberTime(1, days);
             assertFalse(result1.equals(result2));
         }
         {
-            Time result2 = new Time();
-            result2.setRingNumber(ringNumberBar);
-            result2.setMemberTime(2, days);
+            Time result2 = Time.createEmpty();
+            result2 = result2.repSetRingNumber(ringNumberBar);
+            result2 = result2.repSetMemberTime(2, days);
             assertFalse(result1.equals(result2));
         }
     }

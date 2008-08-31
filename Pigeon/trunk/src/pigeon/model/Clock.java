@@ -18,7 +18,6 @@
 package pigeon.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,27 +33,32 @@ public final class Clock implements Comparable<Clock>, Serializable
 {
     private static final long serialVersionUID = 7133528350681374891L;
 
-    private Member member;
+    private final Member member;
+    private final Date masterSet;
+    private final Date masterOpen;
+    private final Date memberSet;
+    private final Date memberOpen;
+    private final int birdsEntered;
+    private final List<Time> times;
 
-    private Date masterSet;
-    private Date masterOpen;
-    private Date memberSet;
-    private Date memberOpen;
+    private Clock(Member member, Date masterSet, Date masterOpen, Date memberSet, Date memberOpen, int birdsEntered, List<Time> times) {
+        this.member = member;
+        this.masterSet = (Date)masterSet.clone();
+        this.masterOpen = (Date)masterOpen.clone();
+        this.memberSet = (Date)memberSet.clone();
+        this.memberOpen = (Date)memberOpen.clone();
+        this.birdsEntered = birdsEntered;
+        this.times = Utilities.unmodifiableSortedListCopy(times);
+    }
 
-    private int birdsEntered = 0;
-    private List<Time> times = new ArrayList<Time>();
-
-    public Clock()
+    public static Clock createEmpty()
     {
         GregorianCalendar cal = new GregorianCalendar();
         cal = new GregorianCalendar(
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH));
-        setTimeOnMasterWhenSet(cal.getTime());
-        setTimeOnMasterWhenOpened(cal.getTime());
-        setTimeOnMemberWhenSet(cal.getTime());
-        setTimeOnMemberWhenOpened(cal.getTime());
+        return new Clock(null, cal.getTime(), cal.getTime(), cal.getTime(), cal.getTime(), 0, Utilities.createEmptyList(Time.class));
     }
 
     /**
@@ -96,9 +100,9 @@ public final class Clock implements Comparable<Clock>, Serializable
         return masterSet;
     }
 
-    public void setTimeOnMasterWhenSet(Date timeOnMasterClockWhenSet)
+    public Clock repSetTimeOnMasterWhenSet(Date masterSet)
     {
-        this.masterSet = timeOnMasterClockWhenSet;
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 
     public Date getTimeOnMemberWhenSet()
@@ -106,9 +110,9 @@ public final class Clock implements Comparable<Clock>, Serializable
         return memberSet;
     }
 
-    public void setTimeOnMemberWhenSet(Date timeOnMemberClockWhenSet)
+    public Clock repSetTimeOnMemberWhenSet(Date memberSet)
     {
-        this.memberSet = timeOnMemberClockWhenSet;
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 
     public Date getTimeOnMasterWhenOpened()
@@ -116,9 +120,9 @@ public final class Clock implements Comparable<Clock>, Serializable
         return masterOpen;
     }
 
-    public void setTimeOnMasterWhenOpened(Date timeOnMasterClockWhenOpened)
+    public Clock repSetTimeOnMasterWhenOpened(Date masterOpen)
     {
-        this.masterOpen = timeOnMasterClockWhenOpened;
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 
     public Date getTimeOnMemberWhenOpened()
@@ -126,19 +130,24 @@ public final class Clock implements Comparable<Clock>, Serializable
         return memberOpen;
     }
 
-    public void setTimeOnMemberWhenOpened(Date timeOnMemberClockWhenOpened)
+    public Clock repSetTimeOnMemberWhenOpened(Date memberOpen)
     {
-        this.memberOpen = timeOnMemberClockWhenOpened;
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 
-    public void addTime(Time time)
+    public Clock repAddTime(Time time) throws ValidationException
     {
-        this.times.add(time);
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, Utilities.replicateListAdd(times, time));
     }
 
-    public void removeTime(Time time)
+    public Clock repRemoveTime(Time time)
     {
-        this.times.remove(time);
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, Utilities.replicateListRemove(times, time));
+    }
+    
+    public Clock repReplaceTime(Time oldTime, Time newTime) throws ValidationException
+    {
+        return repRemoveTime(oldTime).repAddTime(newTime);
     }
 
     public List<Time> getTimes()
@@ -151,9 +160,9 @@ public final class Clock implements Comparable<Clock>, Serializable
         return member;
     }
 
-    public void setMember(Member member)
+    public Clock repSetMember(Member member)
     {
-        this.member = member;
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 
     @Override
@@ -183,12 +192,11 @@ public final class Clock implements Comparable<Clock>, Serializable
         return birdsEntered;
     }
 
-    public void setBirdsEntered(int birdsEntered) throws ValidationException
+    public Clock repSetBirdsEntered(int birdsEntered) throws ValidationException
     {
-        if (birdsEntered >= times.size()) {
-            this.birdsEntered = birdsEntered;
-        } else {
+        if (birdsEntered < times.size()) {
             throw new ValidationException("Total number of birds entered cannot be less than the number of birds clocked.");
         }
+        return new Clock(member, masterSet, masterOpen, memberSet, memberOpen, birdsEntered, times);
     }
 }

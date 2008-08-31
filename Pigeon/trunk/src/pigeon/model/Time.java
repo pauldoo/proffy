@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
     Represents the clocking time for a single ring number.
@@ -32,18 +31,28 @@ public final class Time implements Comparable<Time>, Serializable
 {
     private static final long serialVersionUID = 5746826265321182248L;
 
-    private String ringNumber = "";
-    private String color = "";
-    private Sex sex = Sex.COCK;
-    private int time = 0;
+    private final String ringNumber;
+    private final String color;
+    private final Sex sex;
+    private final int time;
 
     /// In CLUB mode, this list stores the club competitions.
-    private Set<String> openCompetitionsEntered = new TreeSet<String>();
+    private final Set<String> openCompetitionsEntered;
     /// Only populated in FEDERATION mode, empty in CLUB mode.
-    private Set<String> sectionCompetitionsEntered = new TreeSet<String>();
+    private final Set<String> sectionCompetitionsEntered;
 
-    public Time()
+    private Time(String ringNumber, String color, Sex sex, int time, Set<String> openCompetitionsEntered, Set<String> sectionCompetitionsEntered) {
+        this.ringNumber = ringNumber.trim();
+        this.color = color.trim();
+        this.sex = sex;
+        this.time = time;
+        this.openCompetitionsEntered = Utilities.unmodifiableSetCopy(openCompetitionsEntered);
+        this.sectionCompetitionsEntered = Utilities.unmodifiableSetCopy(sectionCompetitionsEntered);
+    }
+
+    public static Time createEmpty()
     {
+        return new Time("", "", Sex.COCK, 0, Utilities.createEmtpySet(String.class), Utilities.createEmtpySet(String.class));
     }
 
     public String getRingNumber()
@@ -51,9 +60,9 @@ public final class Time implements Comparable<Time>, Serializable
         return ringNumber;
     }
 
-    public void setRingNumber(String ringNumber)
+    public Time repSetRingNumber(String ringNumber)
     {
-        this.ringNumber = ringNumber.trim();
+        return new Time(ringNumber, color, sex, time, openCompetitionsEntered, sectionCompetitionsEntered);
     }
 
     public long getMemberTime()
@@ -63,13 +72,13 @@ public final class Time implements Comparable<Time>, Serializable
 
     /**
         Member time is measured in ms since the midnight before liberation.
-    */
-    public void setMemberTime(long time, int daysInRace) throws ValidationException
+     */
+    public Time repSetMemberTime(long time, int daysInRace) throws ValidationException
     {
         if (time < 0 || time >= daysInRace * Constants.MILLISECONDS_PER_DAY) {
             throw new ValidationException("Time is outwith the length of the race (" + daysInRace + " days)");
         }
-        this.time = (int)time;
+        return new Time(ringNumber, color, sex, (int)time, openCompetitionsEntered, sectionCompetitionsEntered);
     }
 
     @Override
@@ -99,9 +108,9 @@ public final class Time implements Comparable<Time>, Serializable
         return Collections.unmodifiableCollection(openCompetitionsEntered);
     }
 
-    public void setOpenCompetitionsEntered(Collection<String> competitions)
+    public Time repSetOpenCompetitionsEntered(Set<String> competitions)
     {
-        openCompetitionsEntered = new TreeSet<String>(competitions);
+        return new Time(ringNumber, color, sex, time, competitions, sectionCompetitionsEntered);
     }
 
     public Collection<String> getSectionCompetitionsEntered()
@@ -109,34 +118,36 @@ public final class Time implements Comparable<Time>, Serializable
         return Collections.unmodifiableCollection(sectionCompetitionsEntered);
     }
 
-    public void setSectionCompetitionsEntered(Collection<String> competitions)
+    public Time repSetSectionCompetitionsEntered(Set<String> competitions)
     {
-        sectionCompetitionsEntered = new TreeSet<String>(competitions);
+        return new Time(ringNumber, color, sex, time, openCompetitionsEntered, competitions);
     }
 
     public String getColor()
     {
-        if (color == null) {
-            setColor("");
+        String result = color;
+        if (result == null) {
+            result = "";
         }
-        return color;
+        return result;
     }
 
-    public void setColor(String color)
+    public Time repSetColor(String color)
     {
-        this.color = color.trim();
+        return new Time(ringNumber, color, sex, time, openCompetitionsEntered, sectionCompetitionsEntered);
     }
 
     public Sex getSex()
     {
-        if (sex == null) {
-            setSex(Sex.COCK);
+        Sex result = sex;
+        if (result == null) {
+            result = Sex.COCK;
         }
         return sex;
     }
 
-    public void setSex(Sex sex)
+    public Time repSetSex(Sex sex)
     {
-        this.sex = sex;
+        return new Time(ringNumber, color, sex, time, openCompetitionsEntered, sectionCompetitionsEntered);
     }
 }

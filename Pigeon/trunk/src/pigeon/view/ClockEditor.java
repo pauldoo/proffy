@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ final class ClockEditor extends javax.swing.JPanel
 
     private static final long serialVersionUID = 7677569341121266746L;
 
-    private final Clock clock;
+    private Clock clock;
     private final int daysInRace;
     private final Season season;
     private final Configuration configuration;
@@ -51,6 +51,7 @@ final class ClockEditor extends javax.swing.JPanel
         this.configuration = configuration;
         initComponents();
         timesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 refreshButtons();
             }
@@ -176,9 +177,11 @@ final class ClockEditor extends javax.swing.JPanel
         try {
             int index = timesTable.getSelectedRow();
             Time time = clock.getTimes().get(index);
-            RingTimeEditor.editEntry(this, time, daysInRace, season, configuration);
+            clock = clock.repReplaceTime(time, RingTimeEditor.editEntry(this, time, daysInRace, season, configuration));
             reloadTimesTable();
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -186,17 +189,18 @@ final class ClockEditor extends javax.swing.JPanel
     {//GEN-HEADEREND:event_removeButtonActionPerformed
         int index = timesTable.getSelectedRow();
         Time time = clock.getTimes().get(index);
-        clock.removeTime(time);
+        clock = clock.repRemoveTime(time);
         reloadTimesTable();
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addButtonActionPerformed
     {//GEN-HEADEREND:event_addButtonActionPerformed
         try {
-            Time time = RingTimeEditor.createEntry(this, daysInRace, season, configuration);
-            clock.addTime(time);
+            clock = clock.repAddTime(RingTimeEditor.createEntry(this, daysInRace, season, configuration));
             reloadTimesTable();
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -214,7 +218,7 @@ final class ClockEditor extends javax.swing.JPanel
     private javax.swing.JTable timesTable;
     // End of variables declaration//GEN-END:variables
 
-    public static void editClockResults(Component parent, Clock clock, int daysInRace, Season season, Configuration configuration)
+    public static Clock editClockResults(Component parent, Clock clock, int daysInRace, Season season, Configuration configuration)
     {
         ClockEditor panel = new ClockEditor(clock, daysInRace, season, configuration);
         Object[] options = {"Finished"};
@@ -227,11 +231,12 @@ final class ClockEditor extends javax.swing.JPanel
                 e.displayErrorDialog(panel);
             }
         }
+        return panel.clock;
     }
     
     private void updateClockObject() throws ValidationException
     {
-        clock.setBirdsEntered(Integer.parseInt(birdsEnteredText.getText()));
+        clock = clock.repSetBirdsEntered(Integer.parseInt(birdsEnteredText.getText()));
     }
 
     private void reloadTimesTable()
