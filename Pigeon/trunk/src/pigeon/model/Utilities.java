@@ -111,8 +111,7 @@ public final class Utilities
         This is only a shallow copy, in that only the list container is copied
         and not all elements within the container.
     */
-    static <T>
-    List<T> modifiableListCopy(List<T> items)
+    public static <T> List<T> modifiableListCopy(List<T> items)
     {
         return new ArrayList<T>(items);
     }

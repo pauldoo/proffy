@@ -172,11 +172,16 @@ final class ClockEditor extends javax.swing.JPanel
 
     }// </editor-fold>//GEN-END:initComponents
 
+    private Time getSelectedEntry()
+    {
+        TimesTableModel model = (TimesTableModel)timesTable.getModel();
+        return model.getEntry(timesTable.getSelectedRow());
+    }
+    
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editButtonActionPerformed
     {//GEN-HEADEREND:event_editButtonActionPerformed
         try {
-            int index = timesTable.getSelectedRow();
-            Time time = clock.getTimes().get(index);
+            Time time = getSelectedEntry();
             clock = clock.repReplaceTime(time, RingTimeEditor.editEntry(this, time, daysInRace, season, configuration));
             reloadTimesTable();
         } catch (UserCancelledException e) {
@@ -187,8 +192,7 @@ final class ClockEditor extends javax.swing.JPanel
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_removeButtonActionPerformed
     {//GEN-HEADEREND:event_removeButtonActionPerformed
-        int index = timesTable.getSelectedRow();
-        Time time = clock.getTimes().get(index);
+        Time time = getSelectedEntry();
         clock = clock.repRemoveTime(time);
         reloadTimesTable();
     }//GEN-LAST:event_removeButtonActionPerformed

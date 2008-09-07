@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,10 @@
 
 package pigeon.view;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
@@ -25,8 +28,8 @@ import pigeon.model.Sex;
 import pigeon.model.Time;
 
 /**
- * Shows the times entered for a clock by listing the ring numbers and times currently entered.
- */
+    Shows the times entered for a clock by listing the ring numbers and times currently entered.
+*/
 final class TimesTableModel extends AbstractTableModel
 {
     private static final long serialVersionUID = 2820658767004438666L;
@@ -42,18 +45,30 @@ final class TimesTableModel extends AbstractTableModel
         this.editable = editable;
     }
 
+    @Override
     public int getRowCount() {
         return clock.getTimes().size();
     }
 
+    @Override
     public int getColumnCount() {
         return 5;
     }
 
-    private Time getEntry(int row) {
-        return clock.getTimes().get(row);
+    Time getEntry(int row) {
+        Comparator<Time> comparator = new Comparator<Time>(){
+            @Override
+            public int compare(Time o1, Time o2) {
+                return Long.valueOf(o1.getMemberTime()).compareTo(o2.getMemberTime());
+            }
+        };
+        
+        List<Time> times = pigeon.model.Utilities.modifiableListCopy(clock.getTimes());
+        Collections.sort(times, comparator);
+        return times.get(row);
     }
-
+    
+    @Override
     public Class getColumnClass(int column) {
         switch (column) {
             case 0:
@@ -71,6 +86,7 @@ final class TimesTableModel extends AbstractTableModel
         }
     }
 
+    @Override
     public Object getValueAt(int row, int column) {
         Time entry = getEntry(row);
 
@@ -90,6 +106,7 @@ final class TimesTableModel extends AbstractTableModel
         }
     }
 
+    @Override
     public String getColumnName(int column) {
         switch (column) {
             case 0:
