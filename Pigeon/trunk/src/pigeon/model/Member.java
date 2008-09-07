@@ -28,29 +28,40 @@ public final class Member implements Serializable, Comparable<Member> {
 
     private static final long serialVersionUID = 3235931567494968807L;
 
-    // Only populated in FEDERATION mode, null otherwise
-    private String club;
-    // Only populated in FEDERATION mode, null otherwise
-    private String section;
+    /// Only populated in FEDERATION mode, null/empty otherwise
+    private final String club;
+    /// Only populated in FEDERATION mode, null/empty otherwise
+    private final String section;
 
-    private String name;
-    private String address;
-    private String telephone;
-    private String SHUNumber;
+    private final String name;
+    private final String address;
+    private final String telephone;
+    private final String SHUNumber;
 
-    public Member() {
+    private Member(String club, String section, String name, String address, String telephone, String SHUNumber) {
+        this.club = club;
+        this.section = section;
+        this.name = name;
+        this.address = address;
+        this.telephone = telephone;
+        this.SHUNumber = SHUNumber;
+    }
+    
+    public static Member createEmpty()
+    {
+        return new Member("", "", "", "", "", "");
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) throws ValidationException {
+    public Member repSetName(String name) throws ValidationException {
         name = name.trim();
         if (name.length() == 0) {
             throw new ValidationException("Member name is empty");
         }
-        this.name = name;
+        return new Member(club, section, name, address, telephone, SHUNumber);
     }
     
     private String getNameAndClubAndSection() {
@@ -104,24 +115,24 @@ public final class Member implements Serializable, Comparable<Member> {
         }
     }
 
-    public void setAddress(String address) {
-        this.address = address.trim();
+    public Member repSetAddress(String address) {
+        return new Member(club, section, name, address.trim(), telephone, SHUNumber);
     }
 
     public String getTelephone() {
         return telephone;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone.trim();
+    public Member repSetTelephone(String telephone) {
+        return new Member(club, section, name, address, telephone.trim(), SHUNumber);
     }
 
     public String getSHUNumber() {
         return SHUNumber;
     }
 
-    public void setSHUNumber(String SHUNumber) {
-        this.SHUNumber = SHUNumber.trim();
+    public Member repSetSHUNumber(String SHUNumber) {
+        return new Member(club, section, name, address, telephone, SHUNumber.trim());
     }
 
     public String getClub()
@@ -129,9 +140,9 @@ public final class Member implements Serializable, Comparable<Member> {
         return club;
     }
 
-    public void setClub(String club)
+    public Member repSetClub(String club)
     {
-        this.club = club.trim();
+        return new Member(club.trim(), section, name, address, telephone, SHUNumber);
     }
 
     public String getSection()
@@ -139,8 +150,8 @@ public final class Member implements Serializable, Comparable<Member> {
         return section;
     }
 
-    public void setSection(String section)
+    public Member repSetSection(String section)
     {
-        this.section = section.trim();
+        return new Member(club, section.trim(), name, address, telephone, SHUNumber);
     }
 }

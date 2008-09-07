@@ -18,12 +18,7 @@
 package pigeon.model;
 
 import junit.framework.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  *
@@ -35,9 +30,11 @@ public final class RaceTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -59,10 +56,8 @@ public final class RaceTest extends TestCase {
     public void testEquality() throws ValidationException {
         Date dateFoo = new Date(1);
         Date dateBar = new Date(2);
-        Racepoint racepointFoo = new Racepoint();
-        racepointFoo.setName("Foo");
-        Racepoint racepointBar = new Racepoint();
-        racepointBar.setName("Bar");
+        Racepoint racepointFoo = Racepoint.createEmpty().repSetName("Foo");
+        Racepoint racepointBar = Racepoint.createEmpty().repSetName("Bar");
 
         Race race1 = Race.createEmpty();
         race1 = race1.repSetLiberationDate(dateFoo);

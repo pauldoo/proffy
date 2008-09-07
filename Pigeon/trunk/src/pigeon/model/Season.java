@@ -88,4 +88,26 @@ public final class Season implements Serializable {
     public List<Race> getRaces() {
         return this.races;
     }
+    
+    public Season repReplaceMember(Member oldMember, Member newMember) throws ValidationException
+    {
+        List<Race> newRaces = Utilities.createEmptyList(Race.class);
+        for (Race r: races) {
+            newRaces.add(r.repReplaceMember(oldMember, newMember));
+        }
+        return new Season(name, organization.repReplaceMember(oldMember, newMember), newRaces);
+    }
+    
+    public Season repReplaceRacepoint(Racepoint oldRacepoint, Racepoint newRacepoint) throws ValidationException
+    {
+        List<Race> newRaces = Utilities.createEmptyList(Race.class);
+        for (Race r: races) {
+            if (r.getRacepoint().equals(oldRacepoint)) {
+                newRaces.add(r.repSetRacepoint(newRacepoint));
+            } else {
+                newRaces.add(r);
+            }
+        }
+        return new Season(name, organization.repReplaceRacepoint(oldRacepoint, newRacepoint), newRaces);        
+    }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,9 +29,11 @@ public final class DistanceEntryTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -42,15 +44,15 @@ public final class DistanceEntryTest extends TestCase {
     }
 
     public void testEquality() throws ValidationException {
-        Member memberFoo = new Member();
-        memberFoo.setName("foo");
-        Member memberBar = new Member();
-        memberBar.setName("bar");
+        Member memberFoo = Member.createEmpty();
+        memberFoo = memberFoo.repSetName("foo");
+        Member memberBar = Member.createEmpty();
+        memberBar = memberBar.repSetName("bar");
 
-        Racepoint racepointFoo = new Racepoint();
-        racepointFoo.setName("foo");
-        Racepoint racepointBar = new Racepoint();
-        racepointBar.setName("bar");
+        Racepoint racepointFoo = Racepoint.createEmpty();
+        racepointFoo = racepointFoo.repSetName("foo");
+        Racepoint racepointBar = Racepoint.createEmpty();
+        racepointBar = racepointBar.repSetName("bar");
 
         Distance distanceFoo = Distance.createFromMetric(1);
         Distance distanceBar = Distance.createFromMetric(2);

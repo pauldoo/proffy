@@ -185,4 +185,22 @@ public final class Organization implements Serializable
         }
         return retval;
     }
+    
+    public Organization repReplaceRacepoint(Racepoint oldRacepoint, Racepoint newRacepoint) throws ValidationException
+    {
+        Organization result = this.repRemoveRacepoint(oldRacepoint).repAddRacepoint(newRacepoint);
+        for(Map.Entry<Member, Distance> e: getDistancesForRacepoint(oldRacepoint).entrySet()) {
+            result = result.repSetDistance(e.getKey(), newRacepoint, e.getValue());
+        }
+        return result;
+    }
+    
+    public Organization repReplaceMember(Member oldMember, Member newMember) throws ValidationException
+    {
+        Organization result = this.repRemoveMember(oldMember).repAddMember(newMember);
+        for(Map.Entry<Racepoint, Distance> e: getDistancesForMember(oldMember).entrySet()) {
+            result = result.repSetDistance(newMember, e.getKey(), e.getValue());
+        }
+        return result;
+    }
 }

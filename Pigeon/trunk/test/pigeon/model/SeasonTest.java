@@ -30,9 +30,11 @@ public final class SeasonTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -43,7 +45,7 @@ public final class SeasonTest extends TestCase {
     }
 
     public void testRemove() throws ValidationException {
-        Racepoint racepoint = new Racepoint();
+        Racepoint racepoint = Racepoint.createEmpty();
         Date liberationDate = new Date(1);
         Season season = Season.createEmpty();
 
@@ -59,7 +61,7 @@ public final class SeasonTest extends TestCase {
     }
 
     public void testClashes() throws ValidationException {
-        Racepoint racepoint = new Racepoint();
+        Racepoint racepoint = Racepoint.createEmpty();
         Date liberationDate = new Date(1);
         Season season = Season.createEmpty();
 

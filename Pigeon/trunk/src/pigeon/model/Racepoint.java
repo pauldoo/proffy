@@ -26,21 +26,27 @@ public final class Racepoint implements Serializable, Comparable<Racepoint> {
 
     private static final long serialVersionUID = 5881572526657587494L;
 
-    private String name;
+    private final String name;
 
-    public Racepoint() {
+    private Racepoint(String name) {
+        this.name = name;
+    }
+    
+    public static Racepoint createEmpty()
+    {
+        return new Racepoint("");
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) throws ValidationException {
+    public Racepoint repSetName(String name) throws ValidationException {
         name = name.trim();
         if (name.length() == 0) {
             throw new ValidationException("Racepoint name is empty");
         }
-        this.name = name;
+        return new Racepoint(name);
     }
 
     @Override
@@ -74,5 +80,4 @@ public final class Racepoint implements Serializable, Comparable<Racepoint> {
             return name.compareTo(other.name);
         }
     }
-
 }

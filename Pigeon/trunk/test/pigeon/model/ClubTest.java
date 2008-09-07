@@ -40,9 +40,11 @@ public final class ClubTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -59,13 +61,13 @@ public final class ClubTest extends TestCase {
             List<Racepoint> racepoints = new ArrayList<Racepoint>();
 
             for (int i = 0; i <= 9; i++) {
-                Member m = new Member();
-                m.setName("member_" + i);
+                Member m = Member.createEmpty();
+                m = m.repSetName("member_" + i);
                 members.add( m );
                 club = club.repAddMember(m);
 
-                Racepoint r = new Racepoint();
-                r.setName("racepoint_" + i);
+                Racepoint r = Racepoint.createEmpty();
+                r = r.repSetName("racepoint_" + i);
                 racepoints.add( r );
                 club = club.repAddRacepoint(r);
             }
@@ -106,18 +108,18 @@ public final class ClubTest extends TestCase {
     public void testClashes() throws ValidationException {
         Organization club = Organization.createEmpty();
         {
-            Member m = new Member();
-            m.setName("foo");
+            Member m = Member.createEmpty();
+            m = m.repSetName("foo");
             club = club.repAddMember(m);
         }
         {
-            Member m = new Member();
-            m.setName("bar");
+            Member m = Member.createEmpty();
+            m = m.repSetName("bar");
             club = club.repAddMember(m);
         }
         {
-            Member m = new Member();
-            m.setName("foo");
+            Member m = Member.createEmpty();
+            m = m.repSetName("foo");
             try {
                 club.repAddMember(m);
                 assertTrue("Expected exception", false);

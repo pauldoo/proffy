@@ -319,4 +319,17 @@ public final class Race implements Serializable, Comparable<Race> {
     {
         return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
     }
+    
+    public Race repReplaceMember(Member oldMember, Member newMember)
+    {
+        List<Clock> newClocks = Utilities.createEmptyList(Clock.class);
+        for (Clock c: clocks) {
+            if (c.getMember().equals(oldMember)) {
+                newClocks.add(c.repSetMember(newMember));
+            } else {
+                newClocks.add(c);
+            }
+        }
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+    }      
 }

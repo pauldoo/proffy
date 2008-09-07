@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,9 +29,11 @@ public final class MemberTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -42,12 +44,9 @@ public final class MemberTest extends TestCase {
     }
 
     public void testEquality() throws ValidationException {
-        Member foo = new Member();
-        foo.setName("Foo");
-        Member foo2 = new Member();
-        foo2.setName("Foo");
-        Member bar = new Member();
-        bar.setName("Bar");
+        Member foo = Member.createEmpty().repSetName("Foo");
+        Member foo2 = Member.createEmpty().repSetName("Foo");
+        Member bar = Member.createEmpty().repSetName("Bar");
 
         assertEquals(foo, foo);
         assertEquals(foo, foo2);
@@ -56,8 +55,7 @@ public final class MemberTest extends TestCase {
 
     public void testExceptions() {
         try {
-            Member foo = new Member();
-            foo.setName("");
+            Member foo = Member.createEmpty().repSetName("");
             assertTrue("Should throw", false);
         } catch (ValidationException ex) {
             assertEquals("Member name is empty", ex.toString());

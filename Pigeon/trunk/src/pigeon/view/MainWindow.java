@@ -885,14 +885,9 @@ final class MainWindow extends javax.swing.JFrame {
         String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()).toString();
         if (name != null) {
             try {
-                String oldName = racepoint.getName();
-                racepoint.setName( name );
-                try {
-                    season = season.repSetOrganization(editDistancesForRacepoint( this.getContentPane(), season.getOrganization(), racepoint ));
-                } catch (UserCancelledException e) {
-                    racepoint.setName( oldName );
-                    throw e;
-                }
+                Racepoint newRacepoint = racepoint.repSetName(name);
+                Season newSeason = season.repReplaceRacepoint(racepoint, newRacepoint);
+                season = newSeason.repSetOrganization(editDistancesForRacepoint( this.getContentPane(), newSeason.getOrganization(), newRacepoint ));
             } catch (UserCancelledException e) {
             } catch (ValidationException e) {
                 e.displayErrorDialog(this);
@@ -905,9 +900,12 @@ final class MainWindow extends javax.swing.JFrame {
         int index = membersList.getSelectedIndex();
         Member member = season.getOrganization().getMembers().get(index);
         try {
-            MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
-            season = season.repSetOrganization(editDistancesForMember( this.getContentPane(), season.getOrganization(),member ));
+            Member newMember = MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
+            Season newSeason = season.repReplaceMember(member, newMember);
+            season = newSeason.repSetOrganization(editDistancesForMember( this.getContentPane(), newSeason.getOrganization(), newMember ));
         } catch (UserCancelledException e) {
+        } catch (ValidationException e) {
+            e.displayErrorDialog(this);
         }
         reloadMembersList();
     }//GEN-LAST:event_memberEditButtonActionPerformed
@@ -916,11 +914,8 @@ final class MainWindow extends javax.swing.JFrame {
         String name = JOptionPane.showInputDialog(this, "Please enter a name", "New racepoint", JOptionPane.QUESTION_MESSAGE);
         if (name != null) {
             try {
-                Racepoint racepoint = new Racepoint();
-                racepoint.setName(name);
-                Organization newOrganization = season.getOrganization().repAddRacepoint(racepoint);
-                newOrganization = editDistancesForRacepoint(this.getContentPane(), newOrganization, racepoint);
-                season = season.repSetOrganization(newOrganization);
+                Racepoint newRacepoint = Racepoint.createEmpty().repSetName(name);
+                season = season.repSetOrganization(editDistancesForRacepoint(this.getContentPane(), season.getOrganization().repAddRacepoint(newRacepoint), newRacepoint));
             } catch (UserCancelledException e) {
             } catch (ValidationException e) {
                 e.displayErrorDialog(this);
@@ -931,10 +926,8 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            Member member = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
-            Organization newOrganization = season.getOrganization().repAddMember(member);
-            newOrganization = editDistancesForMember(this.getContentPane(), newOrganization, member);
-            season = season.repSetOrganization(newOrganization);
+            Member newMember = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
+            season = season.repSetOrganization(editDistancesForMember(this.getContentPane(), season.getOrganization().repAddMember(newMember), newMember));
         } catch (UserCancelledException e) {
         } catch (ValidationException e) {
             e.displayErrorDialog(this);

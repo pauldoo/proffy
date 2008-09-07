@@ -267,23 +267,23 @@ public final class ExtendedTest extends TestCase
         }
 
         for (int i = 0; i < MEMBER_COUNT; i++) {
-            Member m = new Member();
-            m.setName("Member #" + i);
+            Member m = Member.createEmpty();
+            m = m.repSetName("Member #" + i);
             StringBuffer address = new StringBuffer();
             address.append("Line 1" + "\n");
             address.append("Line 2" + "\n");
-            m.setAddress(address.toString());
-            m.setSHUNumber("SHU" + (i * 7));
-            m.setTelephone("" + (i * 11));
+            m = m.repSetAddress(address.toString());
+            m = m.repSetSHUNumber("SHU" + (i * 7));
+            m = m.repSetTelephone("" + (i * 11));
             int clubIndex = random.nextInt(clubs.length);
-            m.setClub(clubs[clubIndex][0]);
-            m.setSection(clubs[clubIndex][1]);
+            m = m.repSetClub(clubs[clubIndex][0]);
+            m = m.repSetSection(clubs[clubIndex][1]);
             org = org.repAddMember(m);
         }
 
         for (int i = 0; i < RACEPOINT_COUNT; i++) {
-            Racepoint r = new Racepoint();
-            r.setName("Racepoint #" + i);
+            Racepoint r = Racepoint.createEmpty();
+            r = r.repSetName("Racepoint #" + i);
             org = org.repAddRacepoint(r);
         }
 

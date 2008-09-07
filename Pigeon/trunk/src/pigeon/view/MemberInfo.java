@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,14 +24,14 @@ import pigeon.model.Organization;
 import pigeon.model.ValidationException;
 
 /**
- * Edits basic info for members like name, etc.
- */
+    Edits basic info for members like name, etc.
+*/
 final class MemberInfo extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 8280472583918302972L;
 
     private Member member;
-    private Organization organization;
+    private final Organization organization;
 
     public MemberInfo(Member member, Organization organization, boolean editable, Configuration.Mode applicationMode) {
         this.member = member;
@@ -73,13 +73,13 @@ final class MemberInfo extends javax.swing.JPanel {
     private void updateMemberObject() throws ValidationException
     {
         if (clubCombo.isEnabled()) {
-            member.setClub( clubCombo.getSelectedItem().toString() );
-            member.setSection( sectionCombo.getSelectedItem().toString() );
+            member = member.repSetClub( clubCombo.getSelectedItem().toString() );
+            member = member.repSetSection( sectionCombo.getSelectedItem().toString() );
         }
-        member.setName( nameText.getText() );
-        member.setAddress( addressText.getText() );
-        member.setTelephone( telephoneText.getText() );
-        member.setSHUNumber(SHUNumberText.getText());
+        member = member.repSetName( nameText.getText() );
+        member = member.repSetAddress( addressText.getText() );
+        member = member.repSetTelephone( telephoneText.getText() );
+        member = member.repSetSHUNumber(SHUNumberText.getText());
     }
 
     /** This method is called from within the constructor to
@@ -247,7 +247,7 @@ final class MemberInfo extends javax.swing.JPanel {
     private javax.swing.JTextField telephoneText;
     // End of variables declaration//GEN-END:variables
 
-    public static void editMember(
+    public static Member editMember(
         Component parent,
         Member member,
         Organization organization,
@@ -273,6 +273,7 @@ final class MemberInfo extends javax.swing.JPanel {
                 }
             }
         }
+        return panel.member;
     }
 
     public static Member createMember(
@@ -281,8 +282,6 @@ final class MemberInfo extends javax.swing.JPanel {
         Configuration.Mode applicationMode
     ) throws UserCancelledException
     {
-        Member member = new Member();
-        editMember(parent, member, organization, true, applicationMode);
-        return member;
+        return editMember(parent, Member.createEmpty(), organization, true, applicationMode);
     }
 }

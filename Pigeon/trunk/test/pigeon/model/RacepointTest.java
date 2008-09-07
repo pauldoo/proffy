@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,9 +29,11 @@ public final class RacepointTest extends TestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
     }
 
+    @Override
     protected void tearDown() throws Exception {
     }
 
@@ -42,12 +44,9 @@ public final class RacepointTest extends TestCase {
     }
 
     public void testEquality() throws ValidationException {
-        Racepoint foo = new Racepoint();
-        foo.setName("Foo");
-        Racepoint foo2 = new Racepoint();
-        foo2.setName("Foo");
-        Racepoint bar = new Racepoint();
-        bar.setName("Bar");
+        Racepoint foo = Racepoint.createEmpty().repSetName("Foo");
+        Racepoint foo2 = Racepoint.createEmpty().repSetName("Foo");
+        Racepoint bar = Racepoint.createEmpty().repSetName("Bar");
 
         assertEquals(foo, foo);
         assertEquals(foo, foo2);
@@ -56,8 +55,7 @@ public final class RacepointTest extends TestCase {
 
     public void testExceptions() {
         try {
-            Racepoint foo = new Racepoint();
-            foo.setName("");
+            Racepoint foo = Racepoint.createEmpty().repSetName("");
             assertTrue("Should throw", false);
         } catch (ValidationException ex) {
             assertEquals("Racepoint name is empty", ex.toString());
