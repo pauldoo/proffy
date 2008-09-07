@@ -32,6 +32,7 @@ public final class About
     public static final String VERSION = "0.8" + " (build " + getBuildId() + ")";
     public static final String TITLE = "RacePoint v" + VERSION;
     public static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
+    public static final String WEBSITE = "http://pauldoo.co.uk/racepoint/";
     
     // NonCreatable
     private About()

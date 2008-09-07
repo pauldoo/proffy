@@ -660,7 +660,7 @@ final class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_viewMemberDistancesItemActionPerformed
 
     private void aboutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutItemActionPerformed
-        JTextArea widget = new JTextArea(About.TITLE + ".\n\n" + About.getLicense() + "\n\n" + About.CREDITS);
+        JTextArea widget = new JTextArea(About.TITLE + ".\n\n" + About.getLicense() + "\n\n" + About.CREDITS + "\n" + About.WEBSITE);
         widget.setEditable(false);
         JOptionPane.showMessageDialog(
             this,
