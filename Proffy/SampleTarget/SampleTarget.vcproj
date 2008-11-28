@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Proffy"
-	ProjectGUID="{40A6B84C-37F9-4825-8A51-1D57B4575E94}"
-	RootNamespace="Proffy"
+	Name="SampleTarget"
+	ProjectGUID="{582B66DD-950D-487D-BC73-34DF7471409E}"
+	RootNamespace="SampleTarget"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -60,7 +60,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbgeng.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -133,7 +132,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbgeng.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -167,10 +165,6 @@
 	<References>
 	</References>
 	<Files>
-		<File
-			RelativePath=".\Externals.h"
-			>
-		</File>
 		<File
 			RelativePath=".\Main.cpp"
 			>

@@ -5,9 +5,13 @@
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
+#define STRICT
 
 #include <windows.h>
+#include <dbgeng.h>
 
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <vector>
