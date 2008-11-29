@@ -11,6 +11,7 @@ int main(void)
 		for (int i = 50; i <= 100; i++) {
 			void* p = malloc(i);
 			free(p);
+			::Sleep(1);
 		}
 	}
 	return EXIT_SUCCESS;
