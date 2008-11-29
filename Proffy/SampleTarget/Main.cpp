@@ -23,16 +23,16 @@
 
 int main(void)
 {
-	std::cout << "Running dummy target.\n";
-	::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
-	while(true) {
-		for (int i = 50; i <= 100; i++) {
-			void* p = malloc(i);
-			free(p);
-			std::cout << ".";
-			std::cout.flush();
-			//::Sleep(0);
-		}
-	}
-	return EXIT_SUCCESS;
+    std::cout << "Running dummy target.\n";
+    ::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+    while(true) {
+        for (int i = 50; i <= 100; i++) {
+            void* p = malloc(i);
+            free(p);
+            std::cout << ".";
+            std::cout.flush();
+            //::Sleep(0);
+        }
+    }
+    return EXIT_SUCCESS;
 }
