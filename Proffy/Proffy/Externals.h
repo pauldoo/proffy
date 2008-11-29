@@ -32,3 +32,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+
+#pragma warning(disable: 4127) // conditional expression is constant
+#pragma warning(disable: 4512) // assignment operator could not be generated

@@ -19,6 +19,8 @@
 #include <iostream>
 #include <cstdlib>
 
+#pragma warning(disable: 4127) // conditional expression is constant
+
 int main(void)
 {
 	std::cout << "Running dummy target.\n";
@@ -27,7 +29,9 @@ int main(void)
 		for (int i = 50; i <= 100; i++) {
 			void* p = malloc(i);
 			free(p);
-			::Sleep(1);
+			std::cout << ".";
+			std::cout.flush();
+			//::Sleep(0);
 		}
 	}
 	return EXIT_SUCCESS;
