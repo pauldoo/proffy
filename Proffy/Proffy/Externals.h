@@ -23,9 +23,11 @@
 #define WIN32_LEAN_AND_MEAN
 #define STRICT
 
+// Microsoft includes
 #include <windows.h>
 #include <dbgeng.h>
 
+// Standard includes
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>

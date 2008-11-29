@@ -191,6 +191,7 @@ public:
 int main(void)
 {
     try {
+        // Start something which we will attempt to profile.
         STARTUPINFO startupInfo = {0};
         PROCESS_INFORMATION processInformation = {0};
         BOOL processStarted = ::CreateProcess(
@@ -210,10 +211,12 @@ int main(void)
             throw ProffyException(message.str());
         }
 
+        // Initialize COM, no idea if this is necessary.
         HRESULT result = S_OK;
         result = ::CoInitialize(0);
         assert(result == S_OK);
 
+        // Get the IDebugClient to start.
         IDebugClient* debugClient = NULL;
         result = ::DebugCreate(
             __uuidof(IDebugClient),
@@ -221,16 +224,19 @@ int main(void)
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Set our output callbacks.
         DebugOutputCallbacks debugOutputCallbacks;
         result = debugClient->SetOutputCallbacks(&debugOutputCallbacks);
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Set our event callbacks.
         DebugEventCallbacks debugEventCallbacks;
         result = debugClient->SetEventCallbacks(&debugEventCallbacks);
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Get the IDebugControl.
         IDebugControl* debugControl = NULL;
         result = debugClient->QueryInterface(
             __uuidof(IDebugControl),
@@ -238,6 +244,7 @@ int main(void)
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Get the IDebugSystemObjects.
         IDebugSystemObjects* debugSystemObjects = NULL;
         result = debugClient->QueryInterface(
             __uuidof(IDebugSystemObjects),
@@ -245,6 +252,7 @@ int main(void)
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Done getting and setting, so now attach.
         result = debugClient->AttachProcess(
             0,
             processInformation.dwProcessId,
@@ -252,12 +260,12 @@ int main(void)
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
+        // Verify we have attached to what we think we have.
         ULONG debugeeTypeClass;
         ULONG debugeeTypeQualifier;
         result = debugControl->GetDebuggeeType(&debugeeTypeClass, &debugeeTypeQualifier);
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
-
         ASSERT(debugeeTypeClass == DEBUG_CLASS_USER_WINDOWS);
         ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
 
