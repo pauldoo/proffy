@@ -46,6 +46,7 @@ void Assert(
     const int lineNumber)
 {
     if (v == false) {
+        ::DebugBreak();
         std::ostringstream message;
         message << "Assertion failure: " << function << " (" << file << ", line " << lineNumber << ")";
         throw ProffyException(message.str());
@@ -256,7 +257,7 @@ int main(void)
         result = debugClient->AttachProcess(
             0,
             processInformation.dwProcessId,
-            0);
+            DEBUG_ATTACH_NONINVASIVE);
         ASSERT(result == S_OK);
         ASSERT(debugClient->FlushCallbacks() == S_OK);
 
@@ -271,8 +272,8 @@ int main(void)
 
         while (true) {
             std::cout << lines << "Waiting..\n" << lines;
-            result = debugControl->WaitForEvent(0, 1000);
-            ASSERT(result == S_FALSE);
+            result = debugControl->WaitForEvent(0, 3000);
+            ASSERT(result == S_OK);
             std::cout << lines << "Done Waiting..\n" << lines;
 
             ULONG executionStatus;
@@ -281,25 +282,26 @@ int main(void)
             ASSERT(debugClient->FlushCallbacks() == S_OK);
             std::cout << "ExecutionStatus: " << executionStatus << "\n";
 
-            //ULONG numberThreads;
-            //result = debugSystemObjects->GetNumberThreads(&numberThreads);
-            //ASSERT(result == S_OK);
-            //ASSERT(debugClient->FlushCallbacks() == S_OK);
-            //std::cout << "NumberThreads: " << numberThreads << "\n";
+            ULONG numberThreads;
+            result = debugSystemObjects->GetNumberThreads(&numberThreads);
+            ASSERT(result == S_OK);
+            ASSERT(debugClient->FlushCallbacks() == S_OK);
+            std::cout << "NumberThreads: " << numberThreads << "\n";
 
             ASSERT(executionStatus == DEBUG_STATUS_BREAK);
 
-            //result = debugControl->OutputStackTrace(
-            //    DEBUG_OUTCTL_THIS_CLIENT,
-            //    NULL,
-            //    10,
-            //    DEBUG_STACK_FRAME_NUMBERS);
-            //ASSERT(result == S_OK);
-            //ASSERT(debugClient->FlushCallbacks() == S_OK);
+            result = debugControl->OutputStackTrace(
+                DEBUG_OUTCTL_THIS_CLIENT,
+                NULL,
+                10,
+                DEBUG_STACK_FRAME_NUMBERS);
+            ASSERT(result == S_OK);
+            ASSERT(debugClient->FlushCallbacks() == S_OK);
 
             std::cout << "Sleeping..\n";
             ::Sleep(5000);
             std::cout << "Done sleeping..\n";
+            break;
         }
 
         return EXIT_SUCCESS;
