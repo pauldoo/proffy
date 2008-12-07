@@ -122,6 +122,8 @@ namespace Proffy {
                 ASSERT(result == S_OK);
                 std::cout << lines << TimeInSeconds() << ": Done Waiting..\n" << lines;
 
+                FlushCallbacks(debugClient);
+
                 ULONG executionStatus;
                 result = debugControl->GetExecutionStatus(&executionStatus);
                 std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
@@ -142,6 +144,8 @@ namespace Proffy {
                     10,
                     DEBUG_STACK_FRAME_NUMBERS);
                 ASSERT(result == S_OK);
+
+                FlushCallbacks(debugClient);
 
                 result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
                 ASSERT(result == S_OK);
