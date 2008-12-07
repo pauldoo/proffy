@@ -16,25 +16,13 @@
 */
 #pragma once
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+namespace Proffy {
+    void Assert(
+        const bool v,
+        const std::string& expression,
+        const std::string& function,
+        const std::string& file,
+        const int lineNumber);
+}
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#define STRICT
-
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
-
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+#define ASSERT(expression) ::Proffy::Assert((expression), #expression, __FUNCTION__, __FILE__, __LINE__);

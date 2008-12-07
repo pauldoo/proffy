@@ -14,27 +14,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include "stdafx.h"
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+#include "Assert.h"
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#define STRICT
+#include "Exception.h"
 
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
-
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+namespace Proffy {
+    void Assert(
+        const bool v,
+        const std::string& expression,
+        const std::string& function,
+        const std::string& file,
+        const int lineNumber)
+    {
+        if (v == false) {
+            ::DebugBreak();
+            std::ostringstream message;
+            message << "Assertion failure: \"" << expression << "\" in " << function << " (" << file << ", line " << lineNumber << ")";
+            throw Exception(message.str());
+        }
+    }
+}

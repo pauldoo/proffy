@@ -16,25 +16,18 @@
 */
 #pragma once
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+namespace Proffy {
+    class DebugOutputCallbacks : public IDebugOutputCallbacks
+    {
+    public:
+        virtual ~DebugOutputCallbacks();
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#define STRICT
+        virtual HRESULT __stdcall QueryInterface(REFIID interfaceId, PVOID* result);
 
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
+        virtual ULONG __stdcall AddRef(void);
 
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <vector>
+        virtual ULONG __stdcall Release(void);
 
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+        virtual HRESULT __stdcall Output(ULONG mask, PCSTR text);
+    };
+}

@@ -170,6 +170,38 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\Assert.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Assert.h"
+			>
+		</File>
+		<File
+			RelativePath=".\DebugEventCallbacks.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\DebugEventCallbacks.h"
+			>
+		</File>
+		<File
+			RelativePath=".\DebugOutputCallbacks.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\DebugOutputCallbacks.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Exception.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Exception.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Externals.h"
 			>
 		</File>

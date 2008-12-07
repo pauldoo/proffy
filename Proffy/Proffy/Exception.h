@@ -16,25 +16,16 @@
 */
 #pragma once
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+namespace Proffy {
+    class Exception : public std::exception
+    {
+    public:
+        Exception(const std::string& reason);
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#define STRICT
+        /// std::exception
+        virtual const char* what () const throw ();
 
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
-
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+    private:
+        const std::string fReason;
+    };
+}

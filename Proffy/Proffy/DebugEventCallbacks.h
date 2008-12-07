@@ -16,25 +16,22 @@
 */
 #pragma once
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+namespace Proffy {
+    class DebugEventCallbacks : public DebugBaseEventCallbacks
+    {
+    public:
+        virtual ~DebugEventCallbacks();
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#define STRICT
+        virtual ULONG __stdcall AddRef(void);
 
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
+        virtual ULONG __stdcall Release(void);
 
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <vector>
+        virtual HRESULT __stdcall GetInterestMask(ULONG* mask);
 
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+        virtual HRESULT __stdcall ChangeEngineState(
+            ULONG flags,
+            ULONG64 argument);
+
+        virtual HRESULT __stdcall Breakpoint(IDebugBreakpoint* breakpoint);
+    };
+}
