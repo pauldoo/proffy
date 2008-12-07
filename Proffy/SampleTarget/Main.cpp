@@ -16,8 +16,10 @@
 */
 #include <windows.h>
 
-#include <iostream>
+#include <algorithm>
 #include <cstdlib>
+#include <iostream>
+#include <vector>
 
 #pragma warning(disable: 4127) // conditional expression is constant
 
@@ -25,14 +27,14 @@ int main(void)
 {
     std::cout << "Running dummy target.\n";
     ::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+
+    std::vector<int> values;
+    for (int i = 0; i < 4000000; i++) {
+        values.push_back(i);
+    }
     while(true) {
-        for (int i = 50; i <= 100; i++) {
-            void* p = malloc(i);
-            free(p);
-            std::cout << ".";
-            std::cout.flush();
-            //::Sleep(0);
-        }
+        std::random_shuffle(values.begin(), values.end());
+        std::sort(values.begin(), values.end());
     }
     return EXIT_SUCCESS;
 }

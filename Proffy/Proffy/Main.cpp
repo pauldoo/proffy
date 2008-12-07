@@ -20,6 +20,7 @@
 #include "Exception.h"
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
+#include "Utilities.h"
 
 namespace {
     const std::string lines = std::string(50, '-') + "\n";
@@ -112,11 +113,12 @@ namespace Proffy {
             ASSERT(debugeeTypeClass == DEBUG_CLASS_USER_WINDOWS);
             ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
 
-            FlushCallbacks(debugClient);
-
             while (true) {
+                FlushCallbacks(debugClient);
+
                 std::cout << lines << TimeInSeconds() << ": Waiting..\n" << lines;
                 result = debugControl->WaitForEvent(0, 3000);
+                std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
                 std::cout << lines << TimeInSeconds() << ": Done Waiting..\n" << lines;
 
@@ -124,13 +126,12 @@ namespace Proffy {
                 result = debugControl->GetExecutionStatus(&executionStatus);
                 ASSERT(result == S_OK);
                 std::cout << "ExecutionStatus: " << executionStatus << "\n";
+                ASSERT(executionStatus == DEBUG_STATUS_BREAK);
 
                 ULONG numberThreads;
                 result = debugSystemObjects->GetNumberThreads(&numberThreads);
                 ASSERT(result == S_OK);
                 std::cout << "NumberThreads: " << numberThreads << "\n";
-
-                ASSERT(executionStatus == DEBUG_STATUS_BREAK);
 
                 std::cout << "OutputStackTrace:\n";
                 result = debugControl->OutputStackTrace(
@@ -140,10 +141,13 @@ namespace Proffy {
                     DEBUG_STACK_FRAME_NUMBERS);
                 ASSERT(result == S_OK);
 
-                std::cout << "Sleeping..\n";
-                ::Sleep(5000);
-                std::cout << "Done sleeping..\n";
-                break;
+                result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
+                ASSERT(result == S_OK);
+
+                //std::cout << "Sleeping..\n";
+                //::Sleep(5000);
+                //std::cout << "Done sleeping..\n";
+                //break;
             }
 
             return EXIT_SUCCESS;
@@ -155,5 +159,6 @@ namespace Proffy {
 }
 
 int main(void) {
+    std::ios::sync_with_stdio(false);
     return Proffy::main();
 }

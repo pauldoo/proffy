@@ -233,6 +233,14 @@
 			RelativePath=".\stdafx.h"
 			>
 		</File>
+		<File
+			RelativePath=".\Utilities.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Utilities.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

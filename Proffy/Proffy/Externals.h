@@ -21,12 +21,16 @@
 */
 
 #define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
 #define STRICT
 
 // Microsoft includes
 #include <windows.h>
 #include <dbgeng.h>
+#pragma warning(push)
+#pragma warning(disable: 4005) // macro redefinition
+#include <ntstatus.h>
+#pragma warning(pop)
+#include <winerror.h>
 
 // Standard includes
 #include <cassert>

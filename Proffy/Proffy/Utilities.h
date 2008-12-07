@@ -14,24 +14,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "stdafx.h"
-
-#include "Assert.h"
-
-#include "Exception.h"
+#pragma once
 
 namespace Proffy {
-    void Assert(
-        const bool v,
-        const std::string& expression,
-        const std::string& function,
-        const std::string& file,
-        const int lineNumber)
-    {
-        if (v == false) {
-            std::ostringstream message;
-            message << "Assertion failure: \"" << expression << "\" in " << function << " (" << file << ", line " << lineNumber << ")";
-            throw Exception(message.str());
-        }
+    namespace Utilities {
+        const std::string DebugStatusReportToString(const ULONG64);
+
+        const std::string HresultToString(const HRESULT);
     }
 }
