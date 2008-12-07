@@ -18,6 +18,8 @@
 
 #include "DebugEventCallbacks.h"
 
+#include "Exception.h"
+
 namespace Proffy {
     DebugEventCallbacks::~DebugEventCallbacks()
     {
@@ -56,50 +58,70 @@ namespace Proffy {
         ULONG flags,
         ULONG64 /*argument*/)
     {
-        //if (flags & DEBUG_CES_CURRENT_THREAD) {
-        //    std::cout << __FUNCTION__ << ": The current thread has changed, which implies that the current target and current process might also have changed.\n";
-        //}
+        if (flags & DEBUG_CES_CURRENT_THREAD) {
+            flags &= ~DEBUG_CES_CURRENT_THREAD;
+            std::cout << __FUNCTION__ << ": The current thread has changed, which implies that the current target and current process might also have changed.\n";
+        }
         if (flags & DEBUG_CES_EFFECTIVE_PROCESSOR) {
+            flags &= ~DEBUG_CES_EFFECTIVE_PROCESSOR;
             std::cout << __FUNCTION__ << ": The effective processor has changed.\n";
         }
         if (flags & DEBUG_CES_BREAKPOINTS) {
+            flags &= ~DEBUG_CES_BREAKPOINTS;
             std::cout << __FUNCTION__ << ": One or more breakpoints have changed.\n";
         }
         if (flags & DEBUG_CES_CODE_LEVEL) {
+            flags &= ~DEBUG_CES_CODE_LEVEL;
             std::cout << __FUNCTION__ << ": The code interpretation level has changed.\n";
         }
-        //if (flags & DEBUG_CES_EXECUTION_STATUS) {
-        //    std::cout << __FUNCTION__ << ": The execution status has changed.\n";
-        //}
+        if (flags & DEBUG_CES_EXECUTION_STATUS) {
+            flags &= ~DEBUG_CES_EXECUTION_STATUS;
+            std::cout << __FUNCTION__ << ": The execution status has changed.\n";
+        }
         if (flags & DEBUG_CES_ENGINE_OPTIONS) {
+            flags &= ~DEBUG_CES_ENGINE_OPTIONS;
             std::cout << __FUNCTION__ << ": The engine options have changed.\n";
         }
         if (flags & DEBUG_CES_LOG_FILE) {
+            flags &= ~DEBUG_CES_LOG_FILE;
             std::cout << __FUNCTION__ << ": The log file has been opened or closed.\n";
         }
         if (flags & DEBUG_CES_RADIX) {
+            flags &= ~DEBUG_CES_RADIX;
             std::cout << __FUNCTION__ << ": The default radix has changed.\n";
         }
         if (flags & DEBUG_CES_EVENT_FILTERS) {
+            flags &= ~DEBUG_CES_EVENT_FILTERS;
             std::cout << __FUNCTION__ << ": The event filters have changed.\n";
         }
         if (flags & DEBUG_CES_PROCESS_OPTIONS) {
+            flags &= ~DEBUG_CES_PROCESS_OPTIONS;
             std::cout << __FUNCTION__ << ": The process options for the current process have changed.\n";
         }
         if (flags & DEBUG_CES_EXTENSIONS) {
+            flags &= ~DEBUG_CES_EXTENSIONS;
             std::cout << __FUNCTION__ << ": Extension DLLs have been loaded or unloaded. (For more information, see Loading Debugger Extension DLLs.)\n";
         }
         if (flags & DEBUG_CES_SYSTEMS) {
+            flags &= ~DEBUG_CES_SYSTEMS;
             std::cout << __FUNCTION__ << ": A target has been added or removed.\n";
         }
         if (flags & DEBUG_CES_ASSEMBLY_OPTIONS) {
+            flags &= ~DEBUG_CES_ASSEMBLY_OPTIONS;
             std::cout << __FUNCTION__ << ": The assemble options have changed.\n";
         }
         if (flags & DEBUG_CES_EXPRESSION_SYNTAX) {
+            flags &= ~DEBUG_CES_EXPRESSION_SYNTAX;
             std::cout << __FUNCTION__ << ": The default expression syntax has changed.\n";
         }
         if (flags & DEBUG_CES_TEXT_REPLACEMENTS) {
+            flags &= ~DEBUG_CES_TEXT_REPLACEMENTS;
             std::cout << __FUNCTION__ << ": Text replacements have changed.\n";
+        }
+        if (flags != 0) {
+            std::ostringstream message;
+            message << "Unknown flag: " << flags;
+            throw Proffy::Exception(message.str());
         }
 
         return S_OK;
