@@ -124,12 +124,14 @@ namespace Proffy {
 
                 ULONG executionStatus;
                 result = debugControl->GetExecutionStatus(&executionStatus);
+                std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
                 std::cout << "ExecutionStatus: " << executionStatus << "\n";
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
 
                 ULONG numberThreads;
                 result = debugSystemObjects->GetNumberThreads(&numberThreads);
+                std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
                 std::cout << "NumberThreads: " << numberThreads << "\n";
 
