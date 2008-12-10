@@ -28,7 +28,7 @@ namespace Proffy {
         *result = NULL;
 
         if (IsEqualIID(interfaceId, __uuidof(IUnknown)) ||
-            IsEqualIID(interfaceId, __uuidof(IDebugEventCallbacks))) {
+            IsEqualIID(interfaceId, __uuidof(IDebugOutputCallbacks))) {
             *result = this;
             AddRef();
             return S_OK;
