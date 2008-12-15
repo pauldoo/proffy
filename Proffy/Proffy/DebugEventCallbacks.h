@@ -17,21 +17,83 @@
 #pragma once
 
 namespace Proffy {
-    class DebugEventCallbacks : public DebugBaseEventCallbacks
+    class DebugEventCallbacks : public IDebugEventCallbacks
     {
     public:
         virtual ~DebugEventCallbacks();
+
+        virtual HRESULT __stdcall QueryInterface(
+            REFIID interfaceId,
+            PVOID* result);
 
         virtual ULONG __stdcall AddRef(void);
 
         virtual ULONG __stdcall Release(void);
 
-        virtual HRESULT __stdcall GetInterestMask(ULONG* mask);
+        virtual HRESULT __stdcall GetInterestMask(
+            ULONG* mask);
 
         virtual HRESULT __stdcall ChangeEngineState(
             ULONG flags,
             ULONG64 argument);
 
-        virtual HRESULT __stdcall Breakpoint(IDebugBreakpoint* breakpoint);
+        virtual HRESULT __stdcall Breakpoint(
+            IDebugBreakpoint* breakpoint);
+
+        virtual HRESULT __stdcall Exception(
+            EXCEPTION_RECORD64* exception,
+            ULONG firstChance);
+
+        virtual HRESULT __stdcall CreateThread(
+            ULONG64 handle,
+            ULONG64 dataOffset,
+            ULONG64 startOffset);
+
+        virtual HRESULT __stdcall ChangeSymbolState(
+            ULONG flags,
+            ULONG64 argument);
+
+        virtual HRESULT __stdcall ChangeDebuggeeState(
+            ULONG flags,
+            ULONG64 argument);
+
+        virtual HRESULT __stdcall SessionStatus(
+            ULONG status);
+
+        virtual HRESULT __stdcall SystemError(
+            ULONG error,
+            ULONG level);
+
+        virtual HRESULT __stdcall UnloadModule(
+            PCSTR imageBaseName,
+            ULONG64 baseOffset);
+
+        virtual HRESULT __stdcall LoadModule(
+            ULONG64 imageFileHandle,
+            ULONG64 baseOffset,
+            ULONG moduleSize,
+            PCSTR moduleName,
+            PCSTR imageName,
+            ULONG checkSum,
+            ULONG timeDateStamp);
+
+        virtual HRESULT __stdcall ExitProcess(
+            ULONG exitCode);
+
+        virtual HRESULT __stdcall CreateProcess(
+            ULONG64 imageFileHandle,
+            ULONG64 handle,
+            ULONG64 baseOffset,
+            ULONG moduleSize,
+            PCSTR moduleName,
+            PCSTR imageName,
+            ULONG checkSum,
+            ULONG timeDateStamp,
+            ULONG64 initialThreadHandle,
+            ULONG64 threadDataOffset,
+            ULONG64 startOffset);
+
+        virtual HRESULT __stdcall ExitThread(
+            ULONG exitCode);
     };
 }

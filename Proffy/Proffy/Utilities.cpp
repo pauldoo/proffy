@@ -50,6 +50,30 @@ namespace Proffy {
             }
         }
 
+        const std::string DebugSessionStatusToString(const ULONG64 status)
+        {
+            switch (status) {
+                case DEBUG_SESSION_ACTIVE:
+                    return "A debugger session has started.";
+                case DEBUG_SESSION_END_SESSION_ACTIVE_TERMINATE:
+                    return "The session was ended by sending DEBUG_END_ACTIVE_TERMINATE to EndSession.";
+                case DEBUG_SESSION_END_SESSION_ACTIVE_DETACH:
+                    return "The session was ended by sending DEBUG_END_ACTIVE_DETACH to EndSession.";
+                case DEBUG_SESSION_END_SESSION_PASSIVE:
+                    return "The session was ended by sending DEBUG_END_PASSIVE to EndSession.";
+                case DEBUG_SESSION_END:
+                    return "The target ran to completion, ending the session.";
+                case DEBUG_SESSION_REBOOT:
+                    return "The target computer rebooted, ending the session.";
+                case DEBUG_SESSION_HIBERNATE:
+                    return "The target computer went into hibernation, ending the session.";
+                case DEBUG_SESSION_FAILURE:
+                    return "The engine was unable to continue the session.";
+                default:
+                    return "Unknown debug session status.";
+            }
+        }
+
         const std::string HresultToString(const HRESULT result)
         {
             switch (result) {

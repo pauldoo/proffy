@@ -22,12 +22,16 @@ namespace Proffy {
     public:
         virtual ~DebugOutputCallbacks();
 
-        virtual HRESULT __stdcall QueryInterface(REFIID interfaceId, PVOID* result);
+        virtual HRESULT __stdcall QueryInterface(
+            REFIID interfaceId,
+            PVOID* result);
 
         virtual ULONG __stdcall AddRef(void);
 
         virtual ULONG __stdcall Release(void);
 
-        virtual HRESULT __stdcall Output(ULONG mask, PCSTR text);
+        virtual HRESULT __stdcall Output(
+            ULONG mask,
+            PCSTR text);
     };
 }

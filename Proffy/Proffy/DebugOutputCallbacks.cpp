@@ -25,6 +25,7 @@ namespace Proffy {
 
     HRESULT __stdcall DebugOutputCallbacks::QueryInterface(REFIID interfaceId, PVOID* result)
     {
+        std::cout << __FUNCTION__ << "\n";
         *result = NULL;
 
         if (IsEqualIID(interfaceId, __uuidof(IUnknown)) ||

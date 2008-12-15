@@ -26,6 +26,21 @@ namespace Proffy {
     {
     }
 
+    HRESULT __stdcall DebugEventCallbacks::QueryInterface(REFIID interfaceId, PVOID* result)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        *result = NULL;
+
+        if (IsEqualIID(interfaceId, __uuidof(IUnknown)) ||
+            IsEqualIID(interfaceId, __uuidof(IDebugEventCallbacks))) {
+            *result = this;
+            AddRef();
+            return S_OK;
+        } else {
+            return E_NOINTERFACE;
+        }
+    }
+
     ULONG __stdcall DebugEventCallbacks::AddRef(void)
     {
         return 1;
@@ -135,6 +150,119 @@ namespace Proffy {
     }
 
     HRESULT __stdcall DebugEventCallbacks::Breakpoint(IDebugBreakpoint* /*breakpoint*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::Exception(
+        EXCEPTION_RECORD64* /*exception*/,
+        ULONG /*firstChance*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::CreateThread(
+        ULONG64 /*handle*/,
+        ULONG64 /*dataOffset*/,
+        ULONG64 /*startOffset*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::ChangeSymbolState(
+        ULONG /*flags*/,
+        ULONG64 /*argument*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::ChangeDebuggeeState(
+        ULONG flags,
+        ULONG64 /*argument*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        switch (flags) {
+            case DEBUG_CDS_ALL:
+                std::cout << "    All\n";
+                break;
+            case DEBUG_CDS_REGISTERS:
+                std::cout << "    Registers\n";
+                break;
+            case DEBUG_CDS_DATA:
+                std::cout << "    Data\n";
+                break;
+            default:
+                std::cout << "    " << flags << "\n";
+        }
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::SessionStatus(
+        ULONG status)
+    {
+        std::cout << __FUNCTION__ << ": " << Utilities::DebugSessionStatusToString(status) << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::SystemError(
+        ULONG /*error*/,
+        ULONG /*level*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::UnloadModule(
+        PCSTR /*imageBaseName*/,
+        ULONG64 /*baseOffset*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::LoadModule(
+        ULONG64 /*imageFileHandle*/,
+        ULONG64 /*baseOffset*/,
+        ULONG /*moduleSize*/,
+        PCSTR /*moduleName*/,
+        PCSTR /*imageName*/,
+        ULONG /*checkSum*/,
+        ULONG /*timeDateStamp*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::ExitProcess(
+        ULONG /*exitCode*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::CreateProcess(
+        ULONG64 /*imageFileHandle*/,
+        ULONG64 /*handle*/,
+        ULONG64 /*baseOffset*/,
+        ULONG /*moduleSize*/,
+        PCSTR /*moduleName*/,
+        PCSTR /*imageName*/,
+        ULONG /*checkSum*/,
+        ULONG /*timeDateStamp*/,
+        ULONG64 /*initialThreadHandle*/,
+        ULONG64 /*threadDataOffset*/,
+        ULONG64 /*startOffset*/)
+    {
+        std::cout << __FUNCTION__ << "\n";
+        return S_OK;
+    }
+
+    HRESULT __stdcall DebugEventCallbacks::ExitThread(
+        ULONG /*exitCode*/)
     {
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
