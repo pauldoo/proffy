@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="External/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,6 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="dbgeng.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="External/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -87,6 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -116,6 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="External/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,6 +141,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="dbgeng.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="External/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -163,6 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;"
 			/>
 		</Configuration>
 	</Configurations>
