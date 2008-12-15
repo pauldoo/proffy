@@ -17,6 +17,7 @@
 #include "stdafx.h"
 
 #include "Assert.h"
+#include "ConsoleColor.h"
 #include "Exception.h"
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
@@ -99,11 +100,13 @@ namespace Proffy {
             ASSERT(result == S_OK);
 
             // Done getting and setting, so now attach.
+            std::cout << lines << TimeInSeconds() << ": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
                 0,
                 processInformation.dwProcessId,
-                DEBUG_ATTACH_NONINVASIVE);
+                DEBUG_ATTACH_NONINVASIVE | DEBUG_ATTACH_NONINVASIVE_NO_SUSPEND);
             ASSERT(result == S_OK);
+            std::cout << lines << TimeInSeconds() << ": Done Attaching..\n" << lines;
 
             // Verify we have attached to what we think we have.
             ULONG debugeeTypeClass;
@@ -112,6 +115,8 @@ namespace Proffy {
             ASSERT(result == S_OK);
             ASSERT(debugeeTypeClass == DEBUG_CLASS_USER_WINDOWS);
             ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
+
+            ConsoleColor c(Color_Normal);
 
             while (true) {
                 FlushCallbacks(debugClient);

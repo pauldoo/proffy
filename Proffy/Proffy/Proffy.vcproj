@@ -184,6 +184,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ConsoleColor.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ConsoleColor.h"
+			>
+		</File>
+		<File
 			RelativePath=".\DebugEventCallbacks.cpp"
 			>
 		</File>

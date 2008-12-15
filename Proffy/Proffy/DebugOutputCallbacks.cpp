@@ -18,6 +18,8 @@
 
 #include "DebugOutputCallbacks.h"
 
+#include "ConsoleColor.h"
+
 namespace Proffy {
     DebugOutputCallbacks::~DebugOutputCallbacks()
     {
@@ -25,6 +27,7 @@ namespace Proffy {
 
     HRESULT __stdcall DebugOutputCallbacks::QueryInterface(REFIID interfaceId, PVOID* result)
     {
+        ConsoleColor c(Color_Green);
         std::cout << __FUNCTION__ << "\n";
         *result = NULL;
 
@@ -50,6 +53,7 @@ namespace Proffy {
 
     HRESULT __stdcall DebugOutputCallbacks::Output(ULONG /*mask*/, PCSTR text)
     {
+        ConsoleColor c(Color_Green);
         std::cout << text;
         return S_OK;
     }
