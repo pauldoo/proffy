@@ -22,8 +22,14 @@
 
 namespace Proffy {
     namespace Utilities {
+        const double TimeInSeconds()
+        {
+            return static_cast<double>(clock()) / CLOCKS_PER_SEC;
+        }
+
         const std::string DebugStatusReportToString(const ULONG64 status)
         {
+            // See: http://msdn.microsoft.com/en-gb/library/cc267466.aspx
             switch (status) {
                 case DEBUG_STATUS_NO_DEBUGGEE:
                     return "No debugging session is active.";
@@ -52,6 +58,7 @@ namespace Proffy {
 
         const std::string DebugSessionStatusToString(const ULONG64 status)
         {
+            // See: http://msdn.microsoft.com/en-gb/library/cc265715.aspx
             switch (status) {
                 case DEBUG_SESSION_ACTIVE:
                     return "A debugger session has started.";
@@ -76,6 +83,7 @@ namespace Proffy {
 
         const std::string HresultToString(const HRESULT result)
         {
+            // See: http://msdn.microsoft.com/en-gb/library/cc267455.aspx
             switch (result) {
                 case S_OK:
                     return "Successful completion.";
@@ -109,6 +117,27 @@ namespace Proffy {
                     std::ostringstream message;
                     message << "Unknown (" << result << ").";
                     return message.str();
+            }
+        }
+
+        const std::string ExecutionStatusToString(const ULONG64 status)
+        {
+            // See: http://msdn.microsoft.com/en-gb/library/cc266036.aspx
+            switch (status) {
+                case DEBUG_STATUS_NO_DEBUGGEE:
+                    return "The engine is not attached to a target.";
+                case DEBUG_STATUS_STEP_OVER:
+                    return "The target is currently executing a single instruction. If that instruction is a subroutine call, the entire call will be executed.";
+                case DEBUG_STATUS_STEP_INTO:
+                    return "The target is currently executing a single instruction.";
+                case DEBUG_STATUS_STEP_BRANCH:
+                    return "The target is currently running until it encounters a branch instruction.";
+                case DEBUG_STATUS_GO:
+                    return "The target is currently running normally. It will continue normal execution until an event occurs.";
+                case DEBUG_STATUS_BREAK:
+                    return "The target is not running.";
+                default:
+                    return "Not an execution status.";
             }
         }
     }

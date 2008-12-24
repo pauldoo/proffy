@@ -19,6 +19,7 @@
 #include "ConsoleColor.h"
 
 #include "Assert.h"
+#include "Utilities.h"
 
 namespace Proffy
 {
@@ -31,14 +32,17 @@ namespace Proffy
         fOldAttributes = info.wAttributes;
 
         switch (color) {
-            case Color_Red:
-                result = ::SetConsoleTextAttribute(handle, FOREGROUND_RED);
+            case Color_Cyan:
+                result = ::SetConsoleTextAttribute(handle,
+                    FOREGROUND_GREEN | FOREGROUND_BLUE);
                 break;
-            case Color_Green:
-                result = ::SetConsoleTextAttribute(handle, FOREGROUND_GREEN);
+            case Color_Magenta:
+                result = ::SetConsoleTextAttribute(handle,
+                    FOREGROUND_RED | FOREGROUND_BLUE);
                 break;
-            case Color_Blue:
-                result = ::SetConsoleTextAttribute(handle, FOREGROUND_BLUE);
+            case Color_Yellow:
+                result = ::SetConsoleTextAttribute(handle,
+                    FOREGROUND_RED | FOREGROUND_GREEN);
                 break;
             case Color_Normal:
                 result = ::SetConsoleTextAttribute(handle,
@@ -48,6 +52,8 @@ namespace Proffy
                 ASSERT(false);
         }
         ASSERT(result != 0);
+
+        std::cout << Utilities::TimeInSeconds() << "\n";
     }
 
     ConsoleColor::~ConsoleColor()

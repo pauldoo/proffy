@@ -20,9 +20,9 @@ namespace Proffy
 {
     enum eColor
     {
-        Color_Red,
-        Color_Green,
-        Color_Blue,
+        Color_Cyan,
+        Color_Magenta,
+        Color_Yellow,
         Color_Normal
     };
 

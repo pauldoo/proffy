@@ -28,13 +28,17 @@ int main(void)
     std::cout << "Running dummy target.\n";
     ::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
 
+    const int count = 10000;
     std::vector<int> values;
-    for (int i = 0; i < 4000000; i++) {
+    values.reserve(count);
+    for (int i = 0; i < count; i++) {
         values.push_back(i);
     }
     while(true) {
         std::random_shuffle(values.begin(), values.end());
         std::sort(values.begin(), values.end());
+        std::cout << ".";
+        std::cout.flush();
     }
     return EXIT_SUCCESS;
 }

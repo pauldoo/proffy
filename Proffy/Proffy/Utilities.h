@@ -18,9 +18,13 @@
 
 namespace Proffy {
     namespace Utilities {
+        const double TimeInSeconds();
+
         const std::string DebugStatusReportToString(const ULONG64);
 
         const std::string DebugSessionStatusToString(const ULONG64);
+
+        const std::string ExecutionStatusToString(const ULONG64);
 
         const std::string HresultToString(const HRESULT);
     }

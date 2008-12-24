@@ -18,6 +18,7 @@
 
 #include "DebugEventCallbacks.h"
 
+#include "Assert.h"
 #include "ConsoleColor.h"
 #include "Exception.h"
 #include "Utilities.h"
@@ -29,7 +30,7 @@ namespace Proffy {
 
     HRESULT __stdcall DebugEventCallbacks::QueryInterface(REFIID interfaceId, PVOID* result)
     {
-        ConsoleColor c(Color_Red);
+        ConsoleColor c(Color_Yellow);
         std::cout << __FUNCTION__ << "\n";
         *result = NULL;
 
@@ -50,21 +51,21 @@ namespace Proffy {
 
     ULONG __stdcall DebugEventCallbacks::Release(void)
     {
-        return 1;
+        return 0;
     }
 
     HRESULT __stdcall DebugEventCallbacks::GetInterestMask(ULONG* mask)
     {
         *mask =
-            DEBUG_EVENT_BREAKPOINT |
-            DEBUG_EVENT_EXCEPTION |
-            DEBUG_EVENT_CREATE_THREAD |
-            DEBUG_EVENT_EXIT_THREAD |
-            DEBUG_EVENT_CREATE_PROCESS |
-            DEBUG_EVENT_EXIT_PROCESS |
-            DEBUG_EVENT_LOAD_MODULE |
-            DEBUG_EVENT_UNLOAD_MODULE |
-            DEBUG_EVENT_SYSTEM_ERROR |
+            //DEBUG_EVENT_BREAKPOINT |
+            //DEBUG_EVENT_EXCEPTION |
+            //DEBUG_EVENT_CREATE_THREAD |
+            //DEBUG_EVENT_EXIT_THREAD |
+            //DEBUG_EVENT_CREATE_PROCESS |
+            //DEBUG_EVENT_EXIT_PROCESS |
+            //DEBUG_EVENT_LOAD_MODULE |
+            //DEBUG_EVENT_UNLOAD_MODULE |
+            //DEBUG_EVENT_SYSTEM_ERROR |
             DEBUG_EVENT_SESSION_STATUS |
             DEBUG_EVENT_CHANGE_DEBUGGEE_STATE |
             DEBUG_EVENT_CHANGE_ENGINE_STATE |
@@ -76,7 +77,7 @@ namespace Proffy {
         ULONG flags,
         ULONG64 argument)
     {
-        ConsoleColor c(Color_Red);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ ": Begin.\n";
         if (flags & DEBUG_CES_CURRENT_THREAD) {
             flags &= ~DEBUG_CES_CURRENT_THREAD;
@@ -154,18 +155,23 @@ namespace Proffy {
 
     HRESULT __stdcall DebugEventCallbacks::Breakpoint(IDebugBreakpoint* /*breakpoint*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT __stdcall DebugEventCallbacks::Exception(
-        EXCEPTION_RECORD64* /*exception*/,
-        ULONG /*firstChance*/)
+        EXCEPTION_RECORD64* exception,
+        ULONG firstChance)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        exception;
+        firstChance;
+
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
-        return S_OK;
+        return DEBUG_STATUS_GO_HANDLED;
     }
 
     HRESULT __stdcall DebugEventCallbacks::CreateThread(
@@ -173,7 +179,8 @@ namespace Proffy {
         ULONG64 /*dataOffset*/,
         ULONG64 /*startOffset*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
@@ -182,7 +189,7 @@ namespace Proffy {
         ULONG /*flags*/,
         ULONG64 /*argument*/)
     {
-        ConsoleColor c(Color_Red);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
@@ -191,7 +198,7 @@ namespace Proffy {
         ULONG flags,
         ULONG64 /*argument*/)
     {
-        ConsoleColor c(Color_Red);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         switch (flags) {
             case DEBUG_CDS_ALL:
@@ -212,17 +219,22 @@ namespace Proffy {
     HRESULT __stdcall DebugEventCallbacks::SessionStatus(
         ULONG status)
     {
-        ConsoleColor c(Color_Red);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << ": " << Utilities::DebugSessionStatusToString(status) << "\n";
         return S_OK;
     }
 
     HRESULT __stdcall DebugEventCallbacks::SystemError(
-        ULONG /*error*/,
-        ULONG /*level*/)
+        ULONG error,
+        ULONG level)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        error;
+        level;
+
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
+        __debugbreak();
         return S_OK;
     }
 
@@ -230,21 +242,31 @@ namespace Proffy {
         PCSTR /*imageBaseName*/,
         ULONG64 /*baseOffset*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT __stdcall DebugEventCallbacks::LoadModule(
-        ULONG64 /*imageFileHandle*/,
-        ULONG64 /*baseOffset*/,
-        ULONG /*moduleSize*/,
-        PCSTR /*moduleName*/,
-        PCSTR /*imageName*/,
-        ULONG /*checkSum*/,
-        ULONG /*timeDateStamp*/)
+        ULONG64 imageFileHandle,
+        ULONG64 baseOffset,
+        ULONG moduleSize,
+        PCSTR moduleName,
+        PCSTR imageName,
+        ULONG checkSum,
+        ULONG timeDateStamp)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        imageFileHandle;
+        baseOffset;
+        moduleSize;
+        moduleName;
+        imageName;
+        checkSum;
+        timeDateStamp;
+
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
@@ -252,7 +274,8 @@ namespace Proffy {
     HRESULT __stdcall DebugEventCallbacks::ExitProcess(
         ULONG /*exitCode*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
@@ -270,7 +293,8 @@ namespace Proffy {
         ULONG64 /*threadDataOffset*/,
         ULONG64 /*startOffset*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
@@ -278,7 +302,8 @@ namespace Proffy {
     HRESULT __stdcall DebugEventCallbacks::ExitThread(
         ULONG /*exitCode*/)
     {
-        ConsoleColor c(Color_Red);
+        ASSERT(false);
+        ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }

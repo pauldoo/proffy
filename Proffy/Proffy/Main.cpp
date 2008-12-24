@@ -25,11 +25,6 @@
 
 namespace {
     const std::string lines = std::string(50, '-') + "\n";
-
-    const double TimeInSeconds()
-    {
-        return static_cast<double>(clock()) / CLOCKS_PER_SEC;
-    }
 }
 
 namespace Proffy {
@@ -100,13 +95,15 @@ namespace Proffy {
             ASSERT(result == S_OK);
 
             // Done getting and setting, so now attach.
-            std::cout << lines << TimeInSeconds() << ": Attaching..\n" << lines;
+            std::cout << lines << Utilities::TimeInSeconds() << ": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
                 0,
                 processInformation.dwProcessId,
-                DEBUG_ATTACH_NONINVASIVE | DEBUG_ATTACH_NONINVASIVE_NO_SUSPEND);
+                0);
+                //DEBUG_ATTACH_INVASIVE_NO_INITIAL_BREAK);
+                //DEBUG_ATTACH_NONINVASIVE | DEBUG_ATTACH_NONINVASIVE_NO_SUSPEND);
             ASSERT(result == S_OK);
-            std::cout << lines << TimeInSeconds() << ": Done Attaching..\n" << lines;
+            std::cout << lines << Utilities::TimeInSeconds() << ": Done Attaching..\n" << lines;
 
             // Verify we have attached to what we think we have.
             ULONG debugeeTypeClass;
@@ -121,11 +118,13 @@ namespace Proffy {
             while (true) {
                 FlushCallbacks(debugClient);
 
-                std::cout << lines << TimeInSeconds() << ": Waiting..\n" << lines;
-                result = debugControl->WaitForEvent(0, 3000);
+                std::cout << lines << Utilities::TimeInSeconds() << ": Waiting..\n" << lines;
+                result = debugControl->WaitForEvent(
+                    DEBUG_WAIT_DEFAULT,
+                    3000);
                 std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
-                ASSERT(result == S_OK);
-                std::cout << lines << TimeInSeconds() << ": Done Waiting..\n" << lines;
+                ASSERT(result == S_OK || result == S_FALSE);
+                std::cout << lines << Utilities::TimeInSeconds() << ": Done Waiting..\n" << lines;
 
                 FlushCallbacks(debugClient);
 
@@ -133,27 +132,29 @@ namespace Proffy {
                 result = debugControl->GetExecutionStatus(&executionStatus);
                 std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
-                std::cout << "ExecutionStatus: " << executionStatus << "\n";
+                std::cout << "ExecutionStatus: " << Utilities::ExecutionStatusToString(executionStatus) << "\n";
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
 
-                ULONG numberThreads;
-                result = debugSystemObjects->GetNumberThreads(&numberThreads);
-                std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
-                ASSERT(result == S_OK);
-                std::cout << "NumberThreads: " << numberThreads << "\n";
+                //ULONG numberThreads;
+                //result = debugSystemObjects->GetNumberThreads(&numberThreads);
+                //std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
+                //ASSERT(result == S_OK);
+                //std::cout << "NumberThreads: " << numberThreads << "\n";
 
-                std::cout << "OutputStackTrace:\n";
-                result = debugControl->OutputStackTrace(
-                    DEBUG_OUTCTL_THIS_CLIENT,
-                    NULL,
-                    10,
-                    DEBUG_STACK_FRAME_NUMBERS);
-                ASSERT(result == S_OK);
+                //std::cout << "OutputStackTrace:\n";
+                //result = debugControl->OutputStackTrace(
+                //    DEBUG_OUTCTL_THIS_CLIENT,
+                //    NULL,
+                //    10,
+                //    DEBUG_STACK_FRAME_NUMBERS);
+                //std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
+                //ASSERT(result == S_OK);
 
                 FlushCallbacks(debugClient);
 
-                result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
-                ASSERT(result == S_OK);
+                //result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
+                //std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
+                //ASSERT(result == S_OK);
 
                 //std::cout << "Sleeping..\n";
                 //::Sleep(5000);
