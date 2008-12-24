@@ -66,10 +66,11 @@ namespace Proffy {
             //DEBUG_EVENT_LOAD_MODULE |
             //DEBUG_EVENT_UNLOAD_MODULE |
             //DEBUG_EVENT_SYSTEM_ERROR |
-            DEBUG_EVENT_SESSION_STATUS |
-            DEBUG_EVENT_CHANGE_DEBUGGEE_STATE |
-            DEBUG_EVENT_CHANGE_ENGINE_STATE |
-            DEBUG_EVENT_CHANGE_SYMBOL_STATE;
+            //DEBUG_EVENT_SESSION_STATUS |
+            //DEBUG_EVENT_CHANGE_DEBUGGEE_STATE |
+            //DEBUG_EVENT_CHANGE_ENGINE_STATE |
+            //DEBUG_EVENT_CHANGE_SYMBOL_STATE |
+            0;
         return S_OK;
     }
 

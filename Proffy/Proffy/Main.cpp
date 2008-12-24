@@ -30,9 +30,9 @@ namespace {
 namespace Proffy {
     void FlushCallbacks(IDebugClient* debugClient)
     {
-        std::cout << __FUNCTION__ << " Begin.\n";
+        //std::cout << __FUNCTION__ << " Begin.\n";
         ASSERT(debugClient->FlushCallbacks() == S_OK);
-        std::cout << __FUNCTION__ << " End.\n";
+        //std::cout << __FUNCTION__ << " End.\n";
     }
 
     int main(void)
@@ -113,41 +113,45 @@ namespace Proffy {
             ASSERT(debugeeTypeClass == DEBUG_CLASS_USER_WINDOWS);
             ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
 
+            FlushCallbacks(debugClient);
+
             ConsoleColor c(Color_Normal);
 
             while (true) {
-                FlushCallbacks(debugClient);
+                //FlushCallbacks(debugClient);
 
                 std::cout << lines << Utilities::TimeInSeconds() << ": Waiting..\n" << lines;
                 result = debugControl->WaitForEvent(
                     DEBUG_WAIT_DEFAULT,
-                    3000);
-                std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
+                    10);
+                //std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK || result == S_FALSE);
                 std::cout << lines << Utilities::TimeInSeconds() << ": Done Waiting..\n" << lines;
-                FlushCallbacks(debugClient);
+                //FlushCallbacks(debugClient);
 
                 ULONG executionStatus;
                 result = debugControl->GetExecutionStatus(&executionStatus);
-                std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
+                //std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
-                std::cout << "ExecutionStatus: " << Utilities::ExecutionStatusToString(executionStatus) << "\n";
+                //std::cout << "ExecutionStatus: " << Utilities::ExecutionStatusToString(executionStatus) << "\n";
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
-                FlushCallbacks(debugClient);
+                //FlushCallbacks(debugClient);
 
                 ULONG numberThreads;
                 ULONG largestProcess;
                 result = debugSystemObjects->GetTotalNumberThreads(&numberThreads, &largestProcess);
-                std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
+                //std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
-                std::cout << "NumberThreads: " << numberThreads << "\n";
-                FlushCallbacks(debugClient);
+                //std::cout << "NumberThreads: " << numberThreads << "\n";
+                //FlushCallbacks(debugClient);
 
                 for (ULONG i = 0; i < numberThreads; i++) {
+                    std::cout << "Thread #" << i << "\n";
+
                     result = debugSystemObjects->SetCurrentThreadId(i);
-                    std::cout << "SetCurrentThreadId returned: " << Utilities::HresultToString(result) << "\n";
+                    //std::cout << "SetCurrentThreadId returned: " << Utilities::HresultToString(result) << "\n";
                     ASSERT(result == S_OK);
-                    FlushCallbacks(debugClient);
+                    //FlushCallbacks(debugClient);
 
                     std::cout << "OutputStackTrace:\n";
                     result = debugControl->OutputStackTrace(
@@ -155,15 +159,15 @@ namespace Proffy {
                         NULL,
                         10,
                         DEBUG_STACK_FRAME_NUMBERS);
-                    std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
+                    //std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
                     ASSERT(result == S_OK);
-                    FlushCallbacks(debugClient);
+                    //FlushCallbacks(debugClient);
                 }
 
-                result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
-                std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
-                ASSERT(result == S_OK);
-                FlushCallbacks(debugClient);
+                //result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
+                //std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
+                //ASSERT(result == S_OK);
+                //FlushCallbacks(debugClient);
 
                 //std::cout << "Sleeping..\n";
                 //::Sleep(5000);
