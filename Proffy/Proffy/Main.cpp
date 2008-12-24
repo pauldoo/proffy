@@ -94,6 +94,13 @@ namespace Proffy {
                 reinterpret_cast<void**>(&debugSystemObjects));
             ASSERT(result == S_OK);
 
+            // Get the IDebugSymbols.
+            IDebugSymbols* debugSymbols = NULL;
+            result = debugClient->QueryInterface(
+                __uuidof(IDebugSymbols),
+                reinterpret_cast<void**>(&debugSymbols));
+            ASSERT(result == S_OK);
+
             // Done getting and setting, so now attach.
             std::cout << lines << Utilities::TimeInSeconds() << ": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
@@ -117,13 +124,15 @@ namespace Proffy {
 
             ConsoleColor c(Color_Normal);
 
-            while (true) {
+            std::list<std::vector<DEBUG_STACK_FRAME> > samples;
+
+            for (int i = 0; i < 10; i++) {
                 //FlushCallbacks(debugClient);
 
                 std::cout << lines << Utilities::TimeInSeconds() << ": Waiting..\n" << lines;
                 result = debugControl->WaitForEvent(
                     DEBUG_WAIT_DEFAULT,
-                    10);
+                    100);
                 //std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK || result == S_FALSE);
                 std::cout << lines << Utilities::TimeInSeconds() << ": Done Waiting..\n" << lines;
@@ -145,7 +154,7 @@ namespace Proffy {
                 //std::cout << "NumberThreads: " << numberThreads << "\n";
                 //FlushCallbacks(debugClient);
 
-                for (ULONG i = 0; i < numberThreads; i++) {
+                for (int i = 0; i < static_cast<int>(numberThreads); i++) {
                     std::cout << "Thread #" << i << "\n";
 
                     result = debugSystemObjects->SetCurrentThreadId(i);
@@ -153,15 +162,52 @@ namespace Proffy {
                     ASSERT(result == S_OK);
                     //FlushCallbacks(debugClient);
 
-                    std::cout << "OutputStackTrace:\n";
-                    result = debugControl->OutputStackTrace(
-                        DEBUG_OUTCTL_THIS_CLIENT,
+                    //std::cout << "OutputStackTrace:\n";
+                    //result = debugControl->OutputStackTrace(
+                    //    DEBUG_OUTCTL_THIS_CLIENT,
+                    //    NULL,
+                    //    10,
+                    //    DEBUG_STACK_FRAME_NUMBERS);
+                    ////std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
+                    //ASSERT(result == S_OK);
+                    ////FlushCallbacks(debugClient);
+
+                    std::vector<DEBUG_STACK_FRAME> frames(100);
+                    ULONG framesFilled;
+                    result = debugControl->GetStackTrace(
                         NULL,
-                        10,
-                        DEBUG_STACK_FRAME_NUMBERS);
-                    //std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
+                        NULL,
+                        NULL,
+                        &(frames.front()),
+                        frames.size(),
+                        &framesFilled);
                     ASSERT(result == S_OK);
-                    //FlushCallbacks(debugClient);
+                    frames.resize(framesFilled);
+
+                    samples.push_back(frames);
+
+                    for (int i = 0; i < static_cast<int>(frames.size()); i++) {
+                        //result = debugSymbols->SetScope(NULL, &(frames.at(k)), NULL, NULL);
+                        //ASSERT(result == S_OK);
+                        
+                        ULONG line;
+                        std::vector<char> filenameAsVector(MAX_PATH * 2);
+                        ULONG filenameSize;
+                        ULONG64 displacement;
+                        result = debugSymbols->GetLineByOffset(
+                            frames.at(i).InstructionOffset, 
+                            &line, 
+                            &(filenameAsVector.front()),
+                            filenameAsVector.size(), 
+                            &filenameSize, 
+                            &displacement);
+                        if (result == S_OK) {
+                            std::string filename(filenameAsVector.begin(), filenameAsVector.begin() + filenameSize - 1);
+                            std::cout << filename << ":" << line << "\n";
+                        } else {
+                            std::cout << "???\n";
+                        }
+                    }
                 }
 
                 //result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
@@ -173,6 +219,18 @@ namespace Proffy {
                 //::Sleep(5000);
                 //std::cout << "Done sleeping..\n";
                 //break;
+            }
+
+            {
+                //for (std::list<std::vector<DEBUG_STACK_FRAME> >::const_iterator i = samples.begin();
+                //    i != samples.end();
+                //    ++i) {
+                //    for (std::vector<DEBUG_STACK_FRAME>::const_iterator j = i->begin();
+                //        j != i->end();
+                //        ++j) {
+                //        
+                //    }
+                //}
             }
 
             return EXIT_SUCCESS;

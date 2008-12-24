@@ -38,6 +38,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <list>
 #include <sstream>
 #include <vector>
 
