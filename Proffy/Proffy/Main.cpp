@@ -125,7 +125,6 @@ namespace Proffy {
                 std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK || result == S_FALSE);
                 std::cout << lines << Utilities::TimeInSeconds() << ": Done Waiting..\n" << lines;
-
                 FlushCallbacks(debugClient);
 
                 ULONG executionStatus;
@@ -134,27 +133,37 @@ namespace Proffy {
                 ASSERT(result == S_OK);
                 std::cout << "ExecutionStatus: " << Utilities::ExecutionStatusToString(executionStatus) << "\n";
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
-
-                //ULONG numberThreads;
-                //result = debugSystemObjects->GetNumberThreads(&numberThreads);
-                //std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
-                //ASSERT(result == S_OK);
-                //std::cout << "NumberThreads: " << numberThreads << "\n";
-
-                //std::cout << "OutputStackTrace:\n";
-                //result = debugControl->OutputStackTrace(
-                //    DEBUG_OUTCTL_THIS_CLIENT,
-                //    NULL,
-                //    10,
-                //    DEBUG_STACK_FRAME_NUMBERS);
-                //std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
-                //ASSERT(result == S_OK);
-
                 FlushCallbacks(debugClient);
 
-                //result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
-                //std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
-                //ASSERT(result == S_OK);
+                ULONG numberThreads;
+                ULONG largestProcess;
+                result = debugSystemObjects->GetTotalNumberThreads(&numberThreads, &largestProcess);
+                std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
+                ASSERT(result == S_OK);
+                std::cout << "NumberThreads: " << numberThreads << "\n";
+                FlushCallbacks(debugClient);
+
+                for (ULONG i = 0; i < numberThreads; i++) {
+                    result = debugSystemObjects->SetCurrentThreadId(i);
+                    std::cout << "SetCurrentThreadId returned: " << Utilities::HresultToString(result) << "\n";
+                    ASSERT(result == S_OK);
+                    FlushCallbacks(debugClient);
+
+                    std::cout << "OutputStackTrace:\n";
+                    result = debugControl->OutputStackTrace(
+                        DEBUG_OUTCTL_THIS_CLIENT,
+                        NULL,
+                        10,
+                        DEBUG_STACK_FRAME_NUMBERS);
+                    std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
+                    ASSERT(result == S_OK);
+                    FlushCallbacks(debugClient);
+                }
+
+                result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
+                std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
+                ASSERT(result == S_OK);
+                FlushCallbacks(debugClient);
 
                 //std::cout << "Sleeping..\n";
                 //::Sleep(5000);

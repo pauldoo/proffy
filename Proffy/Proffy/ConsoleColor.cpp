@@ -19,7 +19,6 @@
 #include "ConsoleColor.h"
 
 #include "Assert.h"
-#include "Utilities.h"
 
 namespace Proffy
 {
@@ -53,7 +52,7 @@ namespace Proffy
         }
         ASSERT(result != 0);
 
-        std::cout << Utilities::TimeInSeconds() << "\n";
+        //std::cout << Utilities::TimeInSeconds() << "\n";
     }
 
     ConsoleColor::~ConsoleColor()
