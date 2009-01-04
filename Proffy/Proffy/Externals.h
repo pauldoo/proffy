@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,9 @@
     I'm placing all includes of files external to this project here.
 */
 
+// Microsoft includes
 #define NOMINMAX
 #define STRICT
-
-// Microsoft includes
 #include <windows.h>
 #include <dbgeng.h>
 #pragma warning(push)
@@ -31,6 +30,9 @@
 #include <ntstatus.h>
 #pragma warning(pop)
 #include <winerror.h>
+
+// Xerces-C++ includes
+#include <xercesc/util/PlatformUtils.hpp>
 
 // Standard includes
 #include <cassert>

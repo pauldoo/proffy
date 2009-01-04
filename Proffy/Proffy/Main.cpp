@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include "DebugOutputCallbacks.h"
 #include "Results.h"
 #include "Utilities.h"
+#include "XercesInitialize.h"
 
 namespace {
     const std::string lines = std::string(50, '-') + "\n";
@@ -218,8 +219,13 @@ namespace Proffy {
                 //break;
             }
 
+            {
+                XercesInitialize xerces;
+            }
 
             return EXIT_SUCCESS;
+        } catch (const xercesc::XMLException& ex) {
+            std::wcerr << ex.getType() << ": " << ex.getMessage() << "\n";
         } catch (const std::exception& ex) {
             std::cerr << typeid(ex).name() << ": " << ex.what() << "\n";
         }

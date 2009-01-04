@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbgeng.lib"
+				AdditionalDependencies="dbgeng.lib xerces-c_3D.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="External/lib"
 				GenerateDebugInformation="true"
@@ -89,7 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;"
+				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;cmd.exe /c copy /y External\bin\$(ConfigurationName)\*.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbgeng.lib"
+				AdditionalDependencies="dbgeng.lib xerces-c_3.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="External/lib"
 				GenerateDebugInformation="true"
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;"
+				CommandLine="cmd.exe /c copy /y External\bin\*.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;cmd.exe /c copy /y External\bin\$(ConfigurationName)\*.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -269,6 +269,14 @@
 		</File>
 		<File
 			RelativePath=".\Utilities.h"
+			>
+		</File>
+		<File
+			RelativePath=".\XercesInitialize.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\XercesInitialize.h"
 			>
 		</File>
 	</Files>
