@@ -16,32 +16,15 @@
 */
 #pragma once
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+namespace Proffy {
+    /**
+        Calls ::CoInitialize() in the constructor and ::CoUninitialize in the destructor.
+    */
+    class ComInitialize
+    {
+    public:
+        ComInitialize();
 
-#define NOMINMAX
-#define STRICT
-
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
-#pragma warning(push)
-#pragma warning(disable: 4005) // macro redefinition
-#include <ntstatus.h>
-#pragma warning(pop)
-#include <winerror.h>
-
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <list>
-#include <map>
-#include <sstream>
-#include <vector>
-
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+        ~ComInitialize();
+    };
+}

@@ -14,34 +14,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include "stdafx.h"
 
-/*
-    I'm placing all includes of files external to this project here.
-*/
+#include "Results.h"
 
-#define NOMINMAX
-#define STRICT
+#include "Assert.h"
 
-// Microsoft includes
-#include <windows.h>
-#include <dbgeng.h>
-#pragma warning(push)
-#pragma warning(disable: 4005) // macro redefinition
-#include <ntstatus.h>
-#pragma warning(pop)
-#include <winerror.h>
+namespace Proffy
+{
+    Results::Results()
+    {
+    }
 
-// Standard includes
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <list>
-#include <map>
-#include <sstream>
-#include <vector>
+    Results::~Results()
+    {
+    }
 
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4512) // assignment operator could not be generated
+    void Results::AccumulateSample(
+        const std::string& filename,
+        const int lineNumber,
+        const bool isTerminalOnTrace)
+    {
+        std::pair<int, int>* const counters = &(fHits[filename][lineNumber]);
+        if (isTerminalOnTrace) {
+            counters->first++;
+        } else {
+            counters->second++;
+        }
+    }
+}

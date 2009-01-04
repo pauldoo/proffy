@@ -184,6 +184,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ComInitialize.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ComInitialize.h"
+			>
+		</File>
+		<File
 			RelativePath=".\ConsoleColor.cpp"
 			>
 		</File>
@@ -221,6 +229,14 @@
 		</File>
 		<File
 			RelativePath=".\Main.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Results.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Results.h"
 			>
 		</File>
 		<File

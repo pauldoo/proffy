@@ -17,10 +17,12 @@
 #include "stdafx.h"
 
 #include "Assert.h"
+#include "ComInitialize.h"
 #include "ConsoleColor.h"
 #include "Exception.h"
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
+#include "Results.h"
 #include "Utilities.h"
 
 namespace {
@@ -59,9 +61,9 @@ namespace Proffy {
             }
 
             // Initialize COM, no idea if this is necessary.
+            const ComInitialize com;
+
             HRESULT result = S_OK;
-            result = ::CoInitialize(0);
-            assert(result == S_OK);
 
             // Get the IDebugClient to start.
             IDebugClient* debugClient = NULL;
@@ -121,10 +123,8 @@ namespace Proffy {
             ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
 
             FlushCallbacks(debugClient);
-
             ConsoleColor c(Color_Normal);
-
-            std::list<std::vector<DEBUG_STACK_FRAME> > samples;
+            Results results;
 
             for (int i = 0; i < 10; i++) {
                 //FlushCallbacks(debugClient);
@@ -184,8 +184,6 @@ namespace Proffy {
                     ASSERT(result == S_OK);
                     frames.resize(framesFilled);
 
-                    samples.push_back(frames);
-
                     for (int i = 0; i < static_cast<int>(frames.size()); i++) {
                         //result = debugSymbols->SetScope(NULL, &(frames.at(k)), NULL, NULL);
                         //ASSERT(result == S_OK);
@@ -201,11 +199,10 @@ namespace Proffy {
                             filenameAsVector.size(), 
                             &filenameSize, 
                             &displacement);
+
                         if (result == S_OK) {
-                            std::string filename(filenameAsVector.begin(), filenameAsVector.begin() + filenameSize - 1);
-                            std::cout << filename << ":" << line << "\n";
-                        } else {
-                            std::cout << "???\n";
+                            const std::string filename(filenameAsVector.begin(), filenameAsVector.begin() + filenameSize - 1);
+                            results.AccumulateSample(filename, line, i==0);
                         }
                     }
                 }
@@ -221,17 +218,6 @@ namespace Proffy {
                 //break;
             }
 
-            {
-                //for (std::list<std::vector<DEBUG_STACK_FRAME> >::const_iterator i = samples.begin();
-                //    i != samples.end();
-                //    ++i) {
-                //    for (std::vector<DEBUG_STACK_FRAME>::const_iterator j = i->begin();
-                //        j != i->end();
-                //        ++j) {
-                //        
-                //    }
-                //}
-            }
 
             return EXIT_SUCCESS;
         } catch (const std::exception& ex) {
