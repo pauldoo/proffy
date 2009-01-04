@@ -27,5 +27,13 @@ namespace Proffy {
         const std::string ExecutionStatusToString(const ULONG64);
 
         const std::string HresultToString(const HRESULT);
+
+        template<typename T>
+        const std::wstring ToWString(const T& val)
+        {
+            std::wostringstream stream;
+            stream << val;
+            return stream.str();
+        }
     }
 }

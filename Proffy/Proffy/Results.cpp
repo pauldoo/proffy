@@ -31,7 +31,7 @@ namespace Proffy
     }
 
     void Results::AccumulateSample(
-        const std::string& filename,
+        const std::wstring& filename,
         const int lineNumber,
         const bool isTerminalOnTrace)
     {
@@ -41,5 +41,10 @@ namespace Proffy
         } else {
             counters->second++;
         }
+    }
+
+    const std::map<std::wstring, std::map<int, std::pair<int, int> > >& Results::AllHits() const
+    {
+        return fHits;
     }
 }

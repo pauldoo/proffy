@@ -32,13 +32,17 @@
 #include <winerror.h>
 
 // Xerces-C++ includes
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 // Standard includes
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 #include <iostream>
 #include <list>
 #include <map>

@@ -32,7 +32,7 @@ namespace Proffy {
             /**
                 Path to source file.
             */
-            const std::string& filename,
+            const std::wstring& filename,
             /**
                 Line number within source file.
             */
@@ -44,7 +44,9 @@ namespace Proffy {
             */
             const bool isTerminalOnTrace);
 
+        const std::map<std::wstring, std::map<int, std::pair<int, int> > >& AllHits() const;
+
     private:
-        std::map<std::string, std::map<int, std::pair<int, int> > > fHits;
+        std::map<std::wstring, std::map<int, std::pair<int, int> > > fHits;
     };
 }
