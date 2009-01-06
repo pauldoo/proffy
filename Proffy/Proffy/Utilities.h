@@ -35,5 +35,14 @@ namespace Proffy {
             stream << val;
             return stream.str();
         }
+
+        template<typename T>
+        const T FromWString(const std::wstring& val)
+        {
+            std::wistringstream stream(val);
+            T result;
+            stream >> result;
+            return result;
+        }
     }
 }

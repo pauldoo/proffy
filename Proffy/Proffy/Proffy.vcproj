@@ -228,6 +228,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Launcher.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Main.cpp"
 			>
 		</File>

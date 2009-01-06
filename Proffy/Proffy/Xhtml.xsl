@@ -27,11 +27,26 @@
 
     <xsl:template name="CssStylesheet">
         <style type="text/css">
-            body { font-family: Verdana, sans-serif; white-space: nowrap; font-size: small; }
-            .numeric { text-align: right; }
-            table { border: 1px solid; }
-            td, th { border: 1px solid; }
-            pre { margin: 0px; padding: 0px; }
+          body {
+              font-family: Verdana, sans-serif;
+              white-space: nowrap;
+              font-size: small;
+          }
+          .numeric {
+              text-align: right;
+          }
+          table {
+              border: 1px solid;
+              border-collapse: collapse;
+          }
+          td, th {
+              border-left: 1px solid;
+              border-right: 1px solid;
+          }
+          pre {
+              margin: 0px;
+              padding: 0px;
+          }
         </style>
     </xsl:template>
 

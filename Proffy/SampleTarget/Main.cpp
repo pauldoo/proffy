@@ -14,6 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "../Proffy/Launcher.h"
+
 #include <windows.h>
 
 #include <algorithm>
@@ -26,7 +29,6 @@
 int main(void)
 {
     std::cout << "Running dummy target.\n";
-    ::SetPriorityClass(::GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
 
     const int count = 10000;
     std::vector<int> values;
@@ -34,11 +36,14 @@ int main(void)
     for (int i = 0; i < count; i++) {
         values.push_back(i);
     }
-    while(true) {
+
+    Proffy::Launcher profiler(L"../Debug", L"../test.xml");
+    for (int i = 0; i < 10; i++) {
         std::random_shuffle(values.begin(), values.end());
         std::sort(values.begin(), values.end());
         std::cout << ".";
         std::cout.flush();
     }
+    ::Sleep(60000);
     return EXIT_SUCCESS;
 }

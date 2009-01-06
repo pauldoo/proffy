@@ -26,11 +26,15 @@
 #include "Utilities.h"
 #include "XercesInitialize.h"
 
-namespace {
-    const std::string lines = std::string(50, '-') + "\n";
-}
-
 namespace Proffy {
+    const std::string lines = std::string(50, '-') + "\n";
+
+    struct CommandLineArguments
+    {
+        int fProcessId;
+        std::wstring fOutputFilename;
+    };
+
     void FlushCallbacks(IDebugClient* debugClient)
     {
         //std::cout << __FUNCTION__ << " Begin.\n";
@@ -38,28 +42,23 @@ namespace Proffy {
         //std::cout << __FUNCTION__ << " End.\n";
     }
 
-    int main(void)
+    const CommandLineArguments ParseCommandLine(
+        const int argc,
+        const wchar_t* const * const argv)
+    {
+        ASSERT(argc == 3);
+        CommandLineArguments result;
+        result.fProcessId = Utilities::FromWString<int>(argv[1]);
+        result.fOutputFilename = argv[2];
+        return result;
+    }
+
+    const int main(
+        const int argc,
+        const wchar_t* const * const argv)
     {
         try {
-            // Start something which we will attempt to profile.
-            STARTUPINFO startupInfo = {0};
-            PROCESS_INFORMATION processInformation = {0};
-            BOOL processStarted = ::CreateProcess(
-                L"../Debug/SampleTarget.exe",
-                NULL,
-                NULL,
-                NULL,
-                FALSE,
-                CREATE_NEW_CONSOLE,
-                NULL,
-                NULL,
-                &startupInfo,
-                &processInformation);
-            if (processStarted != TRUE) {
-                std::ostringstream message;
-                message << ::GetLastError();
-                throw Exception(message.str());
-            }
+            const CommandLineArguments arguments = ParseCommandLine(argc, argv);
 
             // Initialize COM, no idea if this is necessary.
             const ComInitialize com;
@@ -108,7 +107,7 @@ namespace Proffy {
             std::cout << lines << Utilities::TimeInSeconds() << ": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
                 0,
-                processInformation.dwProcessId,
+                arguments.fProcessId,    
                 0);
                 //DEBUG_ATTACH_INVASIVE_NO_INITIAL_BREAK);
                 //DEBUG_ATTACH_NONINVASIVE | DEBUG_ATTACH_NONINVASIVE_NO_SUSPEND);
@@ -263,7 +262,7 @@ namespace Proffy {
 
                 xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();
                 domSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-                xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(L"ProffyFoobar.xml");
+                xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments.fOutputFilename.c_str());
                 xercesc::DOMLSOutput* const output = domImplementation->createLSOutput();
                 output->setByteStream(target);
                 domSerializer->write(document, output);
@@ -279,7 +278,8 @@ namespace Proffy {
     }
 }
 
-int main(void) {
+int wmain(int argc, wchar_t** argv)
+{
     std::ios::sync_with_stdio(false);
-    return Proffy::main();
+    return Proffy::main(argc, argv);
 }
