@@ -37,13 +37,14 @@ int main(void)
         values.push_back(i);
     }
 
-    Proffy::Launcher profiler(L"../Debug", L"../test.xml");
-    for (int i = 0; i < 10; i++) {
-        std::random_shuffle(values.begin(), values.end());
-        std::sort(values.begin(), values.end());
-        std::cout << ".";
-        std::cout.flush();
+    {
+        Proffy::Launcher profiler(L"../Debug", L"../test.xml");
+        for (int i = 0; i < 10; i++) {
+            std::random_shuffle(values.begin(), values.end());
+            std::sort(values.begin(), values.end());
+            std::cout << ".";
+            std::cout.flush();
+        }
     }
-    ::Sleep(60000);
     return EXIT_SUCCESS;
 }

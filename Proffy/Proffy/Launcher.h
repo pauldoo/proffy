@@ -18,6 +18,7 @@
 
 #include <Windows.h>
 #include <exception>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -43,6 +44,21 @@ namespace Proffy {
         const std::string fReason;
     };
 
+    class LauncherOwnedHandle
+    {
+    public:
+        LauncherOwnedHandle(const HANDLE handle) : fHandle(handle)
+        {
+        }
+
+        ~LauncherOwnedHandle()
+        {
+            ::CloseHandle(fHandle);
+        }
+
+        const HANDLE fHandle;
+    };
+
     /**
         This class is implemented entirely in the header and can be
         used by applications to launch Proffy.
@@ -54,9 +70,20 @@ namespace Proffy {
             const std::wstring& proffyDirectory,
             const std::wstring& outputFilename)
         {
+            SECURITY_ATTRIBUTES security = {0};
+            security.nLength = sizeof(security);
+            security.bInheritHandle = TRUE;
+            fStartFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
+            fStopFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
+
             const std::wstring proffyExecutable = proffyDirectory + L"/Proffy.exe";
             std::wostringstream buf;
-            buf << proffyExecutable << L" " << ::GetCurrentProcessId() << L" \"" << outputFilename << L"\"";
+            buf
+                << proffyExecutable
+                << L" " << ::GetCurrentProcessId()
+                << L" \"" << outputFilename << L"\""
+                << L" " << fStartFlag->fHandle
+                << L" " << fStopFlag->fHandle;
             const std::wstring commandLine = buf.str();
 
             STARTUPINFOW startupInfo = {0};
@@ -67,7 +94,7 @@ namespace Proffy {
                 const_cast<wchar_t*>(commandLine.c_str()),
                 NULL,
                 NULL,
-                FALSE,
+                TRUE,
                 CREATE_NEW_CONSOLE,
                 NULL,
                 NULL,
@@ -78,14 +105,40 @@ namespace Proffy {
                 throw LauncherException("Failed to launch profiler.");
             }
 
+            ::CloseHandle(processInformation.hThread);
+            fProfilerProcess.reset(new LauncherOwnedHandle(processInformation.hProcess));
 
+            if (::WaitForSingleObject(fStartFlag->fHandle, INFINITE) != WAIT_OBJECT_0) {
+                throw LauncherException("Failed while waiting for the profiler to start.");
+            }
+        }
+
+        /**
+            Signal the profiler to stop, and wait for it to do so.
+        */
+        void Finish()
+        {
+            if (::ReleaseSemaphore(fStopFlag->fHandle, 1, NULL) == FALSE) {
+                throw LauncherException("Failed to raise stop flag.");
+            }
+
+            if (::WaitForSingleObject(fProfilerProcess->fHandle, INFINITE) != WAIT_OBJECT_0) {
+                throw LauncherException("Failed while waiting for the profiler to exit.");
+            }
         }
 
         ~Launcher()
         {
+            try {
+                Finish();
+            } catch (const LauncherException&) {
+            }
         }
 
     private:
+        std::auto_ptr<LauncherOwnedHandle> fStartFlag;
+        std::auto_ptr<LauncherOwnedHandle> fStopFlag;
+        std::auto_ptr<LauncherOwnedHandle> fProfilerProcess;
     };
 }
 

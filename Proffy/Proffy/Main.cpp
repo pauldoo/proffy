@@ -33,6 +33,8 @@ namespace Proffy {
     {
         int fProcessId;
         std::wstring fOutputFilename;
+        HANDLE fStartFlag;
+        HANDLE fStopFlag;
     };
 
     void FlushCallbacks(IDebugClient* debugClient)
@@ -46,10 +48,12 @@ namespace Proffy {
         const int argc,
         const wchar_t* const * const argv)
     {
-        ASSERT(argc == 3);
+        ASSERT(argc == 5);
         CommandLineArguments result;
         result.fProcessId = Utilities::FromWString<int>(argv[1]);
         result.fOutputFilename = argv[2];
+        result.fStartFlag = Utilities::FromWString<HANDLE>(argv[3]);
+        result.fStopFlag = Utilities::FromWString<HANDLE>(argv[4]);
         return result;
     }
 
@@ -126,7 +130,21 @@ namespace Proffy {
             ConsoleColor c(Color_Normal);
             Results results;
 
-            for (int i = 0; i < 100; i++) {
+            ASSERT(::ReleaseSemaphore(arguments.fStartFlag, 1, NULL) != FALSE);
+
+            while (true) {
+                {
+                    const DWORD result = ::WaitForSingleObject(arguments.fStopFlag, 0);
+                    if (result == WAIT_OBJECT_0) {
+                        // Flag is raised
+                        break;
+                    } else if (result == WAIT_TIMEOUT) {
+                        // Flag is not raised
+                    } else {
+                        ASSERT(false);
+                    }
+                }
+
                 //FlushCallbacks(debugClient);
 
                 //std::cout << lines << Utilities::TimeInSeconds() << ": Waiting..\n" << lines;
@@ -219,6 +237,7 @@ namespace Proffy {
             }
 
             {
+                std::wcout << L"Saving report..\n";
                 XercesInitialize xerces;
                 xercesc::DOMImplementation* const domImplementation =
                     xercesc::DOMImplementationRegistry::getDOMImplementation(NULL);
