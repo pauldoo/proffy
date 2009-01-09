@@ -52,8 +52,8 @@ namespace Proffy {
         CommandLineArguments result;
         result.fProcessId = Utilities::FromWString<int>(argv[1]);
         result.fOutputFilename = argv[2];
-        result.fStartFlag = Utilities::FromWString<HANDLE>(argv[3]);
-        result.fStopFlag = Utilities::FromWString<HANDLE>(argv[4]);
+        result.fStartFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[3]));
+        result.fStopFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[4]));
         return result;
     }
 

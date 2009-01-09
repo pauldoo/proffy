@@ -82,8 +82,8 @@ namespace Proffy {
                 << proffyExecutable
                 << L" " << ::GetCurrentProcessId()
                 << L" \"" << outputFilename << L"\""
-                << L" " << fStartFlag->fHandle
-                << L" " << fStopFlag->fHandle;
+                << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
+                << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle);
             const std::wstring commandLine = buf.str();
 
             STARTUPINFOW startupInfo = {0};
