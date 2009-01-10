@@ -276,6 +276,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\WriteReport.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\WriteReport.h"
+			>
+		</File>
+		<File
 			RelativePath=".\XercesInitialize.cpp"
 			>
 		</File>

@@ -24,7 +24,7 @@
 #include "DebugOutputCallbacks.h"
 #include "Results.h"
 #include "Utilities.h"
-#include "XercesInitialize.h"
+#include "WriteReport.h"
 
 namespace Proffy {
     const std::string lines = std::string(50, '-') + "\n";
@@ -37,11 +37,9 @@ namespace Proffy {
         HANDLE fStopFlag;
     };
 
-    void FlushCallbacks(IDebugClient* debugClient)
+    void FlushCallbacks(IDebugClient* const debugClient)
     {
-        //std::cout << __FUNCTION__ << " Begin.\n";
         ASSERT(debugClient->FlushCallbacks() == S_OK);
-        //std::cout << __FUNCTION__ << " End.\n";
     }
 
     const CommandLineArguments ParseCommandLine(
@@ -113,8 +111,6 @@ namespace Proffy {
                 0,
                 arguments.fProcessId,    
                 0);
-                //DEBUG_ATTACH_INVASIVE_NO_INITIAL_BREAK);
-                //DEBUG_ATTACH_NONINVASIVE | DEBUG_ATTACH_NONINVASIVE_NO_SUSPEND);
             ASSERT(result == S_OK);
             std::cout << lines << Utilities::TimeInSeconds() << ": Done Attaching..\n" << lines;
 
@@ -133,62 +129,34 @@ namespace Proffy {
             ASSERT(::ReleaseSemaphore(arguments.fStartFlag, 1, NULL) != FALSE);
 
             while (true) {
-                {
-                    const DWORD result = ::WaitForSingleObject(arguments.fStopFlag, 0);
-                    if (result == WAIT_OBJECT_0) {
-                        // Flag is raised
-                        break;
-                    } else if (result == WAIT_TIMEOUT) {
-                        // Flag is not raised
-                    } else {
-                        ASSERT(false);
-                    }
+                result = ::WaitForSingleObject(arguments.fStopFlag, 0);
+                if (result == WAIT_OBJECT_0) {
+                    // Flag is raised
+                    break;
+                } else if (result == WAIT_TIMEOUT) {
+                    // Flag is not raised
+                } else {
+                    ASSERT(false);
                 }
 
-                //FlushCallbacks(debugClient);
-
-                //std::cout << lines << Utilities::TimeInSeconds() << ": Waiting..\n" << lines;
                 result = debugControl->WaitForEvent(
                     DEBUG_WAIT_DEFAULT,
                     10);
-                //std::cout << "WaitForEvent returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK || result == S_FALSE);
-                //std::cout << lines << Utilities::TimeInSeconds() << ": Done Waiting..\n" << lines;
-                //FlushCallbacks(debugClient);
 
                 ULONG executionStatus;
                 result = debugControl->GetExecutionStatus(&executionStatus);
-                //std::cout << "GetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
-                //std::cout << "ExecutionStatus: " << Utilities::ExecutionStatusToString(executionStatus) << "\n";
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
-                //FlushCallbacks(debugClient);
 
                 ULONG numberThreads;
                 ULONG largestProcess;
                 result = debugSystemObjects->GetTotalNumberThreads(&numberThreads, &largestProcess);
-                //std::cout << "GetNumberThreads returned: " << Utilities::HresultToString(result) << "\n";
                 ASSERT(result == S_OK);
-                //std::cout << "NumberThreads: " << numberThreads << "\n";
-                //FlushCallbacks(debugClient);
 
                 for (int i = 0; i < static_cast<int>(numberThreads); i++) {
-                    //std::cout << "Thread #" << i << "\n";
-
                     result = debugSystemObjects->SetCurrentThreadId(i);
-                    //std::cout << "SetCurrentThreadId returned: " << Utilities::HresultToString(result) << "\n";
                     ASSERT(result == S_OK);
-                    //FlushCallbacks(debugClient);
-
-                    //std::cout << "OutputStackTrace:\n";
-                    //result = debugControl->OutputStackTrace(
-                    //    DEBUG_OUTCTL_THIS_CLIENT,
-                    //    NULL,
-                    //    10,
-                    //    DEBUG_STACK_FRAME_NUMBERS);
-                    ////std::cout << "OutputStackTrace returned: " << Utilities::HresultToString(result) << "\n";
-                    //ASSERT(result == S_OK);
-                    ////FlushCallbacks(debugClient);
 
                     std::vector<DEBUG_STACK_FRAME> frames(100);
                     ULONG framesFilled;
@@ -203,9 +171,6 @@ namespace Proffy {
                     frames.resize(framesFilled);
 
                     for (int i = 0; i < static_cast<int>(frames.size()); i++) {
-                        //result = debugSymbols->SetScope(NULL, &(frames.at(k)), NULL, NULL);
-                        //ASSERT(result == S_OK);
-                        
                         ULONG line;
                         std::vector<wchar_t> filenameAsVector(MAX_PATH * 2);
                         ULONG filenameSize;
@@ -224,68 +189,12 @@ namespace Proffy {
                         }
                     }
                 }
-
-                //result = debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
-                //std::cout << "SetExecutionStatus returned: " << Utilities::HresultToString(result) << "\n";
-                //ASSERT(result == S_OK);
-                //FlushCallbacks(debugClient);
-
-                //std::cout << "Sleeping..\n";
-                //::Sleep(5000);
-                //std::cout << "Done sleeping..\n";
-                //break;
             }
 
-            {
-                std::wcout << L"Saving report..\n";
-                XercesInitialize xerces;
-                xercesc::DOMImplementation* const domImplementation =
-                    xercesc::DOMImplementationRegistry::getDOMImplementation(NULL);
-                ASSERT(domImplementation != NULL);
-
-                xercesc::DOMDocument* const document = domImplementation->createDocument();
-                document->appendChild(document->createProcessingInstruction(L"xml-stylesheet", L"type=\"text/xsl\" href=\"Xhtml.xsl\""));
-                xercesc::DOMElement* const root = document->createElement(L"ProffyResults");
-                document->appendChild(root);
-
-                for (std::map<std::wstring, std::map<int, std::pair<int, int> > >::const_iterator i = results.AllHits().begin();
-                    i != results.AllHits().end();
-                    ++i) {
-
-                    const std::wstring filename = i->first;
-                    xercesc::DOMElement* const file = document->createElement(L"File");
-                    file->setAttribute(L"Name", filename.c_str());
-
-                    std::wifstream fileStream(filename.c_str());
-                    if (fileStream.is_open()) {
-                        for (int lineNumber = 1; fileStream.eof() == false; lineNumber++) {
-                            std::wstring lineContents;
-                            std::getline(fileStream, lineContents);
-                            
-                            xercesc::DOMElement* const line = document->createElement(L"Line");
-                            line->setAttribute(L"Number", Utilities::ToWString<int>(lineNumber).c_str());
-
-                            std::map<int, std::pair<int, int> >::const_iterator hits = i->second.find(lineNumber);
-                            if (hits != i->second.end()) {
-                                line->setAttribute(L"TerminalHits", Utilities::ToWString<int>(hits->second.first).c_str());
-                                line->setAttribute(L"NonTerminalHits", Utilities::ToWString<int>(hits->second.second).c_str());
-                            }
-                            line->appendChild(document->createCDATASection(lineContents.c_str()));
-                            
-                            file->appendChild(line);
-                        }
-                    }
-
-                    root->appendChild(file);
-                }
-
-                xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();
-                domSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-                xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments.fOutputFilename.c_str());
-                xercesc::DOMLSOutput* const output = domImplementation->createLSOutput();
-                output->setByteStream(target);
-                domSerializer->write(document, output);
-            }
+            std::wcout << L"Saving report..";
+            std::wcout.flush();
+            WriteReport(&results, arguments.fOutputFilename);
+            std::wcout << "Done.\n";
 
             return EXIT_SUCCESS;
         } catch (const xercesc::XMLException& ex) {
