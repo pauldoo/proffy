@@ -66,20 +66,39 @@
     </html>
   </xsl:template>
 
-  <!--<xsl:template name="proffyInclusive">
-    <xsl:param name="symbol"/>
-    <xsl:param name="filename"/>
-    <xsl:param name="linenumber"/>
-    <xsl:param name="result"/>
-    <xsl:param name="startid" select="0"/>
-    
-    <xsl:for-each select="/ProffyResults/PointsEncountered/Point[@Id >= $startid and @SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]">
-      <xsl:variable name="myid" select="@Id"/>
-      <xsl:value-of select="sum(/ProffyResults/CallCounters/Counter[@CallerId = $myid]@Count) + proffy:Inclusive($symbol, $filename, $linenumber, $myid+1)"/>
-    </xsl:for-each>
-    <xsl:value-of select="$result"/>
-  </xsl:function>-->
-  
+  <xsl:template match="Counter" name="CallerCounters">
+      <xsl:param name="symbol"/>
+      <xsl:param name="filename"/>
+      <xsl:param name="linenumber"/>
+      <xsl:param name="docallers" select="0"/>
+      <xsl:param name="docallees" select="0"/>
+
+    <xsl:if test="$docallers = 1">
+        <xsl:variable name="calleeid" select="@CalleeId"/>
+
+        <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@Id = $calleeid and @SymbolName = $symbol and @FileName = $filename and @LineNumber = $linenumber]) > 0">
+            <a><xsl:attribute name="href">#<xsl:value-of select="@CallerId"/></xsl:attribute><xsl:value-of select="@CallerId"/>:<xsl:value-of select="@Count"/></a><br/>
+        </xsl:if>
+    </xsl:if>
+
+    <xsl:if test="$docallees = 1">
+        <xsl:variable name="callerid" select="@CallerId"/>
+
+        <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@Id = $callerid and @SymbolName = $symbol and @FileName = $filename and @LineNumber = $linenumber]) > 0">
+            <a><xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute><xsl:value-of select="@CalleeId"/>:<xsl:value-of select="@Count"/></a><br/>
+        </xsl:if>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Point">
+      <xsl:param name="symbol"/>
+      <xsl:param name="filename"/>
+      <xsl:param name="linenumber"/>
+        <xsl:if test="@SymbolName = $symbol and @FileName = $filename and @LineNumber = $linenumber">
+            <a><xsl:attribute name="name"><xsl:value-of select="@Id"/></xsl:attribute></a>
+        </xsl:if>
+  </xsl:template>
+
   <xsl:template match="PointsEncountered">
       <xsl:for-each select="Point">
           <xsl:variable name="mysymbol" select="@SymbolName"/>
@@ -93,16 +112,35 @@
               <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@FileName = $filename and @SymbolName = $mysymbol]) > 0">
                 <h3><xsl:value-of select="@Name"/></h3>
                 <table>
+                    <tr><th>Line Number</th><th>Callers</th><th>Callees</th><th>Code</th></tr>
                   <xsl:for-each select="Line">
                     <xsl:variable name="linenumber" select="@Number"/>
                     <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@SymbolName = $mysymbol and @FileName = $filename and ((@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3)]) > 0">
                       <tr>
                         <td>
-                          <xsl:value-of select="@Number"/>
+                            <xsl:apply-templates select="/ProffyResults/PointsEncountered/Point">
+                                <xsl:with-param name="symbol" select="$mysymbol"/>
+                                <xsl:with-param name="filename" select="$filename"/>
+                                <xsl:with-param name="linenumber" select="$linenumber"/>
+                            </xsl:apply-templates>
+                            <xsl:value-of select="@Number"/>
                         </td>
-                        <!--<td>
-                          <xsl:value-of select="proffy:Inclusive($mysymbol, $filename, $linenumber)"/>
-                        </td>-->
+                        <td>
+                            <xsl:apply-templates select="/ProffyResults/CallCounters/Counter">
+                                <xsl:with-param name="symbol" select="$mysymbol"/>
+                                <xsl:with-param name="filename" select="$filename"/>
+                                <xsl:with-param name="linenumber" select="$linenumber"/>
+                                <xsl:with-param name="docallers" select="1"/>
+                            </xsl:apply-templates>
+                        </td>
+                        <td>
+                            <xsl:apply-templates select="/ProffyResults/CallCounters/Counter">
+                                <xsl:with-param name="symbol" select="$mysymbol"/>
+                                <xsl:with-param name="filename" select="$filename"/>
+                                <xsl:with-param name="linenumber" select="$linenumber"/>
+                                <xsl:with-param name="docallees" select="1"/>
+                            </xsl:apply-templates>
+                        </td>
                         <td>
                           <pre><xsl:value-of select="."/></pre>
                         </td>
