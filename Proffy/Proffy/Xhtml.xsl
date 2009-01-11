@@ -16,53 +16,107 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:output
-        method="html"
-        doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
-        doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
-        indent="yes"
-        media-type="application/xhtml+xml"
+<xsl:stylesheet
+  version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns="http://www.w3.org/1999/xhtml">
+  <xsl:output
+      method="html"
+      doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+      doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+      indent="yes"
+      media-type="application/xhtml+xml"
         />
 
-    <xsl:template name="CssStylesheet">
-        <style type="text/css">
-          body {
-              font-family: Verdana, sans-serif;
-              white-space: nowrap;
-              font-size: small;
-          }
-          .numeric {
-              text-align: right;
-          }
-          table {
-              border: 1px solid;
-              border-collapse: collapse;
-          }
-          td, th {
-              border-left: 1px solid;
-              border-right: 1px solid;
-          }
-          pre {
-              margin: 0px;
-              padding: 0px;
-          }
-        </style>
-    </xsl:template>
+  <xsl:template name="CssStylesheet">
+    <style type="text/css">
+      body {
+      font-family: Verdana, sans-serif;
+      white-space: nowrap;
+      font-size: small;
+      }
+      .numeric {
+      text-align: right;
+      }
+      table {
+      border: 1px solid;
+      border-collapse: collapse;
+      }
+      td, th {
+      border-left: 1px solid;
+      border-right: 1px solid;
+      }
+      pre {
+      margin: 0px;
+      padding: 0px;
+      }
+    </style>
+  </xsl:template>
 
-    <xsl:template match="/ProffyResults">
-        <html>
-            <head>
-                <title>Proffy Results</title>
-                <xsl:call-template name="CssStylesheet"/>
-            </head>
-            <body>
-                <h1>Hello</h1>
-                <xsl:apply-templates select="File"/>
-            </body>
-        </html>
-    </xsl:template>
+  <xsl:template match="/ProffyResults">
+    <html>
+      <head>
+        <title>Proffy Results</title>
+        <xsl:call-template name="CssStylesheet"/>
+      </head>
+      <body>
+        <h1>Hello</h1>
+        <xsl:apply-templates select="PointsEncountered"/>
+      </body>
+    </html>
+  </xsl:template>
 
+  <!--<xsl:template name="proffyInclusive">
+    <xsl:param name="symbol"/>
+    <xsl:param name="filename"/>
+    <xsl:param name="linenumber"/>
+    <xsl:param name="result"/>
+    <xsl:param name="startid" select="0"/>
+    
+    <xsl:for-each select="/ProffyResults/PointsEncountered/Point[@Id >= $startid and @SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]">
+      <xsl:variable name="myid" select="@Id"/>
+      <xsl:value-of select="sum(/ProffyResults/CallCounters/Counter[@CallerId = $myid]@Count) + proffy:Inclusive($symbol, $filename, $linenumber, $myid+1)"/>
+    </xsl:for-each>
+    <xsl:value-of select="$result"/>
+  </xsl:function>-->
+  
+  <xsl:template match="PointsEncountered">
+      <xsl:for-each select="Point">
+          <xsl:variable name="mysymbol" select="@SymbolName"/>
+          <xsl:if test="count(preceding-sibling::node()[@SymbolName = $mysymbol]) = 0">
+            <h2><xsl:value-of select="@SymbolName"/></h2>
+            <!--<xsl:for-each select="../Point[@SymbolName = $mysymbol]">
+              <xsl:value-of select="@Id"/>,  
+            </xsl:for-each>-->
+            <xsl:for-each select="/ProffyResults/Files/File">
+              <xsl:variable name="filename" select="@Name"/>
+              <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@FileName = $filename and @SymbolName = $mysymbol]) > 0">
+                <h3><xsl:value-of select="@Name"/></h3>
+                <table>
+                  <xsl:for-each select="Line">
+                    <xsl:variable name="linenumber" select="@Number"/>
+                    <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@SymbolName = $mysymbol and @FileName = $filename and ((@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3)]) > 0">
+                      <tr>
+                        <td>
+                          <xsl:value-of select="@Number"/>
+                        </td>
+                        <!--<td>
+                          <xsl:value-of select="proffy:Inclusive($mysymbol, $filename, $linenumber)"/>
+                        </td>-->
+                        <td>
+                          <pre><xsl:value-of select="."/></pre>
+                        </td>
+                      </tr>
+                    </xsl:if>
+                  </xsl:for-each>
+                </table>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:if>
+      </xsl:for-each>
+  </xsl:template>
+
+  <!--
     <xsl:template match="File">
         <h2><xsl:value-of select="@Name"/></h2>
         <table>
@@ -79,4 +133,5 @@
             <td><pre><xsl:value-of select="."/></pre></td>
         </tr>
     </xsl:template>
+    -->
 </xsl:stylesheet>

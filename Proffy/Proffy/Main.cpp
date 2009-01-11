@@ -170,24 +170,49 @@ namespace Proffy {
                     ASSERT(result == S_OK);
                     frames.resize(framesFilled);
 
+                    std::vector<PointInProgram> resolvedFrames;
                     for (int i = 0; i < static_cast<int>(frames.size()); i++) {
-                        ULONG line;
-                        std::vector<wchar_t> filenameAsVector(MAX_PATH * 2);
-                        ULONG filenameSize;
-                        ULONG64 displacement;
-                        result = debugSymbols->GetLineByOffsetWide(
-                            frames.at(i).InstructionOffset, 
-                            &line, 
-                            &(filenameAsVector.front()),
-                            filenameAsVector.size(), 
-                            &filenameSize, 
-                            &displacement);
+                        std::vector<wchar_t> symbolNameAsVector(MAX_PATH * 2);
+                        ULONG symbolNameSize;
+                        ULONG64 symbolDisplacement;
+                        result = debugSymbols->GetNameByOffsetWide(
+                            frames.at(i).InstructionOffset,
+                            &(symbolNameAsVector.front()),
+                            symbolNameAsVector.size(),
+                            &symbolNameSize,
+                            &symbolDisplacement);
 
                         if (result == S_OK) {
-                            const std::wstring filename(filenameAsVector.begin(), filenameAsVector.begin() + filenameSize - 1);
-                            results.AccumulateSample(filename, line, i==0);
+                            ULONG line;
+                            std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
+                            ULONG fileNameSize;
+                            ULONG64 lineDisplacement;
+                            result = debugSymbols->GetLineByOffsetWide(
+                                frames.at(i).InstructionOffset, 
+                                &line, 
+                                &(fileNameAsVector.front()),
+                                fileNameAsVector.size(), 
+                                &fileNameSize, 
+                                &lineDisplacement);
+
+                            if (result == S_OK) {
+                                PointInProgram pip;
+                                
+                                pip.fSymbolName = std::wstring(
+                                    symbolNameAsVector.begin(),
+                                    symbolNameAsVector.begin() + symbolNameSize - 1);
+                                pip.fSymbolDisplacement = static_cast<int>(symbolDisplacement);
+                                pip.fFileName = std::wstring(
+                                    fileNameAsVector.begin(),
+                                    fileNameAsVector.begin() + fileNameSize - 1);
+                                pip.fLineNumber = line;
+                                pip.fLineDisplacement = static_cast<int>(lineDisplacement);
+
+                                resolvedFrames.push_back(pip);
+                            }
                         }
                     }
+                    results.AccumulateSample(resolvedFrames);
                 }
             }
 

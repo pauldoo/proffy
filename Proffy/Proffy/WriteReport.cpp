@@ -38,35 +38,94 @@ namespace Proffy {
         xercesc::DOMElement* const root = document->createElement(L"ProffyResults");
         document->appendChild(root);
 
-        for (std::map<std::wstring, std::map<int, std::pair<int, int> > >::const_iterator i = results->AllHits().begin();
-            i != results->AllHits().end();
-            ++i) {
+        std::set<std::wstring> sourceFiles;
+        {
+            xercesc::DOMElement* const pointsEncountered = document->createElement(L"PointsEncountered");
 
-            const std::wstring filename = i->first;
-            xercesc::DOMElement* const file = document->createElement(L"File");
-            file->setAttribute(L"Name", filename.c_str());
+            for (std::set<PointInProgram>::const_iterator i = results->fEncounteredPoints.begin();
+                i != results->fEncounteredPoints.end();
+                ++i) {
+                const int id = std::distance(results->fEncounteredPoints.begin(), i);
+                
+                sourceFiles.insert(i->fFileName);
 
-            std::wifstream fileStream(filename.c_str());
-            if (fileStream.is_open()) {
-                for (int lineNumber = 1; fileStream.eof() == false; lineNumber++) {
-                    std::wstring lineContents;
-                    std::getline(fileStream, lineContents);
-                    
-                    xercesc::DOMElement* const line = document->createElement(L"Line");
-                    line->setAttribute(L"Number", Utilities::ToWString<int>(lineNumber).c_str());
+                xercesc::DOMElement* const point = document->createElement(L"Point");
+                point->setAttribute(L"Id",
+                    Utilities::ToWString<int>(id).c_str());
+                point->setAttribute(L"SymbolName",
+                    i->fSymbolName.c_str());
+                point->setAttribute(L"SymbolDisplacement",
+                    Utilities::ToWString<int>(i->fSymbolDisplacement).c_str());
+                point->setAttribute(L"FileName",
+                    i->fFileName.c_str());
+                point->setAttribute(L"LineNumber",
+                    Utilities::ToWString<int>(i->fLineNumber).c_str());
+                point->setAttribute(L"LineDisplacement",
+                    Utilities::ToWString<int>(i->fLineDisplacement).c_str());
 
-                    std::map<int, std::pair<int, int> >::const_iterator hits = i->second.find(lineNumber);
-                    if (hits != i->second.end()) {
-                        line->setAttribute(L"TerminalHits", Utilities::ToWString<int>(hits->second.first).c_str());
-                        line->setAttribute(L"NonTerminalHits", Utilities::ToWString<int>(hits->second.second).c_str());
-                    }
-                    line->appendChild(document->createCDATASection(lineContents.c_str()));
-                    
-                    file->appendChild(line);
-                }
+                pointsEncountered->appendChild(point);
             }
 
-            root->appendChild(file);
+            root->appendChild(pointsEncountered);
+        }
+
+        {
+            xercesc::DOMElement* const callCounters = document->createElement(L"CallCounters");
+
+            for (std::map<std::pair<const PointInProgram*, const PointInProgram*>, int>::const_iterator i = results->fHits.begin();
+                i != results->fHits.end();
+                ++i) {
+                    const PointInProgram* const caller = i->first.first;
+                    const PointInProgram* const callee = i->first.second;
+                    const int callerId =
+                        std::distance(results->fEncounteredPoints.begin(),
+                            results->fEncounteredPoints.find(*caller));
+                    const int calleeId = (callee == NULL) ? -1 :
+                        std::distance(results->fEncounteredPoints.begin(),
+                            results->fEncounteredPoints.find(*callee));
+
+                    xercesc::DOMElement* const counter = document->createElement(L"Counter");
+                    
+                    counter->setAttribute(L"CallerId",
+                        Utilities::ToWString<int>(callerId).c_str());
+                    counter->setAttribute(L"CalleeId",
+                        Utilities::ToWString<int>(calleeId).c_str());
+                    counter->setAttribute(L"Count",
+                        Utilities::ToWString<int>(i->second).c_str());
+
+                    callCounters->appendChild(counter);
+            }
+
+            root->appendChild(callCounters);
+        }
+
+        {
+            xercesc::DOMElement* const files = document->createElement(L"Files");
+
+            for (std::set<std::wstring>::const_iterator i = sourceFiles.begin();
+                i != sourceFiles.end();
+                ++i) {
+
+                const std::wstring filename = *i;
+                xercesc::DOMElement* const file = document->createElement(L"File");
+                file->setAttribute(L"Name", filename.c_str());
+
+                std::wifstream fileStream(filename.c_str());
+                if (fileStream.is_open()) {
+                    for (int lineNumber = 1; fileStream.eof() == false; lineNumber++) {
+                        std::wstring lineContents;
+                        std::getline(fileStream, lineContents);
+                        
+                        xercesc::DOMElement* const line = document->createElement(L"Line");
+                        line->setAttribute(L"Number", Utilities::ToWString<int>(lineNumber).c_str());
+
+                        line->appendChild(document->createCDATASection(lineContents.c_str()));
+                        file->appendChild(line);
+                    }
+                }
+                files->appendChild(file);
+            }
+            root->appendChild(files);
         }
 
         xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ int main(void)
     }
 
     {
-        Proffy::Launcher profiler(L"../Debug", L"../test.xml");
+        Proffy::Launcher profiler(L"../Debug", L"../Proffy/test.xml");
         for (int i = 0; i < 10; i++) {
             std::random_shuffle(values.begin(), values.end());
             std::sort(values.begin(), values.end());

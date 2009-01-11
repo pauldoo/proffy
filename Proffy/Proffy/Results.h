@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,24 @@
 #pragma once
 
 namespace Proffy {
+    struct PointInProgram
+    {
+        PointInProgram() :
+            fSymbolDisplacement(0),
+            fLineNumber(0),
+            fLineDisplacement(0)
+        {
+        }
+
+        std::wstring fSymbolName;
+        int fSymbolDisplacement;
+        std::wstring fFileName;
+        int fLineNumber;
+        int fLineDisplacement;
+    };
+
+    const bool operator < (const PointInProgram&, const PointInProgram&);
+
     /**
         Samples during the profile run are accumulated into an instance of this
         class.
@@ -29,24 +47,14 @@ namespace Proffy {
         ~Results();
 
         void AccumulateSample(
-            /**
-                Path to source file.
-            */
-            const std::wstring& filename,
-            /**
-                Line number within source file.
-            */
-            const int lineNumber,
-            /**
-                Set to true iff this sample is at the end of the backtrace
-                (ie is actually executing and not simply waiting on a call
-                to return).
-            */
-            const bool isTerminalOnTrace);
+            const std::vector<PointInProgram>& resolvedFrames);
 
-        const std::map<std::wstring, std::map<int, std::pair<int, int> > >& AllHits() const;
+        std::set<PointInProgram> fEncounteredPoints;
 
-    private:
-        std::map<std::wstring, std::map<int, std::pair<int, int> > > fHits;
+        /**
+            Whenever A is found to be calling B, increment the counter
+            at fHits[A, B].
+        */
+        std::map<std::pair<const PointInProgram*, const PointInProgram*>, int> fHits;
     };
 }

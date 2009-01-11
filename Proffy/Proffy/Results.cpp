@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,20 +31,35 @@ namespace Proffy
     }
 
     void Results::AccumulateSample(
-        const std::wstring& filename,
-        const int lineNumber,
-        const bool isTerminalOnTrace)
+        const std::vector<PointInProgram>& resolvedFrames)
     {
-        std::pair<int, int>* const counters = &(fHits[filename][lineNumber]);
-        if (isTerminalOnTrace) {
-            counters->first++;
-        } else {
-            counters->second++;
+        const PointInProgram* child = NULL;
+        for (int i = 0; i < static_cast<int>(resolvedFrames.size()); i++) {
+            const PointInProgram* const current =
+                &(*(fEncounteredPoints.insert(resolvedFrames.at(i)).first));
+
+            fHits[std::make_pair(current, child)] ++;
+            child = current;
         }
     }
 
-    const std::map<std::wstring, std::map<int, std::pair<int, int> > >& Results::AllHits() const
+    const bool operator < (const PointInProgram& lhs, const PointInProgram& rhs)
     {
-        return fHits;
+        if (lhs.fSymbolName != rhs.fSymbolName) {
+            return lhs.fSymbolName < rhs.fSymbolName;
+        }
+        if (lhs.fSymbolDisplacement != rhs.fSymbolDisplacement) {
+            return lhs.fSymbolDisplacement < rhs.fSymbolDisplacement;
+        }
+        if (lhs.fFileName != rhs.fFileName) {
+            return lhs.fFileName < rhs.fFileName;
+        }
+        if (lhs.fLineNumber != rhs.fLineNumber) {
+            return lhs.fLineNumber < rhs.fLineNumber;
+        }
+        if (lhs.fLineDisplacement != rhs.fLineDisplacement) {
+            return lhs.fLineDisplacement < rhs.fLineDisplacement;
+        }
+        return false;
     }
 }
