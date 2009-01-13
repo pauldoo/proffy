@@ -11,6 +11,7 @@
 <!-[end if]-->
 <link rel="stylesheet" type="text/css" href="/css/solwayFed_print.css" media="print" />
 <script type="text/javascript" src="/scripts/solwayFed.js"></script>
+<script src="/Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 </head>
 
@@ -45,7 +46,7 @@
                     <img src="/includes/thumbnail.php?s=200&path=../<?php echo htmlspecialchars($result["imageFilename"]); ?>" class="floatright" />
                     <p><?php echo nl2br(htmlspecialchars($result["details"])); ?></p>
                     <div id="map" style="width:450px; height:300px; clear: both;"></div>
-                    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAYrFofuFPMX8rrxchY-dtbRSEIYkWFGd2J2hsP_ngrZQDjJ82fRQXX-HGn-6ftv7DzfC1PhNNQztHRQ"
+                    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAVAWlA5cmmv4GmiRpZNRb0BQW6ENpUAfu7wqdWYPgOhZgb9JWMBTmlG0F0VEFv5UsSW_G4CpriZ2R1g"
       type="text/javascript"></script>
                     <script type="text/javascript">
                             function load() {
@@ -75,5 +76,11 @@
 	<div id="footer">
 		  <? include("c:\sites_web\sarah_solwayFed\includes\footer.php"); ?>
 	</div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-3945837-1";
+urchinTracker();
+</script>
 </body>
 <!-- InstanceEnd --></html>

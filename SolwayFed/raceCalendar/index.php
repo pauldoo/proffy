@@ -11,6 +11,7 @@
 <!-[end if]-->
 <link rel="stylesheet" type="text/css" href="/css/solwayFed_print.css" media="print" />
 <script type="text/javascript" src="/scripts/solwayFed.js"></script>
+<script src="/Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 </head>
 
@@ -40,6 +41,8 @@
                 $result = csExecuteQuery($dbh,
                     "SELECT * FROM csEvents WHERE date >= CURRENT_DATE() ORDER BY date");
 
+
+
                 while ($row = mysql_fetch_assoc($result)) {
                     $friendlyDate = date('d/m/Y', strtotime($row["date"]));
                 ?>
@@ -57,12 +60,18 @@
                 ?>
 			<!-- InstanceEndEditable --></div>
 			<div id="rightCol">
-			   <? require_once("c:\sites_web\sarah_solwayFed\includes\\next.php"); ?>
+			   <? include("c:\sites_web\sarah_solwayFed\includes\\next.php"); ?>
 			</div>
 		</div>
 	</div>
 	<div id="footer">
 		  <? include("c:\sites_web\sarah_solwayFed\includes\footer.php"); ?>
 	</div>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-3945837-1";
+urchinTracker();
+</script>
 </body>
 <!-- InstanceEnd --></html>
