@@ -27,6 +27,21 @@
       media-type="application/xhtml+xml"
         />
 
+    <xsl:key
+        name="PointsBy_SymbolName"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="@SymbolName"/>
+
+    <xsl:key
+        name="PointsBy_Id_SymbolName_FileName_LineNumber"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="concat(@Id, '#', @SymbolName, '#', @FileName, '#', @LineNumber)"/>
+
+    <xsl:key
+        name="PointsBy_SymbolName_FileName"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="concat(@SymbolName, '#', @FileName)"/>
+
     <xsl:template name="CssStylesheet">
         <style type="text/css">
               body {
@@ -75,7 +90,7 @@
         <xsl:if test="$docallers = 1">
             <xsl:variable name="calleeid" select="@CalleeId"/>
 
-            <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@Id = $calleeid and @SymbolName = $symbol and @FileName = $filename and @LineNumber = $linenumber]) > 0">
+            <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($calleeid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
                 <a><xsl:attribute name="href">#<xsl:value-of select="@CallerId"/></xsl:attribute><xsl:value-of select="@CallerId"/>:<xsl:value-of select="@Count"/></a><br/>
             </xsl:if>
         </xsl:if>
@@ -83,7 +98,7 @@
         <xsl:if test="$docallees = 1">
             <xsl:variable name="callerid" select="@CallerId"/>
 
-            <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@Id = $callerid and @SymbolName = $symbol and @FileName = $filename and @LineNumber = $linenumber]) > 0">
+            <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($callerid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
                 <a><xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute><xsl:value-of select="@CalleeId"/>:<xsl:value-of select="@Count"/></a><br/>
             </xsl:if>
         </xsl:if>
@@ -101,13 +116,14 @@
     <xsl:template match="PointsEncountered">
         <xsl:for-each select="Point">
             <xsl:variable name="mysymbol" select="@SymbolName"/>
-            <xsl:if test="count(preceding-sibling::node()[@SymbolName = $mysymbol]) = 0">
+            <xsl:variable name="myid" select="@Id"/>
+            <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
                 <h2>
                     <xsl:value-of select="@SymbolName"/>
                 </h2>
                 <xsl:for-each select="/ProffyResults/Files/File">
                     <xsl:variable name="filename" select="@Name"/>
-                    <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@FileName = $filename and @SymbolName = $mysymbol]) > 0">
+                    <xsl:if test="count(key('PointsBy_SymbolName_FileName', concat($mysymbol, '#', $filename))) > 0">
                         <h3>
                             <xsl:value-of select="@Name"/>
                         </h3>
@@ -120,7 +136,7 @@
                             </tr>
                             <xsl:for-each select="Line">
                                 <xsl:variable name="linenumber" select="@Number"/>
-                                <xsl:if test="count(/ProffyResults/PointsEncountered/Point[@SymbolName = $mysymbol and @FileName = $filename and ((@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3)]) > 0">
+                                <xsl:if test="count(key('PointsBy_SymbolName_FileName', concat($mysymbol, '#', $filename))[(@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3]) > 0">
                                     <tr>
                                         <td>
                                             <xsl:apply-templates select="/ProffyResults/PointsEncountered/Point">
