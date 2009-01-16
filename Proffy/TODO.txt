@@ -1,5 +1,3 @@
-Callees and callers should be labelled by symbol.
-
 Callers should be clumped by symbol+file+line.
 
 Callees should be clumped by symbol.

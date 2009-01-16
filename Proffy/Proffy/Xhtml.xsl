@@ -28,6 +28,11 @@
         />
 
     <xsl:key
+        name="PointsBy_Id"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="@Id"/>
+
+    <xsl:key
         name="PointsBy_SymbolName"
         match="/ProffyResults/PointsEncountered/Point"
         use="@SymbolName"/>
@@ -59,6 +64,8 @@
               td, th {
                   border-left: 1px solid;
                   border-right: 1px solid;
+                  border-top: 1px dotted;
+                  border-bottom: 1px dotted;
               }
               pre {
                   margin: 0px;
@@ -91,7 +98,10 @@
             <xsl:variable name="calleeid" select="@CalleeId"/>
 
             <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($calleeid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
-                <a><xsl:attribute name="href">#<xsl:value-of select="@CallerId"/></xsl:attribute><xsl:value-of select="@CallerId"/>:<xsl:value-of select="@Count"/></a><br/>
+                <a>
+                    <xsl:attribute name="href">#<xsl:value-of select="@CallerId"/></xsl:attribute>
+                    <xsl:value-of select="key('PointsBy_Id', @CallerId)/@SymbolName"/>:<xsl:value-of select="@Count"/>
+                </a><br/>
             </xsl:if>
         </xsl:if>
 
@@ -99,7 +109,10 @@
             <xsl:variable name="callerid" select="@CallerId"/>
 
             <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($callerid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
-                <a><xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute><xsl:value-of select="@CalleeId"/>:<xsl:value-of select="@Count"/></a><br/>
+                <a>
+                    <xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute>
+                    <xsl:value-of select="key('PointsBy_Id', @CalleeId)/@SymbolName"/>:<xsl:value-of select="@Count"/>
+                </a><br/>
             </xsl:if>
         </xsl:if>
     </xsl:template>
