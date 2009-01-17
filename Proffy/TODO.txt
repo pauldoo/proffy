@@ -1,12 +1,8 @@
-Callers should be clumped by symbol+file+line.
-
-Callees should be clumped by symbol.
+Callees should be clumped by symbol+file+line : symbol.
 
 Brand with a version number.
 
 Produce a packaging script.
-
-Make a webpage.
 
 64-bit builds - (change from IDE to nmake?).
 

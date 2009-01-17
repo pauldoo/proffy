@@ -47,6 +47,11 @@
         match="/ProffyResults/PointsEncountered/Point"
         use="concat(@SymbolName, '#', @FileName)"/>
 
+    <xsl:key
+        name="PointsBy_SymbolName_FileName_LineNumber"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="concat(@SymbolName, '#', @FileName, '#', @LineNumber)"/>
+
     <xsl:template name="CssStylesheet">
         <style type="text/css">
               body {
@@ -87,33 +92,18 @@
         </html>
     </xsl:template>
 
-    <xsl:template match="Counter" name="CallerCounters">
+    <xsl:template match="Counter" mode="docallees">
         <xsl:param name="symbol"/>
         <xsl:param name="filename"/>
         <xsl:param name="linenumber"/>
-        <xsl:param name="docallers" select="0"/>
-        <xsl:param name="docallees" select="0"/>
 
-        <xsl:if test="$docallers = 1">
-            <xsl:variable name="calleeid" select="@CalleeId"/>
+        <xsl:variable name="callerid" select="@CallerId"/>
 
-            <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($calleeid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
-                <a>
-                    <xsl:attribute name="href">#<xsl:value-of select="@CallerId"/></xsl:attribute>
-                    <xsl:value-of select="key('PointsBy_Id', @CallerId)/@SymbolName"/>:<xsl:value-of select="@Count"/>
-                </a><br/>
-            </xsl:if>
-        </xsl:if>
-
-        <xsl:if test="$docallees = 1">
-            <xsl:variable name="callerid" select="@CallerId"/>
-
-            <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($callerid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
-                <a>
-                    <xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute>
-                    <xsl:value-of select="key('PointsBy_Id', @CalleeId)/@SymbolName"/>:<xsl:value-of select="@Count"/>
-                </a><br/>
-            </xsl:if>
+        <xsl:if test="count(key('PointsBy_Id_SymbolName_FileName_LineNumber', concat($callerid, '#', $symbol, '#', $filename, '#', $linenumber))) > 0">
+            <a>
+                <xsl:attribute name="href">#<xsl:value-of select="@CalleeId"/></xsl:attribute>
+                <xsl:value-of select="key('PointsBy_Id', @CalleeId)/@SymbolName"/>:<xsl:value-of select="@Count"/>
+            </a><br/>
         </xsl:if>
     </xsl:template>
 
@@ -140,10 +130,39 @@
                         <h3>
                             <xsl:value-of select="@Name"/>
                         </h3>
+                        <h4>Callers</h4>
+                        <table>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Count</th>
+                            </tr>
+                            <xsl:for-each select="/ProffyResults/PointsEncountered/Point">
+                                <xsl:variable name="callersymbol" select="@SymbolName"/>
+                                <xsl:variable name="callerfile" select="@FileName"/>
+                                <xsl:variable name="callerline" select="@LineNumber"/>
+                                <xsl:variable name="callerid" select="@Id"/>
+                                <xsl:if test="count(key('PointsBy_SymbolName_FileName_LineNumber', concat($callersymbol, '#', $callerfile, '#', $callerline))[@Id &lt; $callerid]) = 0">
+                                    <!--
+                                        This is the first point that represents this symbol+file+line, so
+                                        now sum the number of counters whose caller is the same symbol+file+line
+                                    -->
+                                    <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CalleeId)[@SymbolName = $mysymbol] and  key('PointsBy_Id', @CallerId)[@SymbolName = $callersymbol and @FileName = $callerfile and @LineNumber = $callerline]]/@Count)"/>
+                                    <xsl:if test="$total > 0">
+                                        <tr>
+                                            <td><xsl:value-of select="$callersymbol"/></td>
+                                            <td class="numeric">
+                                                <xsl:value-of select="$total"/>
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </table>
+
+                        <h4>Code</h4>
                         <table>
                             <tr>
                                 <th>Line Number</th>
-                                <th>Callers</th>
                                 <th>Callees</th>
                                 <th>Code</th>
                             </tr>
@@ -160,15 +179,7 @@
                                             <xsl:value-of select="@Number"/>
                                         </td>
                                         <td>
-                                            <xsl:apply-templates select="/ProffyResults/CallCounters/Counter">
-                                                <xsl:with-param name="symbol" select="$mysymbol"/>
-                                                <xsl:with-param name="filename" select="$filename"/>
-                                                <xsl:with-param name="linenumber" select="$linenumber"/>
-                                                <xsl:with-param name="docallers" select="1"/>
-                                            </xsl:apply-templates>
-                                        </td>
-                                        <td>
-                                            <xsl:apply-templates select="/ProffyResults/CallCounters/Counter">
+                                            <xsl:apply-templates select="/ProffyResults/CallCounters/Counter" mode="docallees">
                                                 <xsl:with-param name="symbol" select="$mysymbol"/>
                                                 <xsl:with-param name="filename" select="$filename"/>
                                                 <xsl:with-param name="linenumber" select="$linenumber"/>
