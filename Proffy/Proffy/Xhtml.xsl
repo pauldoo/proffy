@@ -149,7 +149,10 @@
                                     <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CalleeId)[@SymbolName = $mysymbol] and  key('PointsBy_Id', @CallerId)[@SymbolName = $callersymbol and @FileName = $callerfile and @LineNumber = $callerline]]/@Count)"/>
                                     <xsl:if test="$total > 0">
                                         <tr>
-                                            <td><xsl:value-of select="$callersymbol"/></td>
+                                            <td>
+                                                <xsl:value-of select="$callersymbol"/><br/>
+                                                <xsl:value-of select="$callerfile"/>:<xsl:value-of select="$callerline"/>
+                                            </td>
                                             <td class="numeric">
                                                 <xsl:value-of select="$total"/>
                                             </td>
