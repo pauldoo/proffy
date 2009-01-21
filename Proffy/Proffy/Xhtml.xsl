@@ -98,10 +98,6 @@
             <xsl:variable name="myid" select="@Id"/>
             <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
                 <h2>
-                    <!-- Insert anchors for links to this symbol. -->
-                    <xsl:for-each select="key('PointsBy_SymbolName', $mysymbol)">
-                        <a><xsl:attribute name="name">Symbol_<xsl:value-of select="@Id"/></xsl:attribute></a>
-                    </xsl:for-each>
                     <xsl:value-of select="@SymbolName"/>
                 </h2>
                 <xsl:for-each select="/ProffyResults/Files/File">
@@ -209,9 +205,7 @@
                                                         -->
                                                         <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CalleeId)[@SymbolName = $calleesymbol] and  key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]]/@Count)"/>
                                                         <xsl:if test="$total > 0">
-                                                            <a><xsl:attribute name="href">#Symbol_<xsl:value-of select="$calleeid"/></xsl:attribute>
-                                                                <xsl:value-of select="$calleesymbol"/>:<xsl:value-of select="$total"/>
-                                                            </a><br/>
+                                                            <xsl:value-of select="$calleesymbol"/>:<xsl:value-of select="$total"/><br/>
                                                         </xsl:if>
                                                     </xsl:if>
                                                 </xsl:for-each>
