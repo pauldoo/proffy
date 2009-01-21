@@ -1,5 +1,3 @@
-Link within HTML to callers and callees.
-
 Brand with a version number.
 
 Produce a packaging script.
