@@ -126,8 +126,10 @@
                                     <xsl:if test="$total > 0">
                                         <tr>
                                             <td>
-                                                <xsl:value-of select="$callersymbol"/><br/>
-                                                <xsl:value-of select="$callerfile"/>:<xsl:value-of select="$callerline"/>
+                                                <a><xsl:attribute name="href">#Point_<xsl:value-of select="$callerid"/></xsl:attribute>
+                                                    <xsl:value-of select="$callersymbol"/><br/>
+                                                    <xsl:value-of select="$callerfile"/>:<xsl:value-of select="$callerline"/>
+                                                </a>
                                             </td>
                                             <td class="numeric">
                                                 <xsl:value-of select="$total"/>
@@ -159,6 +161,12 @@
                                 <xsl:if test="$isinteresting or key('PointsBy_SymbolName_FileName', concat($mysymbol, '#', $filename))[(@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3]">
                                     <tr>
                                         <td class="numeric">
+                                            <!-- Insert anchors for people linking to this (by caller id). -->
+                                            <xsl:if test="$isinteresting">
+                                                <xsl:for-each select="key('PointsBy_SymbolName_FileName_LineNumber', concat($mysymbol, '#', $filename, '#', $linenumber))">
+                                                    <a><xsl:attribute name="name">Point_<xsl:value-of select="@Id"/></xsl:attribute></a>
+                                                </xsl:for-each>
+                                            </xsl:if>
                                             <!-- Line number -->
                                             <xsl:value-of select="@Number"/>
                                         </td>
