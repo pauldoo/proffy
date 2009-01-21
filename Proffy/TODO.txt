@@ -1,3 +1,7 @@
+Add table of contents to report.
+
+Format reports nicely.
+
 Brand with a version number.
 
 Produce a packaging script.
