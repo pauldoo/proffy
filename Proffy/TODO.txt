@@ -1,6 +1,6 @@
-Callees should be clumped by symbol+file+line : symbol.
+Show time spent executing inclusive & exclusive of callees (totals).
 
-Show time spent executing (excluding callees).
+Link within HTML to callers and callees.
 
 Brand with a version number.
 
