@@ -155,8 +155,8 @@
                             </tr>
                             <xsl:for-each select="Line">
                                 <xsl:variable name="linenumber" select="@Number"/>
-                                <xsl:if test="key('PointsBy_SymbolName_FileName', concat($mysymbol, '#', $filename))[(@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3]">
-                                    <xsl:variable name="isinteresting" select="count(key('PointsBy_SymbolName_FileName_LineNumber', concat($mysymbol, '#', $filename, '#', $linenumber))) > 0"/>
+                                <xsl:variable name="isinteresting" select="count(key('PointsBy_SymbolName_FileName_LineNumber', concat($mysymbol, '#', $filename, '#', $linenumber))) > 0"/>
+                                <xsl:if test="$isinteresting or key('PointsBy_SymbolName_FileName', concat($mysymbol, '#', $filename))[(@LineNumber - $linenumber) &lt;= 3 and (@LineNumber - $linenumber) >= -3]">
                                     <tr>
                                         <td class="numeric">
                                             <!-- Line number -->
