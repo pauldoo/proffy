@@ -1,5 +1,7 @@
 Callees should be clumped by symbol+file+line : symbol.
 
+Show time spent executing (excluding callees).
+
 Brand with a version number.
 
 Produce a packaging script.
