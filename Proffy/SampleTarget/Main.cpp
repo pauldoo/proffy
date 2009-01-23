@@ -26,6 +26,22 @@
 
 #pragma warning(disable: 4127) // conditional expression is constant
 
+namespace {
+    void SomeFunction(
+        std::vector<int>* const values,
+        int)
+    {
+        std::random_shuffle(values->begin(), values->end());
+    }
+
+    void SomeFunction(
+        std::vector<int>* const values,
+        float)
+    {
+        std::sort(values->begin(), values->end());
+    }
+};
+
 int main(void)
 {
     std::cout << "Running dummy target.\n";
@@ -40,8 +56,8 @@ int main(void)
     {
         Proffy::Launcher profiler(L"../Debug", L"../Proffy/test.xml");
         for (int i = 0; i < 10; i++) {
-            std::random_shuffle(values.begin(), values.end());
-            std::sort(values.begin(), values.end());
+            SomeFunction(&values, 3);
+            SomeFunction(&values, 3.14f);
             std::cout << ".";
             std::cout.flush();
         }
