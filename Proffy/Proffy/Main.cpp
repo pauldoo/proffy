@@ -183,32 +183,51 @@ namespace Proffy {
                             &symbolDisplacement);
 
                         if (result == S_OK) {
-                            ULONG line;
-                            std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
-                            ULONG fileNameSize;
-                            ULONG64 lineDisplacement;
-                            result = debugSymbols->GetLineByOffsetWide(
-                                frames.at(i).InstructionOffset, 
-                                &line, 
-                                &(fileNameAsVector.front()),
-                                fileNameAsVector.size(), 
-                                &fileNameSize, 
-                                &lineDisplacement);
+                            // Last valid character returned is actually NULL, which we're not interested in keeping.
+                            ASSERT(symbolNameAsVector.at(symbolNameSize - 1) == NULL);
+                            symbolNameAsVector.resize(symbolNameSize - 1);
+
+                            std::vector<__int8> fpoBuffer(1000);
+                            ULONG fpoBufferUsed;
+                            result = debugSymbols->GetFunctionEntryByOffset(
+                                frames.at(i).InstructionOffset,
+                                0,
+                                &(fpoBuffer.front()),
+                                fpoBuffer.size(),
+                                &fpoBufferUsed);
 
                             if (result == S_OK) {
-                                PointInProgram pip;
-                                
-                                pip.fSymbolName = std::wstring(
-                                    symbolNameAsVector.begin(),
-                                    symbolNameAsVector.begin() + symbolNameSize - 1);
-                                pip.fSymbolDisplacement = static_cast<int>(symbolDisplacement);
-                                pip.fFileName = std::wstring(
-                                    fileNameAsVector.begin(),
-                                    fileNameAsVector.begin() + fileNameSize - 1);
-                                pip.fLineNumber = line;
-                                pip.fLineDisplacement = static_cast<int>(lineDisplacement);
+                                fpoBuffer.resize(fpoBufferUsed);
+                                ASSERT(fpoBuffer.size() == sizeof(FPO_DATA));
+                                const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
 
-                                resolvedFrames.push_back(pip);
+                                ULONG line;
+                                std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
+                                ULONG fileNameSize;
+                                ULONG64 lineDisplacement;
+                                result = debugSymbols->GetLineByOffsetWide(
+                                    frames.at(i).InstructionOffset, 
+                                    &line, 
+                                    &(fileNameAsVector.front()),
+                                    fileNameAsVector.size(), 
+                                    &fileNameSize, 
+                                    &lineDisplacement);
+
+                                if (result == S_OK) {
+                                    // Last valid character returned is actually NULL, which we're not interested in keeping.
+                                    ASSERT(fileNameAsVector.at(fileNameSize - 1) == NULL);
+                                    fileNameAsVector.resize(fileNameSize - 1);
+
+                                    PointInProgram pip;
+                                    pip.fSymbolName = std::wstring(symbolNameAsVector.begin(), symbolNameAsVector.end()) +
+                                        L"@" + Utilities::ToWString(fpoData->ulOffStart);
+                                    pip.fSymbolDisplacement = static_cast<int>(symbolDisplacement);
+                                    pip.fFileName = std::wstring(fileNameAsVector.begin(), fileNameAsVector.end());
+                                    pip.fLineNumber = line;
+                                    pip.fLineDisplacement = static_cast<int>(lineDisplacement);
+
+                                    resolvedFrames.push_back(pip);
+                                }
                             }
                         }
                     }
