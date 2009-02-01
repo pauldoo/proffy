@@ -225,6 +225,9 @@ namespace Proffy {
             WriteReport(&arguments, &results);
             std::wcout << "Done.\n";
 
+            result = debugClient->DetachProcesses();
+            ASSERT(result == S_OK);
+
             return EXIT_SUCCESS;
         } catch (const xercesc::XMLException& ex) {
             std::wcerr << ex.getType() << ": " << ex.getMessage() << "\n";

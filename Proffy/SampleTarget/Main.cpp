@@ -62,5 +62,7 @@ int main(void)
             std::cout.flush();
         }
     }
+    std::cout << "\nDone.\n";
+
     return EXIT_SUCCESS;
 }
