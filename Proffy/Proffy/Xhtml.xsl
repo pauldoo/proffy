@@ -38,6 +38,11 @@
         use="@SymbolName"/>
 
     <xsl:key
+        name="PointsBy_Id_SymbolName"
+        match="/ProffyResults/PointsEncountered/Point"
+        use="concat(@Id, '#', @SymbolName)"/>
+
+    <xsl:key
         name="PointsBy_Id_SymbolName_FileName_LineNumber"
         match="/ProffyResults/PointsEncountered/Point"
         use="concat(@Id, '#', @SymbolName, '#', @FileName, '#', @LineNumber)"/>
@@ -133,11 +138,11 @@
                 <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
                     <tr>
                         <td class="numeric">
-                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol]]/@Count)"/>
+                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id_SymbolName', concat(@CallerId, '#', $mysymbol))]/@Count)"/>
                             <xsl:value-of select="$total"/>
                         </td>
                         <td class="numeric">
-                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol] and @CalleeId = -1]/@Count)"/>
+                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[@CalleeId = -1 and key('PointsBy_Id_SymbolName', concat(@CallerId, '#', $mysymbol))]/@Count)"/>
                             <xsl:value-of select="$total"/>
                         </td>
                         <td>
@@ -186,7 +191,7 @@
                                         This is the first point that represents this symbol+file+line, so
                                         now sum the number of counters whose caller is the same symbol+file+line
                                     -->
-                                    <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CalleeId)[@SymbolName = $mysymbol] and  key('PointsBy_Id', @CallerId)[@SymbolName = $callersymbol and @FileName = $callerfile and @LineNumber = $callerline]]/@Count)"/>
+                                    <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id_SymbolName', concat(@CalleeId, '#', $mysymbol)) and key('PointsBy_Id_SymbolName_FileName_LineNumber', concat(@CallerId, '#', $callersymbol, '#', $callerfile, '#', $callerline))]/@Count)"/>
                                     <xsl:if test="$total > 0">
                                         <tr>
                                             <td>
@@ -238,14 +243,14 @@
                                         <td class="numeric">
                                             <!-- Inclusive -->
                                             <xsl:if test="$isinteresting">
-                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]]/@Count)"/>
+                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id_SymbolName_FileName_LineNumber', concat(@CallerId, '#', $mysymbol, '#', $filename, '#', $linenumber))]/@Count)"/>
                                                 <xsl:value-of select="$total"/>
                                             </xsl:if>
                                         </td>
                                         <td class="numeric">
                                             <!-- Exclusive -->
                                             <xsl:if test="$isinteresting">
-                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[@CalleeId = -1 and key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]]/@Count)"/>
+                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[@CalleeId = -1 and key('PointsBy_Id_SymbolName_FileName_LineNumber', concat(@CallerId, '#', $mysymbol, '#', $filename, '#', $linenumber))]/@Count)"/>
                                                 <xsl:value-of select="$total"/>
                                             </xsl:if>
                                        </td>
@@ -269,7 +274,7 @@
                                                     This is the first point that represents this callee symbol, so
                                                     now sum the number of counters whose callee is the same symbol.
                                                 -->
-                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CalleeId)[@SymbolName = $calleesymbol] and  key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol and @FileName = $filename and @LineNumber = $linenumber]]/@Count)"/>
+                                                <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id_SymbolName', concat(@CalleeId, '#', $calleesymbol)) and  key('PointsBy_Id_SymbolName_FileName_LineNumber', concat(@CallerId, '#', $mysymbol, '#', $filename, '#', $linenumber))]/@Count)"/>
                                                 <xsl:if test="$total > 0">
                                                 <tr>
                                                     <td colspan="4"/>
