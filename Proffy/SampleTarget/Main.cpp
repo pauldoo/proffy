@@ -54,7 +54,7 @@ int main(void)
     }
 
     {
-        Proffy::Launcher profiler(L"../Release", L"../Proffy/test.xml", 0.01, true);
+        Proffy::Launcher profiler(L"../Release", L"../Proffy/test.xml");
         for (int i = 0; i < 100; i++) {
             SomeFunction(&values, 3);
             SomeFunction(&values, 3.14f);
