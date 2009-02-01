@@ -138,6 +138,7 @@
             <tr><th colspan="2">TimeSpent</th><th/></tr>
             <tr><th>Inclusive</th><th>Exclusive</th><th>Symbol</th></tr>
             <xsl:for-each select="Point">
+                <xsl:sort select="sum(key('CountersBy_CallerSymbol', @SymbolName)/@Count)" data-type="number" order="descending"/>
                 <xsl:variable name="mysymbol" select="@SymbolName"/>
                 <xsl:variable name="myid" select="@Id"/>
                 <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
