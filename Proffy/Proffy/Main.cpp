@@ -23,6 +23,7 @@
 #include "Exception.h"
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
+#include "Launcher.h"
 #include "Results.h"
 #include "Utilities.h"
 #include "WriteReport.h"
@@ -105,6 +106,16 @@ namespace Proffy {
             FlushCallbacks(debugClient);
             ConsoleColor c(Color_Normal);
             Results results;
+
+            // Profiler when used for self-profiling
+            std::auto_ptr<Launcher> profiler;
+            if (arguments.fProfileTheProfiler) {
+                profiler.reset(new Launcher(
+                    L"../Release",
+                    arguments.fOutputFilename,
+                    arguments.fDelayBetweenSamplesInSeconds,
+                    false));
+            }
 
             ASSERT(::ReleaseSemaphore(arguments.fStartFlag, 1, NULL) != FALSE);
             results.fBeginTimeInSeconds = Utilities::TimeInSeconds();
@@ -219,11 +230,14 @@ namespace Proffy {
                 }
             }
             results.fEndTimeInSeconds = Utilities::TimeInSeconds();
+            profiler.reset();
 
-            std::wcout << L"Saving report..";
-            std::wcout.flush();
-            WriteReport(&arguments, &results);
-            std::wcout << "Done.\n";
+            if (arguments.fProfileTheProfiler == false) {
+                std::wcout << L"Saving report..";
+                std::wcout.flush();
+                WriteReport(&arguments, &results);
+                std::wcout << "Done.\n";
+            }
 
             result = debugClient->DetachProcesses();
             ASSERT(result == S_OK);

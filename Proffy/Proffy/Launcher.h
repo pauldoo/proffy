@@ -69,7 +69,8 @@ namespace Proffy {
         Launcher(
             const std::wstring& proffyDirectory,
             const std::wstring& outputFilename,
-            const double delayBetweenSamplesInSeconds = 0.01)
+            const double delayBetweenSamplesInSeconds = 0.01,
+            const bool profileTheProfiler = false)
         {
             SECURITY_ATTRIBUTES security = {0};
             security.nLength = sizeof(security);
@@ -85,7 +86,8 @@ namespace Proffy {
                 << L" \"" << outputFilename << L"\""
                 << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
                 << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle)
-                << L" " << delayBetweenSamplesInSeconds;
+                << L" " << delayBetweenSamplesInSeconds
+                << L" " << profileTheProfiler;
             const std::wstring commandLine = buf.str();
 
             STARTUPINFOW startupInfo = {0};

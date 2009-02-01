@@ -35,5 +35,6 @@ namespace Proffy {
         HANDLE fStartFlag;
         HANDLE fStopFlag;
         double fDelayBetweenSamplesInSeconds;
+        bool fProfileTheProfiler;
     };
 }
