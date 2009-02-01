@@ -38,16 +38,6 @@
         use="@SymbolName"/>
 
     <xsl:key
-        name="PointsBy_Id_SymbolName"
-        match="/ProffyResults/PointsEncountered/Point"
-        use="concat(@Id, '#', @SymbolName)"/>
-
-    <xsl:key
-        name="PointsBy_Id_SymbolName_FileName_LineNumber"
-        match="/ProffyResults/PointsEncountered/Point"
-        use="concat(@Id, '#', @SymbolName, '#', @FileName, '#', @LineNumber)"/>
-
-    <xsl:key
         name="PointsBy_SymbolName_FileName"
         match="/ProffyResults/PointsEncountered/Point"
         use="concat(@SymbolName, '#', @FileName)"/>
@@ -56,6 +46,11 @@
         name="PointsBy_SymbolName_FileName_LineNumber"
         match="/ProffyResults/PointsEncountered/Point"
         use="concat(@SymbolName, '#', @FileName, '#', @LineNumber)"/>
+
+    <xsl:key
+        name="CountersBy_CallerSymbol"
+        match="/ProffyResults/CallCounters/Counter"
+        use="key('PointsBy_Id', @CallerId)/@SymbolName"/>
 
     <xsl:key
         name="CountersBy_CallerSymbol_CallerFileName_CallerLineNumber"
@@ -148,11 +143,11 @@
                 <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
                     <tr>
                         <td class="numeric">
-                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id_SymbolName', concat(@CallerId, '#', $mysymbol))]/@Count)"/>
+                            <xsl:variable name="total" select="sum(key('CountersBy_CallerSymbol', $mysymbol)/@Count)"/>
                             <xsl:value-of select="$total"/>
                         </td>
                         <td class="numeric">
-                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[@CalleeId = -1 and key('PointsBy_Id_SymbolName', concat(@CallerId, '#', $mysymbol))]/@Count)"/>
+                            <xsl:variable name="total" select="sum(key('CountersBy_CallerSymbol', $mysymbol)[@CalleeId = -1]/@Count)"/>
                             <xsl:value-of select="$total"/>
                         </td>
                         <td>
