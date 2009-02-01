@@ -90,7 +90,8 @@
             </head>
             <body>
                 <xsl:apply-templates select="Summary"/>
-                <xsl:apply-templates select="PointsEncountered"/>
+                <xsl:apply-templates select="PointsEncountered" mode="TableOfContents"/>
+                <xsl:apply-templates select="PointsEncountered" mode="Details"/>
             </body>
         </html>
     </xsl:template>
@@ -121,7 +122,36 @@
         </table>
     </xsl:template>
 
-    <xsl:template match="PointsEncountered">
+    <xsl:template match="PointsEncountered" mode="TableOfContents">
+        <h1>Contents</h1>
+        <table>
+            <tr><th colspan="2">TimeSpent</th><th/></tr>
+            <tr><th>Inclusive</th><th>Exclusive</th><th>Symbol</th></tr>
+            <xsl:for-each select="Point">
+                <xsl:variable name="mysymbol" select="@SymbolName"/>
+                <xsl:variable name="myid" select="@Id"/>
+                <xsl:if test="count(key('PointsBy_SymbolName', $mysymbol)[@Id &lt; $myid]) = 0">
+                    <tr>
+                        <td class="numeric">
+                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol]]/@Count)"/>
+                            <xsl:value-of select="$total"/>
+                        </td>
+                        <td class="numeric">
+                            <xsl:variable name="total" select="sum(/ProffyResults/CallCounters/Counter[key('PointsBy_Id', @CallerId)[@SymbolName = $mysymbol] and @CalleeId = -1]/@Count)"/>
+                            <xsl:value-of select="$total"/>
+                        </td>
+                        <td>
+                            <a><xsl:attribute name="href">#Symbol_<xsl:value-of select="$myid"/></xsl:attribute>
+                                <xsl:value-of select="$mysymbol"/>
+                            </a>
+                        </td>
+                    </tr>
+                </xsl:if>
+            </xsl:for-each>
+        </table>
+    </xsl:template>
+
+    <xsl:template match="PointsEncountered" mode="Details">
         <h1>Details</h1>
         <xsl:for-each select="Point">
             <xsl:variable name="mysymbol" select="@SymbolName"/>
