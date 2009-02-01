@@ -22,7 +22,11 @@
 
 namespace Proffy
 {
-    Results::Results()
+    Results::Results() :
+        fNumberOfCallstacks(0),
+        fNumberOfSamples(0),
+        fBeginTimeInSeconds(0.0),
+        fEndTimeInSeconds(0.0)
     {
     }
 
@@ -30,9 +34,11 @@ namespace Proffy
     {
     }
 
-    void Results::AccumulateSample(
+    void Results::AccumulateCallstack(
         const std::vector<PointInProgram>& resolvedFrames)
     {
+        fNumberOfCallstacks++;
+
         const PointInProgram* child = NULL;
         for (int i = 0; i < static_cast<int>(resolvedFrames.size()); i++) {
             const PointInProgram* const current =

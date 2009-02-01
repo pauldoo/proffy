@@ -46,8 +46,31 @@ namespace Proffy {
 
         ~Results();
 
-        void AccumulateSample(
+        void AccumulateCallstack(
             const std::vector<PointInProgram>& resolvedFrames);
+
+        /**
+            Number of callstacks collected.  May be larger than
+            fNumberOfSamples due to multiple threads running
+            in the target.
+        */
+        int fNumberOfCallstacks;
+
+        /**
+            Number of times the profiler paused the target in order
+            to collect callstacks. 
+        */
+        int fNumberOfSamples;
+
+        /**
+            Wall clock time at which profiling started.
+        */
+        double fBeginTimeInSeconds;
+
+        /**
+            Wall clock time at which profiling ended.
+        */
+        double fEndTimeInSeconds;
 
         std::set<PointInProgram> fEncounteredPoints;
 

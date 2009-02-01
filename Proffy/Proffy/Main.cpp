@@ -18,6 +18,7 @@
 
 #include "Assert.h"
 #include "ComInitialize.h"
+#include "CommandLineArguments.h"
 #include "ConsoleColor.h"
 #include "Exception.h"
 #include "DebugEventCallbacks.h"
@@ -29,30 +30,9 @@
 namespace Proffy {
     const std::string lines = std::string(50, '-') + "\n";
 
-    struct CommandLineArguments
-    {
-        int fProcessId;
-        std::wstring fOutputFilename;
-        HANDLE fStartFlag;
-        HANDLE fStopFlag;
-    };
-
     void FlushCallbacks(IDebugClient* const debugClient)
     {
         ASSERT(debugClient->FlushCallbacks() == S_OK);
-    }
-
-    const CommandLineArguments ParseCommandLine(
-        const int argc,
-        const wchar_t* const * const argv)
-    {
-        ASSERT(argc == 5);
-        CommandLineArguments result;
-        result.fProcessId = Utilities::FromWString<int>(argv[1]);
-        result.fOutputFilename = argv[2];
-        result.fStartFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[3]));
-        result.fStopFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[4]));
-        return result;
     }
 
     const int main(
@@ -60,7 +40,7 @@ namespace Proffy {
         const wchar_t* const * const argv)
     {
         try {
-            const CommandLineArguments arguments = ParseCommandLine(argc, argv);
+            const CommandLineArguments arguments = CommandLineArguments::Parse(argc, argv);
 
             // Initialize COM, no idea if this is necessary.
             const ComInitialize com;
@@ -127,6 +107,7 @@ namespace Proffy {
             Results results;
 
             ASSERT(::ReleaseSemaphore(arguments.fStartFlag, 1, NULL) != FALSE);
+            results.fBeginTimeInSeconds = Utilities::TimeInSeconds();
 
             while (true) {
                 result = ::WaitForSingleObject(arguments.fStopFlag, 0);
@@ -139,15 +120,18 @@ namespace Proffy {
                     ASSERT(false);
                 }
 
+                const int delayBetweenSamplesInMilliseconds = Utilities::Round(arguments.fDelayBetweenSamplesInSeconds * 1000.0);
                 result = debugControl->WaitForEvent(
                     DEBUG_WAIT_DEFAULT,
-                    10);
+                    delayBetweenSamplesInMilliseconds);
                 ASSERT(result == S_OK || result == S_FALSE);
 
                 ULONG executionStatus;
                 result = debugControl->GetExecutionStatus(&executionStatus);
                 ASSERT(result == S_OK);
                 ASSERT(executionStatus == DEBUG_STATUS_BREAK);
+
+                results.fNumberOfSamples++;
 
                 ULONG numberThreads;
                 ULONG largestProcess;
@@ -231,13 +215,14 @@ namespace Proffy {
                             }
                         }
                     }
-                    results.AccumulateSample(resolvedFrames);
+                    results.AccumulateCallstack(resolvedFrames);
                 }
             }
+            results.fEndTimeInSeconds = Utilities::TimeInSeconds();
 
             std::wcout << L"Saving report..";
             std::wcout.flush();
-            WriteReport(&results, arguments.fOutputFilename);
+            WriteReport(&arguments, &results);
             std::wcout << "Done.\n";
 
             return EXIT_SUCCESS;

@@ -17,10 +17,23 @@
 #pragma once
 
 namespace Proffy {
-    class CommandLineArguments;
-    class Results;
+    class CommandLineArguments
+    {
+    public:
+        static const CommandLineArguments Parse(
+            const int argc,
+            const wchar_t* const * const argv);
 
-    void WriteReport(
-        const CommandLineArguments* const arguments,
-        const Results* const results);
+        ~CommandLineArguments();
+        
+    private:
+        CommandLineArguments();
+
+    public:
+        int fProcessId;
+        std::wstring fOutputFilename;
+        HANDLE fStartFlag;
+        HANDLE fStopFlag;
+        double fDelayBetweenSamplesInSeconds;
+    };
 }

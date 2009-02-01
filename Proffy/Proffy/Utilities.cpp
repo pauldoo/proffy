@@ -140,5 +140,10 @@ namespace Proffy {
                     return "Not an execution status.";
             }
         }
+
+        const int Round(const double x)
+        {
+            return static_cast<int>(floor(x + 0.5));
+        }
     }
 }

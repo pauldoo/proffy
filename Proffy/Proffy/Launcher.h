@@ -68,7 +68,8 @@ namespace Proffy {
     public:
         Launcher(
             const std::wstring& proffyDirectory,
-            const std::wstring& outputFilename)
+            const std::wstring& outputFilename,
+            const double delayBetweenSamplesInSeconds = 0.01)
         {
             SECURITY_ATTRIBUTES security = {0};
             security.nLength = sizeof(security);
@@ -83,7 +84,8 @@ namespace Proffy {
                 << L" " << ::GetCurrentProcessId()
                 << L" \"" << outputFilename << L"\""
                 << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
-                << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle);
+                << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle)
+                << L" " << delayBetweenSamplesInSeconds;
             const std::wstring commandLine = buf.str();
 
             STARTUPINFOW startupInfo = {0};

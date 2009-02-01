@@ -192,6 +192,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\CommandLineArguments.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\CommandLineArguments.h"
+			>
+		</File>
+		<File
 			RelativePath=".\ConsoleColor.cpp"
 			>
 		</File>

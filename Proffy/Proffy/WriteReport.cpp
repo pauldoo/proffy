@@ -19,14 +19,15 @@
 #include "WriteReport.h"
 
 #include "Assert.h"
+#include "CommandLineArguments.h"
 #include "Results.h"
 #include "Utilities.h"
 #include "XercesInitialize.h"
 
 namespace Proffy {
     void WriteReport(
-        const Results* const results,
-        const std::wstring& outputFilename)
+        const CommandLineArguments* const arguments,
+        const Results* const results)
     {
         XercesInitialize xerces;
         xercesc::DOMImplementation* const domImplementation =
@@ -37,6 +38,28 @@ namespace Proffy {
         document->appendChild(document->createProcessingInstruction(L"xml-stylesheet", L"type=\"text/xsl\" href=\"Xhtml.xsl\""));
         xercesc::DOMElement* const root = document->createElement(L"ProffyResults");
         document->appendChild(root);
+
+        {
+            xercesc::DOMElement* const summary = document->createElement(L"Summary");
+
+            xercesc::DOMElement* const delayBetweenSamplesInSeconds = document->createElement(L"DelayBetweenSamplesInSeconds");
+            delayBetweenSamplesInSeconds->setTextContent(Utilities::ToWString(arguments->fDelayBetweenSamplesInSeconds).c_str());
+            summary->appendChild(delayBetweenSamplesInSeconds);
+
+            xercesc::DOMElement* const sampleCount = document->createElement(L"SampleCount");
+            sampleCount->setTextContent(Utilities::ToWString(results->fNumberOfSamples).c_str());
+            summary->appendChild(sampleCount);
+
+            xercesc::DOMElement* const callstackCount = document->createElement(L"CallstackCount");
+            callstackCount->setTextContent(Utilities::ToWString(results->fNumberOfCallstacks).c_str());
+            summary->appendChild(callstackCount);
+
+            xercesc::DOMElement* const wallClockTimeInSeconds = document->createElement(L"WallClockTimeInSeconds");
+            wallClockTimeInSeconds->setTextContent(Utilities::ToWString(results->fEndTimeInSeconds - results->fBeginTimeInSeconds).c_str());
+            summary->appendChild(wallClockTimeInSeconds);
+
+            root->appendChild(summary);
+        }
 
         std::set<std::wstring> sourceFiles;
         {
@@ -130,7 +153,7 @@ namespace Proffy {
 
         xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();
         domSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(outputFilename.c_str());
+        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments->fOutputFilename.c_str());
         xercesc::DOMLSOutput* const output = domImplementation->createLSOutput();
         output->setByteStream(target);
         domSerializer->write(document, output);

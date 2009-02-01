@@ -44,5 +44,7 @@ namespace Proffy {
             stream >> result;
             return result;
         }
+
+        const int Round(const double x);
     }
 }
