@@ -89,13 +89,40 @@
                 <xsl:call-template name="CssStylesheet"/>
             </head>
             <body>
-                <h1>Hello</h1>
+                <xsl:apply-templates select="Summary"/>
                 <xsl:apply-templates select="PointsEncountered"/>
             </body>
         </html>
     </xsl:template>
 
+    <xsl:template match="Summary">
+        <h1>Summary</h1>
+        <table>
+            <tr>
+                <th>Wall clock time (seconds)</th>
+                <td class="numeric"><xsl:value-of select="WallClockTimeInSeconds"/></td>
+            </tr>
+            <tr>
+                <th>Application time (seconds)</th>
+                <td class="numeric"><xsl:value-of select="SampleCount * DelayBetweenSamplesInSeconds"/></td>
+            </tr>
+            <tr>
+                <th>Delay between samples (seconds)</th>
+                <td class="numeric"><xsl:value-of select="DelayBetweenSamplesInSeconds"/></td>
+            </tr>
+            <tr>
+                <th>Samples gathered</th>
+                <td class="numeric"><xsl:value-of select="SampleCount"/></td>
+            </tr>
+            <tr>
+                <th>Callstacks gathered</th>
+                <td class="numeric"><xsl:value-of select="CallstackCount"/></td>
+            </tr>
+        </table>
+    </xsl:template>
+
     <xsl:template match="PointsEncountered">
+        <h1>Details</h1>
         <xsl:for-each select="Point">
             <xsl:variable name="mysymbol" select="@SymbolName"/>
             <xsl:variable name="myid" select="@Id"/>
