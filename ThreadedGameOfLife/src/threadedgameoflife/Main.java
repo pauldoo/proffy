@@ -29,17 +29,21 @@ public final class Main
 
         public void run() {
             try {
-                if (state == true) {
-                   image.setRGB(x, y, 0xffffff);
-                } else {
-                    image.setRGB(x, y, 0x000000);
-                }
-
                 if (inputs.size() != 8 || outputs.size() != 8) {
                     throw new IllegalArgumentException();
                 }
 
                 while (true) {
+                    if (state == true) {
+                       image.setRGB(x, y, 0xffffff);
+                    } else {
+                        image.setRGB(x, y, 0x000000);
+                    }
+
+                    for (DataOutput out: outputs) {
+                        out.writeBoolean(state);
+                    }
+
                     int aliveCount = 0;
                     for (DataInput in: inputs) {
                         if (in.readBoolean() == true) {
@@ -88,11 +92,6 @@ public final class Main
                                 throw new IllegalStateException();
                         }
                     }
-
-                    for (DataOutput out: outputs) {
-                        out.writeBoolean(state);
-                    }
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
