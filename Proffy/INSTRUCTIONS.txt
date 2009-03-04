@@ -1,0 +1,32 @@
+Batch build the whole solution.
+
+Find the outer source file which you want to profile and:
+
+  Add #include <C:/path/to/Proffy/Proffy/Launcher.h>
+
+  Decorate the function to be profiled like this (note the {} braces for
+  scoping of Proffy::Launcher variable):
+
+    {
+        Proffy::Launcher profiler(
+            L"C:/path/to/Proffy/Release", // Path to Proffy.exe
+            L"C:/path/to/Proffy/Proffy/my_profile_results.xml", // Output filename for this profile run
+            1.0 / 20); // Delay between samples, so here set to 20 Hz
+
+        SomeFunctionWhichWillGetProfiled();
+
+        // The Proffy::Launcher destructor will cause the profiler to stop and save
+        // the report.  So ensure you have the scope correct.
+    }
+    exit(0); // Optional statement just to end the program we are profiling
+
+
+After running the application you can open the
+"C:/path/to/Proffy/Proffy/my_profile_results.xml" file in Firefox or IE. It
+is important that this file be placed alongside the "Xhtml.xsl" file that
+came with Proffy.
+
+Also take care to ensure that frame pointers are present in the application
+being profiled. If these are omitted (due to optimization settings) then the
+results from the profiler will be extremely poor.
+
