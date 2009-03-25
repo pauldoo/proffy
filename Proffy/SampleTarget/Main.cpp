@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <vector>
 
@@ -54,12 +55,11 @@ int main(void)
     }
 
     {
-        Proffy::Launcher profiler(L"../Release", L"../Proffy/test.xml");
-        for (int i = 0; i < 100; i++) {
+        Proffy::Launcher profiler(L"../Release", L"../Proffy/test.xml", 1.0 / 20);
+        const clock_t begin = clock();
+        while ((clock() - begin) / CLOCKS_PER_SEC < 3) {
             SomeFunction(&values, 3);
             SomeFunction(&values, 3.14f);
-            std::cout << ".";
-            std::cout.flush();
         }
     }
     std::cout << "\nDone.\n";

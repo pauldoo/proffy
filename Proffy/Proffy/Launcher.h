@@ -69,7 +69,7 @@ namespace Proffy {
         Launcher(
             const std::wstring& proffyDirectory,
             const std::wstring& outputFilename,
-            const double delayBetweenSamplesInSeconds = 0.01,
+            const double delayBetweenSamplesInSeconds,
             const bool profileTheProfiler = false)
         {
             SECURITY_ATTRIBUTES security = {0};
