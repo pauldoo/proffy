@@ -1,8 +1,9 @@
-Format reports nicely.
+In rough order of priority, from highest to lowest:
 
-Brand with a version number.
+* 64-bit builds - (change from IDE to nmake, bat file?).
 
-Produce a packaging script.
+* Brand with a version number & Produce a packaging script.
 
-64-bit builds - (change from IDE to nmake?).
+* Detect when symbols change (target loads or unloads a DLL).
 
+  - Then cache symbol lookups by offset.  Cache gets invalidated when symbols change.
