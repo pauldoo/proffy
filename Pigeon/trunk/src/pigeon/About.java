@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.
+    Copyright (C) 2005, 2006, 2007, 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ import java.io.StringWriter;
 */
 public final class About
 {
-    public static final String VERSION = "0.8" + " (build " + getBuildId() + ")";
+    public static final String VERSION = "0.9" + " (build " + getBuildId() + ")";
     public static final String TITLE = "RacePoint v" + VERSION;
     public static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
-    public static final String WEBSITE = "http://pauldoo.co.uk/racepoint/";
+    public static final String WEBSITE = "http://pauldoo.com/racepoint/";
     
     // NonCreatable
     private About()
@@ -74,7 +74,7 @@ public final class About
     {
         StringWriter string = new StringWriter();
         PrintWriter writer = new PrintWriter(string);
-        writer.println("Copyright (C) 2005, 2006, 2007, 2008  Paul Richards.");
+        writer.println("Copyright (C) 2005, 2006, 2007, 2008, 2009  Paul Richards.");
         writer.println();
         writer.println("This program is free software: you can redistribute it and/or modify");
         writer.println("it under the terms of the GNU General Public License as published by");
