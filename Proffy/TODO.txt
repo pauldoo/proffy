@@ -1,7 +1,5 @@
 In rough order of priority, from highest to lowest:
 
-* 64-bit builds - (change from IDE to nmake, bat file?).
-
 * Brand with a version number & Produce a packaging script.
 
 * Detect when symbols change (target loads or unloads a DLL).

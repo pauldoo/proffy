@@ -68,7 +68,7 @@ namespace Proffy {
             for (std::set<PointInProgram>::const_iterator i = results->fEncounteredPoints.begin();
                 i != results->fEncounteredPoints.end();
                 ++i) {
-                const int id = std::distance(results->fEncounteredPoints.begin(), i);
+                const int id = static_cast<int>(std::distance(results->fEncounteredPoints.begin(), i));
                 
                 sourceFiles.insert(i->fFileName);
 
@@ -101,11 +101,11 @@ namespace Proffy {
                     const PointInProgram* const caller = i->first.first;
                     const PointInProgram* const callee = i->first.second;
                     const int callerId =
-                        std::distance(results->fEncounteredPoints.begin(),
-                            results->fEncounteredPoints.find(*caller));
+                        static_cast<int>(std::distance(results->fEncounteredPoints.begin(),
+                            results->fEncounteredPoints.find(*caller)));
                     const int calleeId = (callee == NULL) ? -1 :
-                        std::distance(results->fEncounteredPoints.begin(),
-                            results->fEncounteredPoints.find(*callee));
+                        static_cast<int>(std::distance(results->fEncounteredPoints.begin(),
+                            results->fEncounteredPoints.find(*callee)));
 
                     xercesc::DOMElement* const counter = document->createElement(L"Counter");
                     

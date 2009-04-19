@@ -160,7 +160,7 @@ namespace Proffy {
                         NULL,
                         NULL,
                         &(frames.front()),
-                        frames.size(),
+                        static_cast<int>(frames.size()),
                         &framesFilled);
                     ASSERT(result == S_OK);
                     frames.resize(framesFilled);
@@ -173,7 +173,7 @@ namespace Proffy {
                         result = debugSymbols->GetNameByOffsetWide(
                             frames.at(i).InstructionOffset,
                             &(symbolNameAsVector.front()),
-                            symbolNameAsVector.size(),
+                            static_cast<int>(symbolNameAsVector.size()),
                             &symbolNameSize,
                             &symbolDisplacement);
 
@@ -188,13 +188,22 @@ namespace Proffy {
                                 frames.at(i).InstructionOffset,
                                 0,
                                 &(fpoBuffer.front()),
-                                fpoBuffer.size(),
+                                static_cast<int>(fpoBuffer.size()),
                                 &fpoBufferUsed);
 
                             if (result == S_OK) {
                                 fpoBuffer.resize(fpoBufferUsed);
+                                
+#if defined(_X86_)                                
                                 ASSERT(fpoBuffer.size() == sizeof(FPO_DATA));
                                 const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
+                                const size_t functionAddress = fpoData->ulOffStart;
+#endif
+#if defined(_AMD64_)
+                                ASSERT(fpoBuffer.size() == sizeof(IMAGE_FUNCTION_ENTRY));
+                                const IMAGE_FUNCTION_ENTRY* const imageFunctionEntry = reinterpret_cast<IMAGE_FUNCTION_ENTRY*>(&(fpoBuffer.front()));
+                                const size_t functionAddress = imageFunctionEntry->StartingAddress;
+#endif
 
                                 ULONG line;
                                 std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
@@ -204,7 +213,7 @@ namespace Proffy {
                                     frames.at(i).InstructionOffset, 
                                     &line, 
                                     &(fileNameAsVector.front()),
-                                    fileNameAsVector.size(), 
+                                    static_cast<int>(fileNameAsVector.size()), 
                                     &fileNameSize, 
                                     &lineDisplacement);
 
@@ -215,7 +224,7 @@ namespace Proffy {
 
                                     PointInProgram pip;
                                     pip.fSymbolName = std::wstring(symbolNameAsVector.begin(), symbolNameAsVector.end()) +
-                                        L"@" + Utilities::ToWString(fpoData->ulOffStart);
+                                        L"@" + Utilities::ToWString(functionAddress);
                                     pip.fSymbolDisplacement = static_cast<int>(symbolDisplacement);
                                     pip.fFileName = std::wstring(fileNameAsVector.begin(), fileNameAsVector.end());
                                     pip.fLineNumber = line;

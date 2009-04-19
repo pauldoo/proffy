@@ -48,6 +48,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #pragma warning(disable: 4127) // conditional expression is constant
