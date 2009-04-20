@@ -90,7 +90,7 @@ namespace Proffy {
             std::cout << lines << Utilities::TimeInSeconds() << ": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
                 0,
-                arguments.fProcessId,    
+                arguments.fProcessId,
                 0);
             ASSERT(result == S_OK);
             std::cout << lines << Utilities::TimeInSeconds() << ": Done Attaching..\n" << lines;
@@ -193,28 +193,37 @@ namespace Proffy {
 
                             if (result == S_OK) {
                                 fpoBuffer.resize(fpoBufferUsed);
-                                
-#if defined(_X86_)                                
-                                ASSERT(fpoBuffer.size() == sizeof(FPO_DATA));
-                                const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
-                                const size_t functionAddress = fpoData->ulOffStart;
-#endif
-#if defined(_AMD64_)
-                                ASSERT(fpoBuffer.size() == sizeof(IMAGE_FUNCTION_ENTRY));
-                                const IMAGE_FUNCTION_ENTRY* const imageFunctionEntry = reinterpret_cast<IMAGE_FUNCTION_ENTRY*>(&(fpoBuffer.front()));
-                                const size_t functionAddress = imageFunctionEntry->StartingAddress;
-#endif
+
+                                size_t functionAddress = 0;
+                                switch (fpoBuffer.size()) {
+                                    case sizeof(FPO_DATA):
+                                        {
+                                            const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
+                                            functionAddress = fpoData->ulOffStart;
+                                            break;
+                                        }
+
+                                    case sizeof(IMAGE_FUNCTION_ENTRY):
+                                        {
+                                            const IMAGE_FUNCTION_ENTRY* const imageFunctionEntry = reinterpret_cast<IMAGE_FUNCTION_ENTRY*>(&(fpoBuffer.front()));
+                                            functionAddress = imageFunctionEntry->StartingAddress;
+                                            break;
+                                        }
+
+                                    default:
+                                        ASSERT(false);
+                                }
 
                                 ULONG line;
                                 std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
                                 ULONG fileNameSize;
                                 ULONG64 lineDisplacement;
                                 result = debugSymbols->GetLineByOffsetWide(
-                                    frames.at(i).InstructionOffset, 
-                                    &line, 
+                                    frames.at(i).InstructionOffset,
+                                    &line,
                                     &(fileNameAsVector.front()),
-                                    static_cast<int>(fileNameAsVector.size()), 
-                                    &fileNameSize, 
+                                    static_cast<int>(fileNameAsVector.size()),
+                                    &fileNameSize,
                                     &lineDisplacement);
 
                                 if (result == S_OK) {

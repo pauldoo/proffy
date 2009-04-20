@@ -67,7 +67,7 @@ namespace Proffy {
     {
     public:
         Launcher(
-            const std::wstring& proffyDirectory,
+            const std::wstring& proffyExecutable,
             const std::wstring& outputFilename,
             const double delayBetweenSamplesInSeconds,
             const bool profileTheProfiler = false)
@@ -78,9 +78,6 @@ namespace Proffy {
             fStartFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
             fStopFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
 
-            std::wostringstream proffyExecutableStream;
-            proffyExecutableStream << proffyDirectory << L"/Proffy" << (sizeof(void*) * 8) << L".exe";
-            const std::wstring proffyExecutable = proffyExecutableStream.str();
             std::wostringstream buf;
             buf
                 << proffyExecutable

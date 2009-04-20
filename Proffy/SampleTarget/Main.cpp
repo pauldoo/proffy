@@ -55,7 +55,7 @@ int main(void)
     }
 
     {
-        Proffy::Launcher profiler(L".", L"../Proffy/test.xml", 1.0 / 20);
+        Proffy::Launcher profiler(L"../bin64/Proffy64.exe", L"../Proffy/test.xml", 1.0 / 20);
         const clock_t begin = clock();
         while ((clock() - begin) / CLOCKS_PER_SEC < 3) {
             SomeFunction(&values, 3);
