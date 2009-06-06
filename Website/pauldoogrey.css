@@ -1,7 +1,0 @@
-#nav, #submenu ul li a, #extraBox, #footer, #content{
-	background-color:#DCDCDC;
-}
-
-#content a:hover, #extraBox a:hover, #nav ul li a:hover, #footer ul li a:hover{
-	color:#999999;
-}
