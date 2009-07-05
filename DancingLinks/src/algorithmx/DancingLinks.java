@@ -17,7 +17,9 @@
 
 package algorithmx;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -134,9 +136,7 @@ public class DancingLinks {
                     Node node = new Node(row);
                     node.fColumnHeader = headers[col];
 
-                    if (headers[col].fRootNode == null) {
-                        headers[col].fRootNode = node;
-                    } else {
+                    if (headers[col].fRootNode != null) {
                         node.fUp = headers[col].fRootNode.fUp; // Last node in column
                         node.fDown = headers[col].fRootNode; // First node in column
                     }
@@ -218,6 +218,21 @@ public class DancingLinks {
         }
     }
 
+    /**
+        Removes all nodes in a row.  May leave behind empty columns.
+    */
+    private static void removeRow(Node node, Stack undoStack) {
+        List<Node> nodesToRemove = new ArrayList<Node>();
+        Node i = node;
+        do {
+            nodesToRemove.add(i);
+            i = i.fRight;
+        } while (i != node);
+        for (Node n: nodesToRemove) {
+            removeNode(n);
+            undoStack.push(n);
+        }
+    }
 
     /**
         Remove column and all rows with a one in this column.
@@ -231,12 +246,7 @@ public class DancingLinks {
         }
 
         while (column.fRootNode != null) {
-            Node j = column.fRootNode;
-            do {
-                removeNode(j);
-                undoStack.push(j);
-                j = j.fRight;
-            } while (j != column.fRootNode && column.fRootNode != null);
+            removeRow(column.fRootNode, undoStack);
         }
         removeColumnHeader(column);
         undoStack.push(column);
@@ -267,11 +277,15 @@ public class DancingLinks {
                 // Cover all columns which have a 1 in the selected row
                 Stack undoStack = new Stack();
                 {
+                    List<ColumnHeader> columnsToCover = new ArrayList<ColumnHeader>();
                     Node node = selectedRow;
                     do {
-                        coverColumn(node.fColumnHeader, undoStack);
+                        columnsToCover.add(node.fColumnHeader);
                         node = node.fRight;
                     } while (node != selectedRow);
+                    for (ColumnHeader col: columnsToCover) {
+                        coverColumn(col, undoStack);
+                    }
                 }
 
                 solve(matrixHeader, solutions, partialSolution);
