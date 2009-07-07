@@ -18,29 +18,37 @@
 package algorithmx;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
+import java.util.TreeSet;
 
 /**
     An implementation of the "DancingLinks" algorithm:
     http://en.wikipedia.org/wiki/Dancing_Links
 */
-public class DancingLinks {
+public final class DancingLinks {
 
-    private static class MatrixHeader {
+    public static final class MatrixHeader {
         /**
             First column in matrix, or null if matrix is empty.
         */
         private ColumnHeader fRootColumnHeader;
     }
 
+    public static interface IInsertable
+    {
+        public void insert();
+    }
+
     /**
         There is one ColumnHeader per column in the matrix.  They form a
         circular doubly-linked list so that all columns can be easily enumerated.
     */
-    private static class ColumnHeader {
+    private static final class ColumnHeader implements IInsertable {
         /**
             Previous column.
         */
@@ -66,12 +74,16 @@ public class DancingLinks {
             Matrix this column belongs to.
         */
         private MatrixHeader fMatrixHeader;
+
+        public void insert() {
+            insertColumnHeader(this);
+        }
     }
 
     /**
         Represents a single one bit in the sparse matrix.
     */
-    private static class Node {
+    private static final class Node implements IInsertable {
         Node(int rowNumber) {
             this.fRowNumber = rowNumber;
         }
@@ -102,10 +114,16 @@ public class DancingLinks {
             Column this one-bit belongs to.
         */
         private ColumnHeader fColumnHeader;
+
+        public void insert() {
+            insertNode(this);
+        }
     }
 
 
-    private static MatrixHeader constructFromDenseMatrix(final boolean[][] matrix) {
+
+
+    public static SparseBinaryMatrix constructFromDenseMatrix(final boolean[][] matrix) {
         if (matrix.length == 0 ||  matrix[0].length == 0) {
             throw new IllegalArgumentException("Must be non-empty.");
         }
@@ -117,40 +135,49 @@ public class DancingLinks {
             }
         }
 
+        SparseBinaryMatrix result = new SparseBinaryMatrix(rowCount, columnCount);
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                if (matrix[row][column]) {
+                    result.setBit(new SparseBinaryMatrix.BitLocation(row, column), true);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static MatrixHeader constructFromSparseMatrix(final SparseBinaryMatrix sparseMatrix) {
         MatrixHeader result = new MatrixHeader();
 
-        ColumnHeader[] headers = new ColumnHeader[columnCount];
-        for (int col = 0; col < columnCount; col++) {
+        ColumnHeader[] headers = new ColumnHeader[sparseMatrix.columnCount()];
+        for (int col = 0; col < sparseMatrix.columnCount(); col++) {
             headers[col] = new ColumnHeader();
             headers[col].fMatrixHeader = result;
         }
-        for (int col = 0; col < columnCount; col++) {
-            headers[col].fLeft = headers[(col + columnCount - 1) % columnCount];
-            headers[col].fRight = headers[(col + columnCount + 1) % columnCount];
+        for (int col = 0; col < sparseMatrix.columnCount(); col++) {
+            headers[col].fLeft = headers[(col + sparseMatrix.columnCount() - 1) % sparseMatrix.columnCount()];
+            headers[col].fRight = headers[(col + sparseMatrix.columnCount() + 1) % sparseMatrix.columnCount()];
         }
+        
+        Node[] rowRootNodes = new Node[sparseMatrix.rowCount()];
+        for (SparseBinaryMatrix.BitLocation bit: sparseMatrix.allOnes()) {
+            Node node = new Node(bit.fRow);
+            node.fColumnHeader = headers[bit.fColumn];
 
-        for (int row = 0; row < rowCount; row++) {
-            Node rowRootNode = null;
-            for (int col = 0; col < columnCount; col++) {
-                if (matrix[row][col] == true) {
-                    Node node = new Node(row);
-                    node.fColumnHeader = headers[col];
-
-                    if (headers[col].fRootNode != null) {
-                        node.fUp = headers[col].fRootNode.fUp; // Last node in column
-                        node.fDown = headers[col].fRootNode; // First node in column
-                    }
-
-                    if (rowRootNode == null) {
-                        rowRootNode = node;
-                    } else {
-                        node.fLeft = rowRootNode.fLeft; // Last node in row
-                        node.fRight = rowRootNode; // First node in row
-                    }
-
-                    insertNode(node);
-                }
+            if (node.fColumnHeader.fRootNode != null) {
+                node.fUp = node.fColumnHeader.fRootNode.fUp; // Last node in column
+                node.fDown = node.fColumnHeader.fRootNode; // First node in column
             }
+
+            if (rowRootNodes[bit.fRow] == null) {
+                rowRootNodes[bit.fRow] = node;
+            } else {
+                node.fLeft = rowRootNodes[bit.fRow].fLeft; // Last node in row
+                node.fRight = rowRootNodes[bit.fRow]; // First node in row
+            }
+
+            insertNode(node);
         }
 
         result.fRootColumnHeader = headers[0];
@@ -221,7 +248,7 @@ public class DancingLinks {
     /**
         Removes all nodes in a row.  May leave behind empty columns.
     */
-    private static void removeRow(Node node, Stack undoStack) {
+    private static void removeRow(Node node, Stack<IInsertable> undoStack) {
         List<Node> nodesToRemove = new ArrayList<Node>();
         Node i = node;
         do {
@@ -240,7 +267,7 @@ public class DancingLinks {
         Returns a stack of nodes and ColumnHeaders which can be re-inserted to undo this
         operation.
     */
-    private static void coverColumn(ColumnHeader column, Stack undoStack) {
+    private static void coverColumn(ColumnHeader column, Stack<IInsertable> undoStack) {
         if ((column.fRootNode == null) != (column.fOnesCount == 0)) {
             throw new IllegalStateException("ColumnHeader is out of sync");
         }
@@ -275,7 +302,7 @@ public class DancingLinks {
                 partialSolution.add(selectedRow.fRowNumber);
 
                 // Cover all columns which have a 1 in the selected row
-                Stack undoStack = new Stack();
+                Stack<IInsertable> undoStack = new Stack<IInsertable>();
                 {
                     List<ColumnHeader> columnsToCover = new ArrayList<ColumnHeader>();
                     Node node = selectedRow;
@@ -291,14 +318,8 @@ public class DancingLinks {
                 solve(matrixHeader, solutions, partialSolution);
 
                 while (undoStack.empty() == false) {
-                    Object obj = undoStack.pop();
-                    if (obj instanceof Node) {
-                        insertNode((Node)obj);
-                    } else if (obj instanceof ColumnHeader) {
-                        insertColumnHeader((ColumnHeader)obj);
-                    } else {
-                        throw new IllegalStateException("Unknown object type in undo stack");
-                    }
+                    final IInsertable obj = undoStack.pop();
+                    obj.insert();
                 }
 
                 partialSolution.remove(selectedRow.fRowNumber);
@@ -308,9 +329,9 @@ public class DancingLinks {
         }
     }
 
-    public static Set<Set<Integer>> solve(boolean[][] matrix)
+    public static Set<Set<Integer>> solve(SparseBinaryMatrix matrix)
     {
-        MatrixHeader matrixHeader = constructFromDenseMatrix(matrix);
+        MatrixHeader matrixHeader = constructFromSparseMatrix(matrix);
         Set<Integer> emptySolution = new HashSet<Integer>();
         Set<Set<Integer>> solutions = new HashSet<Set<Integer>>();
         solve(matrixHeader, solutions, emptySolution);

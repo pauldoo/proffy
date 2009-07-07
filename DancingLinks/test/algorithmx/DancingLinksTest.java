@@ -18,7 +18,6 @@
 package algorithmx;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class DancingLinksTest {
             boolean[][] matrix = createEmptyDenseMatrix(1, 1);
             matrix[0][0] = true;
 
-            Set<Set<Integer>> solutions = DancingLinks.solve(matrix);
+            Set<Set<Integer>> solutions = DancingLinks.solve(DancingLinks.constructFromDenseMatrix(matrix));
             assertTrue(solutions.size() == 1);
             Set<Integer> solution = solutions.iterator().next();
             assertTrue(solution.size() == 1);
@@ -51,7 +50,7 @@ public class DancingLinksTest {
             matrix[0][0] = true;
             matrix[1][0] = true;
 
-            Set<Set<Integer>> solutions = DancingLinks.solve(matrix);
+            Set<Set<Integer>> solutions = DancingLinks.solve(DancingLinks.constructFromDenseMatrix(matrix));
             assertTrue(solutions.size() == 2);
             List<Set<Integer>> solutionsAsList = new ArrayList<Set<Integer>>(solutions);
             assertTrue(solutionsAsList.get(0).size() == 1);
@@ -64,7 +63,7 @@ public class DancingLinksTest {
             matrix[0][0] = true;
             matrix[1][0] = true;
 
-            Set<Set<Integer>> solutions = DancingLinks.solve(matrix);
+            Set<Set<Integer>> solutions = DancingLinks.solve(DancingLinks.constructFromDenseMatrix(matrix));
             assertTrue(solutions.size() == 0);
         }
         {
@@ -72,7 +71,7 @@ public class DancingLinksTest {
             matrix[0][0] = true;
             matrix[1][1] = true;
 
-            Set<Set<Integer>> solutions = DancingLinks.solve(matrix);
+            Set<Set<Integer>> solutions = DancingLinks.solve(DancingLinks.constructFromDenseMatrix(matrix));
             assertTrue(solutions.size() == 1);
             assertTrue(solutions.iterator().next().size() == 2);
             assertTrue((new ArrayList<Integer>(solutions.iterator().next())).get(0) == 1);
@@ -85,10 +84,8 @@ public class DancingLinksTest {
             matrix[1][1] = true;
             matrix[1][2] = true;
 
-            Set<Set<Integer>> solutions = DancingLinks.solve(matrix);
+            Set<Set<Integer>> solutions = DancingLinks.solve(DancingLinks.constructFromDenseMatrix(matrix));
             assertTrue(solutions.size() == 0);
         }
-
     }
-
 }
