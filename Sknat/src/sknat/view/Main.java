@@ -18,12 +18,23 @@
 package sknat.view;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 import sknat.model.UnitProperties;
 
 public final class Main
 {
+    private static void setLookAndFeel()
+    {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
+    }
+
     public static void main(String[] args)
     {
+        setLookAndFeel();
+
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new UnitPropertyEditor(new UnitProperties(0.25, 0.25, 0.25, 0.25)));
