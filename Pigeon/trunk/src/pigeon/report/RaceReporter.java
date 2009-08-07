@@ -137,7 +137,7 @@ public final class RaceReporter implements Reporter {
                 if (listClubNames) {
                     out.print("<th>Club</th>");
                 }
-                out.print("<th>Birds entered</th>");
+                out.print("<th>Birds<br/>entered</th>");
                 if (race.getDaysCovered() > 1) {
                     out.print("<th>Day</th>");
                 }
