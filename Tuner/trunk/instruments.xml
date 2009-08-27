@@ -62,6 +62,15 @@
         <String name="E (high)"><Semitone>4</Semitone></String>
     </Instrument>
 
+    <Instrument name="Guitar (Drop D)">
+        <String name="D (low)"><Semitone>-22</Semitone></String>
+        <String name="A"><Semitone>-15</Semitone></String>
+        <String name="D"><Semitone>-10</Semitone></String>
+        <String name="G"><Semitone>-5</Semitone></String>
+        <String name="B"><Semitone>-1</Semitone></String>
+        <String name="E (high)"><Semitone>4</Semitone></String>
+    </Instrument>
+    
     <Instrument name="Ukelele">
         <String name="G"><Semitone>19</Semitone></String>
         <String name="C"><Semitone>24</Semitone></String>
