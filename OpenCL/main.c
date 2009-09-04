@@ -90,9 +90,9 @@ static void Vanilla(
 
                 printf("Pixel at location (%i, %i, %i) was warped from (%f, %f, %f)\n", x, y, z, source_x, source_y, source_z);
 
-                if (source_x >= 0.0f && source_x < (width - 1) &&
-                    source_y >= 0.0f && source_y < (height - 1) &&
-                    source_z >= 0.0f && source_z < (depth - 1)
+                if (source_x >= 0.0 && source_x < (width - 1) &&
+                    source_y >= 0.0 && source_y < (height - 1) &&
+                    source_z >= 0.0 && source_z < (depth - 1)
                 ) {
                     short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
 
@@ -105,7 +105,7 @@ static void Vanilla(
 
                     const double output_value =
                         *LookupShortVolume(input_volume, x_int, y_int, z_int) * (1.0 - x_frac) * (1.0 - y_frac) * (1.0 - z_frac) +
-                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int) * (x_frac) * (1.0f - y_frac) * (1.0 - z_frac) +
+                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int) * (x_frac) * (1.0 - y_frac) * (1.0 - z_frac) +
                         *LookupShortVolume(input_volume, x_int, y_int + 1, z_int) * (1.0 - x_frac) * (y_frac) * (1.0 - z_frac) +
                         *LookupShortVolume(input_volume, x_int + 1, y_int + 1, z_int) * (x_frac) * (y_frac) * (1.0 - z_frac) +
                         *LookupShortVolume(input_volume, x_int, y_int, z_int + 1) * (1.0 - x_frac) * (1.0 - y_frac) * (z_frac) +
@@ -160,7 +160,7 @@ static void AllocateFloatVolume(FloatVolume* const result, const int width, cons
 static void InitializeFloatVolume(const FloatVolume* const volume, const double frequencyInRadiansPerPixel, const double magnitude)
 {
     int x, y, z;
-    if (frequencyInRadiansPerPixel * magnitude >= 1.0f) {
+    if (frequencyInRadiansPerPixel * magnitude >= 1.0) {
         printf("ERROR: Warp is too sharp.\n");
         exit(EXIT_FAILURE);
     }
