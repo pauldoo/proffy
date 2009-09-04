@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 typedef struct
 {
@@ -128,7 +129,7 @@ static void Vanilla(
                 const double warp_y = y / warpfield->m_scale;
                 const double warp_z = z / warpfield->m_scale;
 
-                printf("Pixel at location (%i, %i, %i) ", x, y, z);
+                /* printf("Pixel at location (%i, %i, %i) ", x, y, z); */
 
                 if (warp_x >= 0.0 && warp_x < (warp_width - 1) &&
                     warp_y >= 0.0 && warp_y < (warp_height - 1) &&
@@ -144,7 +145,7 @@ static void Vanilla(
                     const double source_y = y + dy;
                     const double source_z = z + dz;
 
-                    printf("was warped from (%f, %f, %f)\n", source_x, source_y, source_z);
+                    /* printf("was warped from (%f, %f, %f)\n", source_x, source_y, source_z); */
 
                     if (source_x >= 0.0 && source_x < (width - 1) &&
                         source_y >= 0.0 && source_y < (height - 1) &&
@@ -155,7 +156,7 @@ static void Vanilla(
                         *output_pixel = (short)floor(output_value + 0.5);
                     }
                 } else {
-                    printf("was outside warpfield\n");
+                    /* printf("was outside warpfield\n"); */
                 }
             }
         }
@@ -219,11 +220,35 @@ static void InitializeFloatVolume(
     }
 }
 
+static void Benchmark(
+    const char* const name,
+    const ShortVolume* const input_volume,
+    const Warpfield* const warpfield,
+    const ShortVolume* const output_volume,
+    void (*func)(const ShortVolume* const, const Warpfield* const, const ShortVolume* const))
+{
+    const int iterations = 1;
+    clock_t begin, end;
+    double secondsPerIteration;
+    int i;
+
+    begin = clock();
+    for (i = 1; i <= iterations; i++) {
+        printf(".", i);
+        func(input_volume, warpfield, output_volume);
+    }
+    printf("\n", i);
+    end = clock();
+
+    secondsPerIteration = ((double)(end - begin)) / CLOCKS_PER_SEC / iterations;
+    printf("%s: %f seconds.\n", name, secondsPerIteration);
+}
+
 int main(void)
 {
-    const int width = 10;
-    const int height = 10;
-    const int depth = 10;
+    const int width = 256;
+    const int height = 256;
+    const int depth = 256;
     const double scale = 3;
     ShortVolume input_volume, output_volume;
     FloatVolume warp_x, warp_y, warp_z;
@@ -244,7 +269,7 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, 0.2, 3.0, scale);
     InitializeFloatVolume(warpfield.m_warp_z, 0.3, 3.0, scale);
 
-    Vanilla(&input_volume, &warpfield, &output_volume);
+    Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, Vanilla);
 
     return 0;
 }

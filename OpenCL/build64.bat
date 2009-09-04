@@ -9,7 +9,9 @@ set LINK_OPTIONS=/link /DEBUG /OPT:REF /DYNAMICBASE
 set LIBRARY_FILES=
 
 cl.exe /Fetest /Fdtest %COMPILE_OPTIONS% %SOURCE_FILES% %LINK_OPTIONS% %LIBRARY_FILES%
+IF %ERRORLEVEL% NEQ 0 exit 1
 mt.exe -manifest test.exe.manifest -outputresource:test.exe;1
+IF %ERRORLEVEL% NEQ 0 exit 1
 
 REM copy /y Proffy\External\bin64\*.dll bin64\
 
