@@ -1,4 +1,6 @@
 .
-Vanilla: 3.959000 seconds.
-.
-OpenCL: 0.001000 seconds.
+Vanilla: 3.831000 seconds.
+.Name: Intel(R) Xeon(R) CPU           E5520  @ 2.27GHz
+Image support: 0
+
+OpenCL: 0.005000 seconds.

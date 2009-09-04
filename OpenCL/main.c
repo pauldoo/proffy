@@ -256,19 +256,139 @@ static void WarpOpenCL(
     const Warpfield* const warpfield,
     const ShortVolume* const output_volume)
 {
-    const char* const program_source = ReadFileIntoString("WarpOpenCL.cl");
-    cl_int status;
+    cl_command_queue command_queue;
     cl_context context;
+    cl_device_id* devices;
+    cl_int status;
+    cl_mem input_volume_mem;
+    cl_mem output_volume_mem;
+    cl_mem warpfield_mem;
+    const char* const program_source = ReadFileIntoString("WarpOpenCL.cl");
+    const int depth = output_volume->m_count;
+    const int height = output_volume->m_images[0].m_height;
+    const int warp_depth = warpfield->m_warp_x->m_count;
+    const int warp_height = warpfield->m_warp_x->m_images[0].m_height;
+    const int warp_width = warpfield->m_warp_x->m_images[0].m_width;
+    const int width = output_volume->m_images[0].m_width;
+    int i;
+    size_t device_list_size;
 
     input_volume;
     warpfield;
     output_volume;
     program_source;
 
-    context = clCreateContextFromType(0, CL_DEVICE_TYPE_CPU, 0, 0, &status);
-    if(status != CL_SUCCESS) {
+    context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_DEFAULT, NULL, NULL, &status);
+    if (status != CL_SUCCESS) {
         Bailout("clCreateContextFromType failed");
 	}
+
+    status = clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, NULL, &device_list_size);
+    if (status != CL_SUCCESS) {
+        Bailout("clGetContextInfo failed");
+    }
+    devices = calloc(1, device_list_size);
+    status = clGetContextInfo(context, CL_CONTEXT_DEVICES, device_list_size, devices, NULL);
+    if (status != CL_SUCCESS) {
+        Bailout("clGetContextInfo failed");
+    }
+
+    for (i = 0; i < (int)(device_list_size / sizeof (cl_device_id)); i++) {
+        size_t name_size;
+        char* name;
+        size_t image_support_size = sizeof(cl_bool);
+        cl_bool image_support;
+
+
+        clGetDeviceInfo(devices[i], CL_DEVICE_NAME, 0, NULL, &name_size);
+        name = calloc(1, name_size);
+        clGetDeviceInfo(devices[i], CL_DEVICE_NAME, name_size, name, NULL);
+
+        clGetDeviceInfo(devices[i], CL_DEVICE_IMAGE_SUPPORT, image_support_size, &image_support, NULL);
+
+        printf("Name: %s\n", name);
+        printf("Image support: %i\n", (int)(image_support == CL_TRUE));
+    }
+
+    command_queue = clCreateCommandQueue(context, devices[0], CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE, &status);
+    if (status != CL_SUCCESS) {
+        Bailout("clCreateCommandQueue failed");
+    }
+
+    input_volume_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, width * height * depth * sizeof(cl_short), NULL, &status);
+    if (status != CL_SUCCESS) {
+        Bailout("clCreateBuffer failed");
+    }
+    warpfield_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, warp_width * warp_height * warp_depth * 3 * sizeof(cl_float), NULL, &status);
+    if (status != CL_SUCCESS) {
+        Bailout("clCreateBuffer failed");
+    }
+    output_volume_mem = clCreateBuffer(context, CL_MEM_WRITE_ONLY, width * height * depth * sizeof(cl_short), NULL, &status);
+    if (status != CL_SUCCESS) {
+        Bailout("clCreateBuffer failed");
+    }
+
+    for (i = 0; i < depth; i++) {
+        status = clEnqueueWriteBuffer(
+            command_queue,
+            input_volume_mem,
+            CL_FALSE,
+            i * width * height * sizeof(cl_short),
+            width * height * sizeof(cl_short),
+            (input_volume->m_images + i)->m_data,
+            0,
+            NULL,
+            NULL);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueWriteBuffer failed");
+        }
+    }
+    for (i = 0; i < warp_depth; i++) {
+        status = clEnqueueWriteBuffer(
+            command_queue,
+            warpfield_mem,
+            CL_FALSE,
+            (0 * warp_depth + i) * warp_width * warp_height * sizeof(cl_float),
+            warp_width * warp_height * sizeof(cl_float),
+            (warpfield->m_warp_x->m_images + i)->m_data,
+            0,
+            NULL,
+            NULL);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueWriteBuffer failed");
+        }
+        status = clEnqueueWriteBuffer(
+            command_queue,
+            warpfield_mem,
+            CL_FALSE,
+            (1 * warp_depth + i) * warp_width * warp_height * sizeof(cl_float),
+            warp_width * warp_height * sizeof(cl_float),
+            (warpfield->m_warp_y->m_images + i)->m_data,
+            0,
+            NULL,
+            NULL);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueWriteBuffer failed");
+        }
+        status = clEnqueueWriteBuffer(
+            command_queue,
+            warpfield_mem,
+            CL_FALSE,
+            (2 * warp_depth + i) * warp_width * warp_height * sizeof(cl_float),
+            warp_width * warp_height * sizeof(cl_float),
+            (warpfield->m_warp_z->m_images + i)->m_data,
+            0,
+            NULL,
+            NULL);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueWriteBuffer failed");
+        }
+    }
+
+    status = clEnqueueBarrier(command_queue);
+    if (status != CL_SUCCESS) {
+        Bailout("clEnqueueBarrier failed");
+    }
 
 	status = clReleaseContext(context);
 	if (status != CL_SUCCESS) {
