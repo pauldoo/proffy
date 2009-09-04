@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 
+#include <CL/cl.h>
+
 typedef struct
 {
     float* m_data;
@@ -105,7 +107,7 @@ static double const LinearInterpFloatVolume(const FloatVolume* const volume, con
 }
 
 
-static void Vanilla(
+static void WarpVanilla(
     const ShortVolume* const input_volume,
     const Warpfield* const warpfield,
     const ShortVolume* const output_volume)
@@ -200,6 +202,12 @@ static void AllocateFloatVolume(FloatVolume* const result, const int width, cons
     }
 }
 
+static void Bailout(const char* const message)
+{
+    printf("ERROR: %s\n", message);
+    exit(EXIT_FAILURE);
+}
+
 static void InitializeFloatVolume(
     const FloatVolume* const volume,
     const double frequencyInRadiansPerPixel,
@@ -208,8 +216,7 @@ static void InitializeFloatVolume(
 {
     int x, y, z;
     if (frequencyInRadiansPerPixel * magnitude >= 1.0) {
-        printf("ERROR: Warp is too sharp.\n");
-        exit(EXIT_FAILURE);
+        Bailout("Warp is too sharp");
     }
     for (z = 0; z < volume->m_count; z++) {
         for (y = 0; y < (volume->m_images + z)->m_height; y++) {
@@ -218,6 +225,55 @@ static void InitializeFloatVolume(
             }
         }
     }
+}
+
+static const char* const ReadFileIntoString(
+    const char* const filename)
+{
+    FILE* fp = fopen(filename, "rb");
+    long size;
+    char* result;
+
+    if (fp == NULL) {
+        Bailout("fopen failed");
+    }
+    if (fseek(fp, 0, SEEK_END) != 0) {
+        Bailout("fseek failed");
+    }
+    size = ftell(fp);
+    if (fseek(fp, 0, SEEK_SET) != 0) {
+        Bailout("fseek failed");
+    }
+    result = calloc(size + 1, 1);
+    if (fread(result, size, 1, fp) != 1) {
+        Bailout("fread failed");
+    }
+    return result;
+}
+
+static void WarpOpenCL(
+    const ShortVolume* const input_volume,
+    const Warpfield* const warpfield,
+    const ShortVolume* const output_volume)
+{
+    const char* const program_source = ReadFileIntoString("WarpOpenCL.cl");
+    cl_int status;
+    cl_context context;
+
+    input_volume;
+    warpfield;
+    output_volume;
+    program_source;
+
+    context = clCreateContextFromType(0, CL_DEVICE_TYPE_CPU, 0, 0, &status);
+    if(status != CL_SUCCESS) {
+        Bailout("clCreateContextFromType failed");
+	}
+
+	status = clReleaseContext(context);
+	if (status != CL_SUCCESS) {
+	    Bailout("clReleaseContext failed");
+	}
 }
 
 static void Benchmark(
@@ -269,7 +325,8 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, 0.2, 3.0, scale);
     InitializeFloatVolume(warpfield.m_warp_z, 0.3, 3.0, scale);
 
-    Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, Vanilla);
+    Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, WarpVanilla);
+    Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, WarpOpenCL);
 
     return 0;
 }

@@ -1,2 +1,4 @@
 .
-Vanilla: 3.148000 seconds.
+Vanilla: 3.959000 seconds.
+.
+OpenCL: 0.001000 seconds.
