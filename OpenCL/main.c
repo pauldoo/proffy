@@ -9,26 +9,26 @@ typedef struct
     int m_height;
 }  FloatImage;
 
-typedef struct 
+typedef struct
 {
     short* m_data;
     int m_width;
     int m_height;
 } ShortImage;
 
-typedef struct 
+typedef struct
 {
     FloatImage* m_images;
     int m_count;
 } FloatVolume;
 
-typedef struct 
+typedef struct
 {
     ShortImage* m_images;
     int m_count;
 } ShortVolume;
 
-typedef struct 
+typedef struct
 {
     FloatVolume* m_warp_x;
     FloatVolume* m_warp_y;
@@ -69,24 +69,24 @@ static void Vanilla(
     const int width = output_volume->m_images[0].m_width;
     const int height = output_volume->m_images[0].m_height;
     const int depth = output_volume->m_count;
-    
+
     int x, y, z;
-    
+
     for (z = 0; z < depth; ++z) {
         const FloatImage* const warp_x = warpfield->m_warp_x->m_images + z;
         const FloatImage* const warp_y = warpfield->m_warp_y->m_images + z;
         const FloatImage* const warp_z = warpfield->m_warp_z->m_images + z;
         const ShortImage* const output_image = output_volume->m_images + z;
-        
+
         for (y = 0; y < height; ++y) {
             for (x = 0; x < width; ++x) {
-                const float dx = warp_x->m_data[x + y * warp_x->m_width];
-                const float dy = warp_y->m_data[x + y * warp_y->m_width];
-                const float dz = warp_z->m_data[x + y * warp_z->m_width];
-                
-                const float source_x = x + dx;
-                const float source_y = y + dy;
-                const float source_z = z + dz;
+                const double dx = warp_x->m_data[x + y * warp_x->m_width];
+                const double dy = warp_y->m_data[x + y * warp_y->m_width];
+                const double dz = warp_z->m_data[x + y * warp_z->m_width];
+
+                const double source_x = x + dx;
+                const double source_y = y + dy;
+                const double source_z = z + dz;
 
                 printf("Pixel at location (%i, %i, %i) was warped from (%f, %f, %f)\n", x, y, z, source_x, source_y, source_z);
 
@@ -95,28 +95,29 @@ static void Vanilla(
                     source_z >= 0.0f && source_z < (depth - 1)
                 ) {
                     short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
-    
-                    const int x_int = (int)floorf(source_x);
-                    const int y_int = (int)floorf(source_y);
-                    const int z_int = (int)floorf(source_z);
-                    const float x_frac = source_x - x_int;
-                    const float y_frac = source_y - y_int;
-                    const float z_frac = source_z - z_int;
-                    
-                    *output_pixel =
-                        *LookupShortVolume(input_volume, x_int, y_int, z_int) * (1.0f - x_frac) * (1.0f - y_frac) * (1.0f - z_frac) +
-                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int) * (x_frac) * (1.0f - y_frac) * (1.0f - z_frac) +
-                        *LookupShortVolume(input_volume, x_int, y_int + 1, z_int) * (1.0f - x_frac) * (y_frac) * (1.0f - z_frac) +
-                        *LookupShortVolume(input_volume, x_int + 1, y_int + 1, z_int) * (x_frac) * (y_frac) * (1.0f - z_frac) +
-                        *LookupShortVolume(input_volume, x_int, y_int, z_int + 1) * (1.0f - x_frac) * (1.0f - y_frac) * (z_frac) +
-                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int + 1) * (x_frac) * (1.0f - y_frac) * (z_frac) +
-                        *LookupShortVolume(input_volume, x_int, y_int + 1, z_int + 1) * (1.0f - x_frac) * (y_frac) * (z_frac) +
+
+                    const int x_int = (int)floor(source_x);
+                    const int y_int = (int)floor(source_y);
+                    const int z_int = (int)floor(source_z);
+                    const double x_frac = source_x - x_int;
+                    const double y_frac = source_y - y_int;
+                    const double z_frac = source_z - z_int;
+
+                    const double output_value =
+                        *LookupShortVolume(input_volume, x_int, y_int, z_int) * (1.0 - x_frac) * (1.0 - y_frac) * (1.0 - z_frac) +
+                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int) * (x_frac) * (1.0f - y_frac) * (1.0 - z_frac) +
+                        *LookupShortVolume(input_volume, x_int, y_int + 1, z_int) * (1.0 - x_frac) * (y_frac) * (1.0 - z_frac) +
+                        *LookupShortVolume(input_volume, x_int + 1, y_int + 1, z_int) * (x_frac) * (y_frac) * (1.0 - z_frac) +
+                        *LookupShortVolume(input_volume, x_int, y_int, z_int + 1) * (1.0 - x_frac) * (1.0 - y_frac) * (z_frac) +
+                        *LookupShortVolume(input_volume, x_int + 1, y_int, z_int + 1) * (x_frac) * (1.0 - y_frac) * (z_frac) +
+                        *LookupShortVolume(input_volume, x_int, y_int + 1, z_int + 1) * (1.0 - x_frac) * (y_frac) * (z_frac) +
                         *LookupShortVolume(input_volume, x_int + 1, y_int + 1, z_int + 1) * (x_frac) * (y_frac) * (z_frac);
-                        
+
+                    *output_pixel = (short)floor(output_value + 0.5);
                 }
             }
         }
-        
+
     }
 }
 
@@ -136,10 +137,10 @@ static void AllocateFloatImage(FloatImage* const result, const int width, const 
 
 static void AllocateShortVolume(ShortVolume* const result, const int width, const int height, const int depth)
 {
+    int z;
     result->m_images = calloc(depth, sizeof(ShortImage));
     result->m_count = depth;
-    
-    int z;
+
     for (z = 0; z < depth; z++) {
         AllocateShortImage(result->m_images + z, width, height);
     }
@@ -147,26 +148,26 @@ static void AllocateShortVolume(ShortVolume* const result, const int width, cons
 
 static void AllocateFloatVolume(FloatVolume* const result, const int width, const int height, const int depth)
 {
+    int z;
     result->m_images = calloc(depth, sizeof(FloatImage));
     result->m_count = depth;
-    
-    int z;
+
     for (z = 0; z < depth; z++) {
         AllocateFloatImage(result->m_images + z, width, height);
     }
 }
 
-static void InitializeFloatVolume(const FloatVolume* const volume, const float frequencyInRadiansPerPixel, const float magnitude)
+static void InitializeFloatVolume(const FloatVolume* const volume, const double frequencyInRadiansPerPixel, const double magnitude)
 {
+    int x, y, z;
     if (frequencyInRadiansPerPixel * magnitude >= 1.0f) {
         printf("ERROR: Warp is too sharp.\n");
         exit(EXIT_FAILURE);
     }
-    int x, y, z;
     for (z = 0; z < volume->m_count; z++) {
         for (y = 0; y < (volume->m_images + z)->m_height; y++) {
             for (x = 0; x < (volume->m_images + z)->m_width; x++) {
-                *LookupFloatVolume(volume, x, y, z) = cos((x + y + z) * frequencyInRadiansPerPixel) * magnitude;
+                *LookupFloatVolume(volume, x, y, z) = (float)(cos((x + y + z) * frequencyInRadiansPerPixel) * magnitude);
             }
         }
     }
@@ -174,30 +175,29 @@ static void InitializeFloatVolume(const FloatVolume* const volume, const float f
 
 int main(void)
 {
-    ShortVolume input_volume, output_volume;
-    
-    FloatVolume warp_x, warp_y, warp_z;
-    Warpfield warpfield;
-    warpfield.m_warp_x = &warp_x;
-    warpfield.m_warp_y = &warp_y;
-    warpfield.m_warp_z = &warp_z;
-    
     const int width = 10;
     const int height = 10;
     const int depth = 10;
-    
+    ShortVolume input_volume, output_volume;
+    FloatVolume warp_x, warp_y, warp_z;
+    Warpfield warpfield;
+
+    warpfield.m_warp_x = &warp_x;
+    warpfield.m_warp_y = &warp_y;
+    warpfield.m_warp_z = &warp_z;
+
     AllocateShortVolume(&input_volume, width, height, depth);
     AllocateShortVolume(&output_volume, width, height, depth);
     AllocateFloatVolume(&warp_x, width, height, depth);
     AllocateFloatVolume(&warp_y, width, height, depth);
     AllocateFloatVolume(&warp_z, width, height, depth);
-    
-    InitializeFloatVolume(warpfield.m_warp_x, 0.1f, 3.0f);
-    InitializeFloatVolume(warpfield.m_warp_y, 0.2f, 3.0f);
-    InitializeFloatVolume(warpfield.m_warp_z, 0.3f, 3.0f);
-    
+
+    InitializeFloatVolume(warpfield.m_warp_x, 0.1, 3.0);
+    InitializeFloatVolume(warpfield.m_warp_y, 0.2, 3.0);
+    InitializeFloatVolume(warpfield.m_warp_z, 0.3, 3.0);
+
     Vanilla(&input_volume, &warpfield, &output_volume);
-    
+
     return 0;
 }
 
