@@ -234,10 +234,10 @@ static void Benchmark(
 
     begin = clock();
     for (i = 1; i <= iterations; i++) {
-        printf(".", i);
+        printf(".");
         func(input_volume, warpfield, output_volume);
     }
-    printf("\n", i);
+    printf("\n");
     end = clock();
 
     secondsPerIteration = ((double)(end - begin)) / CLOCKS_PER_SEC / iterations;
