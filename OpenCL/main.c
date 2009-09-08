@@ -624,7 +624,7 @@ int main(void)
     FloatVolume warp_x, warp_y, warp_z;
     Warpfield warpfield;
 
-    printf("%i\n", __LINE__);
+    setvbuf(stdout, NULL, _IONBF, 0);
 
     warpfield.m_scale = scale;
     warpfield.m_warp_x = &warp_x;
