@@ -315,6 +315,7 @@ static void WarpOpenCL(
     cl_program program;
     cl_kernel kernel;
     const char* const program_source = ReadFileIntoString("WarpOpenCL.cl");
+    const char* program_sources[] = { program_source };
     const cl_int width = output_volume->m_images[0].m_width;
     const cl_int height = output_volume->m_images[0].m_height;
     const cl_int depth = output_volume->m_count;
@@ -457,7 +458,7 @@ static void WarpOpenCL(
     program = clCreateProgramWithSource(
         context,
         1,
-        &program_source,
+        program_sources,
         NULL,
         &status);
     if (status != CL_SUCCESS) {
@@ -554,7 +555,7 @@ static void WarpOpenCL(
         Bailout("clEnqueueBarrier failed");
     }
 
-    printf("%\ni", __LINE__);
+    printf("%i\n", __LINE__);
 
     for (i = 0; i < depth; i++) {
         status = clEnqueueReadBuffer(
@@ -623,6 +624,8 @@ int main(void)
     FloatVolume warp_x, warp_y, warp_z;
     Warpfield warpfield;
 
+    printf("%i\n", __LINE__);
+
     warpfield.m_scale = scale;
     warpfield.m_warp_x = &warp_x;
     warpfield.m_warp_y = &warp_y;
@@ -639,8 +642,12 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, 0.2, 3.0, scale);
     InitializeFloatVolume(warpfield.m_warp_z, 0.3, 3.0, scale);
 
-    /*Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, WarpVanilla);*/
+    printf("%i\n", __LINE__);
+
+    Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, WarpVanilla);
     Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, WarpOpenCL);
+
+    printf("%i\n", __LINE__);
 
     return 0;
 }
