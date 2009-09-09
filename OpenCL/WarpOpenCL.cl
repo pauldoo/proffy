@@ -16,7 +16,7 @@ __kernel void warp(
     const int y = get_global_id(1);
     const int z = get_global_id(2);
 
-    short* const output_pixel = output_volume[x + y * width + z * width * height];
+    __global short* const output_pixel = output_volume + (x + y * width + z * width * height);
     *output_pixel = 9;
 }
 
