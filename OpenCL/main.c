@@ -267,7 +267,7 @@ static void InitializeFloatVolume(
     for (z = 0; z < volume->m_count; z++) {
         for (y = 0; y < (volume->m_images + z)->m_height; y++) {
             for (x = 0; x < (volume->m_images + z)->m_width; x++) {
-                *LookupFloatVolume(volume, x, y, z) = (float)round(cos((x + y + z) * frequencyInRadiansPerPixel * scale) * magnitude);
+                *LookupFloatVolume(volume, x, y, z) = (float)(cos((x + y + z) * frequencyInRadiansPerPixel * scale) * magnitude);
             }
         }
     }
@@ -285,9 +285,9 @@ static void InitializeShortVolumeExpectedResult(
     for (z = 0; z < volume->m_count; z++) {
         for (y = 0; y < (volume->m_images + z)->m_height; y++) {
             for (x = 0; x < (volume->m_images + z)->m_width; x++) {
-                const double dx = round(cos((x + y + z) * frequencyInRadiansPerPixelX) * magnitude);
-                const double dy = round(cos((x + y + z) * frequencyInRadiansPerPixelY) * magnitude);
-                const double dz = round(cos((x + y + z) * frequencyInRadiansPerPixelZ) * magnitude);
+                const double dx = cos((x + y + z) * frequencyInRadiansPerPixelX) * magnitude;
+                const double dy = cos((x + y + z) * frequencyInRadiansPerPixelY) * magnitude;
+                const double dz = cos((x + y + z) * frequencyInRadiansPerPixelZ) * magnitude;
                 const double tx = x + dx;
                 const double ty = y + dy;
                 const double tz = z + dz;
@@ -642,7 +642,7 @@ int main(void)
     const int width = 256;
     const int height = 256;
     const int depth = 256;
-    const double warpScale = 1;
+    const double warpScale = 3;
     const double warpFrequencyInRadiansPerPixelX = 0.1;
     const double warpFrequencyInRadiansPerPixelY = 0.2;
     const double warpFrequencyInRadiansPerPixelZ = 0.3;
