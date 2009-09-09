@@ -6,7 +6,7 @@ output.txt: test
 	./test | tee $@
 
 test: main.c
-	gcc -Wall -O3 -march=native -I$(ATISTREAMSDKROOT)/include -L$(ATISTREAMSDKROOT)/lib/x86_64 -lm -lOpenCL -o $@ $<
+	gcc -std=c99 -Wall -O3 -march=native -I$(ATISTREAMSDKROOT)/include -L$(ATISTREAMSDKROOT)/lib/x86_64 -lm -lOpenCL -o $@ $<
 
 clean:
 	rm -f output.txt test
