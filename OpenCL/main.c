@@ -155,7 +155,7 @@ static void WarpVanilla(
                     ) {
                         short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
                         const double output_value = LinearInterpShortVolume(input_volume, source_x, source_y, source_z);
-                        *output_pixel = (short)floor(output_value + 0.5);
+                        *output_pixel = (short)round(output_value);
                     }
                 } else {
                     /* printf("was outside warpfield\n"); */
@@ -369,6 +369,7 @@ static void WarpOpenCL(
     const cl_int warp_width = warpfield->m_warp_x->m_images[0].m_width;
     const cl_int warp_height = warpfield->m_warp_x->m_images[0].m_height;
     const cl_int warp_depth = warpfield->m_warp_x->m_count;
+    const cl_double warp_scale = warpfield->m_scale;
     int i;
     size_t device_list_size;
     size_t build_log_size;
@@ -552,15 +553,17 @@ static void WarpOpenCL(
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
     clSetKernelArg(kernel, 5, sizeof(cl_int), &warp_depth);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 6, sizeof(cl_mem), &input_volume_mem);
+    clSetKernelArg(kernel, 6, sizeof(cl_double), &warp_scale);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 7, sizeof(cl_mem), &warpfield_x_mem);
+    clSetKernelArg(kernel, 7, sizeof(cl_mem), &input_volume_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 8, sizeof(cl_mem), &warpfield_y_mem);
+    clSetKernelArg(kernel, 8, sizeof(cl_mem), &warpfield_x_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 9, sizeof(cl_mem), &warpfield_z_mem);
+    clSetKernelArg(kernel, 9, sizeof(cl_mem), &warpfield_y_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 10, sizeof(cl_mem), &output_volume_mem);
+    clSetKernelArg(kernel, 10, sizeof(cl_mem), &warpfield_z_mem);
+    if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
+    clSetKernelArg(kernel, 11, sizeof(cl_mem), &output_volume_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
 
     status = clEnqueueNDRangeKernel(

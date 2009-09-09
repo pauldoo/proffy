@@ -2,7 +2,7 @@ ATISTREAMSDKROOT ?= /home/pauldoo/ati-stream-sdk-v2.0-beta2-lnx64
 LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(ATISTREAMSDKROOT)/lib/x86_64
 export LD_LIBRARY_PATH
 
-output.txt: test
+output.txt: test WarpOpenCL.cl
 	./test | tee $@
 
 test: main.c
