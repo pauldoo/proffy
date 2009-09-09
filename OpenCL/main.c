@@ -327,8 +327,6 @@ static void WarpOpenCL(
     size_t build_log_size;
     const size_t global_work_size[] = { width, height, depth };
 
-    printf("%i\n", __LINE__);
-
     context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_DEFAULT, NULL, NULL, &status);
     if (status != CL_SUCCESS) {
         Bailout("clCreateContextFromType failed");
@@ -387,8 +385,6 @@ static void WarpOpenCL(
         Bailout("clCreateBuffer failed");
     }
 
-    printf("%i\n", __LINE__);
-
     for (i = 0; i < depth; i++) {
         status = clEnqueueWriteBuffer(
             command_queue,
@@ -446,14 +442,10 @@ static void WarpOpenCL(
         }
     }
 
-    printf("%i\n", __LINE__);
-
     status = clEnqueueBarrier(command_queue);
     if (status != CL_SUCCESS) {
         Bailout("clEnqueueBarrier failed");
     }
-
-    printf("%i\n", __LINE__);
 
     program = clCreateProgramWithSource(
         context,
@@ -465,14 +457,10 @@ static void WarpOpenCL(
         Bailout("clCreateProgramWithSource failed");
     }
 
-    printf("%i\n", __LINE__);
-
     status = clBuildProgram(program, 0, NULL, "-w", NULL, NULL);
     if (status != CL_SUCCESS) {
         BailoutWithOpenClStatus("clBuildProgram failed", status);
     }
-
-    printf("%i\n", __LINE__);
 
     status = clGetProgramBuildInfo(
         program,
@@ -496,8 +484,6 @@ static void WarpOpenCL(
         BailoutWithOpenClStatus("clGetProgramBuildInfo failed", status);
     }
     printf("%s\n", build_log);
-    printf("%i\n", __LINE__);
-
 
     kernel = clCreateKernel(
         program,
@@ -506,8 +492,6 @@ static void WarpOpenCL(
     if (status != CL_SUCCESS) {
         BailoutWithOpenClStatus("clCreateKernel failed", status);
     }
-
-    printf("%i\n", __LINE__);
 
     clSetKernelArg(kernel, 0, sizeof(cl_int), &width);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
@@ -532,8 +516,6 @@ static void WarpOpenCL(
     clSetKernelArg(kernel, 10, sizeof(cl_mem), &output_volume_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
 
-    printf("%i\n", __LINE__);
-
     status = clEnqueueNDRangeKernel(
         command_queue,
         kernel,
@@ -548,14 +530,10 @@ static void WarpOpenCL(
 	    Bailout("clEnqueueNDRangeKernel failed");
 	}
 
-    printf("%i\n", __LINE__);
-
     status = clEnqueueBarrier(command_queue);
     if (status != CL_SUCCESS) {
         Bailout("clEnqueueBarrier failed");
     }
-
-    printf("%i\n", __LINE__);
 
     for (i = 0; i < depth; i++) {
         status = clEnqueueReadBuffer(
@@ -573,21 +551,15 @@ static void WarpOpenCL(
         }
     }
 
-    printf("%i\n", __LINE__);
-
     status = clFinish(command_queue);
 	if (status != CL_SUCCESS) {
 	    Bailout("clFinish failed");
 	}
 
-    printf("%i\n", __LINE__);
-
-	status = clReleaseContext(context);
-	if (status != CL_SUCCESS) {
-	    BailoutWithOpenClStatus("clReleaseContext failed", status);
-	}
-
-    printf("%i\n", __LINE__);
+    status = clReleaseContext(context);
+    if (status != CL_SUCCESS) {
+        BailoutWithOpenClStatus("clReleaseContext failed", status);
+    }
 }
 
 static void Benchmark(
@@ -642,12 +614,8 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, 0.2, 3.0, scale);
     InitializeFloatVolume(warpfield.m_warp_z, 0.3, 3.0, scale);
 
-    printf("%i\n", __LINE__);
-
     Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, WarpVanilla);
     Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, WarpOpenCL);
-
-    printf("%i\n", __LINE__);
 
     return 0;
 }

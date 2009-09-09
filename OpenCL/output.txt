@@ -1,0 +1,7 @@
+.
+Vanilla: 5.690000 seconds.
+.Name: AMD Athlon(tm) 64 Processor 3500+
+Image support: 0
+
+
+OpenCL: 0.450000 seconds.
