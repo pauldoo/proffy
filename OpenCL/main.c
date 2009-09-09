@@ -505,7 +505,7 @@ static void WarpOpenCL(
         Bailout("clCreateProgramWithSource failed");
     }
 
-    status = clBuildProgram(program, 0, NULL, "-w", NULL, NULL);
+    status = clBuildProgram(program, 0, NULL, "-w -cl-fast-relaxed-math", NULL, NULL);
     if (status != CL_SUCCESS) {
         BailoutWithOpenClStatus("clBuildProgram failed", status);
     }
