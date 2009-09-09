@@ -17,9 +17,9 @@ double LinearInterpShortVolume(
     double y,
     double z)
 {
-    const int x_int = (int)floor(x);
-    const int y_int = (int)floor(y);
-    const int z_int = (int)floor(z);
+    const int x_int = (int)(x);
+    const int y_int = (int)(y);
+    const int z_int = (int)(z);
     const double x_frac = x - x_int;
     const double y_frac = y - y_int;
     const double z_frac = z - z_int;
@@ -55,9 +55,9 @@ double LinearInterpFloatVolume(
     double y,
     double z)
 {
-    const int x_int = (int)floor(x);
-    const int y_int = (int)floor(y);
-    const int z_int = (int)floor(z);
+    const int x_int = (int)(x);
+    const int y_int = (int)(y);
+    const int z_int = (int)(z);
     const double x_frac = x - x_int;
     const double y_frac = y - y_int;
     const double z_frac = z - z_int;
@@ -117,7 +117,7 @@ __kernel void warp(
         ) {
             __global short* const output_pixel = output_volume + (x + y * width + z * width * height);
             const double output_value = LinearInterpShortVolume(input_volume, width, height, source_x, source_y, source_z);
-            *output_pixel = (short)floor(output_value + 0.5);
+            *output_pixel = (short)(output_value + 0.5);
         }
     }
 }
