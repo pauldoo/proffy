@@ -155,7 +155,7 @@ static void WarpVanilla(
                     ) {
                         short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
                         const double output_value = LinearInterpShortVolume(input_volume, source_x, source_y, source_z);
-                        *output_pixel = (short)round(output_value);
+                        *output_pixel = (short)floor(output_value + 0.5);
                     }
                 } else {
                     /* printf("was outside warpfield\n"); */
@@ -248,7 +248,7 @@ static void InitializeShortVolume(const ShortVolume* const volume)
     for (z = 0; z < volume->m_count; z++) {
         for (y = 0; y < (volume->m_images + z)->m_height; y++) {
             for (x = 0; x < (volume->m_images + z)->m_width; x++) {
-                *LookupShortVolume(volume, x, y, z) = (short)round(cos(sqrt(x*x + y*y + z*z) * 0.2) * 20000.0);
+                *LookupShortVolume(volume, x, y, z) = (short)floor(cos(sqrt(x*x + y*y + z*z) * 0.2) * 20000.0 + 0.5);
             }
         }
     }
@@ -291,7 +291,7 @@ static void InitializeShortVolumeExpectedResult(
                 const double tx = x + dx;
                 const double ty = y + dy;
                 const double tz = z + dz;
-                *LookupShortVolume(volume, x, y, z) = (short)round(cos(sqrt(tx*tx + ty*ty + tz*tz) * 0.2) * 20000.0);
+                *LookupShortVolume(volume, x, y, z) = (short)floor(cos(sqrt(tx*tx + ty*ty + tz*tz) * 0.2) * 20000.0 + 0.5);
             }
         }
     }
@@ -624,6 +624,7 @@ static void Benchmark(
     clock_t begin, end;
     double secondsPerIteration;
     int i;
+    double rmsError;
 
     begin = clock();
     for (i = 1; i <= iterations; i++) {
@@ -633,7 +634,7 @@ static void Benchmark(
     printf("\n");
     end = clock();
 
-    const double rmsError = MeasureRmsError(output_volume, expected_volume, 10);
+    rmsError = MeasureRmsError(output_volume, expected_volume, 10);
     printf("%s: %f rms error.\n", name, rmsError);
 
     secondsPerIteration = ((double)(end - begin)) / CLOCKS_PER_SEC / iterations;
