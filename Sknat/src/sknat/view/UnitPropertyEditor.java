@@ -98,7 +98,7 @@ public final class UnitPropertyEditor extends JPanel implements ChangeListener
         defenseSlider.addChangeListener(this);
         speedSlider.addChangeListener(this);
 
-        setUnitProperties(unitProperties);
+        setUnitProperties(initial);
     }
 
 }
