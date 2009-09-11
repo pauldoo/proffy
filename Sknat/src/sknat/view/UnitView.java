@@ -25,10 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import javax.swing.JComponent;
 import sknat.model.UnitProperties;
 
@@ -71,33 +68,14 @@ public final class UnitView extends JComponent
         if (unitProperties == null) {
             g.drawRect(0, 0, getWidth()-1, getHeight()-1);
         } else {
-            final Stroke defaultStroke = g.getStroke();
-            {
-                g.translate(getWidth() * 0.5, getHeight() * 0.5);
-                final double scale = Math.min(getWidth(), getHeight()) * 0.5 * 0.5;
-                g.scale(scale, scale);
-                g.rotate(System.currentTimeMillis() * 0.001 * 0.2);
-            }
+            g.translate(getWidth() * 0.5, getHeight() * 0.5);
+            final double scale = Math.min(getWidth(), getHeight()) * 0.5 * 0.75;
+            g.scale(scale, scale);
+            g.rotate(System.currentTimeMillis() * 0.001);
 
-            {
-                g.setStroke(new BasicStroke((float)(unitProperties.defense * 0.24 + 0.01)));
-                Shape body = new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0);
-                g.draw(body);
-            }
-
-            {
-                g.setStroke(new BasicStroke((float)(unitProperties.attack * 0.5 + 0.01)));
-                Shape gun = new Line2D.Double(0.25, 0.0, 1.25, 0.0);
-                g.draw(gun);
-            }
-
-            {
-                g.setStroke(new BasicStroke(0.01f));
-                Shape engine = new Arc2D.Double(-1.0, -1.0, 2.0, 2.0, 0.0, unitProperties.agility * 360, Arc2D.OPEN);
-                g.draw(engine);
-            }
+            g.setStroke(new BasicStroke((float)(unitProperties.defense * 0.24 + 0.01)));
+            Shape body = new Ellipse2D.Double(-1.0, -1.0, 2.0, 2.0);
+            g.draw(body);
         }
-
-        repaint();
     }
 }
