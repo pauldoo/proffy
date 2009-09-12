@@ -92,6 +92,9 @@ __kernel void warp(
     const int y = get_global_id(1);
     const int z = get_global_id(2);
 
+    __global short* const output_pixel = output_volume + (x + y * width + z * width * height);
+    short output_value = -32768;
+
     /* Coordinate to lookup in downscaled warpfield. */
     const double warp_x = x / warp_scale;
     const double warp_y = y / warp_scale;
@@ -115,10 +118,10 @@ __kernel void warp(
             source_y >= 0.0 && source_y < (height - 1) &&
             source_z >= 0.0 && source_z < (depth - 1)
         ) {
-            __global short* const output_pixel = output_volume + (x + y * width + z * width * height);
-            const double output_value = LinearInterpShortVolume(input_volume, width, height, source_x, source_y, source_z);
-            *output_pixel = (short)(output_value + 0.5);
+            output_value = (short)(LinearInterpShortVolume(input_volume, width, height, source_x, source_y, source_z) + 0.5);
         }
     }
+
+    *output_pixel = output_value;
 }
 

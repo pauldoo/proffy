@@ -63,6 +63,9 @@ void WarpVanilla(
 
         for (y = 0; y < height; ++y) {
             for (x = 0; x < width; ++x) {
+                short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
+                short output_value = -32768;
+
                 /* Coordinate to lookup in downscaled warpfield. */
                 const double warp_x = x / warpfield->m_scale;
                 const double warp_y = y / warpfield->m_scale;
@@ -90,13 +93,13 @@ void WarpVanilla(
                         source_y >= 0.0 && source_y < (height - 1) &&
                         source_z >= 0.0 && source_z < (depth - 1)
                     ) {
-                        short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
-                        const double output_value = LinearInterpShortVolume(input_volume, source_x, source_y, source_z);
-                        *output_pixel = (short)floor(output_value + 0.5);
+                        output_value = (short)floor(LinearInterpShortVolume(input_volume, source_x, source_y, source_z) + 0.5);
                     }
                 } else {
                     /* printf("was outside warpfield\n"); */
                 }
+
+                *output_pixel = output_value;
             }
         }
 

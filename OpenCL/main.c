@@ -1,6 +1,7 @@
 #include "common.h"
 #include "warpopencl.h"
 #include "warpvanilla.h"
+#include "warpvanilla2.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -192,6 +193,7 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_z, warpFrequencyInRadiansPerPixelZ, warpMagnitude, warpScale);
 
     Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla);
+    Benchmark("Vanilla2", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla2);
     Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL);
 
     return 0;
