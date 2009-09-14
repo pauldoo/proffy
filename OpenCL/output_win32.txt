@@ -1,9 +1,12 @@
 .
 Vanilla: 690.776601 rms error.
-Vanilla: 5.869000 seconds.
-.Name: AMD Athlon(tm) 64 Processor 3500+
+Vanilla: 3.247000 seconds.
+.
+Vanilla2: 690.776601 rms error.
+Vanilla2: 3.583000 seconds.
+.Name: Intel(R) Xeon(R) CPU           E5520  @ 2.27GHz
 Image support: 0
 
 
 OpenCL: 690.786497 rms error.
-OpenCL: 5.551000 seconds.
+OpenCL: 1.266000 seconds.

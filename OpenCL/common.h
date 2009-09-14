@@ -40,22 +40,22 @@ typedef void (*WarperFunc)(
     const Warpfield* /* warpfield */,
     const ShortVolume* /* output_data */);
 
-inline short* const LookupShortImage(const ShortImage* const image, const int x, const int y)
+static short* const LookupShortImage(const ShortImage* const image, const int x, const int y)
 {
     return image->m_data + x + y * image->m_width;
 }
 
-inline short* const LookupShortVolume(const ShortVolume* const volume, const int x, const int y, const int z)
+static short* const LookupShortVolume(const ShortVolume* const volume, const int x, const int y, const int z)
 {
     return LookupShortImage(volume->m_images + z, x, y);
 }
 
-inline float* const LookupFloatImage(const FloatImage* const image, const int x, const int y)
+static float* const LookupFloatImage(const FloatImage* const image, const int x, const int y)
 {
     return image->m_data + x + y * image->m_width;
 }
 
-inline float* const LookupFloatVolume(const FloatVolume* const volume, const int x, const int y, const int z)
+static float* const LookupFloatVolume(const FloatVolume* const volume, const int x, const int y, const int z)
 {
     return LookupFloatImage(volume->m_images + z, x, y);
 }

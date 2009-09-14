@@ -1,7 +1,7 @@
 call "%WINDOWS_SDK_PATH%\bin\setenv.cmd" /Release /x86 /xp
 
 set COMPILE_OPTIONS=/Ox /fp:fast /arch:SSE2 /Zi /W4 /TC /MD /D_CRT_SECURE_NO_WARNINGS /I "C:\Program Files (x86)\ATI Stream\include"
-set SOURCE_FILES=main.c
+set SOURCE_FILES=main.c common.c warpopencl.c warpvanilla.c warpvanilla2.c
 
 set LINK_OPTIONS=/link /DEBUG /OPT:REF /DYNAMICBASE /LIBPATH:"C:\Program Files (x86)\ATI Stream\lib\x86"
 set LIBRARY_FILES=OpenCL.lib
