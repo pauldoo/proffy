@@ -38,7 +38,8 @@ typedef struct
 typedef void (*WarperFunc)(
     const ShortVolume* /* input_data */,
     const Warpfield* /* warpfield */,
-    const ShortVolume* /* output_data */);
+    const ShortVolume* /* output_data */,
+    const int iterations);
 
 static short* const LookupShortImage(const ShortImage* const image, const int x, const int y)
 {

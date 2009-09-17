@@ -130,19 +130,16 @@ static void Benchmark(
     const Warpfield* const warpfield,
     const ShortVolume* const output_volume,
     const ShortVolume* const expected_volume,
-    void (*func)(const ShortVolume* const, const Warpfield* const, const ShortVolume* const))
+    const WarperFunc func)
 {
-    const int iterations = 1;
+    const int iterations = 10;
     clock_t begin, end;
     double secondsPerIteration;
     int i;
     double rmsError;
 
     begin = clock();
-    for (i = 1; i <= iterations; i++) {
-        printf(".");
-        func(input_volume, warpfield, output_volume);
-    }
+    func(input_volume, warpfield, output_volume, iterations);
     printf("\n");
     end = clock();
 

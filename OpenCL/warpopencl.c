@@ -82,7 +82,8 @@ static const char* const ReadFileIntoString(
 void WarpOpenCL(
     const ShortVolume* const input_volume,
     const Warpfield* const warpfield,
-    const ShortVolume* const output_volume)
+    const ShortVolume* const output_volume,
+    const int iterations)
 {
     char* build_log;
     cl_command_queue command_queue;
@@ -301,23 +302,25 @@ void WarpOpenCL(
     clSetKernelArg(kernel, 11, sizeof(cl_mem), &output_volume_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
 
-    status = clEnqueueNDRangeKernel(
-        command_queue,
-        kernel,
-        3,
-        NULL,
-        global_work_size,
-        NULL,
-        0,
-        NULL,
-        NULL);
-	if (status != CL_SUCCESS) {
-	    Bailout("clEnqueueNDRangeKernel failed");
-	}
+    for (i = 0; i < iterations; i++) {
+        status = clEnqueueNDRangeKernel(
+            command_queue,
+            kernel,
+            3,
+            NULL,
+            global_work_size,
+            NULL,
+            0,
+            NULL,
+            NULL);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueNDRangeKernel failed");
+        }
 
-    status = clEnqueueBarrier(command_queue);
-    if (status != CL_SUCCESS) {
-        Bailout("clEnqueueBarrier failed");
+        status = clEnqueueBarrier(command_queue);
+        if (status != CL_SUCCESS) {
+            Bailout("clEnqueueBarrier failed");
+        }
     }
 
     for (i = 0; i < depth; i++) {

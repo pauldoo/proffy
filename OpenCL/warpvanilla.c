@@ -47,7 +47,8 @@ static double const LinearInterpFloatVolume(const FloatVolume* const volume, con
 void WarpVanilla(
     const ShortVolume* const input_volume,
     const Warpfield* const warpfield,
-    const ShortVolume* const output_volume)
+    const ShortVolume* const output_volume,
+    const int iterations)
 {
     const int width = output_volume->m_images[0].m_width;
     const int height = output_volume->m_images[0].m_height;
@@ -56,53 +57,54 @@ void WarpVanilla(
     const int warp_height = warpfield->m_warp_x->m_images[0].m_height;
     const int warp_depth = warpfield->m_warp_x->m_count;
 
-    int x, y, z;
+    int x, y, z, i;
+    for (i = 0; i < iterations; i++) {
+        for (z = 0; z < depth; ++z) {
+            const ShortImage* const output_image = output_volume->m_images + z;
 
-    for (z = 0; z < depth; ++z) {
-        const ShortImage* const output_image = output_volume->m_images + z;
+            for (y = 0; y < height; ++y) {
+                for (x = 0; x < width; ++x) {
+                    short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
+                    short output_value = -32768;
 
-        for (y = 0; y < height; ++y) {
-            for (x = 0; x < width; ++x) {
-                short* const output_pixel = output_image->m_data + (x + y * output_image->m_width);
-                short output_value = -32768;
+                    /* Coordinate to lookup in downscaled warpfield. */
+                    const double warp_x = x / warpfield->m_scale;
+                    const double warp_y = y / warpfield->m_scale;
+                    const double warp_z = z / warpfield->m_scale;
 
-                /* Coordinate to lookup in downscaled warpfield. */
-                const double warp_x = x / warpfield->m_scale;
-                const double warp_y = y / warpfield->m_scale;
-                const double warp_z = z / warpfield->m_scale;
+                    /* printf("Pixel at location (%i, %i, %i) ", x, y, z); */
 
-                /* printf("Pixel at location (%i, %i, %i) ", x, y, z); */
-
-                if (warp_x >= 0.0 && warp_x < (warp_width - 1) &&
-                    warp_y >= 0.0 && warp_y < (warp_height - 1) &&
-                    warp_z >= 0.0 && warp_z < (warp_depth - 1)
-                ) {
-                    /* Warpfield value. */
-                    const double dx = LinearInterpFloatVolume(warpfield->m_warp_x, warp_x, warp_y, warp_z);
-                    const double dy = LinearInterpFloatVolume(warpfield->m_warp_y, warp_x, warp_y, warp_z);
-                    const double dz = LinearInterpFloatVolume(warpfield->m_warp_z, warp_x, warp_y, warp_z);
-
-                    /* Coordinate from source volume. */
-                    const double source_x = x + dx;
-                    const double source_y = y + dy;
-                    const double source_z = z + dz;
-
-                    /* printf("was warped from (%f, %f, %f)\n", source_x, source_y, source_z); */
-
-                    if (source_x >= 0.0 && source_x < (width - 1) &&
-                        source_y >= 0.0 && source_y < (height - 1) &&
-                        source_z >= 0.0 && source_z < (depth - 1)
+                    if (warp_x >= 0.0 && warp_x < (warp_width - 1) &&
+                        warp_y >= 0.0 && warp_y < (warp_height - 1) &&
+                        warp_z >= 0.0 && warp_z < (warp_depth - 1)
                     ) {
-                        output_value = (short)floor(LinearInterpShortVolume(input_volume, source_x, source_y, source_z) + 0.5);
+                        /* Warpfield value. */
+                        const double dx = LinearInterpFloatVolume(warpfield->m_warp_x, warp_x, warp_y, warp_z);
+                        const double dy = LinearInterpFloatVolume(warpfield->m_warp_y, warp_x, warp_y, warp_z);
+                        const double dz = LinearInterpFloatVolume(warpfield->m_warp_z, warp_x, warp_y, warp_z);
+
+                        /* Coordinate from source volume. */
+                        const double source_x = x + dx;
+                        const double source_y = y + dy;
+                        const double source_z = z + dz;
+
+                        /* printf("was warped from (%f, %f, %f)\n", source_x, source_y, source_z); */
+
+                        if (source_x >= 0.0 && source_x < (width - 1) &&
+                            source_y >= 0.0 && source_y < (height - 1) &&
+                            source_z >= 0.0 && source_z < (depth - 1)
+                        ) {
+                            output_value = (short)floor(LinearInterpShortVolume(input_volume, source_x, source_y, source_z) + 0.5);
+                        }
+                    } else {
+                        /* printf("was outside warpfield\n"); */
                     }
-                } else {
-                    /* printf("was outside warpfield\n"); */
+
+                    *output_pixel = output_value;
                 }
-
-                *output_pixel = output_value;
             }
-        }
 
+        }
     }
 }
 

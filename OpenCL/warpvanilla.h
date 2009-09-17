@@ -6,6 +6,7 @@
 void WarpVanilla(
     const ShortVolume* const input_volume,
     const Warpfield* const warpfield,
-    const ShortVolume* const output_volume);
+    const ShortVolume* const output_volume,
+    const int iterations);
 
 #endif

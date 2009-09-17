@@ -1,13 +1,13 @@
-.
+
 Vanilla: 673.819261 rms error.
-Vanilla: 0.650000 seconds.
-.
+Vanilla: 0.647800 seconds.
+
 Vanilla2: 673.819261 rms error.
-Vanilla2: 0.825000 seconds.
-.Name: Quadro FX 580
+Vanilla2: 0.725400 seconds.
+Name: Quadro FX 580
 Image support: 1
 
 : Retrieving binary for 'anonymous_jit_identity', for gpu='sm_11', usage mode='
 
 OpenCL: 673.860549 rms error.
-OpenCL: 3.438000 seconds.
+OpenCL: 2.874000 seconds.
