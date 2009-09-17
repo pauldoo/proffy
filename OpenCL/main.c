@@ -155,9 +155,9 @@ static void Benchmark(
 
 int main(void)
 {
-    const int width = 256;
-    const int height = 256;
-    const int depth = 256;
+    const int width = 150;
+    const int height = 150;
+    const int depth = 150;
     const double warpScale = 3;
     const double warpFrequencyInRadiansPerPixelX = 0.1;
     const double warpFrequencyInRadiansPerPixelY = 0.2;

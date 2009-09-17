@@ -30,8 +30,26 @@ static void BailoutWithOpenClStatus(
     case CL_OUT_OF_HOST_MEMORY:
         printf("CL_OUT_OF_HOST_MEMORY\n");
         break;
+    case CL_INVALID_COMMAND_QUEUE:
+        printf("CL_INVALID_COMMAND_QUEUE\n");
+        break;
+    case CL_INVALID_CONTEXT:
+        printf("CL_INVALID_CONTEXT\n");
+        break;
+    case CL_INVALID_MEM_OBJECT:
+        printf("CL_INVALID_MEM_OBJECT\n");
+        break;
+    case CL_INVALID_EVENT_WAIT_LIST:
+        printf("CL_INVALID_EVENT_WAIT_LIST\n");
+        break;
+    case CL_MEM_OBJECT_ALLOCATION_FAILURE:
+        printf("CL_MEM_OBJECT_ALLOCATION_FAILURE\n");
+        break;
+    case CL_OUT_OF_RESOURCES:
+        printf("CL_OUT_OF_RESOURCES\n");
+        break;
     default:
-        printf("Unknown OpenCL error\n");
+        printf("Unknown OpenCL error (%i)\n", status);
         break;
     }
     exit(EXIT_FAILURE);
@@ -86,7 +104,7 @@ void WarpOpenCL(
     const cl_int warp_width = warpfield->m_warp_x->m_images[0].m_width;
     const cl_int warp_height = warpfield->m_warp_x->m_images[0].m_height;
     const cl_int warp_depth = warpfield->m_warp_x->m_count;
-    const cl_double warp_scale = warpfield->m_scale;
+    const cl_float warp_scale = (cl_float)(warpfield->m_scale);
     int i;
     size_t device_list_size;
     size_t build_log_size;
@@ -270,7 +288,7 @@ void WarpOpenCL(
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
     clSetKernelArg(kernel, 5, sizeof(cl_int), &warp_depth);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
-    clSetKernelArg(kernel, 6, sizeof(cl_double), &warp_scale);
+    clSetKernelArg(kernel, 6, sizeof(cl_float), &warp_scale);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
     clSetKernelArg(kernel, 7, sizeof(cl_mem), &input_volume_mem);
     if (status != CL_SUCCESS) { Bailout("clSetKernelArg failed"); }
@@ -314,13 +332,13 @@ void WarpOpenCL(
             NULL,
             NULL);
         if (status != CL_SUCCESS) {
-            Bailout("clEnqueueReadBuffer failed");
+            BailoutWithOpenClStatus("clEnqueueReadBuffer failed", status);
         }
     }
 
     status = clFinish(command_queue);
 	if (status != CL_SUCCESS) {
-	    Bailout("clFinish failed");
+	    BailoutWithOpenClStatus("clFinish failed", status);
 	}
 
     status = clReleaseContext(context);
