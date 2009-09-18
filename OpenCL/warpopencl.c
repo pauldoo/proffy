@@ -114,7 +114,8 @@ void WarpOpenCL(
     //const size_t local_work_size[] = { 5, 5, 5 }; // 0.246800
     //const size_t local_work_size[] = { 30, 5, 1 }; // 0.254900
     //const size_t local_work_size[] = { 15, 15, 1 }; // 0.246700
-    const size_t local_work_size[] = { 6, 6, 6 }; // 0.253900
+    //const size_t local_work_size[] = { 6, 6, 6 }; // 0.253900
+    const size_t local_work_size[] = { 8, 8, 4 };
 
     context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_DEFAULT, NULL, NULL, &status);
     if (status != CL_SUCCESS) {

@@ -1,24 +1,24 @@
-Vanilla: 673.819261 rms error.
-Vanilla: Setup: 0.000111 seconds.
-Vanilla: Compute: 0.648889 seconds.
-
-Vanilla2: 673.819261 rms error.
-Vanilla2: Setup: 0.014667 seconds.
-Vanilla2: Compute: 0.716333 seconds.
-
-VanillaF: 673.819115 rms error.
-VanillaF: Setup: -0.001889 seconds.
-VanillaF: Compute: 0.633889 seconds.
-
-Name: Quadro FX 580
+Name: Quadro FX 5600
 Image support: 1
 
-: Retrieving binary for 'anonymous_jit_identity', for gpu='sm_11', usage mode='
-Name: Quadro FX 580
+: Retrieving binary for 'anonymous_jit_identity', for gpu='sm_10', usage mode='
+Name: Quadro FX 5600
 Image support: 1
 
-: Retrieving binary for 'anonymous_jit_identity', for gpu='sm_11', usage mode='
-OpenCL: 673.860549 rms error.
-OpenCL: Setup: 0.548111 seconds.
-OpenCL: Compute: 0.191889 seconds.
+: Retrieving binary for 'anonymous_jit_identity', for gpu='sm_10', usage mode='
+OpenCL: 690.786393 rms error.
+OpenCL: Setup: 0.572556 seconds.
+OpenCL: Compute: 0.350444 seconds.
+
+Vanilla: 690.776601 rms error.
+Vanilla: Setup: -0.004667 seconds.
+Vanilla: Compute: 3.252667 seconds.
+
+Vanilla2: 690.776601 rms error.
+Vanilla2: Setup: 0.112889 seconds.
+Vanilla2: Compute: 3.570111 seconds.
+
+VanillaF: 690.776673 rms error.
+VanillaF: Setup: 0.002111 seconds.
+VanillaF: Compute: 3.154889 seconds.
 

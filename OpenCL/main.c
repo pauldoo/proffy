@@ -163,9 +163,9 @@ static void Benchmark(
 
 int main(void)
 {
-    const int width = 150;
-    const int height = 150;
-    const int depth = 150;
+    const int width = 256;
+    const int height = 256;
+    const int depth = 256;
     const double warpScale = 3;
     const double warpFrequencyInRadiansPerPixelX = 0.1;
     const double warpFrequencyInRadiansPerPixelY = 0.2;
@@ -200,10 +200,10 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, warpFrequencyInRadiansPerPixelY, warpMagnitude, warpScale);
     InitializeFloatVolume(warpfield.m_warp_z, warpFrequencyInRadiansPerPixelZ, warpMagnitude, warpScale);
 
+    Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL);
     Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla);
     Benchmark("Vanilla2", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla2);
     Benchmark("VanillaF", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanillaF);
-    Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL);
 
     return 0;
 }
