@@ -110,6 +110,11 @@ void WarpOpenCL(
     size_t device_list_size;
     size_t build_log_size;
     const size_t global_work_size[] = { width, height, depth };
+    //const size_t local_work_size[] = { 150, 1, 1 }; // 0.257500
+    //const size_t local_work_size[] = { 5, 5, 5 }; // 0.246800
+    //const size_t local_work_size[] = { 30, 5, 1 }; // 0.254900
+    //const size_t local_work_size[] = { 15, 15, 1 }; // 0.246700
+    const size_t local_work_size[] = { 6, 6, 6 }; // 0.253900
 
     context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_DEFAULT, NULL, NULL, &status);
     if (status != CL_SUCCESS) {
@@ -309,7 +314,7 @@ void WarpOpenCL(
             3,
             NULL,
             global_work_size,
-            NULL,
+            local_work_size,
             0,
             NULL,
             NULL);
