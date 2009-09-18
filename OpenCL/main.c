@@ -133,21 +133,32 @@ static void Benchmark(
     const ShortVolume* const expected_volume,
     const WarperFunc func)
 {
-    const int iterations = 10;
     clock_t begin, end;
-    double secondsPerIteration;
+    double timeSingle;
+    double timeMulti;
+    double setupTime;
+    double computeTime;
     double rmsError;
 
     begin = clock();
-    func(input_volume, warpfield, output_volume, iterations);
-    printf("\n");
+    func(input_volume, warpfield, output_volume, 1);
     end = clock();
+    timeSingle = ((double)(end - begin)) / CLOCKS_PER_SEC;
+
+    begin = clock();
+    func(input_volume, warpfield, output_volume, 10);
+    end = clock();
+    timeMulti = ((double)(end - begin)) / CLOCKS_PER_SEC;
 
     rmsError = MeasureRmsError(output_volume, expected_volume, 10);
     printf("%s: %f rms error.\n", name, rmsError);
 
-    secondsPerIteration = ((double)(end - begin)) / CLOCKS_PER_SEC / iterations;
-    printf("%s: %f seconds.\n", name, secondsPerIteration);
+    computeTime = (timeMulti - timeSingle) / 9.0;
+    setupTime = timeSingle - computeTime;
+
+    printf("%s: Setup: %f seconds.\n", name, setupTime);
+    printf("%s: Compute: %f seconds.\n", name, computeTime);
+    printf("\n");
 }
 
 int main(void)
