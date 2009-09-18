@@ -2,6 +2,7 @@
 #include "warpopencl.h"
 #include "warpvanilla.h"
 #include "warpvanilla2.h"
+#include "warpvanillaf.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -135,7 +136,6 @@ static void Benchmark(
     const int iterations = 10;
     clock_t begin, end;
     double secondsPerIteration;
-    int i;
     double rmsError;
 
     begin = clock();
@@ -191,6 +191,7 @@ int main(void)
 
     Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla);
     Benchmark("Vanilla2", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla2);
+    Benchmark("VanillaF", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanillaF);
     Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL);
 
     return 0;
