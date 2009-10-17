@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <OpenCL/cl.h>
+
 typedef struct
 {
     float* m_data;
@@ -62,5 +64,9 @@ inline float* LookupFloatVolume(const FloatVolume* const volume, const int x, co
 }
 
 void Bailout(const char* const message);
+
+void BailoutWithOpenClStatus(const char* const message, const cl_int status);
+
+const char* ReadFileIntoString(const char* const filename);
 
 #endif

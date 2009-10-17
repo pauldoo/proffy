@@ -1,26 +1,18 @@
-Name: Genuine Intel(R) CPU            1500  @ 2.00GHz
-Image support: 1
-
-Name: Genuine Intel(R) CPU            1500  @ 2.00GHz
-Image support: 1
-
-OpenCL: 690.786542 rms error.
-OpenCL: Setup: 0.238175 seconds.
-OpenCL: Compute: 3.747840 seconds.
-
-OpenMP: 690.776601 rms error.
-OpenMP: Setup: -0.004208 seconds.
-OpenMP: Compute: 6.106615 seconds.
-
-Vanilla: 690.776601 rms error.
-Vanilla: Setup: -0.004392 seconds.
-Vanilla: Compute: 6.135154 seconds.
-
-Vanilla2: 690.776601 rms error.
-Vanilla2: Setup: 0.814040 seconds.
-Vanilla2: Compute: 6.055494 seconds.
-
-VanillaF: 690.776691 rms error.
-VanillaF: Setup: 0.029828 seconds.
-VanillaF: Compute: 6.052348 seconds.
-
+Supported image format: CL_RGBA, CL_SNORM_INT8
+Supported image format: CL_RGBA, CL_UNORM_INT8
+Supported image format: CL_ARGB, CL_UNORM_INT8
+Supported image format: CL_BGRA, CL_UNORM_INT8
+Supported image format: CL_A, CL_UNORM_INT8
+Supported image format: CL_RGBA, CL_SNORM_INT16
+Supported image format: CL_RGBA, CL_UNORM_INT16
+Supported image format: CL_RGBA, CL_SIGNED_INT8
+Supported image format: CL_RGBA, CL_SIGNED_INT16
+Supported image format: CL_RGBA, CL_SIGNED_INT32
+Supported image format: CL_RGBA, CL_UNSIGNED_INT8
+Supported image format: CL_RGBA, CL_UNSIGNED_INT16
+Supported image format: CL_RGBA, CL_UNSIGNED_INT32
+Supported image format: CL_RGBA, CL_HALF_FLOAT
+Supported image format: CL_RGBA, CL_FLOAT
+Supported image format: CL_INTENSITY, CL_UNORM_INT8
+ERROR: clCreateImage3D failed
+CL_IMAGE_FORMAT_NOT_SUPPORTED

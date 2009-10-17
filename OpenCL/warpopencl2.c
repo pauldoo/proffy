@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void WarpOpenCL(
+void WarpOpenCL2(
     const ShortVolume* const input_volume,
     const Warpfield* const warpfield,
     const ShortVolume* const output_volume,
@@ -21,7 +21,7 @@ void WarpOpenCL(
     cl_mem warpfield_z_mem;
     cl_program program;
     cl_kernel kernel;
-    const char* const program_source = ReadFileIntoString("WarpOpenCL.cl");
+    const char* const program_source = ReadFileIntoString("WarpOpenCL2.cl");
     const char* program_sources[] = { program_source };
     const cl_int width = output_volume->m_images[0].m_width;
     const cl_int height = output_volume->m_images[0].m_height;
@@ -40,6 +40,15 @@ void WarpOpenCL(
     //const size_t local_work_size[] = { 15, 15, 1 }; // 0.246700
     //const size_t local_work_size[] = { 6, 6, 6 }; // 0.253900
     //const size_t local_work_size[] = { 8, 8, 4 };
+    cl_image_format input_output_image_format;
+    cl_image_format warp_image_format;
+    cl_image_format supported_image_formats[1000];
+    cl_uint supported_image_format_list_size;
+
+    input_output_image_format.image_channel_order = CL_INTENSITY;
+    input_output_image_format.image_channel_data_type = CL_SNORM_INT16;
+    warp_image_format.image_channel_order = CL_INTENSITY;
+    warp_image_format.image_channel_data_type = CL_FLOAT;
 
     context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_CPU, NULL, NULL, &status);
     if (status != CL_SUCCESS) {
@@ -75,30 +84,130 @@ void WarpOpenCL(
         */
     }
 
+    status = clGetSupportedImageFormats(
+        context,
+        CL_MEM_READ_ONLY,
+        CL_MEM_OBJECT_IMAGE3D,
+        sizeof(supported_image_formats) / sizeof(supported_image_formats[0]),
+        supported_image_formats,
+        &supported_image_format_list_size);
+    if (status != CL_SUCCESS) {
+        BailoutWithOpenClStatus("clGetSupportedImageFormats failed", status);
+    }
+    for (i = 0; i < supported_image_format_list_size; i++) {
+        printf("Supported image format: ");
+        switch (supported_image_formats[i].image_channel_order) {
+        case CL_R:
+            printf("CL_R");
+            break;
+        case CL_A:
+            printf("CL_A");
+            break;
+        case CL_INTENSITY:
+            printf("CL_INTENSITY");
+            break;
+        case CL_LUMINANCE:
+            printf("CL_LUMINANCE");
+            break;
+        case CL_RG:
+            printf("CL_RG");
+            break;
+        case CL_RA:
+            printf("CL_RA");
+            break;
+        case CL_RGB:
+            printf("CL_RGB");
+            break;
+        case CL_RGBA:
+            printf("CL_RGBA");
+            break;
+        case CL_ARGB:
+            printf("CL_ARGB");
+            break;
+        case CL_BGRA:
+            printf("CL_BGRA");
+            break;
+        default:
+            printf("Unknown");
+            break;
+        }
+        printf(", ");
+        switch (supported_image_formats[i].image_channel_data_type) {
+        case CL_UNORM_INT8:
+            printf("CL_UNORM_INT8\n");
+            break;
+        case CL_UNORM_INT16:
+            printf("CL_UNORM_INT16\n");
+            break;
+        case CL_SNORM_INT8:
+            printf("CL_SNORM_INT8\n");
+            break;
+        case CL_SNORM_INT16:
+            printf("CL_SNORM_INT16\n");
+            break;
+        case CL_HALF_FLOAT:
+            printf("CL_HALF_FLOAT\n");
+            break;
+        case CL_FLOAT:
+            printf("CL_FLOAT\n");
+            break;
+        case CL_UNORM_SHORT_565:
+            printf("CL_UNORM_SHORT_565\n");
+            break;
+        case CL_UNORM_SHORT_555:
+            printf("CL_UNORM_SHORT_555\n");
+            break;
+        case CL_UNORM_INT_101010:
+            printf("CL_UNORM_INT_101010\n");
+            break;
+        case CL_SIGNED_INT8:
+            printf("CL_SIGNED_INT8\n");
+            break;
+        case CL_UNSIGNED_INT8:
+            printf("CL_UNSIGNED_INT8\n");
+            break;
+        case CL_SIGNED_INT16:
+            printf("CL_SIGNED_INT16\n");
+            break;
+        case CL_SIGNED_INT32:
+            printf("CL_SIGNED_INT32\n");
+            break;
+        case CL_UNSIGNED_INT16:
+            printf("CL_UNSIGNED_INT16\n");
+            break;
+        case CL_UNSIGNED_INT32:
+            printf("CL_UNSIGNED_INT32\n");
+            break;
+        default:
+            printf("Unknown\n");
+            break;
+        }
+    }
+
     command_queue = clCreateCommandQueue(context, devices[0], 0, &status);
     if (status != CL_SUCCESS) {
         BailoutWithOpenClStatus("clCreateCommandQueue failed", status);
     }
 
-    input_volume_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, width * height * depth * sizeof(cl_short), NULL, &status);
+    input_volume_mem = clCreateImage3D(context, CL_MEM_READ_ONLY, &input_output_image_format, width, height, depth, 0, 0, NULL, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateBuffer failed");
+        BailoutWithOpenClStatus("clCreateImage3D failed", status);
     }
-    warpfield_x_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, warp_width * warp_height * warp_depth * sizeof(cl_float), NULL, &status);
+    warpfield_x_mem = clCreateImage3D(context, CL_MEM_READ_ONLY, &warp_image_format, warp_width, warp_height, warp_depth, 0, 0, NULL, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateBuffer failed");
+        BailoutWithOpenClStatus("clCreateImage3D failed", status);
     }
-    warpfield_y_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, warp_width * warp_height * warp_depth * sizeof(cl_float), NULL, &status);
+    warpfield_y_mem = clCreateImage3D(context, CL_MEM_READ_ONLY, &warp_image_format, warp_width, warp_height, warp_depth, 0, 0, NULL, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateBuffer failed");
+        BailoutWithOpenClStatus("clCreateImage3D failed", status);
     }
-    warpfield_z_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, warp_width * warp_height * warp_depth * sizeof(cl_float), NULL, &status);
+    warpfield_z_mem = clCreateImage3D(context, CL_MEM_READ_ONLY, &warp_image_format, warp_width, warp_height, warp_depth, 0, 0, NULL, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateBuffer failed");
+        BailoutWithOpenClStatus("clCreateImage3D failed", status);
     }
-    output_volume_mem = clCreateBuffer(context, CL_MEM_WRITE_ONLY, width * height * depth * sizeof(cl_short), NULL, &status);
+    output_volume_mem = clCreateImage3D(context, CL_MEM_WRITE_ONLY, &input_output_image_format, width, height, depth, 0, 0, NULL, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateBuffer failed");
+        BailoutWithOpenClStatus("clCreateImage3D failed", status);
     }
 
     for (i = 0; i < depth; i++) {

@@ -1,5 +1,6 @@
 #include "common.h"
 #include "warpopencl.h"
+#include "warpopencl2.h"
 #include "warpvanilla.h"
 #include "warpvanilla2.h"
 #include "warpvanillaf.h"
@@ -164,9 +165,9 @@ static void Benchmark(
 
 int main(void)
 {
-    const int width = 256;
-    const int height = 256;
-    const int depth = 256;
+    const int width = 128;
+    const int height = 128;
+    const int depth = 128;
     const double warpScale = 3;
     const double warpFrequencyInRadiansPerPixelX = 0.1;
     const double warpFrequencyInRadiansPerPixelY = 0.2;
@@ -201,6 +202,7 @@ int main(void)
     InitializeFloatVolume(warpfield.m_warp_y, warpFrequencyInRadiansPerPixelY, warpMagnitude, warpScale);
     InitializeFloatVolume(warpfield.m_warp_z, warpFrequencyInRadiansPerPixelZ, warpMagnitude, warpScale);
 
+    Benchmark("OpenCL2", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL2);
     Benchmark("OpenCL", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenCL);
     Benchmark("OpenMP", &input_volume, &warpfield, &output_volume, &expected_volume, WarpOpenMP);
     Benchmark("Vanilla", &input_volume, &warpfield, &output_volume, &expected_volume, WarpVanilla);
