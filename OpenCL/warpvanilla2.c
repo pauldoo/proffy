@@ -4,12 +4,12 @@
 #include <math.h>
 #include <string.h>
 
-static const short* const LookupShortBlock(const short* const volume, const int width, const int height, const int x, const int y, const int z)
+static const short* LookupShortBlock(const short* const volume, const int width, const int height, const int x, const int y, const int z)
 {
     return volume + x + y * width + z * width * height;
 }
 
-static double const LinearInterpShortBlock(const short* const volume, const int width, const int height, const double x, const double y, const double z)
+static double LinearInterpShortBlock(const short* const volume, const int width, const int height, const double x, const double y, const double z)
 {
     const int x_int = (int)floor(x);
     const int y_int = (int)floor(y);
@@ -30,12 +30,12 @@ static double const LinearInterpShortBlock(const short* const volume, const int 
     return result;
 }
 
-static const float* const LookupFloatBlock(const float* const volume, const int width, const int height, const int x, const int y, const int z)
+static const float* LookupFloatBlock(const float* const volume, const int width, const int height, const int x, const int y, const int z)
 {
     return volume + x + y * width + z * width * height;
 }
 
-static double const LinearInterpFloatBlock(const float* const volume, const int width, const int height, const double x, const double y, const double z)
+static double LinearInterpFloatBlock(const float* const volume, const int width, const int height, const double x, const double y, const double z)
 {
     const int x_int = (int)floor(x);
     const int y_int = (int)floor(y);

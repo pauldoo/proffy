@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-static double const LinearInterpShortVolume(const ShortVolume* const volume, const double x, const double y, const double z)
+static double LinearInterpShortVolume(const ShortVolume* const volume, const double x, const double y, const double z)
 {
     const int x_int = (int)floor(x);
     const int y_int = (int)floor(y);
@@ -23,7 +23,7 @@ static double const LinearInterpShortVolume(const ShortVolume* const volume, con
     return result;
 }
 
-static double const LinearInterpFloatVolume(const FloatVolume* const volume, const double x, const double y, const double z)
+static double LinearInterpFloatVolume(const FloatVolume* const volume, const double x, const double y, const double z)
 {
     const int x_int = (int)floor(x);
     const int y_int = (int)floor(y);

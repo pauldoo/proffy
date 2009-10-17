@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <CL/cl.h>
+#include <OpenCL/cl.h>
 
 static void BailoutWithOpenClStatus(
     const char* const message,
@@ -48,6 +48,32 @@ static void BailoutWithOpenClStatus(
     case CL_OUT_OF_RESOURCES:
         printf("CL_OUT_OF_RESOURCES\n");
         break;
+    case CL_INVALID_DEVICE:
+        printf("CL_INVALID_DEVICE\n");
+        break;
+    case CL_INVALID_QUEUE_PROPERTIES:
+        printf("CL_INVALID_QUEUE_PROPERTIES\n");
+        break;
+    case CL_INVALID_KERNEL_ARGS:
+        printf("CL_INVALID_KERNEL_ARGS\n");
+        break;
+    case CL_INVALID_WORK_DIMENSION:
+        printf("CL_INVALID_WORK_DIMENSION\n");
+        break;
+    /*
+    case CL_INVALID_GLOBAL_WORK_SIZE:
+        printf("CL_INVALID_GLOBAL_WORK_SIZE\n");
+        break;
+    */
+    case CL_INVALID_WORK_GROUP_SIZE:
+        printf("CL_INVALID_WORK_GROUP_SIZE\n");
+        break;
+    case CL_INVALID_WORK_ITEM_SIZE:
+        printf("CL_INVALID_WORK_ITEM_SIZE\n");
+        break;
+    case CL_INVALID_GLOBAL_OFFSET:
+        printf("CL_INVALID_GLOBAL_OFFSET\n");
+        break;
     default:
         printf("Unknown OpenCL error (%i)\n", status);
         break;
@@ -55,7 +81,7 @@ static void BailoutWithOpenClStatus(
     exit(EXIT_FAILURE);
 }
 
-static const char* const ReadFileIntoString(
+static const char* ReadFileIntoString(
     const char* const filename)
 {
     FILE* fp = fopen(filename, "rb");
@@ -115,9 +141,9 @@ void WarpOpenCL(
     //const size_t local_work_size[] = { 30, 5, 1 }; // 0.254900
     //const size_t local_work_size[] = { 15, 15, 1 }; // 0.246700
     //const size_t local_work_size[] = { 6, 6, 6 }; // 0.253900
-    const size_t local_work_size[] = { 8, 8, 4 };
+    //const size_t local_work_size[] = { 8, 8, 4 };
 
-    context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_DEFAULT, NULL, NULL, &status);
+    context = clCreateContextFromType(NULL, CL_DEVICE_TYPE_CPU, NULL, NULL, &status);
     if (status != CL_SUCCESS) {
         Bailout("clCreateContextFromType failed");
 	}
@@ -149,9 +175,9 @@ void WarpOpenCL(
         printf("Image support: %i\n", (int)(image_support == CL_TRUE));
     }
 
-    command_queue = clCreateCommandQueue(context, devices[0], CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE, &status);
+    command_queue = clCreateCommandQueue(context, devices[0], 0, &status);
     if (status != CL_SUCCESS) {
-        Bailout("clCreateCommandQueue failed");
+        BailoutWithOpenClStatus("clCreateCommandQueue failed", status);
     }
 
     input_volume_mem = clCreateBuffer(context, CL_MEM_READ_ONLY, width * height * depth * sizeof(cl_short), NULL, &status);
@@ -315,12 +341,12 @@ void WarpOpenCL(
             3,
             NULL,
             global_work_size,
-            local_work_size,
+            NULL, //local_work_size,
             0,
             NULL,
             NULL);
         if (status != CL_SUCCESS) {
-            Bailout("clEnqueueNDRangeKernel failed");
+            BailoutWithOpenClStatus("clEnqueueNDRangeKernel failed", status);
         }
 
         status = clEnqueueBarrier(command_queue);

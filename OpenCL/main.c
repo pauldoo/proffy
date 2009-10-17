@@ -103,7 +103,7 @@ static void InitializeShortVolumeExpectedResult(
     }
 }
 
-static const double MeasureRmsError(
+static double MeasureRmsError(
     const ShortVolume* const volumeA,
     const ShortVolume* const volumeB,
     const int ignoreRegionSize)

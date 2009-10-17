@@ -1,12 +1,26 @@
-.
+Name: Genuine Intel(R) CPU            1500  @ 2.00GHz
+Image support: 1
+
+Name: Genuine Intel(R) CPU            1500  @ 2.00GHz
+Image support: 1
+
+OpenCL: 690.786542 rms error.
+OpenCL: Setup: 0.238175 seconds.
+OpenCL: Compute: 3.747840 seconds.
+
+OpenMP: 690.776601 rms error.
+OpenMP: Setup: -0.004208 seconds.
+OpenMP: Compute: 6.106615 seconds.
+
 Vanilla: 690.776601 rms error.
-Vanilla: 3.380000 seconds.
-.
+Vanilla: Setup: -0.004392 seconds.
+Vanilla: Compute: 6.135154 seconds.
+
 Vanilla2: 690.776601 rms error.
-Vanilla2: 3.460000 seconds.
-.Name: AMD Athlon(tm) 64 Processor 3500+
-Image support: 0
+Vanilla2: Setup: 0.814040 seconds.
+Vanilla2: Compute: 6.055494 seconds.
 
+VanillaF: 690.776691 rms error.
+VanillaF: Setup: 0.029828 seconds.
+VanillaF: Compute: 6.052348 seconds.
 
-OpenCL: 690.786497 rms error.
-OpenCL: 3.190000 seconds.
