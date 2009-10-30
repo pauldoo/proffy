@@ -25,13 +25,14 @@ namespace Proffy {
             const wchar_t* const * const argv);
 
         ~CommandLineArguments();
-        
+
     private:
         CommandLineArguments();
 
     public:
         int fProcessId;
-        std::wstring fOutputFilename;
+        std::wstring fXmlOutputFilename;
+        std::wstring fDotOutputFilename;
         HANDLE fStartFlag;
         HANDLE fStopFlag;
         double fDelayBetweenSamplesInSeconds;

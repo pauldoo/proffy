@@ -112,7 +112,8 @@ namespace Proffy {
             if (arguments.fProfileTheProfiler) {
                 profiler.reset(new Launcher(
                     L"../Release",
-                    arguments.fOutputFilename,
+                    arguments.fXmlOutputFilename,
+                    arguments.fDotOutputFilename,
                     arguments.fDelayBetweenSamplesInSeconds,
                     false));
             }

@@ -68,7 +68,8 @@ namespace Proffy {
     public:
         Launcher(
             const std::wstring& proffyExecutable,
-            const std::wstring& outputFilename,
+            const std::wstring& xmlOutputFilename,
+            const std::wstring& dotOutputFilename,
             const double delayBetweenSamplesInSeconds,
             const bool profileTheProfiler = false)
         {
@@ -82,7 +83,8 @@ namespace Proffy {
             buf
                 << proffyExecutable
                 << L" " << ::GetCurrentProcessId()
-                << L" \"" << outputFilename << L"\""
+                << L" \"" << xmlOutputFilename << L"\""
+                << L" \"" << dotOutputFilename << L"\""
                 << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
                 << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle)
                 << L" " << delayBetweenSamplesInSeconds

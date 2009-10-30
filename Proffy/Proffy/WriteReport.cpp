@@ -25,7 +25,7 @@
 #include "XercesInitialize.h"
 
 namespace Proffy {
-    void WriteReport(
+    void WriteXmlReport(
         const CommandLineArguments* const arguments,
         const Results* const results)
     {
@@ -69,7 +69,7 @@ namespace Proffy {
                 i != results->fEncounteredPoints.end();
                 ++i) {
                 const int id = static_cast<int>(std::distance(results->fEncounteredPoints.begin(), i));
-                
+
                 sourceFiles.insert(i->fFileName);
 
                 xercesc::DOMElement* const point = document->createElement(L"Point");
@@ -108,7 +108,7 @@ namespace Proffy {
                             results->fEncounteredPoints.find(*callee)));
 
                     xercesc::DOMElement* const counter = document->createElement(L"Counter");
-                    
+
                     counter->setAttribute(L"CallerId",
                         Utilities::ToWString<int>(callerId).c_str());
                     counter->setAttribute(L"CalleeId",
@@ -138,7 +138,7 @@ namespace Proffy {
                     for (int lineNumber = 1; fileStream.eof() == false; lineNumber++) {
                         std::wstring lineContents;
                         std::getline(fileStream, lineContents);
-                        
+
                         xercesc::DOMElement* const line = document->createElement(L"Line");
                         line->setAttribute(L"Number", Utilities::ToWString<int>(lineNumber).c_str());
 
@@ -153,9 +153,97 @@ namespace Proffy {
 
         xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();
         domSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments->fOutputFilename.c_str());
+        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments->fXmlOutputFilename.c_str());
         xercesc::DOMLSOutput* const output = domImplementation->createLSOutput();
         output->setByteStream(target);
         domSerializer->write(document, output);
+    }
+
+    namespace {
+        template<typename T1, typename T2, typename T3> class triple
+        {
+        public:
+            typedef T1 Type1;
+            typedef T2 Type2;
+            typedef T3 Type3;
+
+            Type1 first;
+            Type2 second;
+            Type3 third;
+        };
+    }
+
+    void WriteDotReport(
+        const CommandLineArguments* const arguments,
+        const Results* const results)
+    {
+        std::wofstream dotStream(arguments->fDotOutputFilename.c_str());
+
+
+        dotStream << L"strict digraph Awesome {\n";
+
+        std::map<std::wstring, triple<int, std::map<std::wstring, int>, int> > tally;
+
+        // Ensure each symbol is present in the tally map.
+        for (std::set<PointInProgram>::const_iterator i = results->fEncounteredPoints.begin();
+            i != results->fEncounteredPoints.end();
+            ++i) {
+            tally[i->fSymbolName];
+        }
+
+        // Accumulate symbol to symbol call counters
+        for (std::map<std::pair<const PointInProgram*, const PointInProgram*>, int>::const_iterator i = results->fHits.begin();
+            i != results->fHits.end();
+            ++i) {
+            const PointInProgram* const caller = i->first.first;
+            const PointInProgram* const callee = i->first.second;
+
+            if (callee != NULL) {
+                std::map<std::wstring, int>& tmp = tally.find(caller->fSymbolName)->second.second;
+                tmp[callee->fSymbolName] += i->second;
+            } else {
+                tally.find(caller->fSymbolName)->second.third += i->second;
+            }
+        }
+
+        // Give each symbol a unique id number and output nodes.
+        int counter = 0;
+        for (std::map<std::wstring, triple<int, std::map<std::wstring, int>, int > >::iterator i = tally.begin();
+            i != tally.end();
+            ++i) {
+            i->second.first = (counter++);
+
+            dotStream << L"    node_" << (i->second.first) << L" [label=\"" << (i->first) << L"\\n" << i->second.third << "\"];\n";
+        }
+
+        dotStream << L"\n";
+
+        // Output edges.
+        for (std::map<std::wstring, triple<int, std::map<std::wstring, int>, int  > >::const_iterator i = tally.begin();
+            i != tally.end();
+            ++i) {
+            for (std::map<std::wstring, int>::const_iterator j = i->second.second.begin();
+                j != i->second.second.end();
+                ++j) {
+                const int callerId = tally.find(i->first)->second.first;
+                const int calleeId = tally.find(j->first)->second.first;
+                const int callCount = tally.find(i->first)->second.second.find(j->first)->second;
+                dotStream << L"    node_" << callerId << L" -> node_" << calleeId << L" [label=\"" << callCount << L"\", weight=" << callCount << L"];\n";
+            }
+        }
+
+        dotStream << L"}\n";
+
+
+
+        dotStream.close();
+    }
+
+    void WriteReport(
+        const CommandLineArguments* const arguments,
+        const Results* const results)
+    {
+        WriteXmlReport(arguments, results);
+        WriteDotReport(arguments, results);
     }
 }
