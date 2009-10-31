@@ -199,6 +199,7 @@ namespace Proffy {
                                 switch (fpoBuffer.size()) {
                                     case sizeof(FPO_DATA):
                                         {
+                                            // 32-bit x86
                                             const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
                                             functionAddress = fpoData->ulOffStart;
                                             break;
@@ -206,6 +207,7 @@ namespace Proffy {
 
                                     case sizeof(IMAGE_FUNCTION_ENTRY):
                                         {
+                                            // 64-bit x64
                                             const IMAGE_FUNCTION_ENTRY* const imageFunctionEntry = reinterpret_cast<IMAGE_FUNCTION_ENTRY*>(&(fpoBuffer.front()));
                                             functionAddress = imageFunctionEntry->StartingAddress;
                                             break;
@@ -263,10 +265,11 @@ namespace Proffy {
 
             return EXIT_SUCCESS;
         } catch (const xercesc::XMLException& ex) {
-            std::wcerr << ex.getType() << ": " << ex.getMessage() << "\n";
+            std::wcerr << ex.getType() << L": " << ex.getMessage() << L"\n";
         } catch (const std::exception& ex) {
-            std::cerr << typeid(ex).name() << ": " << ex.what() << "\n";
+            std::wcerr << typeid(ex).name() << L": " << ex.what() << L"\n";
         }
+        system("pause");
         return EXIT_FAILURE;
     }
 }

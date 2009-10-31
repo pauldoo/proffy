@@ -1,7 +1,5 @@
 In rough order of priority, from highest to lowest:
 
-* Fix or forbid profiling of 32-bit targets from 64-bit profiler.
-
 * Brand with a version number & Produce a packaging script.
 
 * Detect when symbols change (target loads or unloads a DLL).

@@ -4,8 +4,8 @@ Find the outer source file which you want to profile and:
 
   Add #include <C:/path/to/Proffy/Proffy/Launcher.h>
 
-  Decorate the function to be profiled like this (note the {} braces for
-  scoping of Proffy::Launcher variable):
+  Decorate the function to be profiled like this (note the {} braces for scoping
+  of Proffy::Launcher variable):
 
     {
         Proffy::Launcher profiler(
@@ -22,14 +22,15 @@ Find the outer source file which you want to profile and:
 
 
 After running the application you can open the
-"C:/path/to/Proffy/Proffy/my_profile_results.xml" file in Firefox or IE. It
-is important that this file be placed alongside the "Xhtml.xsl" file that
-came with Proffy.
+"C:/path/to/Proffy/Proffy/my_profile_results.xml" file in Firefox or IE. It is
+important that this file be placed alongside the "Xhtml.xsl" file that came with
+Proffy.
 
 Also take care to ensure that frame pointers are present in the application
 being profiled. If these are omitted (due to optimization settings) then the
 results from the profiler will be extremely poor.
 
-Note that the 64-bit version of Proffy (Proffy64.exe) is capable of
-profiling both 32-bit and 64-bit targets.
+Note that the 64-bit version of Proffy (Proffy64.exe) is capable of profiling
+both 32-bit and 64-bit targets. The 32-bit version of Proffy (Proffy32.exe) is
+only capable of profiling 32-bit targets.
 
