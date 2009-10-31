@@ -2,10 +2,6 @@ In rough order of priority, from highest to lowest:
 
 * Brand with a version number & Produce a packaging script.
 
-* Detect when symbols change (target loads or unloads a DLL).
-
-  - Then cache symbol lookups by offset.  Cache gets invalidated when symbols change.
-
 * Remove dead code added during initial exploration of DbgEng.
 
 * Port to C++/CLI.

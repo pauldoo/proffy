@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,10 +16,14 @@
 */
 #pragma once
 
+#include "LookupSymbols.h"
+
 namespace Proffy {
     class DebugEventCallbacks : public IDebugEventCallbacks
     {
     public:
+        DebugEventCallbacks(SymbolCache* const);
+        
         virtual ~DebugEventCallbacks();
 
         virtual HRESULT __stdcall QueryInterface(
@@ -95,5 +99,8 @@ namespace Proffy {
 
         virtual HRESULT __stdcall ExitThread(
             ULONG exitCode);
+        
+    private:
+        SymbolCache* const fSymbolCache;
     };
 }

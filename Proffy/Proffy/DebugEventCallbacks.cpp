@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,11 @@
 #include "Utilities.h"
 
 namespace Proffy {
+    DebugEventCallbacks::DebugEventCallbacks(SymbolCache* const cache) :
+        fSymbolCache(cache)
+    {
+    }
+    
     DebugEventCallbacks::~DebugEventCallbacks()
     {
     }
@@ -69,7 +74,7 @@ namespace Proffy {
             //DEBUG_EVENT_SESSION_STATUS |
             //DEBUG_EVENT_CHANGE_DEBUGGEE_STATE |
             //DEBUG_EVENT_CHANGE_ENGINE_STATE |
-            //DEBUG_EVENT_CHANGE_SYMBOL_STATE |
+            DEBUG_EVENT_CHANGE_SYMBOL_STATE |
             0;
         return S_OK;
     }
@@ -187,11 +192,31 @@ namespace Proffy {
     }
 
     HRESULT __stdcall DebugEventCallbacks::ChangeSymbolState(
-        ULONG /*flags*/,
+        ULONG flags,
         ULONG64 /*argument*/)
     {
+        /*
         ConsoleColor c(Color_Cyan);
         std::cout << __FUNCTION__ << "\n";
+        */
+        switch (flags) {
+            case DEBUG_CSS_SCOPE:
+                // Ignore
+                break;
+            case DEBUG_CSS_LOADS:
+            case DEBUG_CSS_UNLOADS:
+            case DEBUG_CSS_PATHS:
+            case DEBUG_CSS_SYMBOL_OPTIONS:
+            case DEBUG_CSS_TYPE_OPTIONS:
+                {
+                    ConsoleColor c(Color_Cyan);
+                    std::cout << __FUNCTION__ ": Clearing symbol cache.\n";
+                    fSymbolCache->clear();
+                    break;
+                }
+            default:
+                ASSERT(false);
+        }
         return S_OK;
     }
 

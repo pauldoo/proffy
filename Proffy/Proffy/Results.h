@@ -19,10 +19,18 @@
 namespace Proffy {
     struct PointInProgram
     {
-        PointInProgram() :
-            fSymbolDisplacement(0),
-            fLineNumber(0),
-            fLineDisplacement(0)
+        PointInProgram(
+            const std::wstring& symbolName,
+            const int symbolDisplacement,
+            const std::wstring& fileName,
+            const int lineNumber,
+            const int lineDisplacement
+        ) :
+            fSymbolName(symbolName),
+            fSymbolDisplacement(symbolDisplacement),
+            fFileName(fileName),
+            fLineNumber(lineNumber),
+            fLineDisplacement(lineDisplacement)
         {
         }
 

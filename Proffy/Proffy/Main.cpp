@@ -24,6 +24,7 @@
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
 #include "Launcher.h"
+#include "LookupSymbols.h"
 #include "Results.h"
 #include "Utilities.h"
 #include "WriteReport.h"
@@ -47,6 +48,7 @@ namespace Proffy {
             const ComInitialize com;
 
             HRESULT result = S_OK;
+            SymbolCache symbolCache;
 
             // Get the IDebugClient to start.
             IDebugClient* debugClient = NULL;
@@ -61,7 +63,7 @@ namespace Proffy {
             ASSERT(result == S_OK);
 
             // Set our event callbacks.
-            DebugEventCallbacks debugEventCallbacks;
+            DebugEventCallbacks debugEventCallbacks(&symbolCache);
             result = debugClient->SetEventCallbacks(&debugEventCallbacks);
             ASSERT(result == S_OK);
 
@@ -111,7 +113,7 @@ namespace Proffy {
             std::auto_ptr<Launcher> profiler;
             if (arguments.fProfileTheProfiler) {
                 profiler.reset(new Launcher(
-                    L"../Release",
+                    L"../bin64/Proffy64.exe",
                     arguments.fXmlOutputFilename,
                     arguments.fDotOutputFilename,
                     arguments.fDelayBetweenSamplesInSeconds,
@@ -168,83 +170,13 @@ namespace Proffy {
 
                     std::vector<PointInProgram> resolvedFrames;
                     for (int i = 0; i < static_cast<int>(frames.size()); i++) {
-                        std::vector<wchar_t> symbolNameAsVector(MAX_PATH * 2);
-                        ULONG symbolNameSize;
-                        ULONG64 symbolDisplacement;
-                        result = debugSymbols->GetNameByOffsetWide(
+                        const Maybe<const PointInProgram> pip = LookupSymbols(
                             frames.at(i).InstructionOffset,
-                            &(symbolNameAsVector.front()),
-                            static_cast<int>(symbolNameAsVector.size()),
-                            &symbolNameSize,
-                            &symbolDisplacement);
-
-                        if (result == S_OK) {
-                            // Last valid character returned is actually NULL, which we're not interested in keeping.
-                            ASSERT(symbolNameAsVector.at(symbolNameSize - 1) == NULL);
-                            symbolNameAsVector.resize(symbolNameSize - 1);
-
-                            std::vector<__int8> fpoBuffer(1000);
-                            ULONG fpoBufferUsed;
-                            result = debugSymbols->GetFunctionEntryByOffset(
-                                frames.at(i).InstructionOffset,
-                                0,
-                                &(fpoBuffer.front()),
-                                static_cast<int>(fpoBuffer.size()),
-                                &fpoBufferUsed);
-
-                            if (result == S_OK) {
-                                fpoBuffer.resize(fpoBufferUsed);
-
-                                size_t functionAddress = 0;
-                                switch (fpoBuffer.size()) {
-                                    case sizeof(FPO_DATA):
-                                        {
-                                            // 32-bit x86
-                                            const FPO_DATA* const fpoData = reinterpret_cast<FPO_DATA*>(&(fpoBuffer.front()));
-                                            functionAddress = fpoData->ulOffStart;
-                                            break;
-                                        }
-
-                                    case sizeof(IMAGE_FUNCTION_ENTRY):
-                                        {
-                                            // 64-bit x64
-                                            const IMAGE_FUNCTION_ENTRY* const imageFunctionEntry = reinterpret_cast<IMAGE_FUNCTION_ENTRY*>(&(fpoBuffer.front()));
-                                            functionAddress = imageFunctionEntry->StartingAddress;
-                                            break;
-                                        }
-
-                                    default:
-                                        ASSERT(false);
-                                }
-
-                                ULONG line;
-                                std::vector<wchar_t> fileNameAsVector(MAX_PATH * 2);
-                                ULONG fileNameSize;
-                                ULONG64 lineDisplacement;
-                                result = debugSymbols->GetLineByOffsetWide(
-                                    frames.at(i).InstructionOffset,
-                                    &line,
-                                    &(fileNameAsVector.front()),
-                                    static_cast<int>(fileNameAsVector.size()),
-                                    &fileNameSize,
-                                    &lineDisplacement);
-
-                                if (result == S_OK) {
-                                    // Last valid character returned is actually NULL, which we're not interested in keeping.
-                                    ASSERT(fileNameAsVector.at(fileNameSize - 1) == NULL);
-                                    fileNameAsVector.resize(fileNameSize - 1);
-
-                                    PointInProgram pip;
-                                    pip.fSymbolName = std::wstring(symbolNameAsVector.begin(), symbolNameAsVector.end()) +
-                                        L"@" + Utilities::ToWString(functionAddress);
-                                    pip.fSymbolDisplacement = static_cast<int>(symbolDisplacement);
-                                    pip.fFileName = std::wstring(fileNameAsVector.begin(), fileNameAsVector.end());
-                                    pip.fLineNumber = line;
-                                    pip.fLineDisplacement = static_cast<int>(lineDisplacement);
-
-                                    resolvedFrames.push_back(pip);
-                                }
-                            }
+                            debugSymbols,
+                            &symbolCache);
+                        
+                        if (pip.Ok()) {
+                            resolvedFrames.push_back(pip.Get());
                         }
                     }
                     results.AccumulateCallstack(resolvedFrames);
