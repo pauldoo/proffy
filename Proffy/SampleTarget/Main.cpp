@@ -55,7 +55,9 @@ int main(void)
     }
 
     {
-        Proffy::Launcher profiler(L"../bin64/Proffy64.exe", L"../Proffy/test.xml", L"../Proffy/test.dot", 1.0 / 20);
+        std::wostringstream pathToProffy;
+        pathToProffy << L"../bin" << (sizeof(void*)*8) << L"/Proffy" << (sizeof(void*)*8) << L".exe";
+        Proffy::Launcher profiler(pathToProffy.str(), L"../Proffy/test.xml", L"../Proffy/test.dot", 1.0 / 20);
         const clock_t begin = clock();
         while ((clock() - begin) / CLOCKS_PER_SEC < 3) {
             SomeFunction(&values, 3);

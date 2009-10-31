@@ -170,6 +170,13 @@ namespace Proffy {
             Type1 first;
             Type2 second;
             Type3 third;
+
+            triple() :
+                first(Type1()),
+                second(Type2()),
+                third(Type3())
+            {
+            }
         };
     }
 
