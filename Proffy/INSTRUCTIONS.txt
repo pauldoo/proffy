@@ -1,4 +1,4 @@
-Batch build the whole solution.
+Execute build.bat to build both the 32-bit and 64-bit versions of Proffy.
 
 Find the outer source file which you want to profile and:
 
@@ -10,7 +10,8 @@ Find the outer source file which you want to profile and:
     {
         Proffy::Launcher profiler(
             L"C:/path/to/Proffy/bin64/Proffy64.exe", // Path to Proffy.exe
-            L"C:/path/to/Proffy/Proffy/my_profile_results.xml", // Output filename for this profile run
+            L"C:/path/to/Proffy/Proffy/my_profile_results.xml", // Output filename for this profile run (XML output)
+            L"C:/path/to/Proffy/Proffy/my_profile_results.dot", // Output filename for this profile run (Graphviz Dot output)
             1.0 / 20); // Delay between samples, so here set to 20 Hz
 
         SomeFunctionWhichWillGetProfiled();
