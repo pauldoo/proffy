@@ -18,6 +18,3 @@ IF %ERRORLEVEL% NEQ 0 exit 1
 mt.exe -manifest bin64\SampleTarget64.exe.manifest -outputresource:bin64\SampleTarget64.exe;1
 IF %ERRORLEVEL% NEQ 0 exit 1
 
-copy /y Proffy\External\bin64\*.dll bin64\
-IF %ERRORLEVEL% NEQ 0 exit 1
-

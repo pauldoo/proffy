@@ -18,6 +18,3 @@ IF %ERRORLEVEL% NEQ 0 exit 1
 mt.exe -manifest bin32\SampleTarget32.exe.manifest -outputresource:bin32\SampleTarget32.exe;1
 IF %ERRORLEVEL% NEQ 0 exit 1
 
-copy /y Proffy\External\bin32\*.dll bin32\
-IF %ERRORLEVEL% NEQ 0 exit 1
-

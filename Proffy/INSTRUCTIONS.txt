@@ -1,5 +1,3 @@
-Execute build.bat to build both the 32-bit and 64-bit versions of Proffy.
-
 Find the outer source file which you want to profile and:
 
   Add #include <C:/path/to/Proffy/Proffy/Launcher.h>
@@ -10,8 +8,8 @@ Find the outer source file which you want to profile and:
     {
         Proffy::Launcher profiler(
             L"C:/path/to/Proffy/bin64/Proffy64.exe", // Path to Proffy.exe
-            L"C:/path/to/Proffy/Proffy/my_profile_results.xml", // Output filename for this profile run (XML output)
-            L"C:/path/to/Proffy/Proffy/my_profile_results.dot", // Output filename for this profile run (Graphviz Dot output)
+            L"C:/path/to/Proffy/my_profile_results.xml", // Output filename for this profile run (XML output)
+            L"C:/path/to/Proffy/my_profile_results.dot", // Output filename for this profile run (Graphviz Dot output)
             1.0 / 20); // Delay between samples, so here set to 20 Hz
 
         SomeFunctionWhichWillGetProfiled();
@@ -23,7 +21,7 @@ Find the outer source file which you want to profile and:
 
 
 After running the application you can open the
-"C:/path/to/Proffy/Proffy/my_profile_results.xml" file in Firefox or IE. It is
+"C:/path/to/Proffy/my_profile_results.xml" file in Firefox or IE. It is
 important that this file be placed alongside the "Xhtml.xsl" file that came with
 Proffy.
 
