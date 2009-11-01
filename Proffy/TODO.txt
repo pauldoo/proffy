@@ -1,7 +1,5 @@
 In rough order of priority, from highest to lowest:
 
-* Brand with a version number
-
 * Remove dead code added during initial exploration of DbgEng.
 
 * Port to C++/CLI.

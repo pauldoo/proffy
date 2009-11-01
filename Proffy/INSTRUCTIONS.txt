@@ -33,3 +33,5 @@ Note that the 64-bit version of Proffy (Proffy64.exe) is capable of profiling
 both 32-bit and 64-bit targets. The 32-bit version of Proffy (Proffy32.exe) is
 only capable of profiling 32-bit targets.
 
+See also: http://pauldoo.com/proffy/
+

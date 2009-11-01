@@ -1,5 +1,8 @@
 set WINDOWS_SDK_PATH=C:\Program Files\Microsoft SDKs\Windows\v6.1
 
+SubWCRev . Proffy\Version.h.template Proffy\Version.h
+IF %ERRORLEVEL% NEQ 0 exit 1
+
 cmd.exe /E:ON /V:ON /C build32.bat
 IF %ERRORLEVEL% NEQ 0 exit 1
 cmd.exe /E:ON /V:ON /C build64.bat
@@ -9,6 +12,7 @@ mkdir dist
 mkdir dist\bin32
 mkdir dist\bin64
 
+del *.txt~
 copy /y *.txt dist\
 IF %ERRORLEVEL% NEQ 0 exit 1
 copy /y Proffy\External\bin32\*.dll dist\bin32\

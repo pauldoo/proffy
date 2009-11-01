@@ -27,10 +27,41 @@
 #include "LookupSymbols.h"
 #include "Results.h"
 #include "Utilities.h"
+#include "Version.h"
 #include "WriteReport.h"
 
 namespace Proffy {
-    const std::string lines = std::string(50, '-') + "\n";
+    const std::wstring lines = std::wstring(50, '-') + L"\n";
+
+    const std::wstring AboutText()
+    {
+        std::wostringstream result;
+        result
+            << L"Proffy (" << Version() << L").\n"
+            << L"\n"
+            << L"\n"
+            << L"Copyright (C) 2008, 2009  Paul Richards.\n"
+            << L"\n"
+            << L"This program is free software: you can redistribute it and/or modify\n"
+            << L"it under the terms of the GNU General Public License as published by\n"
+            << L"the Free Software Foundation, either version 3 of the License, or\n"
+            << L"(at your option) any later version.\n"
+            << L"\n"
+            << L"This program is distributed in the hope that it will be useful,\n"
+            << L"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+            << L"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+            << L"GNU General Public License for more details.\n"
+            << L"\n"
+            << L"You should have received a copy of the GNU General Public License\n"
+            << L"along with this program.  If not, see <http://www.gnu.org/licenses/>.\n"
+            << L"\n"
+            << L"\n"
+            << L"Created by Paul Richards <paul.richards@gmail.com>.\n"
+            << L"\n"
+            << L"http://pauldoo.com/proffy/\n";
+            
+        return result.str();
+    }
 
     void FlushCallbacks(IDebugClient* const debugClient)
     {
@@ -42,6 +73,10 @@ namespace Proffy {
         const wchar_t* const * const argv)
     {
         try {
+            std::wcout
+                << AboutText() << L"\n"
+                << lines;
+            
             const CommandLineArguments arguments = CommandLineArguments::Parse(argc, argv);
 
             // Initialize COM, no idea if this is necessary.
@@ -89,13 +124,13 @@ namespace Proffy {
             ASSERT(result == S_OK);
 
             // Done getting and setting, so now attach.
-            std::cout << lines << Utilities::TimeInSeconds() << ": Attaching..\n" << lines;
+            std::wcout << lines << Utilities::TimeInSeconds() << L": Attaching..\n" << lines;
             result = debugClient->AttachProcess(
                 0,
                 arguments.fProcessId,
                 0);
             ASSERT(result == S_OK);
-            std::cout << lines << Utilities::TimeInSeconds() << ": Done Attaching..\n" << lines;
+            std::wcout << lines << Utilities::TimeInSeconds() << L": Done Attaching..\n" << lines;
 
             // Verify we have attached to what we think we have.
             ULONG debugeeTypeClass;
