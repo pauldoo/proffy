@@ -21,7 +21,7 @@ namespace Proffy {
     {
         std::wostringstream result;
         result
-            << L"build " << $WCRANGE$ << $WCMODS?L"M":L""$;
+            << L"build " << "$WCRANGE$" << $WCMODS?L"M":L""$;
         return result.str();
     }
 }
