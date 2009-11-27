@@ -51,9 +51,25 @@ public class OctTreeTest {
 
     @Test
     public void testCreateEmpty() {
-        System.out.println("createEmpty");
-        OctTree expResult = null;
         OctTree result = OctTree.createEmpty();
         assertNotNull(result);
+    }
+
+    @Test
+    public void testBasicHits() {
+        {
+            OctTree tree = OctTree.createEmpty();
+            assert(Double.isNaN(tree.firstHit(-10, 0, 0, 1, 0, 0)));
+        }
+
+        {
+            OctTree tree = OctTree.createEmpty().repSetRegion(0.0, 0.0, 0.0, 0.5, 0.5, 0.5, true);
+            assertEquals(10.0, tree.firstHit(-10, 0.25, 0.25, 1, 0, 0), 0.0);
+            assertEquals(9.5, tree.firstHit(10, 0.25, 0.25, -1, 0, 0), 0.0);
+            assertEquals(10.0, tree.firstHit(0.25, -10, 0.25, 0, 1, 0), 0.0);
+            assertEquals(9.5, tree.firstHit(0.25, 10, 0.25, 0, -1, 0), 0.0);
+            assertEquals(10.0, tree.firstHit(0.25, 0.25, -10, 0, 0, 1), 0.0);
+            assertEquals(9.5, tree.firstHit(0.25, 0.25, 10, 0, 0, -1), 0.0);
+        }
     }
 }

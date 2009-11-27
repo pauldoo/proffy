@@ -17,10 +17,15 @@
 
 package mandelbulb;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 /**
     Immutable binary segmentation in 3D.
 */
-public class OctTree
+public abstract class OctTree
 {
     public static OctTree createEmpty()
     {
@@ -28,6 +33,85 @@ public class OctTree
                 -1.0, -1.0, -1.0,
                 1.0, 1.0, 1.0,
                 false);
+    }
+
+    /**
+        For the parametric line (x, y, z) + t * (dx, dy, dz), compute
+        the lowest value for t in the range [0, inf) that represents
+        the line hitting the boundary of the set.
+
+        Returns NaN if there is no hit.
+    */
+    public abstract double firstHit(
+            final double x,
+            final double y,
+            final double z,
+            final double dx,
+            final double dy,
+            final double dz);
+
+    /**
+        Sets the volume from [(minX, minY, minZ), (maxX, maxY, maxZ)]
+        to be entirely filled or entirely unfilled.
+    */
+    public abstract OctTree repSetRegion(
+                final double minX,
+                final double minY,
+                final double minZ,
+                final double maxX,
+                final double maxY,
+                final double maxZ,
+                final boolean fill);
+
+    protected final double firstHitWithBoundingBox(
+            final double x,
+            final double y,
+            final double z,
+            final double dx,
+            final double dy,
+            final double dz)
+    {
+        double tMin = Double.NEGATIVE_INFINITY;
+        double tMax = Double.POSITIVE_INFINITY;
+
+        if (dx != 0.0) {
+            final double t1 = (minX - x) / dx;
+            final double t2 = (maxX - x) / dx;
+            tMin = Math.max(tMin, Math.min(t1, t2));
+            tMax = Math.min(tMax, Math.max(t1, t2));
+        } else {
+            if ((minX <= x && x < maxX) == false) {
+                return Double.NaN;
+            }
+        }
+
+        if (dy != 0.0) {
+            final double t1 = (minY - y) / dy;
+            final double t2 = (maxY - y) / dy;
+            tMin = Math.max(tMin, Math.min(t1, t2));
+            tMax = Math.min(tMax, Math.max(t1, t2));
+        } else {
+            if ((minY <= y && y < maxY) == false) {
+                return Double.NaN;
+            }
+        }
+
+        if (dz != 0.0) {
+            final double t1 = (minZ - z) / dz;
+            final double t2 = (maxZ - z) / dz;
+            tMin = Math.max(tMin, Math.min(t1, t2));
+            tMax = Math.min(tMax, Math.max(t1, t2));
+        } else {
+            if ((minZ <= z && z < maxZ) == false) {
+                return Double.NaN;
+            }
+        }
+
+        if (tMin <= tMax && tMax >= 0.0) {
+            return Math.max(0.0, tMin);
+        } else {
+            return Double.NaN;
+        }
     }
 
     private OctTree(
@@ -65,6 +149,71 @@ public class OctTree
         }
 
         private final boolean filled;
+
+        @Override
+        public final double firstHit(double x, double y, double z, double dx, double dy, double dz) {
+            if (filled) {
+                return firstHitWithBoundingBox(x, y, z, dx, dy, dz);
+            } else {
+                return Double.NaN;
+            }
+        }
+
+        @Override
+        public final OctTree repSetRegion(
+                double minX,
+                double minY,
+                double minZ,
+                double maxX,
+                double maxY,
+                double maxZ,
+                boolean fill) {
+            if (this.filled == fill) {
+                // Leaf already agrees, so skip.
+                return this;
+            } else if (
+                this.maxX <= minX ||
+                this.maxY <= minY ||
+                this.maxZ <= minZ ||
+                maxX <= this.minX ||
+                maxY <= this.minY ||
+                maxZ <= this.minZ) {
+                // Node does not overlap, so skip.
+                return this;
+            } else if (
+                minX <= this.minX &&
+                minY <= this.minY &&
+                minZ <= this.minZ &&
+                this.maxX <= maxX &&
+                this.maxY <= maxY &&
+                this.maxZ <= maxZ) {
+                // Node is entirely filled, so change.
+                return new LeafNode(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, fill);
+            } else {
+                // Partial overlap, so split.
+                final double newMinX = this.minX;
+                final double newMidX = (this.minX + this.maxX) / 2.0;
+                final double newMaxX = this.maxX;
+
+                final double newMinY = this.minY;
+                final double newMidY = (this.minY + this.maxY) / 2.0;
+                final double newMaxY = this.maxY;
+
+                final double newMinZ = this.minZ;
+                final double newMidZ = (this.minZ + this.maxZ) / 2.0;
+                final double newMaxZ = this.maxZ;
+
+                return new InnerNode(
+                        (new LeafNode(newMinX, newMinY, newMinZ, newMidX, newMidY, newMidZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMidX, newMinY, newMinZ, newMaxX, newMidY, newMidZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMinX, newMidY, newMinZ, newMidX, newMaxY, newMidZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMidX, newMidY, newMinZ, newMaxX, newMaxY, newMidZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMinX, newMinY, newMidZ, newMidX, newMidY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMidX, newMinY, newMidZ, newMaxX, newMidY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMinX, newMidY, newMidZ, newMidX, newMaxY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        (new LeafNode(newMidX, newMidY, newMidZ, newMaxX, newMaxY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill));
+            }
+        }
     }
     
     private static final class InnerNode extends OctTree
@@ -148,6 +297,98 @@ public class OctTree
         private final OctTree nodeF;
         private final OctTree nodeG;
         private final OctTree nodeH;
+
+        private static final void considerNode(
+                final double x,
+                final double y,
+                final double z,
+                final double dx,
+                final double dy,
+                final double dz,
+                final OctTree node,
+                final SortedMap<Double, Collection<OctTree> > childrenInIntersectOrder)
+        {
+            final double t = node.firstHitWithBoundingBox(x, y, z, dx, dy, dz);
+            if (Double.isNaN(t) == false) {
+                if (childrenInIntersectOrder.containsKey(t) == false) {
+                    childrenInIntersectOrder.put(t, new ArrayList<OctTree>());
+                }
+                childrenInIntersectOrder.get(t).add(node);
+            }
+        }
+
+        @Override
+        public final double firstHit(double x, double y, double z, double dx, double dy, double dz) {
+            double result = Double.NaN;
+
+            if (Double.isNaN(firstHitWithBoundingBox(x, y, z, dx, dy, dz)) == false) {
+                final SortedMap<Double, Collection<OctTree> > childrenInIntersectOrder = new TreeMap<Double, Collection<OctTree> >();
+
+                // Perform cheap (bounding-box) only tests on our children
+                considerNode(x, y, z, dx, dy, dz, nodeA, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeB, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeC, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeD, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeE, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeF, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeG, childrenInIntersectOrder);
+                considerNode(x, y, z, dx, dy, dz, nodeH, childrenInIntersectOrder);
+
+                search:
+                for (Collection<OctTree> list: childrenInIntersectOrder.values()) {
+                    for (OctTree node: list) {
+                        double t = node.firstHit(x, y, z, dx, dy, dz);
+                        if (Double.isNaN(t) == false) {
+                            result = t;
+                            break search;
+                        }
+                    }
+                }
+            }
+
+            assert(Double.isNaN(result) || result >= 0.0);
+            return result;
+        }
+
+        @Override
+        public final OctTree repSetRegion(
+                double minX,
+                double minY,
+                double minZ,
+                double maxX,
+                double maxY,
+                double maxZ,
+                boolean fill) {
+            if (
+                this.maxX <= minX ||
+                this.maxY <= minY ||
+                this.maxZ <= minZ ||
+                maxX <= this.minX ||
+                maxY <= this.minY ||
+                maxZ <= this.minZ) {
+                // Node does not overlap, so skip.
+                return this;
+            } else if (
+                minX <= this.minX &&
+                minY <= this.minY &&
+                minZ <= this.minZ &&
+                this.maxX <= maxX &&
+                this.maxY <= maxY &&
+                this.maxZ <= maxZ) {
+                // Node is entirely filled, so change.
+                return new LeafNode(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, fill);
+            } else {
+                return new InnerNode(
+                        nodeA.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeB.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeC.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeD.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeE.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeF.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeG.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
+                        nodeH.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill));
+            }
+        }
     }
 
     /**
