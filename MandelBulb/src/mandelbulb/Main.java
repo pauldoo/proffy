@@ -17,6 +17,7 @@
 
 package mandelbulb;
 
+import java.awt.Color;
 import javax.swing.JFrame;
 
 public final class Main
@@ -33,6 +34,51 @@ public final class Main
             this.renderComponent = renderComponent;
         }
 
+        private static class Triplex
+        {
+            public final double x;
+            public final double y;
+            public final double z;
+
+            public Triplex(double x, double y, double z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+
+            static Triplex add(Triplex a, Triplex b)
+            {
+                return new Triplex(
+                        a.x + b.x,
+                        a.y + b.y,
+                        a.z + b.z);
+            }
+
+            static Triplex power(Triplex a, double n)
+            {
+                final double r = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+                final double theta = Math.atan2( Math.sqrt(a.x*a.x + a.y*a.y), a.z );
+                final double phi = Math.atan2(a.y, a.x);
+                return new Triplex(
+                        Math.pow(r, n) * Math.sin(theta * n) * Math.cos(phi * n),
+                        Math.pow(r, n) * Math.sin(theta * n) * Math.sin(phi * n),
+                        Math.pow(r, n) * Math.cos(theta * n));
+            }
+        }
+
+        private static boolean evaluate(final Triplex c)
+        {
+            final int maxIter = 6;
+            final double n = 8;
+
+            Triplex z = new Triplex(0.0, 0.0, 0.0);
+            int i;
+            for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
+                z = Triplex.add(Triplex.power(z, n), c);
+            }
+            return i == maxIter;
+        }
+
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
@@ -45,8 +91,7 @@ public final class Main
                                 double y = (iy + 0.5) / resolution;
                                 double z = (iz + 0.5) / resolution;
 
-                                double t = 0.8 - Math.sqrt(x*x + y*y);
-                                boolean inside = (t*t + z*z) <= 0.03;
+                                boolean inside = evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5));
                                 double scale = 0.5 / resolution;
                                 tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
                             }
@@ -58,6 +103,7 @@ public final class Main
                     renderComponent.setSegmentation(tree);
                     Thread.sleep(2000);
                 }
+                renderComponent.setBackground(Color.GREEN);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -71,8 +117,8 @@ public final class Main
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(renderComponent);
-        frame.setSize(200, 200);
-        frame.setResizable(false);
+        frame.setSize(250, 250);
+        frame.setResizable(true);
         frame.setVisible(true);
 
         new Thread(new Evaluator(renderComponent)).start();

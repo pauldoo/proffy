@@ -17,6 +17,7 @@
 
 package mandelbulb;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JComponent;
@@ -35,7 +36,7 @@ public final class RenderComponent extends JComponent {
 
     private final void paintComponent(Graphics2D g)
     {
-        OctTreeRenderer.render(segmentation, g, getWidth() / 2.0);
+        OctTreeRenderer.render(segmentation, g, getWidth() / 2.0, backgroundColor);
         repaint();
     }
 
@@ -45,5 +46,12 @@ public final class RenderComponent extends JComponent {
         repaint();
     }
 
+    public void setBackgroundColor(Color color)
+    {
+        this.backgroundColor = color;
+        repaint();
+    }
+
     private OctTree segmentation = OctTree.createEmpty().repSetRegion(0.0, 0.0, 0.0, 0.5, 0.5, 0.5, true);
+    private Color backgroundColor = Color.RED;
 }

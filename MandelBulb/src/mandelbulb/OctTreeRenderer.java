@@ -30,11 +30,12 @@ public final class OctTreeRenderer
     public static void render(
             final OctTree segmentation,
             final Graphics g,
-            final double size)
+            final double size,
+            final Color backgroundColor)
     {
         final long startTime = System.currentTimeMillis();
 
-        final double theta = System.currentTimeMillis() * 0.0005;
+        final double theta = System.currentTimeMillis() * 0.0001;
 
         final Rectangle bounds = g.getClipBounds();
         double[][] distances = new double[bounds.height][];
@@ -43,7 +44,7 @@ public final class OctTreeRenderer
             for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix++) {
                 final double tx = 0.0;
                 final double ty = 0.0;
-                final double tz = -2.0;
+                final double tz = -1.5;
                 final double tdx = (ix - size) / size;
                 final double tdy = (iy - size) / size;
                 final double tdz = 1.0;
@@ -64,7 +65,7 @@ public final class OctTreeRenderer
             for (int ix = bounds.x + 1; ix < (bounds.x + bounds.width) - 1; ix++) {
                 final double z = distances[iy - bounds.y][ix - bounds.x];
                 if (Double.isNaN(z)) {
-                    g.setColor(Color.PINK);
+                    g.setColor(backgroundColor);
                 } else {
                     final double dzdx = (distances[iy - bounds.y][ix - bounds.x + 1] - distances[iy - bounds.y][ix - bounds.x - 1]) / 2.0 * size / z;
                     final double dzdy = (distances[iy - bounds.y + 1][ix - bounds.x] - distances[iy - bounds.y - 1][ix - bounds.x]) / 2.0 * size / z;
