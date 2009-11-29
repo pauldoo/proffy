@@ -103,7 +103,7 @@ public final class Main
                     renderComponent.setSegmentation(tree);
                     Thread.sleep(2000);
                 }
-                renderComponent.setBackground(Color.GREEN);
+                renderComponent.setBackgroundColor(Color.GREEN);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
