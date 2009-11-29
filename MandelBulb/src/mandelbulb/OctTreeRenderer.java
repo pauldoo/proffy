@@ -34,11 +34,11 @@ public final class OctTreeRenderer
     {
         final long startTime = System.currentTimeMillis();
 
-        final double theta = System.currentTimeMillis() * 0.001;
+        final double theta = System.currentTimeMillis() * 0.0005;
 
         final Rectangle bounds = g.getClipBounds();
-        for (int iy = bounds.y; iy < (bounds.y + bounds.height); iy+=2) {
-            for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix+=2) {
+        for (int iy = bounds.y; iy < (bounds.y + bounds.height); iy++) {
+            for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix++) {
                 final double tx = 0.0;
                 final double ty = 0.0;
                 final double tz = -2.0;
@@ -59,7 +59,7 @@ public final class OctTreeRenderer
                 dz /= mag;
                 final double result = segmentation.firstHit(x, y, z, dx, dy, dz);
                 g.setColor(Double.isNaN(result) ? Color.BLACK : Color.WHITE);
-                g.fillRect(ix, iy, 2, 2);
+                g.fillRect(ix, iy, 1, 1);
             }
         }
 
