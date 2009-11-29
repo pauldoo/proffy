@@ -17,11 +17,6 @@
 
 package mandelbulb;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 /**
     Immutable binary segmentation in 3D.
 */
@@ -310,23 +305,11 @@ public abstract class OctTree
         private final OctTree nodeG;
         private final OctTree nodeH;
 
-        private static final void considerNode(
-                final double x,
-                final double y,
-                final double z,
-                final double dx,
-                final double dy,
-                final double dz,
-                final OctTree node,
-                final SortedMap<Double, Collection<OctTree> > childrenInIntersectOrder)
+        private static final void swap(OctTree[] array, int index1, int index2)
         {
-            final double t = node.firstHitWithBoundingBox(x, y, z, dx, dy, dz);
-            if (Double.isNaN(t) == false) {
-                if (childrenInIntersectOrder.containsKey(t) == false) {
-                    childrenInIntersectOrder.put(t, new ArrayList<OctTree>());
-                }
-                childrenInIntersectOrder.get(t).add(node);
-            }
+            final OctTree temp = array[index1];
+            array[index1] = array[index2];
+            array[index2] = temp;
         }
 
         @Override
@@ -334,26 +317,32 @@ public abstract class OctTree
             double result = Double.NaN;
 
             if (Double.isNaN(firstHitWithBoundingBox(x, y, z, dx, dy, dz)) == false) {
-                final SortedMap<Double, Collection<OctTree> > childrenInIntersectOrder = new TreeMap<Double, Collection<OctTree> >();
+                OctTree[] childrenInIntersectOrder = new OctTree[]{nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH};
 
-                // Perform cheap (bounding-box) only tests on our children
-                considerNode(x, y, z, dx, dy, dz, nodeA, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeB, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeC, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeD, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeE, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeF, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeG, childrenInIntersectOrder);
-                considerNode(x, y, z, dx, dy, dz, nodeH, childrenInIntersectOrder);
+                if (dx < 0.0) {
+                    swap(childrenInIntersectOrder, 0, 1);
+                    swap(childrenInIntersectOrder, 2, 3);
+                    swap(childrenInIntersectOrder, 4, 5);
+                    swap(childrenInIntersectOrder, 6, 7);
+                }
+                if (dy < 0.0) {
+                    swap(childrenInIntersectOrder, 0, 2);
+                    swap(childrenInIntersectOrder, 1, 3);
+                    swap(childrenInIntersectOrder, 4, 6);
+                    swap(childrenInIntersectOrder, 5, 7);
+                }
+                if (dz < 0.0) {
+                    swap(childrenInIntersectOrder, 0, 4);
+                    swap(childrenInIntersectOrder, 1, 5);
+                    swap(childrenInIntersectOrder, 2, 6);
+                    swap(childrenInIntersectOrder, 3, 7);
+                }
 
-                search:
-                for (Collection<OctTree> list: childrenInIntersectOrder.values()) {
-                    for (OctTree node: list) {
-                        double t = node.firstHit(x, y, z, dx, dy, dz);
-                        if (Double.isNaN(t) == false) {
-                            result = t;
-                            break search;
-                        }
+                for (OctTree node: childrenInIntersectOrder) {
+                    double t = node.firstHit(x, y, z, dx, dy, dz);
+                    if (Double.isNaN(t) == false) {
+                        result = t;
+                        break;
                     }
                 }
             }
