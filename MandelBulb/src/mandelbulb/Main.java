@@ -36,7 +36,7 @@ public final class Main
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
-                for (int level = 1; level <= 8; level++) {
+                for (int level = 1; level <= 5; level++) {
                     final int resolution = 2 << level;
                     for (int iz = -resolution; iz < resolution; iz++) {
                         for (int iy = -resolution; iy < resolution; iy++) {
@@ -45,13 +45,16 @@ public final class Main
                                 double y = (iy + 0.5) / resolution;
                                 double z = (iz + 0.5) / resolution;
 
-                                boolean inside = (x*x + y*y + z*z) <= 1.0;
+                                double t = 0.8 - Math.sqrt(x*x + y*y);
+                                boolean inside = (t*t + z*z) <= 0.03;
                                 double scale = 0.5 / resolution;
                                 tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
                             }
                         }
                     }
 
+                    final int nodeCount = tree.nodeCount();
+                    System.out.println("Level " + level + ", resolution " + resolution + ", nodeCount " + nodeCount + ", nodeCount/resolution^2 " + (nodeCount / (resolution * resolution)));
                     renderComponent.setSegmentation(tree);
                     Thread.sleep(2000);
                 }
@@ -68,7 +71,7 @@ public final class Main
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(renderComponent);
-        frame.setSize(600, 600);
+        frame.setSize(200, 200);
         frame.setResizable(false);
         frame.setVisible(true);
 

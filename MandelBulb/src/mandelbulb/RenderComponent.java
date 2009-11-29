@@ -36,6 +36,7 @@ public final class RenderComponent extends JComponent {
     private final void paintComponent(Graphics2D g)
     {
         OctTreeRenderer.render(segmentation, g, getWidth() / 2.0);
+        repaint();
     }
 
     public void setSegmentation(OctTree segmentation)

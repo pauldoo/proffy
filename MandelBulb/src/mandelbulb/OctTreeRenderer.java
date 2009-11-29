@@ -34,22 +34,32 @@ public final class OctTreeRenderer
     {
         final long startTime = System.currentTimeMillis();
 
+        final double theta = System.currentTimeMillis() * 0.001;
+
         final Rectangle bounds = g.getClipBounds();
-        for (int iy = bounds.y; iy < (bounds.y + bounds.height); iy++) {
-            for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix++) {
-                final double x = 0.0;
-                final double y = 0.0;
-                final double z = -3.0;
-                double dx = (ix - size) / size;
-                double dy = (iy - size) / size;
-                double dz = 1.0;
+        for (int iy = bounds.y; iy < (bounds.y + bounds.height); iy+=2) {
+            for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix+=2) {
+                final double tx = 0.0;
+                final double ty = 0.0;
+                final double tz = -2.0;
+                final double tdx = (ix - size) / size;
+                final double tdy = (iy - size) / size;
+                final double tdz = 1.0;
+
+                final double x = Math.cos(theta) * tx - Math.sin(theta) * tz;
+                final double y = ty;
+                final double z = Math.sin(theta) * tx + Math.cos(theta) * tz;
+                double dx = Math.cos(theta) * tdx - Math.sin(theta) * tdz;
+                double dy = tdy;
+                double dz = Math.sin(theta) * tdx + Math.cos(theta) * tdz;
+
                 final double mag = Math.sqrt(dx * dx + dy * dy + dz * dz);
                 dx /= mag;
                 dy /= mag;
                 dz /= mag;
                 final double result = segmentation.firstHit(x, y, z, dx, dy, dz);
                 g.setColor(Double.isNaN(result) ? Color.BLACK : Color.WHITE);
-                g.fillRect(ix, iy, 1, 1);
+                g.fillRect(ix, iy, 2, 2);
             }
         }
 

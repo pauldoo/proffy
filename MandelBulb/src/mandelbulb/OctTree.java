@@ -35,6 +35,11 @@ public abstract class OctTree
                 false);
     }
 
+    final static class HitInfo
+    {
+        public int fDepth;
+    }
+
     /**
         For the parametric line (x, y, z) + t * (dx, dy, dz), compute
         the lowest value for t in the range [0, inf) that represents
@@ -62,6 +67,8 @@ public abstract class OctTree
                 final double maxY,
                 final double maxZ,
                 final boolean fill);
+
+    public abstract int nodeCount();
 
     protected final double firstHitWithBoundingBox(
             final double x,
@@ -213,6 +220,11 @@ public abstract class OctTree
                         (new LeafNode(newMinX, newMidY, newMidZ, newMidX, newMaxY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
                         (new LeafNode(newMidX, newMidY, newMidZ, newMaxX, newMaxY, newMaxZ, this.filled)).repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill));
             }
+        }
+
+        @Override
+        public int nodeCount() {
+            return 1;
         }
     }
     
@@ -378,16 +390,41 @@ public abstract class OctTree
                 // Node is entirely filled, so change.
                 return new LeafNode(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, fill);
             } else {
-                return new InnerNode(
-                        nodeA.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeB.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeC.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeD.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeE.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeF.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeG.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill),
-                        nodeH.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill));
+                final OctTree newNodeA = nodeA.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeB = nodeB.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeC = nodeC.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeD = nodeD.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeE = nodeE.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeF = nodeF.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeG = nodeG.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                final OctTree newNodeH = nodeH.repSetRegion(minX, minY, minZ, maxX, maxY, maxZ, fill);
+                if ((newNodeA instanceof LeafNode) && ((LeafNode)newNodeA).filled == fill &&
+                    (newNodeB instanceof LeafNode) && ((LeafNode)newNodeB).filled == fill &&
+                    (newNodeC instanceof LeafNode) && ((LeafNode)newNodeC).filled == fill &&
+                    (newNodeD instanceof LeafNode) && ((LeafNode)newNodeD).filled == fill &&
+                    (newNodeE instanceof LeafNode) && ((LeafNode)newNodeE).filled == fill &&
+                    (newNodeF instanceof LeafNode) && ((LeafNode)newNodeF).filled == fill &&
+                    (newNodeG instanceof LeafNode) && ((LeafNode)newNodeG).filled == fill &&
+                    (newNodeH instanceof LeafNode) && ((LeafNode)newNodeH).filled == fill) {
+                    // All child nodes now totally agree.
+                    return new LeafNode(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, fill);
+                } else {
+                    return new InnerNode(newNodeA, newNodeB, newNodeC, newNodeD, newNodeE, newNodeF, newNodeG, newNodeH);
+                }
             }
+        }
+
+        @Override
+        public int nodeCount() {
+            return 1 +
+                nodeA.nodeCount() +
+                nodeB.nodeCount() +
+                nodeC.nodeCount() +
+                nodeD.nodeCount() +
+                nodeE.nodeCount() +
+                nodeF.nodeCount() +
+                nodeG.nodeCount() +
+                nodeH.nodeCount();
         }
     }
 
