@@ -37,7 +37,9 @@ public final class OctTreeRenderer
         final double theta = System.currentTimeMillis() * 0.0005;
 
         final Rectangle bounds = g.getClipBounds();
+        double[][] distances = new double[bounds.height][];
         for (int iy = bounds.y; iy < (bounds.y + bounds.height); iy++) {
+            distances[iy - bounds.y] = new double[bounds.width];
             for (int ix = bounds.x; ix < (bounds.x + bounds.width); ix++) {
                 final double tx = 0.0;
                 final double ty = 0.0;
@@ -49,16 +51,27 @@ public final class OctTreeRenderer
                 final double x = Math.cos(theta) * tx - Math.sin(theta) * tz;
                 final double y = ty;
                 final double z = Math.sin(theta) * tx + Math.cos(theta) * tz;
-                double dx = Math.cos(theta) * tdx - Math.sin(theta) * tdz;
-                double dy = tdy;
-                double dz = Math.sin(theta) * tdx + Math.cos(theta) * tdz;
+                final double dx = Math.cos(theta) * tdx - Math.sin(theta) * tdz;
+                final double dy = tdy;
+                final double dz = Math.sin(theta) * tdx + Math.cos(theta) * tdz;
 
-                final double mag = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                dx /= mag;
-                dy /= mag;
-                dz /= mag;
                 final double result = segmentation.firstHit(x, y, z, dx, dy, dz);
-                g.setColor(Double.isNaN(result) ? Color.BLACK : Color.WHITE);
+                distances[iy - bounds.y][ix - bounds.x] = result;
+            }
+        }
+
+        for (int iy = bounds.y + 1; iy < (bounds.y + bounds.height) - 1; iy++) {
+            for (int ix = bounds.x + 1; ix < (bounds.x + bounds.width) - 1; ix++) {
+                final double z = distances[iy - bounds.y][ix - bounds.x];
+                if (Double.isNaN(z)) {
+                    g.setColor(Color.PINK);
+                } else {
+                    final double dzdx = (distances[iy - bounds.y][ix - bounds.x + 1] - distances[iy - bounds.y][ix - bounds.x - 1]) / 2.0 * size / z;
+                    final double dzdy = (distances[iy - bounds.y + 1][ix - bounds.x] - distances[iy - bounds.y - 1][ix - bounds.x]) / 2.0 * size / z;
+                    final double shade = 1.0 / Math.sqrt(1.0 + dzdx*dzdx + dzdy*dzdy);
+                    final Color color = new Color((float)(shade*shade), (float)(shade*shade), (float)(shade));
+                    g.setColor(color);
+                }
                 g.fillRect(ix, iy, 1, 1);
             }
         }

@@ -36,7 +36,7 @@ public final class Main
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
-                for (int level = 1; level <= 5; level++) {
+                for (int level = 1; level <= 6; level++) {
                     final int resolution = 2 << level;
                     for (int iz = -resolution; iz < resolution; iz++) {
                         for (int iy = -resolution; iy < resolution; iy++) {
