@@ -79,6 +79,6 @@ public final class OctTreeRenderer
 
         final long endTime = System.currentTimeMillis();
 
-        System.out.println("Render took: " + (endTime - startTime) + "ms");
+        //System.out.println("Render took: " + (endTime - startTime) + "ms");
     }
 }

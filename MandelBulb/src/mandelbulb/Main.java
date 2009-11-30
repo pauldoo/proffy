@@ -68,7 +68,7 @@ public final class Main
 
         private static boolean evaluate(final Triplex c)
         {
-            final int maxIter = 6;
+            final int maxIter = 50;
             final double n = 8;
 
             Triplex z = new Triplex(0.0, 0.0, 0.0);
@@ -82,7 +82,9 @@ public final class Main
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
-                for (int level = 1; level <= 6; level++) {
+                for (int level = 1; level <= 7; level++) {
+                    final long startTime = System.currentTimeMillis();
+
                     final int resolution = 2 << level;
                     for (int iz = -resolution; iz < resolution; iz++) {
                         for (int iy = -resolution; iy < resolution; iy++) {
@@ -98,8 +100,10 @@ public final class Main
                         }
                     }
 
+                    final long endTime = System.currentTimeMillis();
+
                     final int nodeCount = tree.nodeCount();
-                    System.out.println("Level " + level + ", resolution " + resolution + ", nodeCount " + nodeCount + ", nodeCount/resolution^2 " + (nodeCount / (resolution * resolution)));
+                    System.out.println("Level " + level + ", resolution " + resolution + ", nodeCount " + nodeCount + ", nodeCount/resolution^2 " + (nodeCount / (resolution * resolution)) + ", time " + (endTime - startTime) + "ms");
                     renderComponent.setSegmentation(tree);
                     Thread.sleep(2000);
                 }
