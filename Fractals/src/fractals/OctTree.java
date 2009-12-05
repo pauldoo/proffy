@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package mandelbulb;
+package fractals;
 
 /**
     Immutable binary segmentation in 3D.

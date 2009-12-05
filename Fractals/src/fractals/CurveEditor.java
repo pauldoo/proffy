@@ -103,9 +103,9 @@ final class CurveEditor implements ComponentListener, MouseInputListener
     }
     
     private void updateControlPoint(Point p) {
-        int index = (int)Math.floor((double)p.getX() * controlPointValues.length / panel.getWidth());
+        int index = (int)Math.floor(p.getX() * controlPointValues.length / panel.getWidth());
         index = Utilities.clamp(0, index, controlPointValues.length-1);
-        controlPointValues[index] = 1.0 - ((double)p.getY() / panel.getHeight());
+        controlPointValues[index] = 1.0 - (p.getY() / panel.getHeight());
         repopulatePanel();
     }
 

@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package mandelbulb;
+package fractals;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -27,6 +27,8 @@ import javax.swing.JComponent;
  * @author pauldoo
  */
 public final class RenderComponent extends JComponent {
+
+    private static final long serialVersionUID = 4417921502019642371L;
 
     @Override
     public final void paintComponent(Graphics g)

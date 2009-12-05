@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package mandelbulb;
+package fractals;
 
 import java.awt.Color;
 import java.awt.Graphics;

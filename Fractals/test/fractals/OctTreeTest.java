@@ -15,47 +15,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package mandelbulb;
+package fractals;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
+
 
 /**
  *
  * @author pauldoo
  */
-public class OctTreeTest {
+public class OctTreeTest extends TestCase {
 
     public OctTreeTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @Override
     public void setUp() {
     }
 
-    @After
+    @Override
     public void tearDown() {
     }
 
-    @Test
     public void testCreateEmpty() {
         OctTree result = OctTree.createEmpty();
         assertNotNull(result);
     }
 
-    @Test
     public void testBasicHits() {
         {
             OctTree tree = OctTree.createEmpty();
