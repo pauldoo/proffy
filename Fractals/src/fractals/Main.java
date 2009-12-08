@@ -64,6 +64,16 @@ public final class Main
                         Math.pow(r, n) * Math.sin(theta * n) * Math.sin(phi * n),
                         Math.pow(r, n) * Math.cos(theta * n));
             }
+
+            static Triplex step(Triplex a)
+            {
+                final double w2 = a.x*a.x + a.y*a.y;
+                final double r2 = a.x*a.x + a.y*a.y + a.z*a.z;
+                return new Triplex(
+                        2.0 * a.z * Math.sqrt(w2) * (a.x*a.x - a.y*a.y) / r2,
+                        4.0 * a.x * a.y * a.z * Math.sqrt(w2) / r2,
+                        a.z*a.z - w2);
+            }
         }
 
         private static boolean evaluate(final Triplex c)
@@ -75,6 +85,7 @@ public final class Main
             int i;
             for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
                 z = Triplex.add(Triplex.power(z, n), c);
+                //z = Triplex.add(Triplex.step(Triplex.step(Triplex.step(z))), c);
             }
             return i == maxIter;
         }
