@@ -26,7 +26,7 @@ public final class Main
     {
     }
 
-    private final static class Evaluator implements Runnable
+    private static final class Evaluator implements Runnable
     {
         final RenderComponent renderComponent;
 
@@ -44,6 +44,20 @@ public final class Main
                 this.x = x;
                 this.y = y;
                 this.z = z;
+            }
+
+            @Override
+            public String toString()
+            {
+                return "(" + x + ", " + y + ", " + z + ")";
+            }
+
+            public Triplex squashNaNs()
+            {
+                return new Triplex(
+                    Double.isNaN(x) ? 0.0 : x,
+                    Double.isNaN(y) ? 0.0 : y,
+                    Double.isNaN(z) ? 0.0 : z);
             }
 
             static Triplex add(Triplex a, Triplex b)
@@ -67,12 +81,28 @@ public final class Main
 
             static Triplex step(Triplex a)
             {
-                final double w2 = a.x*a.x + a.y*a.y;
-                final double r2 = a.x*a.x + a.y*a.y + a.z*a.z;
+                final double w2 = a.x * a.x + a.y * a.y;
+                final double r2 = w2 + a.z * a.z;
+                final double w = Math.sqrt(w2);
+                final double r = Math.sqrt(r2);
+                final double cPhi = a.x / w;
+                final double sPhi = a.y / w;
+                final double cTheta = a.z / r;
+                final double sTheta = w / r;
+                final Complex phi8 = new Complex(cPhi, sPhi);
+                Complex.squareReplace(phi8);
+                Complex.squareReplace(phi8);
+                Complex.squareReplace(phi8);
+                final Complex theta8 = new Complex(cTheta, sTheta);
+                Complex.squareReplace(theta8);
+                Complex.squareReplace(theta8);
+                Complex.squareReplace(theta8);
+                final double r4 = r2 * r2;
+                final double r8 = r4 * r4;
                 return new Triplex(
-                        2.0 * a.z * Math.sqrt(w2) * (a.x*a.x - a.y*a.y) / r2,
-                        4.0 * a.x * a.y * a.z * Math.sqrt(w2) / r2,
-                        a.z*a.z - w2);
+                    r8 * phi8.getReal() * theta8.getImaginary(),
+                    r8 * phi8.getImaginary() * theta8.getImaginary(),
+                    r8 * theta8.getReal()).squashNaNs();
             }
         }
 
@@ -84,8 +114,8 @@ public final class Main
             Triplex z = new Triplex(0.0, 0.0, 0.0);
             int i;
             for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
-                z = Triplex.add(Triplex.power(z, n), c);
-                //z = Triplex.add(Triplex.step(Triplex.step(Triplex.step(z))), c);
+                //z = Triplex.add(Triplex.power(z, n), c);
+                z = Triplex.add(Triplex.step(z), c);
             }
             return i == maxIter;
         }
@@ -93,7 +123,7 @@ public final class Main
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
-                for (int level = 1; level <= 7; level++) {
+                for (int level = 1; level <= 8; level++) {
                     final long startTime = System.currentTimeMillis();
 
                     final int resolution = 2 << level;

@@ -265,4 +265,21 @@ final class Complex implements Cloneable
     {
         return power(this, b);
     }
+
+    public static void squareReplace(Complex a)
+    {
+        multiplyReplace(a, a);
+    }
+
+    public static Complex square(Complex a)
+    {
+        Complex result = a.clone();
+        squareReplace(result);
+        return result;
+    }
+
+    public Complex square()
+    {
+        return square(this);
+    }
 }
