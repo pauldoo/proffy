@@ -34,92 +34,6 @@ public final class Main
             this.renderComponent = renderComponent;
         }
 
-        private static class Triplex
-        {
-            public final double x;
-            public final double y;
-            public final double z;
-
-            public Triplex(double x, double y, double z) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-
-            @Override
-            public String toString()
-            {
-                return "(" + x + ", " + y + ", " + z + ")";
-            }
-
-            public Triplex squashNaNs()
-            {
-                return new Triplex(
-                    Double.isNaN(x) ? 0.0 : x,
-                    Double.isNaN(y) ? 0.0 : y,
-                    Double.isNaN(z) ? 0.0 : z);
-            }
-
-            static Triplex add(Triplex a, Triplex b)
-            {
-                return new Triplex(
-                        a.x + b.x,
-                        a.y + b.y,
-                        a.z + b.z);
-            }
-
-            static Triplex power(Triplex a, double n)
-            {
-                final double r = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
-                final double theta = Math.atan2( Math.sqrt(a.x*a.x + a.y*a.y), a.z );
-                final double phi = Math.atan2(a.y, a.x);
-                return new Triplex(
-                        Math.pow(r, n) * Math.sin(theta * n) * Math.cos(phi * n),
-                        Math.pow(r, n) * Math.sin(theta * n) * Math.sin(phi * n),
-                        Math.pow(r, n) * Math.cos(theta * n));
-            }
-
-            static Triplex step(Triplex a)
-            {
-                final double w2 = a.x * a.x + a.y * a.y;
-                final double r2 = w2 + a.z * a.z;
-                final double w = Math.sqrt(w2);
-                final double r = Math.sqrt(r2);
-                final double cPhi = a.x / w;
-                final double sPhi = a.y / w;
-                final double cTheta = a.z / r;
-                final double sTheta = w / r;
-                final Complex phi8 = new Complex(cPhi, sPhi);
-                Complex.squareReplace(phi8);
-                Complex.squareReplace(phi8);
-                Complex.squareReplace(phi8);
-                final Complex theta8 = new Complex(cTheta, sTheta);
-                Complex.squareReplace(theta8);
-                Complex.squareReplace(theta8);
-                Complex.squareReplace(theta8);
-                final double r4 = r2 * r2;
-                final double r8 = r4 * r4;
-                return new Triplex(
-                    r8 * phi8.getReal() * theta8.getImaginary(),
-                    r8 * phi8.getImaginary() * theta8.getImaginary(),
-                    r8 * theta8.getReal()).squashNaNs();
-            }
-        }
-
-        private static boolean evaluate(final Triplex c)
-        {
-            final int maxIter = 50;
-            final double n = 8;
-
-            Triplex z = new Triplex(0.0, 0.0, 0.0);
-            int i;
-            for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
-                //z = Triplex.add(Triplex.power(z, n), c);
-                z = Triplex.add(Triplex.step(z), c);
-            }
-            return i == maxIter;
-        }
-
         public void run() {
             try {
                 OctTree tree = OctTree.createEmpty();
@@ -134,7 +48,7 @@ public final class Main
                                 double y = (iy + 0.5) / resolution;
                                 double z = (iz + 0.5) / resolution;
 
-                                boolean inside = evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5));
+                                boolean inside = Mandelbulb.evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5));
                                 double scale = 0.5 / resolution;
                                 tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
                             }
