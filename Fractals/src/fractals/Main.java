@@ -28,9 +28,9 @@ public final class Main
 
     private static final class Evaluator implements Runnable
     {
-        final RenderComponent renderComponent;
+        final OctTreeRendererComponent renderComponent;
 
-        public Evaluator(RenderComponent renderComponent) {
+        public Evaluator(OctTreeRendererComponent renderComponent) {
             this.renderComponent = renderComponent;
         }
 
@@ -71,7 +71,7 @@ public final class Main
     
     public static void main(String[] args)
     {
-        final RenderComponent renderComponent = new RenderComponent();
+        final OctTreeRendererComponent renderComponent = new OctTreeRendererComponent();
         
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

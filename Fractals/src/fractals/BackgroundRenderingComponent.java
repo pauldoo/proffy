@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -122,6 +122,8 @@ abstract class BackgroundRenderingComponent extends JComponent
         incremental rendering visible to the user.
         <p>
         The implementor is expected to check Thread.interrupted() fairly regularly.
+        <p>
+        \see bufferIsNowOkayToBlit
     */
     protected abstract void render(Graphics2D g) throws InterruptedException;
     
@@ -147,6 +149,8 @@ abstract class BackgroundRenderingComponent extends JComponent
                     bufferIsNowOkayToBlit();
                     repaint();
                 } catch (InterruptedException ex) {
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
                 } finally {
                     if (g != null) {
                         g.dispose();
