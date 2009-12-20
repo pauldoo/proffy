@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2009  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,34 +25,31 @@ import java.util.concurrent.ThreadFactory;
 
 final class Utilities
 {
-    private static final ScheduledExecutorService lightThreadPool;
-    private static final ScheduledExecutorService heavyThreadPool;
-    
-    static {
-        final int lightThreadCount = 2;
-        final ThreadFactory lightThreadFactory = new ThreadFactory(){
-            public Thread newThread(Runnable r) {
-                Thread result = new Thread(r);
-                result.setDaemon(true);
-                return result;
-            }
-        };
-        lightThreadPool = new ScheduledThreadPoolExecutor(lightThreadCount, lightThreadFactory);
+    private static final ScheduledExecutorService lightThreadPool =
+            new ScheduledThreadPoolExecutor(2, new MyThreadFactory(Thread.NORM_PRIORITY));
+    private static final ScheduledExecutorService heavyThreadPool =
+            new ScheduledThreadPoolExecutor(2, new MyThreadFactory((Thread.NORM_PRIORITY + Thread.MIN_PRIORITY) / 2));
+    private static final ScheduledExecutorService backgroundThreadPool =
+            new ScheduledThreadPoolExecutor(2, new MyThreadFactory(Thread.MIN_PRIORITY));
+
+    private static final class MyThreadFactory implements ThreadFactory
+    {
+        final int priority;
+
+        MyThreadFactory(int priority)
+        {
+            this.priority = priority;
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread result = new Thread(r);
+            result.setPriority(priority);
+            result.setDaemon(true);
+            return result;
+        }
     }
-    
-    static {
-        final int heavyThreadCount = Runtime.getRuntime().availableProcessors();
-        final ThreadFactory heavyThreadFactory = new ThreadFactory(){
-            public Thread newThread(Runnable r) {
-                Thread result = new Thread(r);
-                result.setDaemon(true);
-                result.setPriority(Thread.MIN_PRIORITY);
-                return result;
-            }
-        };
-        heavyThreadPool = new ScheduledThreadPoolExecutor(heavyThreadCount, heavyThreadFactory);
-    }
-    
+
     private Utilities()
     {
     }
@@ -86,11 +83,21 @@ final class Utilities
     }
     
     /**
-        A thread pool intended for heavy background tasks (e.g. rendering).
+        A thread pool intended for heavy tasks that benefit image quality
+        in the short term (e.g. rendering, projecting).
     */
     static ScheduledExecutorService getHeavyThreadPool()
     {
         return heavyThreadPool;
+    }
+
+    /**
+        A thread pool intended for heavy tasks that benefit image quality
+        in the long term (e.g. further sampling expected to take many seconds).
+    */
+    static ScheduledExecutorService getBackgroundThreadPool()
+    {
+        return backgroundThreadPool;
     }
     
     /**
