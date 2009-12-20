@@ -57,7 +57,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
                     g,
                     super.getSupersampledWidth() / downscale,
                     super.getSupersampledHeight() / downscale,
-                    super.getSupersampledWidth() / 2.0 / downscale,
+                    Math.min(super.getSupersampledWidth(), super.getSupersampledHeight()) / 2.0 / downscale,
                     backgroundColor);
 
             super.bufferIsNowOkayToBlit();
@@ -95,7 +95,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
             }
             distances[iy] = new double[width];
 
-            projectLine(width, size, iy, theta, segmentation, distances);
+            projectLine(width, height, size, iy, theta, segmentation, distances);
             if (iy >= 2) {
                 shadeLine(width, distances, iy - 1, g, backgroundColor, size);
                 distances[iy - 2] = null;
@@ -103,13 +103,13 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
         }
     }
 
-    private static void projectLine(final int width, final double size, int iy, final double theta, final OctTree segmentation, double[][] distances) {
+    private static void projectLine(final int width, final int height, final double size, int iy, final double theta, final OctTree segmentation, double[][] distances) {
         for (int ix = 0; ix < width; ix++) {
             final double tx = 0.0;
             final double ty = 0.0;
             final double tz = -1.5;
-            final double tdx = (ix - size) / size;
-            final double tdy = (iy - size) / size;
+            final double tdx = (ix - width/2.0) / size;
+            final double tdy = (iy - height/2.0) / size;
             final double tdz = 1.0;
             final double x = Math.cos(theta) * tx - Math.sin(theta) * tz;
             final double y = ty;
