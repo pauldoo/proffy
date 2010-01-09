@@ -54,42 +54,70 @@ public class MatrixTest extends TestCase {
         }
     }
 
-    public void testCreate() {
-        {
-            Matrix a = Matrix.create3x5(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0);
-            assertEquals(a.rows(), 3);
-            assertEquals(a.columns(), 5);
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 5; j++) {
-                    assertEquals(a.get(i, j), i * 5 + j + 1.0);
-                }
+    public void testCreateAndEquals() {
+        Matrix a = Matrix.create3x5(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0);
+        assertEquals(a.rows(), 3);
+        assertEquals(a.columns(), 5);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 5; j++) {
+                assertEquals(a.get(i, j), i * 5 + j + 1.0);
             }
         }
 
-        {
-            Matrix b = Matrix.create5x3(10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0);
-            assertEquals(b.rows(), 5);
-            assertEquals(b.columns(), 3);
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 3; j++) {
-                    assertEquals(b.get(i, j), (i * 3 + j + 1.0) * 10.0);
-                }
+        Matrix b = Matrix.create5x3(10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0);
+        assertEquals(b.rows(), 5);
+        assertEquals(b.columns(), 3);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 3; j++) {
+                assertEquals(b.get(i, j), (i * 3 + j + 1.0) * 10.0);
             }
         }
 
-        {
-            Matrix c = Matrix.create5x5(-10.0, -20.0, -30.0, -40.0, -50.0, -60.0, -70.0, -80.0, -90.0, -100.0, -110.0, -120.0, -130.0, -140.0, -150.0, -160.0, -170.0, -180.0, -190.0, -200.0, -210.0, -220.0, -230.0, -240.0, -250.0);
-            assertEquals(c.rows(), 5);
-            assertEquals(c.columns(), 5);
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-                    assertEquals(c.get(i, j), (i * 5 + j + 1.0) * -10.0);
-                }
+        Matrix c = Matrix.create5x5(-10.0, -20.0, -30.0, -40.0, -50.0, -60.0, -70.0, -80.0, -90.0, -100.0, -110.0, -120.0, -130.0, -140.0, -150.0, -160.0, -170.0, -180.0, -190.0, -200.0, -210.0, -220.0, -230.0, -240.0, -250.0);
+        assertEquals(c.rows(), 5);
+        assertEquals(c.columns(), 5);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                assertEquals(c.get(i, j), (i * 5 + j + 1.0) * -10.0);
             }
         }
+
+        assertTrue(a.equals(a));
+        assertTrue(b.equals(b));
+        assertTrue(c.equals(c));
+        assertTrue(a.equals(Matrix.create3x5(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0)));
+        assertTrue(b.equals(Matrix.create5x3(10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0)));
+        assertTrue(c.equals(Matrix.create5x5(-10.0, -20.0, -30.0, -40.0, -50.0, -60.0, -70.0, -80.0, -90.0, -100.0, -110.0, -120.0, -130.0, -140.0, -150.0, -160.0, -170.0, -180.0, -190.0, -200.0, -210.0, -220.0, -230.0, -240.0, -250.0)));
+        assertTrue(a.equals(b) == false);
+        assertTrue(a.equals(c) == false);
+        assertTrue(b.equals(c) == false);
+        assertTrue(c.equals(Matrix.createIdentity(5)) == false);
+
+        assertTrue(a.compareTo(a) == 0);
+        assertTrue(b.compareTo(b) == 0);
+        assertTrue(c.compareTo(c) == 0);
+        assertTrue(a.compareTo(b) != 0);
+        assertTrue(a.compareTo(c) != 0);
+        assertTrue(b.compareTo(c) != 0);
+        assertTrue(c.compareTo(Matrix.createIdentity(5)) != 0);
     }
 
     public void testMultiply() {
-        assertTrue(false); // Not yet written
+        Matrix a = Matrix.create3x5(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0);
+        Matrix b = Matrix.create5x3(10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0);
+        Matrix c = Matrix.create5x5(-10.0, -20.0, -30.0, -40.0, -50.0, -60.0, -70.0, -80.0, -90.0, -100.0, -110.0, -120.0, -130.0, -140.0, -150.0, -160.0, -170.0, -180.0, -190.0, -200.0, -210.0, -220.0, -230.0, -240.0, -250.0);
+
+        assertEquals(3, Matrix.multiply(a, b).rows());
+        assertEquals(3, Matrix.multiply(a, b).columns());
+        assertEquals(5, Matrix.multiply(b, a).rows());
+        assertEquals(5, Matrix.multiply(b, a).columns());
+
+        assertEquals(3, Matrix.multiply(a, c).rows());
+        assertEquals(5, Matrix.multiply(a, c).columns());
+        assertEquals(5, Matrix.multiply(c, b).rows());
+        assertEquals(3, Matrix.multiply(c, b).columns());
+
+        assertTrue(Matrix.multiply(c, Matrix.createIdentity(5)).equals(c));
+        assertTrue(Matrix.multiply(Matrix.createIdentity(5), c).equals(c));
     }
 }

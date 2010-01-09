@@ -17,10 +17,12 @@
 
 package fractals;
 
+import java.util.Arrays;
+
 /**
     Immutable matrix class (over reals).
 */
-final class Matrix
+final class Matrix implements Comparable<Matrix>
 {
     private Matrix(double[][] values)
     {
@@ -189,6 +191,42 @@ final class Matrix
             result[i] = new double[columns];
         }
         return result;
+    }
+
+    @Override
+    public int compareTo(Matrix m) {
+        int result = 0;
+        if (this != m) {
+            result = this.rows() - m.rows();
+            if (result == 0) {
+                result = this.columns() - m.columns();
+
+                for (int row = 0; (result == 0) && (row < rows()); row++) {
+                    for (int column = 0; (result == 0) && (column < columns()); column++) {
+                        result = Double.compare(this.get(row, column), m.get(row, column));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Matrix) && equals((Matrix)o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 0;
+        for (int row = 0; row < rows(); row++) {
+            result = result ^ (Arrays.hashCode(values[row]) * row);
+        }
+        return result;
+    }
+
+    public boolean equals(Matrix m) {
+        return this.compareTo(m) == 0;
     }
 
     private final double[][] values;
