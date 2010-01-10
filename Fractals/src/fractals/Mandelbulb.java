@@ -21,11 +21,11 @@ import java.awt.Color;
 import javax.swing.JComponent;
 
 final class Mandelbulb {
-    public static final int maxIterations = 5;
+    public static final int maxIterations = 10;
 
     static boolean evaluate(final Triplex c, final int maxIter)
     {
-        Triplex z = new Triplex(0.0, 0.0, 0.0);
+        Triplex z = c;
         int i;
         for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
             z = stepNormal(c, z, null).first;
@@ -41,7 +41,7 @@ final class Mandelbulb {
     static Triplex computeNormal(final Triplex c, final int maxIter)
     {
         Pair<Triplex, Matrix> state = new Pair<Triplex, Matrix>(
-            new Triplex(0.0, 0.0, 0.0),
+            c,
             Matrix.createIdentity(3));
         for (int i = 0; i < maxIter; i++) {
             state = stepNormal(c, state.first, state.second);
