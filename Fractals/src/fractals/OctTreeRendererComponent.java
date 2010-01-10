@@ -42,7 +42,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
         Utilities.setGraphicsToLowQuality(g);
 
         AffineTransform originalTransform = g.getTransform();
-        final double theta = System.currentTimeMillis() * 0.0001;
+        final double theta = 2.5;//System.currentTimeMillis() * 0.0001;
 
         for (int downscale = subSample * superSample; downscale >= 1; downscale /= 2) {
             if (Thread.interrupted()) {
@@ -88,63 +88,43 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
             final double size,
             final Color backgroundColor) throws InterruptedException
     {
-        double[][] distances = new double[height][];
         for (int iy = 0; iy < height; iy++) {
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            distances[iy] = new double[width];
 
-            projectLine(width, height, size, iy, theta, segmentation, distances);
-            if (iy >= 2) {
-                shadeLine(width, distances, iy - 1, g, backgroundColor, size);
-                distances[iy - 2] = null;
+            for (int ix = 0; ix < width; ix++) {
+                final double tx = 0.0;
+                final double ty = 0.0;
+                final double tz = -1.5;
+                final double tdx = (ix - width/2.0) / size;
+                final double tdy = (iy - height/2.0) / size;
+                final double tdz = 1.0;
+                final double x = Math.cos(theta) * tx - Math.sin(theta) * tz;
+                final double y = ty;
+                final double z = Math.sin(theta) * tx + Math.cos(theta) * tz;
+                final double dx = Math.cos(theta) * tdx - Math.sin(theta) * tdz;
+                final double dy = tdy;
+                final double dz = Math.sin(theta) * tdx + Math.cos(theta) * tdz;
+                final double result = segmentation.firstHit(x, y, z, dx, dy, dz);
+
+                if (Double.isNaN(result)) {
+                    g.setColor(backgroundColor);
+                } else {
+                    final Triplex position = new Triplex(
+                        x + result * dx,
+                        y + result * dy,
+                        z + result * dz);
+                    final Triplex normal = Mandelbulb.computeNormal(position, 5);
+                    final double shade = Math.max(normal.x * 0.5 + normal.y * 0.5 + normal.z * 0.5, 0.0);
+                    final Color color = new Color((float) (shade), (float) (shade), (float) (shade));
+                    g.setColor(color);
+                }
+                g.fillRect(ix, iy, 1, 1);
+
             }
         }
     }
 
-    private static void projectLine(final int width, final int height, final double size, int iy, final double theta, final OctTree segmentation, double[][] distances) {
-        for (int ix = 0; ix < width; ix++) {
-            final double tx = 0.0;
-            final double ty = 0.0;
-            final double tz = -1.5;
-            final double tdx = (ix - width/2.0) / size;
-            final double tdy = (iy - height/2.0) / size;
-            final double tdz = 1.0;
-            final double x = Math.cos(theta) * tx - Math.sin(theta) * tz;
-            final double y = ty;
-            final double z = Math.sin(theta) * tx + Math.cos(theta) * tz;
-            final double dx = Math.cos(theta) * tdx - Math.sin(theta) * tdz;
-            final double dy = tdy;
-            final double dz = Math.sin(theta) * tdx + Math.cos(theta) * tdz;
-            final double result = segmentation.firstHit(x, y, z, dx, dy, dz);
-            distances[iy][ix] = result;
-        }
-    }
-
-    private static double lookupValue(double[][] distances, int x, int y, int dx, int dy)
-    {
-        double result = distances[y + dy][x + dx];
-        if (Double.isNaN(result)) {
-            result = distances[y][x];
-        }
-        return result;
-    }
-
-    private static void shadeLine(final int width, double[][] distances, int iy, final Graphics g, final Color backgroundColor, final double size) {
-        for (int ix = 1; ix < width - 1; ix++) {
-            final double z = distances[iy][ix];
-            if (Double.isNaN(z)) {
-                g.setColor(backgroundColor);
-            } else {
-                final double dzdx = (lookupValue(distances, ix, iy, 1, 0) - lookupValue(distances, ix, iy, -1, 0)) / 2.0 * size / z;
-                final double dzdy = (lookupValue(distances, ix, iy, 0, 1) - lookupValue(distances, ix, iy, 0, -1)) / 2.0 * size / z;
-                final double shade = 1.0 / Math.sqrt(1.0 + dzdx * dzdx + dzdy * dzdy);
-                final Color color = new Color((float) (shade*shade), (float) (shade*shade), (float) (shade));
-                g.setColor(color);
-            }
-            g.fillRect(ix, iy, 1, 1);
-        }
-    }
 
 }

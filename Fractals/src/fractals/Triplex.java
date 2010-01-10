@@ -38,9 +38,9 @@ final class Triplex
     Triplex squashNaNs()
     {
         return new Triplex(
-            Double.isNaN(x) ? 0.0 : x,
-            Double.isNaN(y) ? 0.0 : y,
-            Double.isNaN(z) ? 0.0 : z);
+            Utilities.squashNaN(x),
+            Utilities.squashNaN(y),
+            Utilities.squashNaN(z));
     }
 
     static Triplex add(Triplex a, Triplex b)

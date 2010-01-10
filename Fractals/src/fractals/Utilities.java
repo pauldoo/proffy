@@ -120,4 +120,12 @@ final class Utilities
         System.arraycopy(source, 0, result, 0, source.length);
         return result;
     }
+
+    /**
+        Converts NaN to 0.0, and leaves other numbers alone.
+    */
+    static double squashNaN(double x)
+    {
+        return Double.isNaN(x) ? 0.0 : x;
+    }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,6 +43,34 @@ final class Matrix implements Comparable<Matrix>
         for (int i = 0; i < size; i++) {
             values[i][i] = 1.0;
         }
+        return new Matrix(values);
+    }
+
+    /**
+        Static constructor for matrices with 1 row and 3 columns.
+    */
+    static Matrix create1x3(
+            double a, double b, double c)
+    {
+        double[][] values = allocateArray(1, 3);
+        values[0][0] = a;
+        values[0][1] = b;
+        values[0][2] = c;
+        return new Matrix(values);
+    }
+
+    /**
+        Static constructor for matrices with 2 rows and 2 columns.
+    */
+    static Matrix create2x2(
+            double a, double b,
+            double c, double d)
+    {
+        double[][] values = allocateArray(2, 2);
+        values[0][0] = a;
+        values[0][1] = b;
+        values[1][0] = c;
+        values[1][1] = d;
         return new Matrix(values);
     }
 
@@ -165,6 +193,21 @@ final class Matrix implements Comparable<Matrix>
         return values[row][column];
     }
 
+    static Matrix add(final Matrix a, final Matrix b)
+    {
+        if (a.rows() != b.rows() || a.columns() != b.columns()) {
+            throw new IllegalArgumentException("Matrices cannot be multiplied");
+        }
+
+        double[][] result = allocateArray(a.rows(), a.columns());
+        for (int row = 0; row < a.rows(); row++) {
+            for (int column = 0; column < a.columns(); column++) {
+                result[row][column] = a.get(row, column) + b.get(row, column);
+            }
+        }
+        return new Matrix(result);
+    }
+
     static Matrix multiply(final Matrix a, final Matrix b)
     {
         if (a.columns() != b.rows()) {
@@ -179,6 +222,36 @@ final class Matrix implements Comparable<Matrix>
                     value += a.get(row, i) * b.get(i, column);
                 }
                 result[row][column] = value;
+            }
+        }
+        return new Matrix(result);
+    }
+
+    /**
+        Returns a^7 (or a*a*a*a*a*a*a).
+    */
+    static Matrix power7(final Matrix a)
+    {
+        if (a.rows() != a.columns()) {
+            throw new IllegalArgumentException("Matrix is not square");
+        }
+
+        Matrix a2 = multiply(a, a);
+        Matrix a3 = multiply(a, a2);
+        Matrix a4 = multiply(a2, a2);
+        Matrix a7 = multiply(a3, a4);
+        return a7;
+    }
+
+    /**
+        Replaces all instances of NaN with 0.0.
+    */
+    static Matrix squashNaNs(final Matrix a)
+    {
+        double[][] result = allocateArray(a.rows(), a.columns());
+        for (int row = 0; row < a.rows(); row++) {
+            for (int column = 0; column < a.columns(); column++) {
+                result[row][column] = Utilities.squashNaN(a.get(row, column));
             }
         }
         return new Matrix(result);
@@ -223,6 +296,20 @@ final class Matrix implements Comparable<Matrix>
             result = result ^ (Arrays.hashCode(values[row]) * row);
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        for (int row = 0; row < rows(); row++) {
+            result.append("[");
+            for (int column = 0; column < columns(); column++) {
+                result.append(" ");
+                result.append(get(row, column));
+            }
+            result.append(" ]\n");
+        }
+        return result.toString();
     }
 
     public boolean equals(Matrix m) {
