@@ -21,14 +21,14 @@ import java.awt.Color;
 import javax.swing.JComponent;
 
 final class Mandelbulb {
+    public static final int maxIterations = 5;
+
     static boolean evaluate(final Triplex c, final int maxIter)
     {
-        final int n = 8;
-
         Triplex z = new Triplex(0.0, 0.0, 0.0);
         int i;
         for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
-            z = Triplex.add(Triplex.power(z, n), c);
+            z = stepNormal(c, z, null).first;
         }
         return i == maxIter;
     }
@@ -106,7 +106,7 @@ final class Mandelbulb {
         if (jz != null) {
             final Matrix A = Matrix.squashNaNs(Matrix.create3x5(
                     cosThetaBar * sinPhiBar, r8 * sinPhiBar, 0.0, 0.0, r8 * cosThetaBar,
-                    sinThetaBar * sinPhiBar, 0, r8 * sinPhiBar, 0.0, r8 * sinThetaBar,
+                    sinThetaBar * sinPhiBar, 0.0, r8 * sinPhiBar, 0.0, r8 * sinThetaBar,
                     cosPhiBar, 0.0, 0.0, r8, 0.0));
             final Matrix subThetaB = Matrix.power7(Matrix.squashNaNs(Matrix.create2x2(
                     cosTheta, -sinTheta,
@@ -164,7 +164,7 @@ final class Mandelbulb {
                                 double y = (iy + 0.5) / resolution;
                                 double z = (iz + 0.5) / resolution;
 
-                                boolean inside = Mandelbulb.evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5), 5);
+                                boolean inside = Mandelbulb.evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5), maxIterations);
                                 double scale = 0.5 / resolution;
                                 tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
                             }

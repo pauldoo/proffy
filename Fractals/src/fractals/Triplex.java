@@ -50,45 +50,4 @@ final class Triplex
                 a.y + b.y,
                 a.z + b.z);
     }
-
-    static Triplex power(Triplex a, double n)
-    {
-        if (n == 8.0) {
-            return power8(a);
-        } else {
-            final double r = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
-            final double theta = Math.atan2( Math.sqrt(a.x*a.x + a.y*a.y), a.z );
-            final double phi = Math.atan2(a.y, a.x);
-            return new Triplex(
-                    Math.pow(r, n) * Math.sin(theta * n) * Math.cos(phi * n),
-                    Math.pow(r, n) * Math.sin(theta * n) * Math.sin(phi * n),
-                    Math.pow(r, n) * Math.cos(theta * n));
-        }
-    }
-
-    private static Triplex power8(Triplex a)
-    {
-        final double w2 = a.x * a.x + a.y * a.y;
-        final double r2 = w2 + a.z * a.z;
-        final double w = Math.sqrt(w2);
-        final double r = Math.sqrt(r2);
-        final double cPhi = a.x / w;
-        final double sPhi = a.y / w;
-        final double cTheta = a.z / r;
-        final double sTheta = w / r;
-        final Complex phi8 = new Complex(cPhi, sPhi);
-        Complex.squareReplace(phi8);
-        Complex.squareReplace(phi8);
-        Complex.squareReplace(phi8);
-        final Complex theta8 = new Complex(cTheta, sTheta);
-        Complex.squareReplace(theta8);
-        Complex.squareReplace(theta8);
-        Complex.squareReplace(theta8);
-        final double r4 = r2 * r2;
-        final double r8 = r4 * r4;
-        return new Triplex(
-            r8 * phi8.getReal() * theta8.getImaginary(),
-            r8 * phi8.getImaginary() * theta8.getImaginary(),
-            r8 * theta8.getReal()).squashNaNs();
-    }
 }
