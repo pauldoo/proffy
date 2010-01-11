@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2008, 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -134,6 +134,7 @@ abstract class BackgroundRenderingComponent extends JComponent
     {
         stopBackgroundThread();
         Runnable runner = new Runnable() {
+            @Override
             public void run()
             {
                 Graphics2D g = null;
