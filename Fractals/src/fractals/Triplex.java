@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,12 +35,15 @@ final class Triplex
         return "(" + x + ", " + y + ", " + z + ")";
     }
 
-    Triplex squashNaNs()
+    /**
+        Asserts that no values are NaN, then returns 'this'.
+    */
+    Triplex assertNotNaN()
     {
-        return new Triplex(
-            Utilities.squashNaN(x),
-            Utilities.squashNaN(y),
-            Utilities.squashNaN(z));
+        Utilities.assertNotNaN(x);
+        Utilities.assertNotNaN(y);
+        Utilities.assertNotNaN(z);
+        return this;
     }
 
     static Triplex add(Triplex a, Triplex b)

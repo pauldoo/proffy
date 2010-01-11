@@ -244,17 +244,16 @@ final class Matrix implements Comparable<Matrix>
     }
 
     /**
-        Replaces all instances of NaN with 0.0.
+        Asserts that no values in the matrix are NaN, then returns the input matrix.
     */
-    static Matrix squashNaNs(final Matrix a)
+    static Matrix assertNotNaN(final Matrix a)
     {
-        double[][] result = allocateArray(a.rows(), a.columns());
         for (int row = 0; row < a.rows(); row++) {
             for (int column = 0; column < a.columns(); column++) {
-                result[row][column] = Utilities.squashNaN(a.get(row, column));
+                Utilities.assertNotNaN(a.get(row, column));
             }
         }
-        return new Matrix(result);
+        return a;
     }
 
     private static double[][] allocateArray(int rows, int columns)

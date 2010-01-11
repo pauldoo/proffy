@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2008, 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -122,10 +122,13 @@ final class Utilities
     }
 
     /**
-        Converts NaN to 0.0, and leaves other numbers alone.
+        Asserts that the value is not NaN, then returns it.
     */
-    static double squashNaN(double x)
+    static double assertNotNaN(double x) throws NotANumberException
     {
-        return Double.isNaN(x) ? 0.0 : x;
+        if (Double.isNaN(x)) {
+            throw new NotANumberException();
+        }
+        return x;
     }
 }

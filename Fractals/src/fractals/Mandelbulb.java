@@ -90,10 +90,10 @@ final class Mandelbulb {
         Complex.squareReplace(phi8);
         final double r4 = r2 * r2;
         final double r8 = r4 * r4;
-        final double cosThetaBar = Utilities.squashNaN(theta8.getReal());
-        final double sinThetaBar = Utilities.squashNaN(theta8.getImaginary());
-        final double cosPhiBar = Utilities.squashNaN(phi8.getReal());
-        final double sinPhiBar = Utilities.squashNaN(phi8.getImaginary());
+        final double cosThetaBar = Utilities.assertNotNaN(theta8.getReal());
+        final double sinThetaBar = Utilities.assertNotNaN(theta8.getImaginary());
+        final double cosPhiBar = Utilities.assertNotNaN(phi8.getReal());
+        final double sinPhiBar = Utilities.assertNotNaN(phi8.getImaginary());
 
         final Triplex zNew = Triplex.add(
                 new Triplex(
@@ -104,29 +104,29 @@ final class Mandelbulb {
 
         Matrix jzNew = null;
         if (jz != null) {
-            final Matrix A = Matrix.squashNaNs(Matrix.create3x5(
+            final Matrix A = Matrix.assertNotNaN(Matrix.create3x5(
                     cosThetaBar * sinPhiBar, r8 * sinPhiBar, 0.0, 0.0, r8 * cosThetaBar,
                     sinThetaBar * sinPhiBar, 0.0, r8 * sinPhiBar, 0.0, r8 * sinThetaBar,
                     cosPhiBar, 0.0, 0.0, r8, 0.0));
-            final Matrix subThetaB = Matrix.power7(Matrix.squashNaNs(Matrix.create2x2(
+            final Matrix subThetaB = Matrix.power7(Matrix.assertNotNaN(Matrix.create2x2(
                     cosTheta, -sinTheta,
                     sinTheta, cosTheta)));
-            final Matrix subPhiB = Matrix.power7(Matrix.squashNaNs(Matrix.create2x2(
+            final Matrix subPhiB = Matrix.power7(Matrix.assertNotNaN(Matrix.create2x2(
                     cosPhi, -sinPhi,
                     sinPhi, cosPhi)));
-            final Matrix B = Matrix.squashNaNs(Matrix.create5x5(
+            final Matrix B = Matrix.assertNotNaN(Matrix.create5x5(
                     n * (r4 * (r2 * r)), 0.0, 0.0, 0.0, 0.0,
                     0.0, n * subThetaB.get(0, 0), n * subThetaB.get(0, 1), 0.0, 0.0,
                     0.0, n * subThetaB.get(1, 0), n * subThetaB.get(1, 1), 0.0, 0.0,
                     0.0, 0.0, 0.0, n * subPhiB.get(0, 0), n * subPhiB.get(0, 1),
                     0.0, 0.0, 0.0, n * subPhiB.get(1, 0), n * subPhiB.get(1, 1)));
-            final Matrix C = Matrix.squashNaNs(Matrix.create5x5(
+            final Matrix C = Matrix.assertNotNaN(Matrix.create5x5(
                     1.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, -z.x / w2, 1.0 / w, 0.0, 0.0,
                     0.0, -z.y / w2, 0.0, 1.0 / w, 0.0,
                     -z.z / r2, 0.0, 0.0, 0.0, 1.0 / r,
                     -w / r2, 1.0 / r, 0.0, 0.0, 0.0));
-            final Matrix D = Matrix.squashNaNs(Matrix.create5x3(
+            final Matrix D = Matrix.assertNotNaN(Matrix.create5x3(
                     z.x / r, z.y / r, z.z / r,
                     z.x / w, z.y / w, 0.0,
                     1.0, 0.0, 0.0,
@@ -135,7 +135,7 @@ final class Mandelbulb {
 
             jzNew =
                 Matrix.add(
-                    Matrix.squashNaNs(Matrix.multiply(Matrix.multiply(Matrix.multiply(Matrix.multiply(A, B), C), D), jz)),
+                    Matrix.assertNotNaN(Matrix.multiply(Matrix.multiply(Matrix.multiply(Matrix.multiply(A, B), C), D), jz)),
                     Matrix.createIdentity(3));
         }
 
