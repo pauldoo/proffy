@@ -111,14 +111,18 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
                 if (Double.isNaN(result)) {
                     g.setColor(backgroundColor);
                 } else {
-                    final Triplex position = new Triplex(
-                        x + result * dx,
-                        y + result * dy,
-                        z + result * dz);
-                    final Triplex normal = Mandelbulb.computeNormal(position, Mandelbulb.maxIterations-2);
-                    final double shade = Math.max(normal.x * 0.0 + normal.y * -0.5 + normal.z * 0.5, 0.0);
-                    final Color color = new Color((float) (shade), (float) (shade), (float) (shade));
-                    g.setColor(color);
+                    try {
+                        final Triplex position = new Triplex(
+                            x + result * dx,
+                            y + result * dy,
+                            z + result * dz);
+                        final Triplex normal = Mandelbulb.computeNormal(position, Mandelbulb.maxIterations);
+                        final double shade = Math.max(normal.x * 0.0 + normal.y * -0.5 + normal.z * 0.5, 0.0);
+                        final Color color = new Color((float) (shade), (float) (shade), (float) (shade));
+                        g.setColor(color);
+                    } catch (NotANumberException ex) {
+                        g.setColor(Color.BLUE);
+                    }
                 }
                 g.fillRect(ix, iy, 1, 1);
 
