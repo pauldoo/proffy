@@ -26,11 +26,11 @@ final class Mandelbulb {
     static boolean evaluate(final Triplex c, final int maxIter)
     {
         Triplex z = c;
-        int i;
-        for (i = 0; i < maxIter && (z.x*z.x + z.y*z.y + z.z*z.z) < 100.0; i++) {
+        boolean inside = true;
+        for (int i = 0; (inside = (z.x*z.x + z.y*z.y + z.z*z.z) < 4.0) && i < maxIter; i++) {
             z = stepNormal(c, z, null).first;
         }
-        return i == maxIter;
+        return inside;
     }
 
     /**
