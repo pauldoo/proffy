@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,12 +16,14 @@
 */
 #pragma once
 
+
 namespace Proffy {
     const std::wstring Version()
     {
         std::wostringstream result;
-        result
-            << L"build " << "$WCRANGE$" << $WCMODS?L"M":L""$;
+        result <<
+#include "Version.inc"
+            ;
         return result.str();
     }
 }

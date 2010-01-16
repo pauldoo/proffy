@@ -1,6 +1,6 @@
 set WINDOWS_SDK_PATH=C:\Program Files\Microsoft SDKs\Windows\v6.1
 
-SubWCRev . Proffy\Version.h.template Proffy\Version.h
+c:\cygwin\bin\sh getversion.sh > Proffy\Version.inc
 IF %ERRORLEVEL% NEQ 0 exit 1
 
 cmd.exe /E:ON /V:ON /C build32.bat

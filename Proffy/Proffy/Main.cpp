@@ -40,7 +40,7 @@ namespace Proffy {
             << L"Proffy (" << Version() << L").\n"
             << L"\n"
             << L"\n"
-            << L"Copyright (C) 2008, 2009  Paul Richards.\n"
+            << L"Copyright (C) 2008, 2009, 2010  Paul Richards.\n"
             << L"\n"
             << L"This program is free software: you can redistribute it and/or modify\n"
             << L"it under the terms of the GNU General Public License as published by\n"
