@@ -21,9 +21,10 @@ namespace Proffy {
     const std::wstring Version()
     {
         std::wostringstream result;
-        result <<
+        result
+            << L"build id " <<
 #include "Version.inc"
-            ;
+            << L", compiled on " << __DATE__ << L" at " << __TIME__;
         return result.str();
     }
 }
