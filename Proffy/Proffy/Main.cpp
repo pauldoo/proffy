@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2008, 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ namespace Proffy {
             << L"Created by Paul Richards <paul.richards@gmail.com>.\n"
             << L"\n"
             << L"http://pauldoo.com/proffy/\n";
-            
+
         return result.str();
     }
 
@@ -76,7 +76,7 @@ namespace Proffy {
             std::wcout
                 << AboutText() << L"\n"
                 << lines;
-            
+
             const CommandLineArguments arguments = CommandLineArguments::Parse(argc, argv);
 
             // Initialize COM, no idea if this is necessary.
@@ -142,15 +142,14 @@ namespace Proffy {
 
             FlushCallbacks(debugClient);
             ConsoleColor c(Color_Normal);
-            Results results;
+            ResultsForAllThreads results;
 
             // Profiler when used for self-profiling
             std::auto_ptr<Launcher> profiler;
             if (arguments.fProfileTheProfiler) {
                 profiler.reset(new Launcher(
                     L"../bin64/Proffy64.exe",
-                    arguments.fXmlOutputFilename,
-                    arguments.fDotOutputFilename,
+                    arguments.fOutputDirectory,
                     arguments.fDelayBetweenSamplesInSeconds,
                     false));
             }
@@ -191,6 +190,10 @@ namespace Proffy {
                     result = debugSystemObjects->SetCurrentThreadId(i);
                     ASSERT(result == S_OK);
 
+                    ULONG threadSystemId;
+                    result = debugSystemObjects->GetCurrentThreadSystemId(&threadSystemId);
+                    ASSERT(result == S_OK);
+
                     std::vector<DEBUG_STACK_FRAME> frames(100);
                     ULONG framesFilled;
                     result = debugControl->GetStackTrace(
@@ -209,12 +212,15 @@ namespace Proffy {
                             frames.at(i).InstructionOffset,
                             debugSymbols,
                             &symbolCache);
-                        
+
                         if (pip.Ok()) {
                             resolvedFrames.push_back(pip.Get());
                         }
                     }
-                    results.AccumulateCallstack(resolvedFrames);
+
+                    std::wostringstream threadId;
+                    threadId << "thread-" << threadSystemId;
+                    results.AccumulateCallstack(threadId.str(), resolvedFrames);
                 }
             }
             results.fEndTimeInSeconds = Utilities::TimeInSeconds();
@@ -223,7 +229,7 @@ namespace Proffy {
             if (arguments.fProfileTheProfiler == false) {
                 std::wcout << L"Saving report..";
                 std::wcout.flush();
-                WriteReport(&arguments, &results);
+                WriteAllReports(&arguments, &results);
                 std::wcout << "Done.\n";
             }
 

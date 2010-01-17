@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -109,6 +109,10 @@
     <xsl:template match="Summary">
         <h1>Summary</h1>
         <table>
+            <tr>
+                <th>Title</th>
+                <td><xsl:value-of select="Title"/></td>
+            </tr>
             <tr>
                 <th>Wall clock time (seconds)</th>
                 <td class="numeric"><xsl:value-of select="WallClockTimeInSeconds"/></td>

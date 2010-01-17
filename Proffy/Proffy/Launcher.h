@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -68,8 +68,7 @@ namespace Proffy {
     public:
         Launcher(
             const std::wstring& proffyExecutable,
-            const std::wstring& xmlOutputFilename,
-            const std::wstring& dotOutputFilename,
+            const std::wstring& outputDirectory,
             const double delayBetweenSamplesInSeconds,
             const bool profileTheProfiler = false)
         {
@@ -83,8 +82,7 @@ namespace Proffy {
             buf
                 << proffyExecutable
                 << L" " << ::GetCurrentProcessId()
-                << L" \"" << xmlOutputFilename << L"\""
-                << L" \"" << dotOutputFilename << L"\""
+                << L" \"" << outputDirectory << L"\""
                 << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
                 << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle)
                 << L" " << delayBetweenSamplesInSeconds

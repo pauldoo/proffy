@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,10 @@
 namespace Proffy {
     void WriteXmlReport(
         const CommandLineArguments* const arguments,
-        const Results* const results)
+        const std::wstring& title,
+        const int numberOfSamples,
+        const double wallClockTimeInSeconds,
+        const ResultsForSingleThread* const results)
     {
         XercesInitialize xerces;
         xercesc::DOMImplementation* const domImplementation =
@@ -46,45 +49,51 @@ namespace Proffy {
             delayBetweenSamplesInSeconds->setTextContent(Utilities::ToWString(arguments->fDelayBetweenSamplesInSeconds).c_str());
             summary->appendChild(delayBetweenSamplesInSeconds);
 
+            xercesc::DOMElement* const titleNode = document->createElement(L"Title");
+            titleNode->setTextContent(title.c_str());
+            summary->appendChild(titleNode);
+
             xercesc::DOMElement* const sampleCount = document->createElement(L"SampleCount");
-            sampleCount->setTextContent(Utilities::ToWString(results->fNumberOfSamples).c_str());
+            sampleCount->setTextContent(Utilities::ToWString(numberOfSamples).c_str());
             summary->appendChild(sampleCount);
 
             xercesc::DOMElement* const callstackCount = document->createElement(L"CallstackCount");
             callstackCount->setTextContent(Utilities::ToWString(results->fNumberOfCallstacks).c_str());
             summary->appendChild(callstackCount);
 
-            xercesc::DOMElement* const wallClockTimeInSeconds = document->createElement(L"WallClockTimeInSeconds");
-            wallClockTimeInSeconds->setTextContent(Utilities::ToWString(results->fEndTimeInSeconds - results->fBeginTimeInSeconds).c_str());
-            summary->appendChild(wallClockTimeInSeconds);
+            xercesc::DOMElement* const wallClockTimeInSecondsNode = document->createElement(L"WallClockTimeInSeconds");
+            wallClockTimeInSecondsNode->setTextContent(Utilities::ToWString(wallClockTimeInSeconds).c_str());
+            summary->appendChild(wallClockTimeInSecondsNode);
 
             root->appendChild(summary);
         }
+
+        const std::set<const PointInProgram*> encounteredPoints = results->EncounteredPoints();
 
         std::set<std::wstring> sourceFiles;
         {
             xercesc::DOMElement* const pointsEncountered = document->createElement(L"PointsEncountered");
 
-            for (std::set<PointInProgram>::const_iterator i = results->fEncounteredPoints.begin();
-                i != results->fEncounteredPoints.end();
+            for (std::set<const PointInProgram*>::const_iterator i = encounteredPoints.begin();
+                i != encounteredPoints.end();
                 ++i) {
-                const int id = static_cast<int>(std::distance(results->fEncounteredPoints.begin(), i));
+                const int id = static_cast<int>(std::distance(encounteredPoints.begin(), i));
 
-                sourceFiles.insert(i->fFileName);
+                sourceFiles.insert((*i)->fFileName);
 
                 xercesc::DOMElement* const point = document->createElement(L"Point");
                 point->setAttribute(L"Id",
                     Utilities::ToWString<int>(id).c_str());
                 point->setAttribute(L"SymbolName",
-                    i->fSymbolName.c_str());
+                    (*i)->fSymbolName.c_str());
                 point->setAttribute(L"SymbolDisplacement",
-                    Utilities::ToWString<int>(i->fSymbolDisplacement).c_str());
+                    Utilities::ToWString<int>((*i)->fSymbolDisplacement).c_str());
                 point->setAttribute(L"FileName",
-                    i->fFileName.c_str());
+                    (*i)->fFileName.c_str());
                 point->setAttribute(L"LineNumber",
-                    Utilities::ToWString<int>(i->fLineNumber).c_str());
+                    Utilities::ToWString<int>((*i)->fLineNumber).c_str());
                 point->setAttribute(L"LineDisplacement",
-                    Utilities::ToWString<int>(i->fLineDisplacement).c_str());
+                    Utilities::ToWString<int>((*i)->fLineDisplacement).c_str());
 
                 pointsEncountered->appendChild(point);
             }
@@ -100,12 +109,10 @@ namespace Proffy {
                 ++i) {
                     const PointInProgram* const caller = i->first.first;
                     const PointInProgram* const callee = i->first.second;
-                    const int callerId =
-                        static_cast<int>(std::distance(results->fEncounteredPoints.begin(),
-                            results->fEncounteredPoints.find(*caller)));
-                    const int calleeId = (callee == NULL) ? -1 :
-                        static_cast<int>(std::distance(results->fEncounteredPoints.begin(),
-                            results->fEncounteredPoints.find(*callee)));
+                    const int callerId = static_cast<int>(
+                            std::distance(encounteredPoints.begin(), encounteredPoints.find(caller)));
+                    const int calleeId = (callee == NULL) ? -1 : static_cast<int>(
+                            std::distance(encounteredPoints.begin(), encounteredPoints.find(callee)));
 
                     xercesc::DOMElement* const counter = document->createElement(L"Counter");
 
@@ -151,9 +158,12 @@ namespace Proffy {
             root->appendChild(files);
         }
 
+        std::wostringstream outputFilename;
+        outputFilename << arguments->fOutputDirectory << L"\\" << title << L".xml";
+
         xercesc::DOMLSSerializer* const domSerializer = domImplementation->createLSSerializer();
         domSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(arguments->fXmlOutputFilename.c_str());
+        xercesc::XMLFormatTarget* const target = new xercesc::LocalFileFormatTarget(outputFilename.str().c_str());
         xercesc::DOMLSOutput* const output = domImplementation->createLSOutput();
         output->setByteStream(target);
         domSerializer->write(document, output);
@@ -182,20 +192,23 @@ namespace Proffy {
 
     void WriteDotReport(
         const CommandLineArguments* const arguments,
-        const Results* const results)
+        const std::wstring& title,
+        const ResultsForSingleThread* const results)
     {
-        std::wofstream dotStream(arguments->fDotOutputFilename.c_str());
-
+        std::wostringstream outputFilename;
+        outputFilename << arguments->fOutputDirectory << L"\\" << title << L".dot";
+        std::wofstream dotStream(outputFilename.str().c_str());
 
         dotStream << L"strict digraph Awesome {\n";
 
         std::map<std::wstring, triple<int, std::map<std::wstring, int>, int> > tally;
 
         // Ensure each symbol is present in the tally map.
-        for (std::set<PointInProgram>::const_iterator i = results->fEncounteredPoints.begin();
-            i != results->fEncounteredPoints.end();
+        const std::set<const PointInProgram*> encounteredPoints = results->EncounteredPoints();
+        for (std::set<const PointInProgram*>::const_iterator i = encounteredPoints.begin();
+            i != encounteredPoints.end();
             ++i) {
-            tally[i->fSymbolName];
+            tally[(*i)->fSymbolName];
         }
 
         // Accumulate symbol to symbol call counters
@@ -241,16 +254,46 @@ namespace Proffy {
 
         dotStream << L"}\n";
 
-
-
         dotStream.close();
     }
 
-    void WriteReport(
+    void WriteSingleReport(
         const CommandLineArguments* const arguments,
-        const Results* const results)
+        const std::wstring& title,
+        const int numberOfSamples,
+        const double wallClockTimeInSeconds,
+        const ResultsForSingleThread* const results)
     {
-        WriteXmlReport(arguments, results);
-        WriteDotReport(arguments, results);
+        WriteXmlReport(arguments, title, numberOfSamples, wallClockTimeInSeconds, results);
+        WriteDotReport(arguments, title, results);
+    }
+
+    void WriteAllReports(
+        const CommandLineArguments* const arguments,
+        const ResultsForAllThreads* const results)
+    {
+        ResultsForSingleThread accumulatedResultsForAllThreads;
+        const double wallClockTimeInSeconds = results->fEndTimeInSeconds - results->fBeginTimeInSeconds;
+
+        for (std::map<std::wstring, ResultsForSingleThread>::const_iterator i = results->fThreadResults.begin();
+            i != results->fThreadResults.end();
+            ++i) {
+            const std::wstring& threadId = i->first;
+            const ResultsForSingleThread* const threadResults = &(i->second);
+            accumulatedResultsForAllThreads.Accumulate(threadResults);
+            WriteSingleReport(
+                arguments,
+                threadId,
+                results->fNumberOfSamples,
+                wallClockTimeInSeconds,
+                threadResults);
+        }
+
+        WriteSingleReport(
+            arguments,
+            L"AllThreads",
+            results->fNumberOfSamples,
+            wallClockTimeInSeconds,
+            &accumulatedResultsForAllThreads);
     }
 }

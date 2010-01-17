@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2008, 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,25 +44,63 @@ namespace Proffy {
     const bool operator < (const PointInProgram&, const PointInProgram&);
 
     /**
+        Records results of the samples collected for a single thread.
+        
+        Multiple instances of this class are aggregated into ResultsForAllThreads.
+    */
+    class ResultsForSingleThread
+    {
+    public:
+        ResultsForSingleThread();
+
+        ~ResultsForSingleThread();
+
+        /**
+            Does not take ownership of the PointInProgram instances.
+            Instead the structures are expected to stay alive for the duration
+            of this class.  Usually held in a ResultsForAllThreads object.
+        */
+        void AccumulateCallstack(
+            const std::vector<const PointInProgram*>& resolvedFrames);
+        
+        /**
+            Merges the given results object into this one.
+        */
+        void Accumulate(
+            const ResultsForSingleThread* const);
+
+        /**
+            Number of callstacks collected for this thread.
+        */
+        int fNumberOfCallstacks;
+        
+        /**
+            Returns the set of all PointInProgram objects which are
+            present in the fHits map.
+        */
+        const std::set<const PointInProgram*> EncounteredPoints() const;
+        
+        /**
+            Whenever A is found to be calling B, increment the counter
+            at fHits[A, B].
+        */
+        std::map<std::pair<const PointInProgram*, const PointInProgram*>, int> fHits;
+    };
+    
+    /**
         Samples during the profile run are accumulated into an instance of this
         class.
     */
-    class Results
+    class ResultsForAllThreads
     {
     public:
-        Results();
+        ResultsForAllThreads();
 
-        ~Results();
+        ~ResultsForAllThreads();
 
         void AccumulateCallstack(
+            const std::wstring& threadId,
             const std::vector<PointInProgram>& resolvedFrames);
-
-        /**
-            Number of callstacks collected.  May be larger than
-            fNumberOfSamples due to multiple threads running
-            in the target.
-        */
-        int fNumberOfCallstacks;
 
         /**
             Number of times the profiler paused the target in order
@@ -80,12 +118,18 @@ namespace Proffy {
         */
         double fEndTimeInSeconds;
 
+    private:
+        /**
+            Never read from directly.  Used only to store
+            PointInProgram instances for the lifetime they
+            require.
+            
+            The ResultsForSingleThread objects store pointers
+            to these.
+        */
         std::set<PointInProgram> fEncounteredPoints;
 
-        /**
-            Whenever A is found to be calling B, increment the counter
-            at fHits[A, B].
-        */
-        std::map<std::pair<const PointInProgram*, const PointInProgram*>, int> fHits;
-    };
+    public:
+        std::map<std::wstring, ResultsForSingleThread> fThreadResults;
+    };    
 }

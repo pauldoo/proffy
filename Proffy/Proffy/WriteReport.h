@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 namespace Proffy {
     class CommandLineArguments;
-    class Results;
+    class ResultsForAllThreads;
 
-    void WriteReport(
+    void WriteAllReports(
         const CommandLineArguments* const arguments,
-        const Results* const results);
+        const ResultsForAllThreads* const results);
 }

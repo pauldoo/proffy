@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2008, 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <process.h>
 #include <vector>
 
 #pragma warning(disable: 4127) // conditional expression is constant
@@ -41,6 +42,14 @@ namespace {
     {
         std::sort(values->begin(), values->end());
     }
+    
+    void ThreadFunction(void*)
+    {
+        while (true) {
+            void* const pointer = calloc(20, 1000);
+            free(pointer);
+        }
+    }
 };
 
 int main(void)
@@ -57,8 +66,9 @@ int main(void)
     {
         std::wostringstream pathToProffy;
         pathToProffy << L"../dist/bin" << (sizeof(void*)*8) << L"/Proffy" << (sizeof(void*)*8) << L".exe";
-        Proffy::Launcher profiler(pathToProffy.str(), L"../dist/test.xml", L"../dist/test.dot", 1.0 / 20);
+        Proffy::Launcher profiler(pathToProffy.str(), L"../dist", 1.0 / 20);
         const clock_t begin = clock();
+        _beginthread(ThreadFunction, 0, NULL);
         while ((clock() - begin) / CLOCKS_PER_SEC < 3) {
             SomeFunction(&values, 3);
             SomeFunction(&values, 3.14f);

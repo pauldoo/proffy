@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009  Paul Richards.
+    Copyright (C) 2009, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,15 +39,14 @@ namespace Proffy {
         const int argc,
         const wchar_t* const * const argv)
     {
-        ASSERT(argc == 8);
+        ASSERT(argc == 7);
         CommandLineArguments result;
         result.fProcessId = Utilities::FromWString<int>(argv[1]);
-        result.fXmlOutputFilename = argv[2];
-        result.fDotOutputFilename = argv[3];
-        result.fStartFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[4]));
-        result.fStopFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[5]));
-        result.fDelayBetweenSamplesInSeconds = Utilities::FromWString<double>(argv[6]);
-        result.fProfileTheProfiler = Utilities::FromWString<bool>(argv[7]);
+        result.fOutputDirectory = argv[2];
+        result.fStartFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[3]));
+        result.fStopFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[4]));
+        result.fDelayBetweenSamplesInSeconds = Utilities::FromWString<double>(argv[5]);
+        result.fProfileTheProfiler = Utilities::FromWString<bool>(argv[6]);
         return result;
     }
 }
