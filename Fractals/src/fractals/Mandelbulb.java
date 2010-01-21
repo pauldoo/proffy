@@ -27,7 +27,7 @@ final class Mandelbulb {
     {
         Triplex z = c;
         boolean inside = true;
-        for (int i = 0; (inside = (z.x*z.x + z.y*z.y + z.z*z.z) < 4.0) && i < maxIter; i++) {
+        for (int i = 0; (inside = z.magnitudeSquared() < 4.0) && i < maxIter; i++) {
             z = stepNormal(c, z, null).first;
         }
         return inside;

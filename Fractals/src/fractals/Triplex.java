@@ -53,4 +53,14 @@ final class Triplex
                 a.y + b.y,
                 a.z + b.z);
     }
+
+    final double magnitudeSquared()
+    {
+        return x*x + y*y + z*z;
+    }
+
+    final double magnitude()
+    {
+        return Math.sqrt(magnitudeSquared());
+    }
 }
