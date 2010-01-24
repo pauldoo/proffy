@@ -75,6 +75,56 @@ final class Matrix implements Comparable<Matrix>
     }
 
     /**
+        Creates the 3x4 camera matrix represented
+        by the quaternion rotation and the vector translation.
+    */
+    static Matrix create3x4(
+            /**
+                Must be normalized.
+            */
+            Quaternion q,
+            Triplex p)
+    {
+        // http://en.wikipedia.org/w/index.php?title=Quaternions_and_spatial_rotation&oldid=337794355#From_a_quaternion_to_an_orthogonal_matrix
+        return create3x4(
+                q.a*q.a + q.b*q.b - q.c*q.c - q.d*q.d,
+                2.0*q.b*q.c - 2.0*q.a*q.d,
+                2.0*q.b*q.d + 2.0*q.a*q.c,
+                p.x,
+
+                2.0*q.b*q.c + 2.0*q.a*q.d,
+                q.a*q.a - q.b*q.b + q.c*q.c - q.d*q.d,
+                2.0*q.c*q.d - 2.0*q.a*q.b,
+                p.y,
+
+                2.0*q.b*q.d - 2.0*q.a*q.c,
+                2.0*q.c*q.d + 2.0*q.a*q.b,
+                q.a*q.a - q.b*q.b - q.c*q.c + q.d*q.d,
+                p.z);
+    }
+
+    static Matrix create3x4(
+            double a, double b, double c, double d,
+            double e, double f, double g, double h,
+            double i, double j, double k, double l)
+    {
+        double[][] values = allocateArray(3, 4);
+        values[0][0] = a;
+        values[0][1] = b;
+        values[0][2] = c;
+        values[0][3] = d;
+        values[1][0] = e;
+        values[1][1] = f;
+        values[1][2] = g;
+        values[1][3] = h;
+        values[2][0] = i;
+        values[2][1] = j;
+        values[2][2] = k;
+        values[2][3] = l;
+        return new Matrix(values);
+    }
+
+    /**
         Static constructor for matrices of 3 rows and 5 columns.
     */
     static Matrix create3x5(
