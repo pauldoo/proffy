@@ -50,14 +50,8 @@ final class Mandelbulb {
         Matrix normal = Matrix.multiply(
                 Matrix.create1x3(state.first.x, state.first.y, state.first.z),
                 state.second);
-        final double mag = Math.sqrt(
-                normal.get(0, 0) * normal.get(0, 0) +
-                normal.get(0, 1) * normal.get(0, 1) +
-                normal.get(0, 2) * normal.get(0, 2));
-        return new Triplex(
-                normal.get(0, 0) / mag,
-                normal.get(0, 1) / mag,
-                normal.get(0, 2) / mag);
+        Triplex result = new Triplex(normal.get(0, 0), normal.get(0, 1), normal.get(0, 2));
+        return Triplex.normalize(result);
     }
 
     /**
@@ -185,9 +179,18 @@ final class Mandelbulb {
         }
     }
 
+    final static class NormalProvider implements OctTreeRendererComponent.NormalProvider
+    {
+        @Override
+        public Triplex normalAtPosition(Triplex p) {
+            return computeNormal(p, maxIterations);
+        }
+    }
+
     public static JComponent createView()
     {
-        final OctTreeRendererComponent renderComponent = new OctTreeRendererComponent();
+        final OctTreeRendererComponent renderComponent = new OctTreeRendererComponent(new NormalProvider());
+
         /*
             TODO: Remove this thread, and do it as part of the OctTreeRenderComponent.
             That way evaluation of a region will only occur as a consequence of a rendering.

@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 /**
+    Renders an OctTree in 3D.
 */
 final class OctTreeRendererComponent extends BackgroundRenderingComponent {
 
@@ -30,11 +31,32 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
 
     private OctTree segmentation = OctTree.createEmpty().repSetRegion(0.0, 0.0, 0.0, 0.5, 0.5, 0.5, true);
     private Color backgroundColor = Color.RED;
+    private final NormalProvider normalProvider;
     private static final int superSample = 2;
     private static final int subSample = 4;
 
-    public OctTreeRendererComponent() {
+    /**
+        Callback interface used by OctTreeRendererComponent when
+        the surface normal at a point is needed.
+
+        This normal could be estimated using the structure of the OctTree
+        segmentation, but in some cases the normal can be computed
+        analytically by some other means.
+    */
+    static interface NormalProvider
+    {
+        /**
+            Should calculate the surface normal for the
+            given point (which will only roughly be on the surface).
+
+            The returned value should be normalized.
+        */
+        Triplex normalAtPosition(Triplex p);
+    }
+
+    public OctTreeRendererComponent(final NormalProvider normalProvider) {
         super(superSample);
+        this.normalProvider = normalProvider;
     }
 
     @Override
@@ -53,6 +75,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
             g.transform(AffineTransform.getScaleInstance(downscale, downscale));
             doRender(
                     segmentation,
+                    normalProvider,
                     theta,
                     g,
                     super.getSupersampledWidth() / downscale,
@@ -81,6 +104,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
 
     private static void doRender(
             final OctTree segmentation,
+            final NormalProvider normalProvider,
             final double theta,
             final Graphics g,
             final int width,
@@ -116,7 +140,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
                             x + result * dx,
                             y + result * dy,
                             z + result * dz);
-                        final Triplex normal = Mandelbulb.computeNormal(position, Mandelbulb.maxIterations);
+                        final Triplex normal = normalProvider.normalAtPosition(position);
                         final double shade = Math.max(normal.x * 0.0 + normal.y * -0.5 + normal.z * 0.5, 0.0);
                         final Color color = new Color((float) (shade), (float) (shade), (float) (shade));
                         g.setColor(color);
@@ -125,10 +149,8 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent {
                     }
                 }
                 g.fillRect(ix, iy, 1, 1);
-
             }
         }
     }
-
-
 }
+

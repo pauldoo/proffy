@@ -63,4 +63,13 @@ final class Triplex
     {
         return Math.sqrt(magnitudeSquared());
     }
+
+    static Triplex normalize(Triplex a)
+    {
+        final double mag = a.magnitude();
+        return new Triplex(
+                a.x / mag,
+                a.y / mag,
+                a.z / mag);
+    }
 }
