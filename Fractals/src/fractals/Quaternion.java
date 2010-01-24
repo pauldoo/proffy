@@ -91,19 +91,4 @@ final class Quaternion {
     {
         return new Quaternion(1.0, 0.0, 0.0, 0.0);
     }
-
-    public static Quaternion rotateAroundXby90()
-    {
-        return new Quaternion(0.0, 1.0, 0.0, 0.0);
-    }
-    
-    public static Quaternion rotateAroundYby90()
-    {
-        return new Quaternion(0.0, 0.0, 1.0, 0.0);
-    }
-
-    public static Quaternion rotateAroundZby90()
-    {
-        return new Quaternion(0.0, 0.0, 0.0, 1.0);
-    }
 }
