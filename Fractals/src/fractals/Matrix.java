@@ -124,6 +124,32 @@ final class Matrix implements Comparable<Matrix>
         return new Matrix(values);
     }
 
+    static Matrix create4x4(
+            double a, double b, double c, double d,
+            double e, double f, double g, double h,
+            double i, double j, double k, double l,
+            double m, double n, double o, double p)
+    {
+        double[][] values = allocateArray(4, 4);
+        values[0][0] = a;
+        values[0][1] = b;
+        values[0][2] = c;
+        values[0][3] = d;
+        values[1][0] = e;
+        values[1][1] = f;
+        values[1][2] = g;
+        values[1][3] = h;
+        values[2][0] = i;
+        values[2][1] = j;
+        values[2][2] = k;
+        values[2][3] = l;
+        values[3][0] = m;
+        values[3][1] = n;
+        values[3][2] = o;
+        values[3][3] = p;
+        return new Matrix(values);
+    }
+
     /**
         Static constructor for matrices of 3 rows and 5 columns.
     */
@@ -304,6 +330,108 @@ final class Matrix implements Comparable<Matrix>
             }
         }
         return a;
+    }
+
+    static Matrix invert4x4(final Matrix a) {
+        if (a.rows() != 4 || a.columns() != 4) {
+            throw new IllegalArgumentException("Only 4x4 matrices supported.");
+        }
+
+        /*
+            Adapted from:
+            ftp://download.intel.com/design/PentiumIII/sml/24504301.pdf
+        */
+
+        // temp array for pairs
+        double tmp[] = new double[12];
+        // array of transpose source matrix
+        double src[] = new double[16];
+        // determinant
+        double det;
+        // destination
+        double dst[] = new double[16];
+
+        // transpose matrix
+        for (int i = 0; i < 4; i++) {
+            src[i] = a.get(i, 0);
+            src[i + 4] = a.get(i, 1);
+            src[i + 8] = a.get(i, 2);
+            src[i + 12] = a.get(i, 3);
+        }
+
+        // calculare pairs for first 8 elements (cofactors)
+        tmp[0] = src[10] * src[15]; 
+        tmp[1] = src[11] * src[14];
+        tmp[2] = src[9] * src[15];
+        tmp[3] = src[11] * src[13];
+        tmp[4] = src[9] * src[14];
+        tmp[5] = src[10] * src[13];
+        tmp[6] = src[8] * src[15];
+        tmp[7] = src[11] * src[12];
+        tmp[8] = src[8] * src[14];
+        tmp[9] = src[10] * src[12];
+        tmp[10] = src[8] * src[13];
+        tmp[11] = src[9] * src[12];
+
+        // calculate first 8 elements (cofactors)
+        dst[0] = tmp[0]*src[5] + tmp[3]*src[6] + tmp[4]*src[7];
+        dst[0] -= tmp[1]*src[5] + tmp[2]*src[6] + tmp[5]*src[7];
+        dst[1] = tmp[1]*src[4] + tmp[6]*src[6] + tmp[9]*src[7];
+        dst[1] -= tmp[0]*src[4] + tmp[7]*src[6] + tmp[8]*src[7];
+        dst[2] = tmp[2]*src[4] + tmp[7]*src[5] + tmp[10]*src[7];
+        dst[2] -= tmp[3]*src[4] + tmp[6]*src[5] + tmp[11]*src[7];
+        dst[3] = tmp[5]*src[4] + tmp[8]*src[5] + tmp[11]*src[6];
+        dst[3] -= tmp[4]*src[4] + tmp[9]*src[5] + tmp[10]*src[6];
+        dst[4] = tmp[1]*src[1] + tmp[2]*src[2] + tmp[5]*src[3];
+        dst[4] -= tmp[0]*src[1] + tmp[3]*src[2] + tmp[4]*src[3];
+        dst[5] = tmp[0]*src[0] + tmp[7]*src[2] + tmp[8]*src[3];
+        dst[5] -= tmp[1]*src[0] + tmp[6]*src[2] + tmp[9]*src[3];
+        dst[6] = tmp[3]*src[0] + tmp[6]*src[1] + tmp[11]*src[3];
+        dst[6] -= tmp[2]*src[0] + tmp[7]*src[1] + tmp[10]*src[3];
+        dst[7] = tmp[4]*src[0] + tmp[9]*src[1] + tmp[10]*src[2];
+        dst[7] -= tmp[5]*src[0] + tmp[8]*src[1] + tmp[11]*src[2];
+
+        // calculate pairs for second 8 elements (cofactors)
+        tmp[0] = src[2]*src[7];
+        tmp[1] = src[3]*src[6];
+        tmp[2] = src[1]*src[7];
+        tmp[3] = src[3]*src[5];
+        tmp[4] = src[1]*src[6];
+        tmp[5] = src[2]*src[5];
+        tmp[6] = src[0]*src[7];
+        tmp[7] = src[3]*src[4]; 
+        tmp[8] = src[0]*src[6];
+        tmp[9] = src[2]*src[4];
+        tmp[10] = src[0]*src[5];
+        tmp[11] = src[1]*src[4];
+        
+        // calculate second 8 elements (cofactors)
+        dst[8] = tmp[0]*src[13] + tmp[3]*src[14] + tmp[4]*src[15];
+        dst[8] -= tmp[1]*src[13] + tmp[2]*src[14] + tmp[5]*src[15];
+        dst[9] = tmp[1]*src[12] + tmp[6]*src[14] + tmp[9]*src[15]; 
+        dst[9] -= tmp[0]*src[12] + tmp[7]*src[14] + tmp[8]*src[15]; 
+        dst[10] = tmp[2]*src[12] + tmp[7]*src[13] + tmp[10]*src[15]; 
+        dst[10]-= tmp[3]*src[12] + tmp[6]*src[13] + tmp[11]*src[15]; 
+        dst[11] = tmp[5]*src[12] + tmp[8]*src[13] + tmp[11]*src[14]; 
+        dst[11]-= tmp[4]*src[12] + tmp[9]*src[13] + tmp[10]*src[14];
+        dst[12] = tmp[2]*src[10] + tmp[5]*src[11] + tmp[1]*src[9];
+        dst[12]-= tmp[4]*src[11] + tmp[0]*src[9] + tmp[3]*src[10];
+        dst[13] = tmp[8]*src[11] + tmp[0]*src[8] + tmp[7]*src[10]; 
+        dst[13]-= tmp[6]*src[10] + tmp[9]*src[11] + tmp[1]*src[8];
+        dst[14] = tmp[6]*src[9] + tmp[11]*src[11] + tmp[3]*src[8]; 
+        dst[14]-= tmp[10]*src[11] + tmp[2]*src[8] + tmp[7]*src[9]; 
+        dst[15] = tmp[10]*src[10] + tmp[4]*src[8] + tmp[9]*src[9];
+        dst[15]-= tmp[8]*src[9] + tmp[11]*src[10] + tmp[5]*src[8];        
+        
+        // calculate determinant
+        det=src[0]*dst[0]+src[1]*dst[1]+src[2]*dst[2]+src[3]*dst[3];
+        
+        // calculate matrix inverse
+        return Matrix.create4x4(
+                dst[0] / det, dst[1] / det, dst[2] / det, dst[3] / det,
+                dst[4] / det, dst[5] / det, dst[6] / det, dst[7] / det,
+                dst[8] / det, dst[9] / det, dst[10] / det, dst[11] / det,
+                dst[12] / det, dst[13] / det, dst[14] / det, dst[15] / det);
     }
 
     private static double[][] allocateArray(int rows, int columns)

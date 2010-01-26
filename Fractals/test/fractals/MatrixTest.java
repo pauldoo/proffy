@@ -120,4 +120,22 @@ public class MatrixTest extends TestCase {
         assertTrue(Matrix.multiply(c, Matrix.createIdentity(5)).equals(c));
         assertTrue(Matrix.multiply(Matrix.createIdentity(5), c).equals(c));
     }
+
+    public void testInvert() {
+        Matrix a = Matrix.create4x4(
+                2, 3, 5, 7,
+                11, 13, 17, 19,
+                23, 29, 31, 37,
+                41, 43, 47, 53);
+
+        Matrix aInverse = Matrix.invert4x4(a);
+
+        Matrix identity = Matrix.multiply(a, aInverse);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                assert(Math.abs(identity.get(i, j) - ((i==j) ? 1.0 : 0.0)) < 1e-9);
+            }
+        }
+
+    }
 }
