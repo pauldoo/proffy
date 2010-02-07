@@ -15,15 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fractals;
+package fractals.math;
 
-final class Triplex
+import fractals.Utilities;
+
+public final class Triplex
 {
     public final double x;
     public final double y;
     public final double z;
 
-    Triplex(double x, double y, double z) {
+    public Triplex(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -46,7 +48,7 @@ final class Triplex
         return this;
     }
 
-    static Triplex add(Triplex a, Triplex b)
+    public static Triplex add(Triplex a, Triplex b)
     {
         return new Triplex(
                 a.x + b.x,
@@ -54,7 +56,7 @@ final class Triplex
                 a.z + b.z);
     }
 
-    static Triplex subtract(Triplex a, Triplex b)
+    public static Triplex subtract(Triplex a, Triplex b)
     {
         return new Triplex(
                 a.x - b.x,
@@ -62,7 +64,7 @@ final class Triplex
                 a.z - b.z);
     }
 
-    static Triplex multiply(Triplex a, double b)
+    public static Triplex multiply(Triplex a, double b)
     {
         return new Triplex(
                 a.x * b,
@@ -70,22 +72,22 @@ final class Triplex
                 a.z * b);
     }
 
-    final double magnitudeSquared()
+    public final double magnitudeSquared()
     {
         return x*x + y*y + z*z;
     }
 
-    final double magnitude()
+    public final double magnitude()
     {
         return Math.sqrt(magnitudeSquared());
     }
 
-    final Triplex negate()
+    public final Triplex negate()
     {
         return new Triplex(-x, -y, -z);
     }
 
-    static Triplex normalize(Triplex a)
+    public static Triplex normalize(Triplex a)
     {
         final double mag = a.magnitude();
         return new Triplex(
@@ -94,7 +96,7 @@ final class Triplex
                 a.z / mag);
     }
 
-    static Triplex crossProduct(Triplex a, Triplex b)
+    public static Triplex crossProduct(Triplex a, Triplex b)
     {
         return new Triplex(
                 a.y * b.z - b.y * a.z,
@@ -102,12 +104,12 @@ final class Triplex
                 a.x * b.y - b.x * a.y);
     }
 
-    static double dotProduct(Triplex a, Triplex b)
+    public static double dotProduct(Triplex a, Triplex b)
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
-    Triplex normalize()
+    public Triplex normalize()
     {
         return normalize(this);
     }

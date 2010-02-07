@@ -15,19 +15,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fractals;
+package fractals.math;
 
 /**
     Simple struct-like object for storing 4D vectors.
 */
-final class Vector4
+public final class Vector4
 {
     private final double a;
     private final double b;
     private final double c;
     private final double d;
     
-    Vector4(double a, double b, double c, double d)
+    public Vector4(double a, double b, double c, double d)
     {
         this.a = a;
         this.b = b;
@@ -35,19 +35,19 @@ final class Vector4
         this.d = d;
     }
     
-    double getA() {
+    public double getA() {
         return a;
     }
 
-    double getB() {
+    public double getB() {
         return b;
     }
 
-    double getC() {
+    public double getC() {
         return c;
     }
 
-    double getD() {
+    public double getD() {
         return d;
     }
 
@@ -83,7 +83,7 @@ final class Vector4
         return "(" + getA() + ", " + getB() + ", " + getC() + ", " + getD() + ")";
     }
     
-    static Vector4 add(Vector4 lhs, Vector4 rhs)
+    public static Vector4 add(Vector4 lhs, Vector4 rhs)
     {
         return new Vector4(
                 lhs.getA() + rhs.getA(),
@@ -92,12 +92,12 @@ final class Vector4
                 lhs.getD() + rhs.getD());
     }
     
-    Vector4 add(Vector4 rhs)
+    public Vector4 add(Vector4 rhs)
     {
         return add(this, rhs);
     }
     
-    static Vector4 multiply(Vector4 vector, double scalar)
+    public static Vector4 multiply(Vector4 vector, double scalar)
     {
         return new Vector4(
                 vector.getA() * scalar,
@@ -106,7 +106,7 @@ final class Vector4
                 vector.getD() * scalar);
     }
     
-    Vector4 multiply(double scalar)
+    public Vector4 multiply(double scalar)
     {
         return multiply(this, scalar);
     }

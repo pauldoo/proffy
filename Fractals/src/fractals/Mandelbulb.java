@@ -17,6 +17,9 @@
 
 package fractals;
 
+import fractals.math.Complex;
+import fractals.math.Matrix;
+import fractals.math.Triplex;
 import java.awt.Color;
 import javax.swing.JComponent;
 

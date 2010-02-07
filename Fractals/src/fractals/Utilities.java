@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 
-final class Utilities
+public final class Utilities
 {
     private static final ScheduledExecutorService lightThreadPool =
             new ScheduledThreadPoolExecutor(2, new MyThreadFactory(Thread.NORM_PRIORITY));
@@ -124,7 +124,7 @@ final class Utilities
     /**
         Asserts that the value is not NaN, then returns it.
     */
-    static double assertNotNaN(double x) throws NotANumberException
+    public static double assertNotNaN(double x) throws NotANumberException
     {
         if (Double.isNaN(x)) {
             throw new NotANumberException();

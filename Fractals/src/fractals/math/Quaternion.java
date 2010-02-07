@@ -15,7 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fractals;
+package fractals.math;
+
+import fractals.math.Triplex;
 
 /**
     Quaternion class.
@@ -30,7 +32,7 @@ package fractals;
     Using quaternions to represent rotations in this way allows
     quaternion multiplication to be used to compose rotations.
 */
-final class Quaternion implements Comparable<Quaternion>
+public final class Quaternion implements Comparable<Quaternion>
 {
     /**
         Real part.

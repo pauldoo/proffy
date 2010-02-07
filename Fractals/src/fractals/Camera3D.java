@@ -17,6 +17,10 @@
 
 package fractals;
 
+import fractals.math.Matrix;
+import fractals.math.Quaternion;
+import fractals.math.Triplex;
+
 /**
     Stores all properties of a camera in 3D space.
     The representation is intentionally more restrictive than

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2007, 2008  Paul Richards.
+    Copyright (C) 2007, 2008, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 package fractals;
 
+import fractals.math.Complex;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

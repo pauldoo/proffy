@@ -17,6 +17,9 @@
 
 package fractals;
 
+import fractals.math.Matrix;
+import fractals.math.Quaternion;
+import fractals.math.Triplex;
 import junit.framework.TestCase;
 
 /**

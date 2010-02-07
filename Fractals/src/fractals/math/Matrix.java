@@ -15,14 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fractals;
+package fractals.math;
 
+import fractals.Utilities;
 import java.util.Arrays;
 
 /**
     Immutable matrix class (over reals).
 */
-final class Matrix implements Comparable<Matrix>
+public final class Matrix implements Comparable<Matrix>
 {
     private Matrix(double[][] values)
     {
@@ -37,7 +38,7 @@ final class Matrix implements Comparable<Matrix>
         }
     }
 
-    static Matrix createIdentity(int size)
+    public static Matrix createIdentity(int size)
     {
         double[][] values = allocateArray(size, size);
         for (int i = 0; i < size; i++) {
@@ -49,7 +50,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Static constructor for matrices with 1 row and 3 columns.
     */
-    static Matrix create1x3(
+    public static Matrix create1x3(
             double a, double b, double c)
     {
         double[][] values = allocateArray(1, 3);
@@ -62,7 +63,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Static constructor for matrices with 2 rows and 2 columns.
     */
-    static Matrix create2x2(
+    public static Matrix create2x2(
             double a, double b,
             double c, double d)
     {
@@ -78,7 +79,7 @@ final class Matrix implements Comparable<Matrix>
         Creates the 3x3 rotation matrix represented
         by the normalized quaternion.
     */
-    static Matrix create3x3(
+    public static Matrix create3x3(
             Quaternion q)
     {
         // http://en.wikipedia.org/w/index.php?title=Quaternions_and_spatial_rotation&oldid=337794355#From_a_quaternion_to_an_orthogonal_matrix
@@ -96,7 +97,7 @@ final class Matrix implements Comparable<Matrix>
                 q.a*q.a - q.b*q.b - q.c*q.c + q.d*q.d);
     }
 
-    static Matrix create4x4(
+    public static Matrix create4x4(
             Triplex translation,
             Quaternion rotation)
     {
@@ -109,7 +110,7 @@ final class Matrix implements Comparable<Matrix>
                     0.0, 0.0, 0.0, 1.0));
     }
 
-    static Matrix create3x3(
+    public static Matrix create3x3(
             double a, double b, double c,
             double d, double e, double f,
             double g, double h, double i)
@@ -129,7 +130,7 @@ final class Matrix implements Comparable<Matrix>
         return new Matrix(values);
     }
 
-    static Matrix create3x4(
+    public static Matrix create3x4(
             double a, double b, double c, double d,
             double e, double f, double g, double h,
             double i, double j, double k, double l)
@@ -150,7 +151,7 @@ final class Matrix implements Comparable<Matrix>
         return new Matrix(values);
     }
 
-    static Matrix create4x1(
+    public static Matrix create4x1(
             double a,
             double b,
             double c,
@@ -164,7 +165,7 @@ final class Matrix implements Comparable<Matrix>
         return new Matrix(values);
     }
 
-    static Matrix create4x4(
+    public static Matrix create4x4(
             double a, double b, double c, double d,
             double e, double f, double g, double h,
             double i, double j, double k, double l,
@@ -193,7 +194,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Static constructor for matrices of 3 rows and 5 columns.
     */
-    static Matrix create3x5(
+    public static Matrix create3x5(
             double a, double b, double c, double d, double e,
             double f, double g, double h, double i, double j,
             double k, double l, double m, double n, double o)
@@ -220,7 +221,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Static constructor for matrices of 5 rows and 5 columns.
     */
-    static Matrix create5x5(
+    public static Matrix create5x5(
             double a, double b, double c, double d, double e,
             double f, double g, double h, double i, double j,
             double k, double l, double m, double n, double o,
@@ -259,7 +260,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Static constructor for matrices of 5 rows and 3 columns.
     */
-    static Matrix create5x3(
+    public static Matrix create5x3(
             double a, double b, double c,
             double d, double e, double f,
             double g, double h, double i,
@@ -288,7 +289,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Returns a count of the number of matrix rows.
     */
-    int rows()
+    public int rows()
     {
         return values.length;
     }
@@ -296,7 +297,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Returns a count of the number of matrix columns.
     */
-    int columns()
+    public int columns()
     {
         return values[0].length;
     }
@@ -304,12 +305,12 @@ final class Matrix implements Comparable<Matrix>
     /**
         Returns the matrix value from the specified row and column of the matrix.
     */
-    double get(int row, int column)
+    public double get(int row, int column)
     {
         return values[row][column];
     }
 
-    static Matrix add(final Matrix a, final Matrix b)
+    public static Matrix add(final Matrix a, final Matrix b)
     {
         if (a.rows() != b.rows() || a.columns() != b.columns()) {
             throw new IllegalArgumentException("Matrices cannot be multiplied");
@@ -324,7 +325,7 @@ final class Matrix implements Comparable<Matrix>
         return new Matrix(result);
     }
 
-    static Matrix multiply(final Matrix a, final Matrix b)
+    public static Matrix multiply(final Matrix a, final Matrix b)
     {
         if (a.columns() != b.rows()) {
             throw new IllegalArgumentException("Matrices cannot be multiplied");
@@ -346,7 +347,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Returns a^7 (or a*a*a*a*a*a*a).
     */
-    static Matrix power7(final Matrix a)
+    public static Matrix power7(final Matrix a)
     {
         if (a.rows() != a.columns()) {
             throw new IllegalArgumentException("Matrix is not square");
@@ -362,7 +363,7 @@ final class Matrix implements Comparable<Matrix>
     /**
         Asserts that no values in the matrix are NaN, then returns the input matrix.
     */
-    static Matrix assertNotNaN(final Matrix a)
+    public static Matrix assertNotNaN(final Matrix a)
     {
         for (int row = 0; row < a.rows(); row++) {
             for (int column = 0; column < a.columns(); column++) {
@@ -372,7 +373,7 @@ final class Matrix implements Comparable<Matrix>
         return a;
     }
 
-    static Matrix extendWithIdentity(final Matrix a, int rows, int columns)
+    public static Matrix extendWithIdentity(final Matrix a, int rows, int columns)
     {
         if (a.rows() == rows && a.columns() == columns) {
             return a;
@@ -393,7 +394,7 @@ final class Matrix implements Comparable<Matrix>
         }
     }
 
-    static Matrix invert4x4(final Matrix a) {
+    public static Matrix invert4x4(final Matrix a) {
         if (a.rows() != 4 || a.columns() != 4) {
             throw new IllegalArgumentException("Only 4x4 matrices supported.");
         }
@@ -501,7 +502,7 @@ final class Matrix implements Comparable<Matrix>
         Assumes homogenous coordinate representation, and converts
         to standard Triplex coordinate.
     */
-    Triplex toTriplex()
+    public Triplex toTriplex()
     {
         if (rows() == 4 && columns() == 1) {
             return new Triplex(

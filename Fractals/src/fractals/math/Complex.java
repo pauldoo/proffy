@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fractals;
+package fractals.math;
 
 /**
     Complex number class.
@@ -28,7 +28,7 @@ package fractals;
     "xxxReplace()" methods should be used instead.  These perform their
     operation and write the result out to an existing instance.
 */
-final class Complex implements Cloneable
+public final class Complex implements Cloneable
 {
     /// Real part
     private double real;
