@@ -24,6 +24,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import javax.swing.event.MouseInputListener;
@@ -31,13 +33,13 @@ import javax.swing.event.MouseInputListener;
 /**
     Renders an OctTree in 3D.
 */
-final class OctTreeRendererComponent extends BackgroundRenderingComponent implements MouseInputListener
+final class OctTreeRendererComponent extends BackgroundRenderingComponent implements MouseInputListener, KeyListener
 {
 
     private static final long serialVersionUID = 4417921502019642371L;
 
     private OctTree segmentation = OctTree.createEmpty().repSetRegion(0.0, 0.0, 0.0, 0.5, 0.5, 0.5, true);
-    private Color backgroundColor = Color.RED;
+    private final Color backgroundColor = Color.DARK_GRAY;
     private final NormalProvider normalProvider;
     private Camera3D camera = new Camera3D(new Triplex(0.0, 0.0, -1.5), Quaternion.identityRotation());
     private Point previousDragPoint = null;
@@ -105,7 +107,6 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
                 rayVector.x,
                 rayVector.y,
                 rayVector.z);
-        } else {
         }
     }
 
@@ -121,6 +122,47 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        switch (e.getKeyChar()) {
+            case '+':
+                zoomBy(0.2);
+                break;
+            case '-':
+                zoomBy(-0.2);
+                break;
+            default:
+        }
+    }
+
+    private void zoomBy(double factor)
+    {
+        final Matrix invertedProjectionMatrix = Matrix.invert4x4(camera.toProjectionMatrix());
+        final Triplex cameraCenter = recoverCameraCenter(invertedProjectionMatrix);
+
+        final Triplex rayVector = recoverDirectionVector(invertedProjectionMatrix, 0.0, 0.0).normalize();
+        final double distance = segmentation.firstHit(
+            cameraCenter.x,
+            cameraCenter.y,
+            cameraCenter.z,
+            rayVector.x,
+            rayVector.y,
+            rayVector.z);
+        if (Double.isNaN(distance) == false) {
+            final Triplex shift = Triplex.multiply(rayVector, distance * factor);
+            camera = camera.replicateAddShift(shift);
+            super.rerender();
+        }
     }
 
     /**
@@ -145,8 +187,10 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
     public OctTreeRendererComponent(final NormalProvider normalProvider) {
         super(superSample);
         this.normalProvider = normalProvider;
+        this.setFocusable(true);
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
+        this.addKeyListener(this);
     }
 
     @Override
@@ -186,12 +230,6 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
         super.rerender();
     }
 
-    public void setBackgroundColor(Color color)
-    {
-        this.backgroundColor = color;
-        super.rerender();
-    }
-
     private static Triplex recoverCameraCenter(
             Matrix invertedProjectionMatrix)
     {
@@ -223,7 +261,11 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
         final Matrix invertedProjectionMatrix = Matrix.invert4x4(projectionMatrix);
         final Triplex cameraCenter = recoverCameraCenter(invertedProjectionMatrix);
         final double halfSize = Math.max(width, height) / 2.0;
-        final Triplex lightDirection = recoverDirectionVector(invertedProjectionMatrix, 0.0, 0.5).negate().normalize();
+
+        final Triplex redLightDirection = recoverDirectionVector(invertedProjectionMatrix, -1.0, 1.0).negate().normalize();
+        final Triplex blueLightDirection = recoverDirectionVector(invertedProjectionMatrix, 1.0, 1.0).negate().normalize();
+        final Triplex greenLightDirection = recoverDirectionVector(invertedProjectionMatrix, 0.0, -1.0).negate().normalize();
+
 
         for (int iy = 0; iy < height; iy++) {
             if (Thread.interrupted()) {
@@ -232,7 +274,7 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
 
             for (int ix = 0; ix < width; ix++) {
                 final double sx = (ix - width/2.0) / halfSize;
-                final double sy = (iy - height/2.0) / halfSize;
+                 final double sy = (iy - height/2.0) / halfSize;
                 final Triplex rayVector = recoverDirectionVector(invertedProjectionMatrix, sx, sy);
 
                 final double result = segmentation.firstHit(
@@ -249,8 +291,12 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
                     try {
                         final Triplex position = Triplex.add(cameraCenter, Triplex.multiply(rayVector, result));
                         final Triplex normal = normalProvider.normalAtPosition(position);
-                        final double shade = Math.max(Triplex.dotProduct(normal, lightDirection), 0.0);
-                        final Color color = new Color((float) (shade), (float) (shade), (float) (shade));
+
+                        final double redShade = Math.max(Triplex.dotProduct(normal, redLightDirection), 0.0);
+                        final double blueShade = Math.max(Triplex.dotProduct(normal, blueLightDirection), 0.0);
+                        final double greenShade = Math.max(Triplex.dotProduct(normal, greenLightDirection), 0.0);
+                        final Color color = new Color((float)(redShade), (float)(blueShade), (float)(greenShade));
+
                         g.setColor(color);
                     } catch (NotANumberException ex) {
                         g.setColor(Color.BLUE);

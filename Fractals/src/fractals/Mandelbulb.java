@@ -147,37 +147,32 @@ final class Mandelbulb {
             this.renderComponent = renderComponent;
         }
 
+        @Override
         public void run() {
-            try {
-                OctTree tree = OctTree.createEmpty();
-                for (int level = 1; level <= 8; level++) {
-                    final long startTime = System.currentTimeMillis();
+            OctTree tree = OctTree.createEmpty();
+            for (int level = 1; level <= 8; level++) {
+                final long startTime = System.currentTimeMillis();
 
-                    final int resolution = 2 << level;
-                    for (int iz = -resolution; iz < resolution; iz++) {
-                        for (int iy = -resolution; iy < resolution; iy++) {
-                            for (int ix = -resolution; ix < resolution; ix++) {
-                                double x = (ix + 0.5) / resolution;
-                                double y = (iy + 0.5) / resolution;
-                                double z = (iz + 0.5) / resolution;
+                final int resolution = 2 << level;
+                for (int iz = -resolution; iz < resolution; iz++) {
+                    for (int iy = -resolution; iy < resolution; iy++) {
+                        for (int ix = -resolution; ix < resolution; ix++) {
+                            double x = (ix + 0.5) / resolution;
+                            double y = (iy + 0.5) / resolution;
+                            double z = (iz + 0.5) / resolution;
 
-                                boolean inside = Mandelbulb.evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5), maxIterations);
-                                double scale = 0.5 / resolution;
-                                tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
-                            }
+                            boolean inside = Mandelbulb.evaluate(new Triplex(x * 1.5, y * 1.5, z * 1.5), maxIterations);
+                            double scale = 0.5 / resolution;
+                            tree = tree.repSetRegion(x - scale, y - scale, z - scale, x + scale, y + scale, z + scale, inside);
                         }
                     }
-
-                    final long endTime = System.currentTimeMillis();
-
-                    final int nodeCount = tree.nodeCount();
-                    System.out.println("Level " + level + ", resolution " + resolution + ", nodeCount " + nodeCount + ", nodeCount/resolution^2 " + (nodeCount / (resolution * resolution)) + ", time " + (endTime - startTime) + "ms");
-                    renderComponent.setSegmentation(tree);
-                    Thread.sleep(2000);
                 }
-                renderComponent.setBackgroundColor(Color.GREEN);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+
+                final long endTime = System.currentTimeMillis();
+
+                final int nodeCount = tree.nodeCount();
+                System.out.println("Level " + level + ", resolution " + resolution + ", nodeCount " + nodeCount + ", nodeCount/resolution^2 " + (nodeCount / (resolution * resolution)) + ", time " + (endTime - startTime) + "ms");
+                renderComponent.setSegmentation(tree);
             }
         }
     }
