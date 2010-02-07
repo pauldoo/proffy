@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008  Paul Richards.
+    Copyright (C) 2008, 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,8 +27,6 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -36,12 +34,13 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.event.MouseInputListener;
 
 /**
     A Quadrilateral gui widget that sits without a layout manager and
     can be dragged around by the 4 corners.
 */
-final class DraggableQuadrilateral extends JComponent implements MouseListener, MouseMotionListener
+final class DraggableQuadrilateral extends JComponent implements MouseInputListener
 {
     private static final long serialVersionUID = 4705086044490724806L;
 
