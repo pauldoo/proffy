@@ -28,6 +28,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.event.MouseInputListener;
 
 /**
@@ -262,10 +264,12 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
         final Triplex cameraCenter = recoverCameraCenter(invertedProjectionMatrix);
         final double halfSize = Math.max(width, height) / 2.0;
 
-        final Triplex redLightDirection = recoverDirectionVector(invertedProjectionMatrix, -1.0, 1.0).negate().normalize();
-        final Triplex blueLightDirection = recoverDirectionVector(invertedProjectionMatrix, 1.0, 1.0).negate().normalize();
-        final Triplex greenLightDirection = recoverDirectionVector(invertedProjectionMatrix, 0.0, -1.0).negate().normalize();
-
+        final List<Pair<Triplex, Color> > lights = new ArrayList<Pair<Triplex, Color> >();
+        lights.add(new Pair<Triplex, Color>(new Triplex(+1.0, 0.0, 0.0), Color.RED));
+        lights.add(new Pair<Triplex, Color>(new Triplex(-0.5, -0.866, 0.0), Color.GREEN));
+        lights.add(new Pair<Triplex, Color>(new Triplex(-0.5, +0.866, 0.0), Color.BLUE));
+        lights.add(new Pair<Triplex, Color>(new Triplex(0.0, 0.0, -1.0), Color.DARK_GRAY));
+        lights.add(new Pair<Triplex, Color>(new Triplex(0.0, 0.0, +1.0), Color.DARK_GRAY));
 
         for (int iy = 0; iy < height; iy++) {
             if (Thread.interrupted()) {
@@ -292,11 +296,22 @@ final class OctTreeRendererComponent extends BackgroundRenderingComponent implem
                         final Triplex position = Triplex.add(cameraCenter, Triplex.multiply(rayVector, result));
                         final Triplex normal = normalProvider.normalAtPosition(position);
 
-                        final double redShade = Math.max(Triplex.dotProduct(normal, redLightDirection), 0.0);
-                        final double blueShade = Math.max(Triplex.dotProduct(normal, blueLightDirection), 0.0);
-                        final double greenShade = Math.max(Triplex.dotProduct(normal, greenLightDirection), 0.0);
-                        final Color color = new Color((float)(redShade), (float)(blueShade), (float)(greenShade));
+                        double red = 0.0;
+                        double blue = 0.0;
+                        double green = 0.0;
+                        for(Pair<Triplex, Color> light: lights) {
+                            final double shade = Math.max(Triplex.dotProduct(normal, light.first), 0.0);
+                            if (shade > 0.0) {
+                                red += shade * (light.second.getRed() / 255.0);
+                                green += shade * (light.second.getGreen() / 255.0);
+                                blue += shade * (light.second.getBlue() / 255.0);
+                            }
+                        }
+                        red = Math.min(red, 1.0);
+                        green = Math.min(green, 1.0);
+                        blue = Math.min(blue, 1.0);
 
+                        final Color color = new Color((float)(red), (float)(green), (float)(blue));
                         g.setColor(color);
                     } catch (NotANumberException ex) {
                         g.setColor(Color.BLUE);
