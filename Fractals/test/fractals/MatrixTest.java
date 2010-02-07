@@ -136,6 +136,58 @@ public class MatrixTest extends TestCase {
                 assert(Math.abs(identity.get(i, j) - ((i==j) ? 1.0 : 0.0)) < 1e-9);
             }
         }
+    }
+
+    static boolean approximatelyEqual(Matrix a, Matrix b)
+    {
+        if (a.rows() == b.rows() &&
+            a.columns() == b.columns()) {
+
+            for (int i = 0; i < a.rows(); i++) {
+                for (int j = 0; j < a.columns(); j++) {
+                    if (Math.abs(a.get(i, j) - b.get(i, j)) >= 1e-9) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    public void testCreate3x4()
+    {
+        {
+            Matrix actual = Matrix.create4x4(new Triplex(0.0, 0.0, 0.0), Quaternion.identityRotation());
+            Matrix expected = Matrix.create4x4(
+                    1.0, 0.0, 0.0, 0.0,
+                    0.0, 1.0, 0.0, 0.0,
+                    0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0);
+            assertEquals(expected, actual);
+        }
+        {
+            Matrix actual = Matrix.create4x4(new Triplex(1.0, 2.0, 3.0), Quaternion.identityRotation());
+            Matrix expected = Matrix.create4x4(
+                    1.0, 0.0, 0.0, 1.0,
+                    0.0, 1.0, 0.0, 2.0,
+                    0.0, 0.0, 1.0, 3.0,
+                    0.0, 0.0, 0.0, 1.0);
+            assertEquals(expected, actual);
+        }
+        {
+            Matrix actual = Matrix.create4x4(new Triplex(1.0, 2.0, 3.0), Quaternion.createRotation(new Triplex(0.0, 1.0, 0.0), Math.PI));
+            Matrix expected = Matrix.create4x4(
+                    -1.0, 0.0, 0.0, -1.0,
+                    0.0, 1.0, 0.0, 2.0,
+                    0.0, 0.0, -1.0, -3.0,
+                    0.0, 0.0, 0.0, 1.0);
+            assertTrue(approximatelyEqual(expected, actual));
+        }
+
 
     }
 }

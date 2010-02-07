@@ -30,7 +30,8 @@ package fractals;
     Using quaternions to represent rotations in this way allows
     quaternion multiplication to be used to compose rotations.
 */
-final class Quaternion {
+final class Quaternion implements Comparable<Quaternion>
+{
     /**
         Real part.
     */
@@ -58,6 +59,16 @@ final class Quaternion {
         this.d = d;
     }
 
+    public static Quaternion createRotation(Triplex axis, double angle)
+    {
+        axis = Triplex.normalize(axis);
+        return new Quaternion(
+                Math.cos(angle / 2.0),
+                Math.sin(angle / 2.0) * axis.x,
+                Math.sin(angle / 2.0) * axis.y,
+                Math.sin(angle / 2.0) * axis.z);
+    }
+
     public final double magnitudeSquared()
     {
         return a*a + b*b + c*c + d*d;
@@ -78,6 +89,11 @@ final class Quaternion {
                 d / magnitude);
     }
 
+    public final Quaternion negate()
+    {
+        return new Quaternion(-a, -b, -c, -d);
+    }
+
     public static Quaternion multiply(Quaternion lhs, Quaternion rhs)
     {
         return new Quaternion(
@@ -87,8 +103,54 @@ final class Quaternion {
                 lhs.a*rhs.d + lhs.b*rhs.c - lhs.c*rhs.b + lhs.d*rhs.a);
     }
 
+    public static Quaternion subtract(Quaternion lhs, Quaternion rhs)
+    {
+        return new Quaternion(
+                lhs.a - rhs.a,
+                lhs.b - rhs.b,
+                lhs.c - rhs.c,
+                lhs.d - rhs.d);
+    }
+
     public static Quaternion identityRotation()
     {
         return new Quaternion(1.0, 0.0, 0.0, 0.0);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + a + ", " + b + ", " + c + ", " + d + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equals((Quaternion)obj);
+    }
+
+    public boolean equals(Quaternion other) {
+        return compareTo(other) == 0;
+    }
+
+    @Override
+    public int compareTo(Quaternion o) {
+        int result;
+
+        result = Double.compare(this.a, o.a);
+        if (result != 0) {
+            return result;
+        }
+
+        result = Double.compare(this.b, o.b);
+        if (result != 0) {
+            return result;
+        }
+
+        result = Double.compare(this.c, o.c);
+        if (result != 0) {
+            return result;
+        }
+
+        result = Double.compare(this.d, o.d);
+        return result;
     }
 }

@@ -54,6 +54,22 @@ final class Triplex
                 a.z + b.z);
     }
 
+    static Triplex subtract(Triplex a, Triplex b)
+    {
+        return new Triplex(
+                a.x - b.x,
+                a.y - b.y,
+                a.z - b.z);
+    }
+
+    static Triplex multiply(Triplex a, double b)
+    {
+        return new Triplex(
+                a.x * b,
+                a.y * b,
+                a.z * b);
+    }
+
     final double magnitudeSquared()
     {
         return x*x + y*y + z*z;
@@ -64,6 +80,11 @@ final class Triplex
         return Math.sqrt(magnitudeSquared());
     }
 
+    final Triplex negate()
+    {
+        return new Triplex(-x, -y, -z);
+    }
+
     static Triplex normalize(Triplex a)
     {
         final double mag = a.magnitude();
@@ -71,5 +92,30 @@ final class Triplex
                 a.x / mag,
                 a.y / mag,
                 a.z / mag);
+    }
+
+    static Triplex crossProduct(Triplex a, Triplex b)
+    {
+        return new Triplex(
+                a.y * b.z - b.y * a.z,
+                a.z * b.x - b.z * a.x,
+                a.x * b.y - b.x * a.y);
+    }
+
+    static double dotProduct(Triplex a, Triplex b)
+    {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    Triplex normalize()
+    {
+        return normalize(this);
+    }
+
+    public boolean approximatelyEquals(Triplex other, double tollerance) {
+        return subtract(this, other).magnitudeSquared() <= (tollerance*tollerance);
+    }
+    public boolean approximatelyEquals(Triplex other) {
+        return approximatelyEquals(other, 1e-6);
     }
 }

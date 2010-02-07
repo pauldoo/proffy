@@ -75,32 +75,58 @@ final class Matrix implements Comparable<Matrix>
     }
 
     /**
-        Creates the 3x4 camera matrix represented
-        by the quaternion rotation and the vector translation.
+        Creates the 3x3 rotation matrix represented
+        by the normalized quaternion.
     */
-    static Matrix create3x4(
-            /**
-                Must be normalized.
-            */
-            Quaternion q,
-            Triplex p)
+    static Matrix create3x3(
+            Quaternion q)
     {
         // http://en.wikipedia.org/w/index.php?title=Quaternions_and_spatial_rotation&oldid=337794355#From_a_quaternion_to_an_orthogonal_matrix
-        return create3x4(
+        return create3x3(
                 q.a*q.a + q.b*q.b - q.c*q.c - q.d*q.d,
                 2.0*q.b*q.c - 2.0*q.a*q.d,
                 2.0*q.b*q.d + 2.0*q.a*q.c,
-                p.x,
 
                 2.0*q.b*q.c + 2.0*q.a*q.d,
                 q.a*q.a - q.b*q.b + q.c*q.c - q.d*q.d,
                 2.0*q.c*q.d - 2.0*q.a*q.b,
-                p.y,
 
                 2.0*q.b*q.d - 2.0*q.a*q.c,
                 2.0*q.c*q.d + 2.0*q.a*q.b,
-                q.a*q.a - q.b*q.b - q.c*q.c + q.d*q.d,
-                p.z);
+                q.a*q.a - q.b*q.b - q.c*q.c + q.d*q.d);
+    }
+
+    static Matrix create4x4(
+            Triplex translation,
+            Quaternion rotation)
+    {
+        return Matrix.multiply(
+                Matrix.extendWithIdentity(Matrix.create3x3(rotation), 4, 4),
+                Matrix.create4x4(
+                    1.0, 0.0, 0.0, translation.x,
+                    0.0, 1.0, 0.0, translation.y,
+                    0.0, 0.0, 1.0, translation.z,
+                    0.0, 0.0, 0.0, 1.0));
+    }
+
+    static Matrix create3x3(
+            double a, double b, double c,
+            double d, double e, double f,
+            double g, double h, double i)
+    {
+        double[][] values = allocateArray(3, 3);
+        values[0][0] = a;
+        values[0][1] = b;
+        values[0][2] = c;
+
+        values[1][0] = d;
+        values[1][1] = e;
+        values[1][2] = f;
+
+        values[2][0] = g;
+        values[2][1] = h;
+        values[2][2] = i;
+        return new Matrix(values);
     }
 
     static Matrix create3x4(
@@ -121,6 +147,20 @@ final class Matrix implements Comparable<Matrix>
         values[2][1] = j;
         values[2][2] = k;
         values[2][3] = l;
+        return new Matrix(values);
+    }
+
+    static Matrix create4x1(
+            double a,
+            double b,
+            double c,
+            double d)
+    {
+        double [][] values = allocateArray(4, 1);
+        values[0][0] = a;
+        values[1][0] = b;
+        values[2][0] = c;
+        values[3][0] = d;
         return new Matrix(values);
     }
 
@@ -332,6 +372,27 @@ final class Matrix implements Comparable<Matrix>
         return a;
     }
 
+    static Matrix extendWithIdentity(final Matrix a, int rows, int columns)
+    {
+        if (a.rows() == rows && a.columns() == columns) {
+            return a;
+        } else if (rows < a.rows() || columns < a.columns()) {
+            throw new IllegalArgumentException("Cannot shrink matrix");
+        } else {
+            double[][] result = allocateArray(rows, columns);
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < columns; col++) {
+                    if (row < a.rows() && col < a.columns()) {
+                        result[row][col] = a.get(row, col);
+                    } else {
+                        result[row][col] = (row == col) ? 1.0 : 0.0;
+                    }
+                }
+            }
+            return new Matrix(result);
+        }
+    }
+
     static Matrix invert4x4(final Matrix a) {
         if (a.rows() != 4 || a.columns() != 4) {
             throw new IllegalArgumentException("Only 4x4 matrices supported.");
@@ -432,6 +493,24 @@ final class Matrix implements Comparable<Matrix>
                 dst[4] / det, dst[5] / det, dst[6] / det, dst[7] / det,
                 dst[8] / det, dst[9] / det, dst[10] / det, dst[11] / det,
                 dst[12] / det, dst[13] / det, dst[14] / det, dst[15] / det);
+    }
+
+    /**
+        Only operates on 4x1 column matrices/vectors.
+
+        Assumes homogenous coordinate representation, and converts
+        to standard Triplex coordinate.
+    */
+    Triplex toTriplex()
+    {
+        if (rows() == 4 && columns() == 1) {
+            return new Triplex(
+                    get(0, 0) / get(3, 0),
+                    get(1, 0) / get(3, 0),
+                    get(2, 0) / get(3, 0));
+        } else {
+            throw new IllegalArgumentException("Only 4x1 column vectors supported");
+        }
     }
 
     private static double[][] allocateArray(int rows, int columns)
