@@ -28,9 +28,9 @@ public final class Utilities
     private static final ScheduledExecutorService lightThreadPool =
             new ScheduledThreadPoolExecutor(2, new MyThreadFactory(Thread.NORM_PRIORITY));
     private static final ScheduledExecutorService heavyThreadPool =
-            new ScheduledThreadPoolExecutor(2, new MyThreadFactory((Thread.NORM_PRIORITY + Thread.MIN_PRIORITY) / 2));
+            new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), new MyThreadFactory((Thread.NORM_PRIORITY + Thread.MIN_PRIORITY) / 2));
     private static final ScheduledExecutorService backgroundThreadPool =
-            new ScheduledThreadPoolExecutor(2, new MyThreadFactory(Thread.MIN_PRIORITY));
+            new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), new MyThreadFactory(Thread.MIN_PRIORITY));
 
     private static final class MyThreadFactory implements ThreadFactory
     {
