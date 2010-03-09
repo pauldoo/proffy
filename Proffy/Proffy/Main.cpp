@@ -188,39 +188,39 @@ namespace Proffy {
 
                 for (int i = 0; i < static_cast<int>(numberThreads); i++) {
                     result = debugSystemObjects->SetCurrentThreadId(i);
-                    ASSERT(result == S_OK);
+                    if (result == S_OK) {
+                        ULONG threadSystemId;
+                        result = debugSystemObjects->GetCurrentThreadSystemId(&threadSystemId);
+                        ASSERT(result == S_OK);
 
-                    ULONG threadSystemId;
-                    result = debugSystemObjects->GetCurrentThreadSystemId(&threadSystemId);
-                    ASSERT(result == S_OK);
+                        std::vector<DEBUG_STACK_FRAME> frames(100);
+                        ULONG framesFilled;
+                        result = debugControl->GetStackTrace(
+                            NULL,
+                            NULL,
+                            NULL,
+                            &(frames.front()),
+                            static_cast<int>(frames.size()),
+                            &framesFilled);
+                        ASSERT(result == S_OK);
+                        frames.resize(framesFilled);
 
-                    std::vector<DEBUG_STACK_FRAME> frames(100);
-                    ULONG framesFilled;
-                    result = debugControl->GetStackTrace(
-                        NULL,
-                        NULL,
-                        NULL,
-                        &(frames.front()),
-                        static_cast<int>(frames.size()),
-                        &framesFilled);
-                    ASSERT(result == S_OK);
-                    frames.resize(framesFilled);
+                        std::vector<PointInProgram> resolvedFrames;
+                        for (int i = 0; i < static_cast<int>(frames.size()); i++) {
+                            const Maybe<const PointInProgram> pip = LookupSymbols(
+                                frames.at(i).InstructionOffset,
+                                debugSymbols,
+                                &symbolCache);
 
-                    std::vector<PointInProgram> resolvedFrames;
-                    for (int i = 0; i < static_cast<int>(frames.size()); i++) {
-                        const Maybe<const PointInProgram> pip = LookupSymbols(
-                            frames.at(i).InstructionOffset,
-                            debugSymbols,
-                            &symbolCache);
-
-                        if (pip.Ok()) {
-                            resolvedFrames.push_back(pip.Get());
+                            if (pip.Ok()) {
+                                resolvedFrames.push_back(pip.Get());
+                            }
                         }
-                    }
 
-                    std::wostringstream threadId;
-                    threadId << "thread-" << threadSystemId;
-                    results.AccumulateCallstack(threadId.str(), resolvedFrames);
+                        std::wostringstream threadId;
+                        threadId << "thread-" << threadSystemId;
+                        results.AccumulateCallstack(threadId.str(), resolvedFrames);
+                    }
                 }
             }
             results.fEndTimeInSeconds = Utilities::TimeInSeconds();
