@@ -1,9 +1,0 @@
-64-bit AMD:
-  VC8 32-bit Windows:
-  9.76563 GiB copied in 9.734 s, 1.00325 GiB/s
-  GCC 64-bit Linux:
-  9.76562 GiB copied in 5.87 s, 1.66365 GiB/s
-
-32-bit Intel Core:
-  GCC 32-bit Mac OS X:
-  9.76562 GiB copied in 5.45657 s, 1.7897 GiB/s
