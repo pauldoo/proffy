@@ -1,5 +1,5 @@
-bin32
-bin64
-obj32
-obj64
-dist
+bin32/
+bin64/
+obj32/
+obj64/
+dist/
