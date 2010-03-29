@@ -43,6 +43,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <hash_map>
 #include <iostream>
 #include <list>
 #include <map>

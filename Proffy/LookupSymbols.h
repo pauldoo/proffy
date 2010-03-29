@@ -20,8 +20,8 @@
 #include "Results.h"
 
 namespace Proffy {
-    typedef std::map<unsigned __int64, Maybe<const PointInProgram> > SymbolCache;
-    
+    typedef stdext::hash_map<unsigned __int64, Maybe<const PointInProgram> > SymbolCache;
+
     const Maybe<const PointInProgram> LookupSymbols(
         const unsigned __int64 instructionOffset,
         IDebugSymbols3* const,
