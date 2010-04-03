@@ -85,6 +85,46 @@ namespace Proffy {
             HRESULT result = S_OK;
             SymbolCache symbolCache;
 
+            const OwnedHandle processHandle = OwnedHandle(::OpenProcess(
+                PROCESS_VM_READ | PROCESS_QUERY_INFORMATION,
+                FALSE,
+                arguments.fProcessId));
+            ASSERT(processHandle.fHandle != NULL);
+
+            std::vector<wchar_t> versionBuffer(1024);
+            DWORD versionBufferLength = 0;
+            ASSERT(::GetVersionFromProcess(
+                processHandle.fHandle,
+                &(versionBuffer.front()),
+                versionBuffer.size(),
+                &versionBufferLength) == S_OK);
+            versionBuffer.resize(versionBufferLength);
+            std::wcout << std::wstring(versionBuffer.begin(), versionBuffer.end()) << "\n";
+
+            IUnknown* corDebugAsUnknown = NULL;
+            ASSERT(::CreateDebuggingInterfaceFromVersion(
+                CorDebugVersion_2_0,
+                &(versionBuffer.front()),
+                &corDebugAsUnknown) == S_OK);
+            ASSERT(corDebugAsUnknown != NULL);
+
+            ICorDebug* corDebug = NULL;
+            ASSERT(corDebugAsUnknown->QueryInterface(
+                __uuidof(ICorDebug),
+                reinterpret_cast<void**>(&corDebug)) == S_OK);
+            ASSERT(corDebug != NULL);
+
+            ASSERT(corDebug->Initialize() == S_OK);
+
+            ICorDebugProcess* corDebugProcess = NULL;
+            ASSERT(corDebug->DebugActiveProcess(
+                arguments.fProcessId,
+                FALSE,
+                &corDebugProcess) == S_OK);
+            ASSERT(corDebugProcess != NULL);
+
+            ASSERT(false);
+
             // Get the IDebugClient to start.
             IDebugClient* debugClient = NULL;
             result = ::DebugCreate(
@@ -157,7 +197,7 @@ namespace Proffy {
             OwnedHandle stopFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, arguments.fStopFlag.c_str()));
             ASSERT(stopFlag.fHandle != NULL);
             ASSERT(::GetLastError() == ERROR_ALREADY_EXISTS);
-            
+
             {
                 OwnedHandle startFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, arguments.fStartFlag.c_str()));
                 ASSERT(startFlag.fHandle != NULL);

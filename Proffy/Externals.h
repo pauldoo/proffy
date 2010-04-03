@@ -20,16 +20,23 @@
     I'm placing all includes of files external to this project here.
 */
 
-// Microsoft includes
+// Windows includes
 #define NOMINMAX
 #define STRICT
 #include <windows.h>
+#include <winerror.h>
+
+// DbgEng includes
 #include <dbgeng.h>
 #pragma warning(push)
 #pragma warning(disable: 4005) // macro redefinition
 #include <ntstatus.h>
 #pragma warning(pop)
-#include <winerror.h>
+
+// Stuff for debugging managed targets
+#include <mscoree.h>
+#include <corhdr.h>
+#include <cordebug.h>
 
 // Xerces-C++ includes
 #include <xercesc/dom/DOM.hpp>
