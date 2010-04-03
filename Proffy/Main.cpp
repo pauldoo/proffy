@@ -93,34 +93,39 @@ namespace Proffy {
 
             std::vector<wchar_t> versionBuffer(1024);
             DWORD versionBufferLength = 0;
-            ASSERT(::GetVersionFromProcess(
+            result = ::GetVersionFromProcess(
                 processHandle.fHandle,
                 &(versionBuffer.front()),
                 versionBuffer.size(),
-                &versionBufferLength) == S_OK);
+                &versionBufferLength);
+            ASSERT(result == S_OK);
             versionBuffer.resize(versionBufferLength);
-            std::wcout << std::wstring(versionBuffer.begin(), versionBuffer.end()) << "\n";
 
             IUnknown* corDebugAsUnknown = NULL;
-            ASSERT(::CreateDebuggingInterfaceFromVersion(
+            result = ::CreateDebuggingInterfaceFromVersion(
                 CorDebugVersion_2_0,
                 &(versionBuffer.front()),
-                &corDebugAsUnknown) == S_OK);
+                &corDebugAsUnknown);
+            ASSERT(result == S_OK);
             ASSERT(corDebugAsUnknown != NULL);
 
             ICorDebug* corDebug = NULL;
-            ASSERT(corDebugAsUnknown->QueryInterface(
+            result = corDebugAsUnknown->QueryInterface(
                 __uuidof(ICorDebug),
-                reinterpret_cast<void**>(&corDebug)) == S_OK);
+                reinterpret_cast<void**>(&corDebug));
+            ASSERT(result == S_OK);
             ASSERT(corDebug != NULL);
 
-            ASSERT(corDebug->Initialize() == S_OK);
+            result = corDebug->Initialize();
+            ASSERT(result == S_OK);
 
             ICorDebugProcess* corDebugProcess = NULL;
-            ASSERT(corDebug->DebugActiveProcess(
+            result = corDebug->DebugActiveProcess(
                 arguments.fProcessId,
                 FALSE,
-                &corDebugProcess) == S_OK);
+                &corDebugProcess);
+            std::wcout << Utilities::HresultToString(result).c_str() << "\n";
+            ASSERT(result == S_OK);
             ASSERT(corDebugProcess != NULL);
 
             ASSERT(false);
