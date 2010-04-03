@@ -27,13 +27,14 @@ namespace Proffy {
         ~CommandLineArguments();
 
     private:
-        CommandLineArguments();
+        CommandLineArguments(
+            const wchar_t* const * const argv);
 
     public:
         int fProcessId;
         std::wstring fOutputDirectory;
-        HANDLE fStartFlag;
-        HANDLE fStopFlag;
+        std::wstring fStartFlag;
+        std::wstring fStopFlag;
         double fDelayBetweenSamplesInSeconds;
         bool fProfileTheProfiler;
     };

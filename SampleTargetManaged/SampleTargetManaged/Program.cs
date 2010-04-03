@@ -10,30 +10,64 @@ namespace SampleTargetManaged
 {
     class Program
     {
+        private static int fib(int n)
+        {
+            switch (n) {
+                case 0:
+                    return 0;
+                case 1:
+                    return 1;
+                default:
+                    return fib(n-2) + fib(n-1);
+            }
+        }
+
         static void Main(string[] args)
         {
-            const string pathToProffyExecutable = "c:\\Proffy_586\\bin32\\Proffy32.exe";
-            const string outputXmlFile = "c:\\Proffy_586\\result.xml";
-            const string outputDotFile = "c:\\Proffy_586\\result.dot";
+            const string pathToProffyExecutable = "..\\..\\..\\..\\dist\\bin32\\Proffy32.exe";
+            const string outputFolder = "..\\..\\..\\..\\dist";
             const double delayBetweenSamplesInSeconds = 0.1;
             const bool profileTheProfiler = false;
 
-            SemaphoreSecurity security = new SemaphoreSecurity();
-            Semaphore startFlag = new Semaphore(0, 10);
-            Semaphore stopFlag = new Semaphore(0, 10);
+            System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
 
-            StringBuilder argumentsBuilder = new StringBuilder();
-            argumentsBuilder.Append(Process.GetCurrentProcess().Id);
-            argumentsBuilder.Append(" " + outputXmlFile);
-            argumentsBuilder.Append(" " + outputDotFile);
-            argumentsBuilder.Append(" " + startFlag.SafeWaitHandle.DangerousGetHandle());
-            argumentsBuilder.Append(" " + stopFlag.SafeWaitHandle.DangerousGetHandle());
-            argumentsBuilder.Append(" " + delayBetweenSamplesInSeconds); 
-            argumentsBuilder.Append(" " + (profileTheProfiler ? "1" : "0"));
 
-            System.Console.Out.WriteLine(argumentsBuilder.ToString());
-            using (Process process = Process.Start(pathToProffyExecutable, argumentsBuilder.ToString())) {
-                process.WaitForExit();
+            string guid = System.Guid.NewGuid().ToString();
+            string semaphoreStartName = "Proffy_" + guid + "_start";
+            string semaphoreStopName = "Proffy_" + guid + "_stop";
+
+            using (Semaphore startFlag = new Semaphore(0, 10, semaphoreStartName))
+            {
+                using (Semaphore stopFlag = new Semaphore(0, 10, semaphoreStopName))
+                {
+                    StringBuilder argumentsBuilder = new StringBuilder();
+                    argumentsBuilder.Append(Process.GetCurrentProcess().Id);
+                    argumentsBuilder.Append(" " + outputFolder);
+                    argumentsBuilder.Append(" " + semaphoreStartName);
+                    argumentsBuilder.Append(" " + semaphoreStopName);
+                    argumentsBuilder.Append(" " + delayBetweenSamplesInSeconds);
+                    argumentsBuilder.Append(" " + (profileTheProfiler ? "1" : "0"));
+
+                    using (Process process = Process.Start(pathToProffyExecutable, argumentsBuilder.ToString()))
+                    {
+                        System.Console.Out.WriteLine("Waiting for proffy to start..");
+                        startFlag.WaitOne();
+
+                        System.Console.Out.WriteLine("Spinning..");
+                        long start = System.DateTime.UtcNow.ToFileTimeUtc();
+                        long ticksPerSecond = 10000000; // ToFileTimeUtc() returns in units of 100-nanoseconds, ie, 10^7 ticks per second.
+                        while (System.DateTime.UtcNow.ToFileTimeUtc() - start < 10 * ticksPerSecond) {
+                            fib(10);
+                        }
+                        System.Console.Out.WriteLine("Spun for 10 seconds..");
+
+                        stopFlag.Release();
+
+                        System.Console.Out.WriteLine("Waiting for proffy to stop..");
+                        process.WaitForExit();
+                        System.Console.Out.WriteLine("Done..");
+                    }
+                }
             }
         }
     }

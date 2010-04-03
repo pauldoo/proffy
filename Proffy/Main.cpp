@@ -154,11 +154,20 @@ namespace Proffy {
                     false));
             }
 
-            ASSERT(::ReleaseSemaphore(arguments.fStartFlag, 1, NULL) != FALSE);
+            OwnedHandle stopFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, arguments.fStopFlag.c_str()));
+            ASSERT(stopFlag.fHandle != NULL);
+            ASSERT(::GetLastError() == ERROR_ALREADY_EXISTS);
+            
+            {
+                OwnedHandle startFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, arguments.fStartFlag.c_str()));
+                ASSERT(startFlag.fHandle != NULL);
+                ASSERT(::GetLastError() == ERROR_ALREADY_EXISTS);
+                ASSERT(::ReleaseSemaphore(startFlag.fHandle, 1, NULL) != FALSE);
+            }
             results.fBeginTimeInSeconds = Utilities::TimeInSeconds();
 
             while (true) {
-                result = ::WaitForSingleObject(arguments.fStopFlag, 0);
+                result = ::WaitForSingleObject(stopFlag.fHandle, 0);
                 if (result == WAIT_OBJECT_0) {
                     // Flag is raised
                     break;

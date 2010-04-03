@@ -22,12 +22,13 @@
 #include "Utilities.h"
 
 namespace Proffy {
-    CommandLineArguments::CommandLineArguments() :
-        fProcessId(0),
-        fStartFlag(0),
-        fStopFlag(0),
-        fDelayBetweenSamplesInSeconds(0.0),
-        fProfileTheProfiler(false)
+    CommandLineArguments::CommandLineArguments(const wchar_t* const * const argv) :
+        fProcessId(Utilities::FromWString<int>(argv[1])),
+        fOutputDirectory(argv[2]),
+        fStartFlag(argv[3]),
+        fStopFlag(argv[4]),
+        fDelayBetweenSamplesInSeconds(Utilities::FromWString<double>(argv[5])),
+        fProfileTheProfiler(Utilities::FromWString<bool>(argv[6]))
     {
     }
 
@@ -40,13 +41,6 @@ namespace Proffy {
         const wchar_t* const * const argv)
     {
         ASSERT(argc == 7);
-        CommandLineArguments result;
-        result.fProcessId = Utilities::FromWString<int>(argv[1]);
-        result.fOutputDirectory = argv[2];
-        result.fStartFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[3]));
-        result.fStopFlag = reinterpret_cast<HANDLE>(Utilities::FromWString<uintptr_t>(argv[4]));
-        result.fDelayBetweenSamplesInSeconds = Utilities::FromWString<double>(argv[5]);
-        result.fProfileTheProfiler = Utilities::FromWString<bool>(argv[6]);
-        return result;
+        return CommandLineArguments(argv);
     }
 }

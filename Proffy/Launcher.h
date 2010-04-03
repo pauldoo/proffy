@@ -44,14 +44,14 @@ namespace Proffy {
         const std::string fReason;
     };
 
-    class LauncherOwnedHandle
+    class OwnedHandle
     {
     public:
-        LauncherOwnedHandle(const HANDLE handle) : fHandle(handle)
+        OwnedHandle(const HANDLE handle) : fHandle(handle)
         {
         }
 
-        ~LauncherOwnedHandle()
+        ~OwnedHandle()
         {
             ::CloseHandle(fHandle);
         }
@@ -72,19 +72,24 @@ namespace Proffy {
             const double delayBetweenSamplesInSeconds,
             const bool profileTheProfiler = false)
         {
-            SECURITY_ATTRIBUTES security = {0};
-            security.nLength = sizeof(security);
-            security.bInheritHandle = TRUE;
-            fStartFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
-            fStopFlag.reset(new LauncherOwnedHandle(::CreateSemaphoreW(&security, 0, LONG_MAX, NULL)));
+            std::wostringstream uid;
+            uid << ::GetCurrentProcessId() << L"-" << this;
+            const std::wstring semaphoreStartName = L"Proffy_" + uid.str() + L"_start";
+            const std::wstring semaphoreStopName = L"Proffy_" + uid.str() + L"_stop";
+            
+            const OwnedHandle startFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, semaphoreStartName.c_str()));
+            fStopFlag.reset(new OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, semaphoreStopName.c_str())));
+            if (startFlag.fHandle == NULL || fStopFlag->fHandle == NULL) {
+                throw LauncherException("Unable to create semaphores.");
+            }
 
             std::wostringstream buf;
             buf
                 << proffyExecutable
                 << L" " << ::GetCurrentProcessId()
                 << L" \"" << outputDirectory << L"\""
-                << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
-                << L" " << reinterpret_cast<uintptr_t>(fStopFlag->fHandle)
+                << L" " << semaphoreStartName
+                << L" " << semaphoreStopName
                 << L" " << delayBetweenSamplesInSeconds
                 << L" " << profileTheProfiler;
             const std::wstring commandLine = buf.str();
@@ -97,7 +102,7 @@ namespace Proffy {
                 const_cast<wchar_t*>(commandLine.c_str()),
                 NULL,
                 NULL,
-                TRUE,
+                FALSE,
                 CREATE_NEW_CONSOLE,
                 NULL,
                 NULL,
@@ -109,9 +114,9 @@ namespace Proffy {
             }
 
             ::CloseHandle(processInformation.hThread);
-            fProfilerProcess.reset(new LauncherOwnedHandle(processInformation.hProcess));
+            fProfilerProcess.reset(new OwnedHandle(processInformation.hProcess));
 
-            if (::WaitForSingleObject(fStartFlag->fHandle, INFINITE) != WAIT_OBJECT_0) {
+            if (::WaitForSingleObject(startFlag.fHandle, INFINITE) != WAIT_OBJECT_0) {
                 throw LauncherException("Failed while waiting for the profiler to start.");
             }
         }
@@ -139,9 +144,8 @@ namespace Proffy {
         }
 
     private:
-        std::auto_ptr<LauncherOwnedHandle> fStartFlag;
-        std::auto_ptr<LauncherOwnedHandle> fStopFlag;
-        std::auto_ptr<LauncherOwnedHandle> fProfilerProcess;
+        std::auto_ptr<OwnedHandle> fStopFlag;
+        std::auto_ptr<OwnedHandle> fProfilerProcess;
     };
 }
 
