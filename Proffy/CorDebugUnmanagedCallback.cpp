@@ -56,8 +56,8 @@ namespace Proffy {
     }
 
     HRESULT __stdcall CorDebugUnmanagedCallback::DebugEvent(
-        LPDEBUG_EVENT pDebugEvent,
-        BOOL fOutOfBand)
+        LPDEBUG_EVENT /*pDebugEvent*/,
+        BOOL /*fOutOfBand*/)
     {
         return S_OK;
     }

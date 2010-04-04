@@ -122,6 +122,7 @@ namespace Proffy {
             ASSERT(corDebug != NULL);
 
             result = corDebug->Initialize();
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
 
             CorDebugManagedCallback managedCallback;

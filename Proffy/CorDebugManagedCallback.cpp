@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2008, 2009  Paul Richards.
+    Copyright (C) 2010  Paul Richards.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -206,7 +206,7 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         LONG /*lLevel*/,
         ULONG /*ulReason*/,
-        WCHAR* /*pLogSwitchName,
+        WCHAR* /*pLogSwitchName*/,
         WCHAR* /*pParentName*/)
     {
         return S_OK;
@@ -264,6 +264,7 @@ namespace Proffy {
         ICorDebugFunction* /*pNewFunction*/,
         ULONG32 /*oldILOffset*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::CreateConnection(
@@ -271,50 +272,57 @@ namespace Proffy {
         CONNID /*dwConnectionId*/,
         WCHAR* /*pConnName*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::ChangeConnection(
         ICorDebugProcess* /*pProcess*/,
-        CONNID dwConnectionId)
+        CONNID /*dwConnectionId*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::DestroyConnection(
-        ICorDebugProcess *pProcess,
-        CONNID dwConnectionId)
+        ICorDebugProcess* /*pProcess*/,
+        CONNID /*dwConnectionId*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::Exception(
-        ICorDebugAppDomain *pAppDomain,
-        ICorDebugThread *pThread,
-        ICorDebugFrame *pFrame,
-        ULONG32 nOffset,
-        CorDebugExceptionCallbackType dwEventType,
-        DWORD dwFlags)
+        ICorDebugAppDomain* /*pAppDomain*/,
+        ICorDebugThread* /*pThread*/,
+        ICorDebugFrame* /*pFrame*/,
+        ULONG32 /*nOffset*/,
+        CorDebugExceptionCallbackType /*dwEventType*/,
+        DWORD /*dwFlags*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::ExceptionUnwind(
-        ICorDebugAppDomain *pAppDomain,
-        ICorDebugThread *pThread,
-        CorDebugExceptionUnwindCallbackType dwEventType,
-        DWORD dwFlags)
+        ICorDebugAppDomain* /*pAppDomain*/,
+        ICorDebugThread* /*pThread*/,
+        CorDebugExceptionUnwindCallbackType /*dwEventType*/,
+        DWORD /*dwFlags*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::FunctionRemapComplete(
-        ICorDebugAppDomain *pAppDomain,
-        ICorDebugThread *pThread,
-        ICorDebugFunction *pFunction)
+        ICorDebugAppDomain* /*pAppDomain*/,
+        ICorDebugThread* /*pThread*/,
+        ICorDebugFunction* /*pFunction*/)
     {
+        return S_OK;
     }
 
     HRESULT __stdcall CorDebugManagedCallback::MDANotification(
-        ICorDebugController *pController,
-        ICorDebugThread *pThread,
-        ICorDebugMDA *pMDA)
+        ICorDebugController* /*pController*/,
+        ICorDebugThread* /*pThread*/,
+        ICorDebugMDA* /*pMDA*/)
     {
+        return S_OK;
     }
 }
 

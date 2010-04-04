@@ -1,6 +1,3 @@
-REM Temporarily disable 64-bit build for quicker edit-debug cycle.
-exit 0
-
 call "%WINDOWS_SDK_PATH%\bin\setenv.cmd" /Release /x64 /xp
 
 set COMPILE_OPTIONS=/Foobj64\ /O2 /GL /Oy- /Zi /W4 /TP /MD /EHsc /I Proffy/External/include
