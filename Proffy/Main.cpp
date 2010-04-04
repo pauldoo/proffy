@@ -98,7 +98,7 @@ namespace Proffy {
             result = ::GetVersionFromProcess(
                 processHandle.fHandle,
                 &(versionBuffer.front()),
-                versionBuffer.size(),
+                static_cast<int>(versionBuffer.size()),
                 &versionBufferLength);
             std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
