@@ -144,76 +144,7 @@ namespace Proffy {
             ASSERT(result == S_OK);
             ASSERT(corDebugProcess != NULL);
 
-            ASSERT(false);
-
-            // Get the IDebugClient to start.
-            IDebugClient* debugClient = NULL;
-            result = ::DebugCreate(
-                __uuidof(IDebugClient),
-                reinterpret_cast<void**>(&debugClient));
-            ASSERT(result == S_OK);
-
-            // Set our output callbacks.
-            DebugOutputCallbacks debugOutputCallbacks;
-            result = debugClient->SetOutputCallbacks(&debugOutputCallbacks);
-            ASSERT(result == S_OK);
-
-            // Set our event callbacks.
-            DebugEventCallbacks debugEventCallbacks(&symbolCache);
-            result = debugClient->SetEventCallbacks(&debugEventCallbacks);
-            ASSERT(result == S_OK);
-
-            // Get the IDebugControl.
-            IDebugControl* debugControl = NULL;
-            result = debugClient->QueryInterface(
-                __uuidof(IDebugControl),
-                reinterpret_cast<void**>(&debugControl));
-            ASSERT(result == S_OK);
-
-            // Get the IDebugSystemObjects.
-            IDebugSystemObjects* debugSystemObjects = NULL;
-            result = debugClient->QueryInterface(
-                __uuidof(IDebugSystemObjects),
-                reinterpret_cast<void**>(&debugSystemObjects));
-            ASSERT(result == S_OK);
-
-            // Get the IDebugSymbols.
-            IDebugSymbols3* debugSymbols = NULL;
-            result = debugClient->QueryInterface(
-                __uuidof(IDebugSymbols3),
-                reinterpret_cast<void**>(&debugSymbols));
-            ASSERT(result == S_OK);
-
-            // Done getting and setting, so now attach.
-            std::wcout << lines << Utilities::TimeInSeconds() << L": Attaching..\n" << lines;
-            result = debugClient->AttachProcess(
-                0,
-                arguments.fProcessId,
-                0);
-            ASSERT(result == S_OK);
-            std::wcout << lines << Utilities::TimeInSeconds() << L": Done Attaching..\n" << lines;
-
-            // Verify we have attached to what we think we have.
-            ULONG debugeeTypeClass;
-            ULONG debugeeTypeQualifier;
-            result = debugControl->GetDebuggeeType(&debugeeTypeClass, &debugeeTypeQualifier);
-            ASSERT(result == S_OK);
-            ASSERT(debugeeTypeClass == DEBUG_CLASS_USER_WINDOWS);
-            ASSERT(debugeeTypeQualifier == DEBUG_USER_WINDOWS_PROCESS);
-
-            FlushCallbacks(debugClient);
-            ConsoleColor c(Color_Normal);
-            ResultsForAllThreads results;
-
-            // Profiler when used for self-profiling
-            std::auto_ptr<Launcher> profiler;
-            if (arguments.fProfileTheProfiler) {
-                profiler.reset(new Launcher(
-                    L"../bin64/Proffy64.exe",
-                    arguments.fOutputDirectory,
-                    arguments.fDelayBetweenSamplesInSeconds,
-                    false));
-            }
+            const int delayBetweenSamplesInMilliseconds = Utilities::Round(arguments.fDelayBetweenSamplesInSeconds * 1000.0);
 
             OwnedHandle stopFlag = OwnedHandle(::CreateSemaphoreW(NULL, 0, 10, arguments.fStopFlag.c_str()));
             ASSERT(stopFlag.fHandle != NULL);
@@ -225,10 +156,14 @@ namespace Proffy {
                 ASSERT(::GetLastError() == ERROR_ALREADY_EXISTS);
                 ASSERT(::ReleaseSemaphore(startFlag.fHandle, 1, NULL) != FALSE);
             }
-            results.fBeginTimeInSeconds = Utilities::TimeInSeconds();
 
             while (true) {
-                result = ::WaitForSingleObject(stopFlag.fHandle, 0);
+                std::wcout << L".";
+                std::wcout.flush();
+                result = corDebugProcess->Continue(FALSE);
+                ASSERT(result == S_OK);
+
+                result = ::WaitForSingleObject(stopFlag.fHandle, delayBetweenSamplesInMilliseconds);
                 if (result == WAIT_OBJECT_0) {
                     // Flag is raised
                     break;
@@ -238,73 +173,10 @@ namespace Proffy {
                     ASSERT(false);
                 }
 
-                const int delayBetweenSamplesInMilliseconds = Utilities::Round(arguments.fDelayBetweenSamplesInSeconds * 1000.0);
-                result = debugControl->WaitForEvent(
-                    DEBUG_WAIT_DEFAULT,
-                    delayBetweenSamplesInMilliseconds);
-                ASSERT(result == S_OK || result == S_FALSE);
-
-                ULONG executionStatus;
-                result = debugControl->GetExecutionStatus(&executionStatus);
+                result = corDebugProcess->Stop(INFINITE);
                 ASSERT(result == S_OK);
-                ASSERT(executionStatus == DEBUG_STATUS_BREAK);
-
-                results.fNumberOfSamples++;
-
-                ULONG numberThreads;
-                ULONG largestProcess;
-                result = debugSystemObjects->GetTotalNumberThreads(&numberThreads, &largestProcess);
-                ASSERT(result == S_OK);
-
-                for (int i = 0; i < static_cast<int>(numberThreads); i++) {
-                    result = debugSystemObjects->SetCurrentThreadId(i);
-                    if (result == S_OK) {
-                        ULONG threadSystemId;
-                        result = debugSystemObjects->GetCurrentThreadSystemId(&threadSystemId);
-                        ASSERT(result == S_OK);
-
-                        std::vector<DEBUG_STACK_FRAME> frames(100);
-                        ULONG framesFilled;
-                        result = debugControl->GetStackTrace(
-                            NULL,
-                            NULL,
-                            NULL,
-                            &(frames.front()),
-                            static_cast<int>(frames.size()),
-                            &framesFilled);
-                        ASSERT(result == S_OK);
-                        frames.resize(framesFilled);
-
-                        std::vector<PointInProgram> resolvedFrames;
-                        for (int i = 0; i < static_cast<int>(frames.size()); i++) {
-                            const Maybe<const PointInProgram> pip = LookupSymbols(
-                                frames.at(i).InstructionOffset,
-                                debugSymbols,
-                                &symbolCache);
-
-                            if (pip.Ok()) {
-                                resolvedFrames.push_back(pip.Get());
-                            }
-                        }
-
-                        std::wostringstream threadId;
-                        threadId << "thread-" << threadSystemId;
-                        results.AccumulateCallstack(threadId.str(), resolvedFrames);
-                    }
-                }
             }
-            results.fEndTimeInSeconds = Utilities::TimeInSeconds();
-            profiler.reset();
-
-            if (arguments.fProfileTheProfiler == false) {
-                std::wcout << L"Saving report..";
-                std::wcout.flush();
-                WriteAllReports(&arguments, &results);
-                std::wcout << "Done.\n";
-            }
-
-            result = debugClient->DetachProcesses();
-            ASSERT(result == S_OK);
+            std::wcout << L"\n";
 
             return EXIT_SUCCESS;
         } catch (const xercesc::XMLException& ex) {
