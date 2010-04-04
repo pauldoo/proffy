@@ -1,7 +1,10 @@
+REM Temporarily disable 64-bit build for quicker edit-debug cycle.
+exit 0
+
 call "%WINDOWS_SDK_PATH%\bin\setenv.cmd" /Release /x64 /xp
 
-set COMPILE_OPTIONS=/Foobj64\ /O1 /GL /Oy- /Zi /W4 /TP /MD /EHsc /I Proffy/External/include
-set SOURCE_FILES=Proffy\Assert.cpp Proffy\ComInitialize.cpp Proffy\CommandLineArguments.cpp Proffy\ConsoleColor.cpp Proffy\DebugEventCallbacks.cpp Proffy\DebugOutputCallbacks.cpp Proffy\Exception.cpp Proffy\LookupSymbols.cpp Proffy\Main.cpp Proffy\Results.cpp Proffy\Utilities.cpp Proffy\WriteReport.cpp Proffy\XercesInitialize.cpp
+set COMPILE_OPTIONS=/Foobj64\ /O2 /GL /Oy- /Zi /W4 /TP /MD /EHsc /I Proffy/External/include
+set SOURCE_FILES=Proffy\Assert.cpp Proffy\ComInitialize.cpp Proffy\CommandLineArguments.cpp Proffy\ConsoleColor.cpp Proffy\CorDebugManagedCallback.cpp Proffy\CorDebugUnmanagedCallback.cpp Proffy\DebugEventCallbacks.cpp Proffy\DebugOutputCallbacks.cpp Proffy\Exception.cpp Proffy\LookupSymbols.cpp Proffy\Main.cpp Proffy\Results.cpp Proffy\Utilities.cpp Proffy\WriteReport.cpp Proffy\XercesInitialize.cpp
 set LINK_OPTIONS=/link /DEBUG /LIBPATH:Proffy/External/lib64 /OPT:REF /DYNAMICBASE
 set LIBRARY_FILES=dbgeng.lib xerces-c_3.lib ole32.lib mscoree.lib
 

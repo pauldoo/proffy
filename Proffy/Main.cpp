@@ -20,9 +20,11 @@
 #include "ComInitialize.h"
 #include "CommandLineArguments.h"
 #include "ConsoleColor.h"
-#include "Exception.h"
+#include "CorDebugManagedCallback.h"
+#include "CorDebugUnmanagedCallback.h"
 #include "DebugEventCallbacks.h"
 #include "DebugOutputCallbacks.h"
+#include "Exception.h"
 #include "Launcher.h"
 #include "LookupSymbols.h"
 #include "Results.h"
@@ -98,6 +100,7 @@ namespace Proffy {
                 &(versionBuffer.front()),
                 versionBuffer.size(),
                 &versionBufferLength);
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
             versionBuffer.resize(versionBufferLength);
 
@@ -106,6 +109,7 @@ namespace Proffy {
                 CorDebugVersion_2_0,
                 &(versionBuffer.front()),
                 &corDebugAsUnknown);
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
             ASSERT(corDebugAsUnknown != NULL);
 
@@ -113,10 +117,21 @@ namespace Proffy {
             result = corDebugAsUnknown->QueryInterface(
                 __uuidof(ICorDebug),
                 reinterpret_cast<void**>(&corDebug));
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
             ASSERT(corDebug != NULL);
 
             result = corDebug->Initialize();
+            ASSERT(result == S_OK);
+
+            CorDebugManagedCallback managedCallback;
+            result = corDebug->SetManagedHandler(&managedCallback);
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+            ASSERT(result == S_OK);
+
+            CorDebugUnmanagedCallback unmanagedCallback;
+            result = corDebug->SetUnmanagedHandler(&unmanagedCallback);
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
 
             ICorDebugProcess* corDebugProcess = NULL;
@@ -124,7 +139,7 @@ namespace Proffy {
                 arguments.fProcessId,
                 FALSE,
                 &corDebugProcess);
-            std::wcout << Utilities::HresultToString(result).c_str() << "\n";
+            std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
             ASSERT(result == S_OK);
             ASSERT(corDebugProcess != NULL);
 
