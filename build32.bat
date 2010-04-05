@@ -10,7 +10,9 @@ set LIBRARY_FILES=dbgeng.lib xerces-c_3.lib ole32.lib mscoree.lib
 mkdir bin32
 mkdir obj32
 
-cl.exe /Febin32\Proffy32 /Fdbin32\Proffy32 %PROFFY_COMPILE_OPTIONS% %SOURCE_FILES% %LINK_OPTIONS% %LIBRARY_FILES%
+cl.exe /Fdbin32\Proffy32 %PROFFY_COMPILE_OPTIONS% /c /Ycstdafx.h /Fpobj32\stdafx.pch Proffy\stdafx.cpp
+IF %ERRORLEVEL% NEQ 0 exit 1
+cl.exe /Febin32\Proffy32 /Fdbin32\Proffy32 %PROFFY_COMPILE_OPTIONS% /Yustdafx.h /Fpobj32\stdafx.pch %SOURCE_FILES% %LINK_OPTIONS% obj32\stdafx.obj %LIBRARY_FILES%
 IF %ERRORLEVEL% NEQ 0 exit 1
 mt.exe -manifest bin32\Proffy32.exe.manifest -outputresource:bin32\Proffy32.exe;1
 IF %ERRORLEVEL% NEQ 0 exit 1
