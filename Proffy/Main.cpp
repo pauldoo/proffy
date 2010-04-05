@@ -160,8 +160,8 @@ namespace Proffy {
             while (true) {
                 std::wcout << L".";
                 std::wcout.flush();
-                result = corDebugProcess->Continue(FALSE);
-                ASSERT(result == S_OK);
+                //result = corDebugProcess->Continue(FALSE);
+                //ASSERT(result == S_OK);
 
                 result = ::WaitForSingleObject(stopFlag.fHandle, delayBetweenSamplesInMilliseconds);
                 if (result == WAIT_OBJECT_0) {
@@ -173,8 +173,8 @@ namespace Proffy {
                     ASSERT(false);
                 }
 
-                result = corDebugProcess->Stop(INFINITE);
-                ASSERT(result == S_OK);
+                //result = corDebugProcess->Stop(INFINITE);
+                //ASSERT(result == S_OK);
             }
             std::wcout << L"\n";
 

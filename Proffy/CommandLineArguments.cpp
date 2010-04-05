@@ -40,6 +40,10 @@ namespace Proffy {
         const int argc,
         const wchar_t* const * const argv)
     {
+        for (int i = 0; i < argc; i++) {
+            std::wcout << i << ": " << (argv[i]) << "\n";
+        }
+
         ASSERT(argc == 7);
         return CommandLineArguments(argv);
     }

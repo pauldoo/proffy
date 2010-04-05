@@ -59,6 +59,8 @@ namespace Proffy {
         LPDEBUG_EVENT /*pDebugEvent*/,
         BOOL /*fOutOfBand*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 }

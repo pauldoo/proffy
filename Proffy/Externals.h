@@ -23,15 +23,13 @@
 // Windows includes
 #define NOMINMAX
 #define STRICT
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winerror.h>
+#include <comdef.h>
 
 // DbgEng includes
 #include <dbgeng.h>
-#pragma warning(push)
-#pragma warning(disable: 4005) // macro redefinition
-#include <ntstatus.h>
-#pragma warning(pop)
 
 // Stuff for debugging managed targets
 #include <mscoree.h>

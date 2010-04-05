@@ -18,7 +18,9 @@
 
 #include "CorDebugManagedCallback.h"
 
+#include "Assert.h"
 #include "ConsoleColor.h"
+#include "Utilities.h"
 
 namespace Proffy {
     CorDebugManagedCallback::CorDebugManagedCallback()
@@ -63,6 +65,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugThread* /*thread*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -71,6 +75,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         ICorDebugBreakpoint* /*pBreakpoint*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -80,25 +86,42 @@ namespace Proffy {
         ICorDebugBreakpoint* /*pBreakpoint*/,
         unsigned long /*dwError*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT _stdcall CorDebugManagedCallback::ControlCTrap(
         ICorDebugProcess* /*pProcess*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT _stdcall CorDebugManagedCallback::CreateAppDomain(
-        ICorDebugProcess* /*pProcess*/,
+        ICorDebugProcess* pProcess,
         ICorDebugAppDomain* /*pAppDomain*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
+
+        const HRESULT result = pProcess->Continue(FALSE);
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
         return S_OK;
     }
 
     HRESULT _stdcall CorDebugManagedCallback::CreateProcess(
-        ICorDebugProcess* /*pProcess*/)
+        ICorDebugProcess* pProcess)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
+
+        const HRESULT result = pProcess->Continue(FALSE);
+        ASSERT(result == S_OK);
+
         return S_OK;
     }
 
@@ -106,14 +129,22 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugThread* /*thread*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT _stdcall CorDebugManagedCallback::DebuggerError(
         ICorDebugProcess* /*pProcess*/,
-        HRESULT /*errorHR*/,
-        unsigned long /*errorCode*/)
+        HRESULT errorHR,
+        unsigned long errorCode)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
+
+        std::wcout << L"HRESULT: " << Utilities::HresultToString(errorHR).c_str() << L"\n";
+        std::wcout << L"CLR Code: " << errorCode << L"\n";
+
         return S_OK;
     }
 
@@ -123,6 +154,8 @@ namespace Proffy {
         ICorDebugFunction* /*pFunction*/,
         BOOL /*fAccurate*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -131,6 +164,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         ICorDebugEval* /*pEval*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -139,6 +174,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         ICorDebugEval* /*pEval*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -147,6 +184,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         BOOL /*unhandled*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -154,12 +193,16 @@ namespace Proffy {
         ICorDebugProcess* /*pProcess*/,
         ICorDebugAppDomain* /*pAppDomain*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
     HRESULT _stdcall CorDebugManagedCallback::ExitProcess(
         ICorDebugProcess* /*pProcess*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -167,6 +210,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugThread* /*thread*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -174,6 +219,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugAssembly* /*pAssembly*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -181,6 +228,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugClass* /*c*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -188,6 +237,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugModule* /*pModule*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -198,6 +249,8 @@ namespace Proffy {
         WCHAR* /*pLogSwitchName*/,
         WCHAR* /*pMessage*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -209,6 +262,8 @@ namespace Proffy {
         WCHAR* /*pLogSwitchName*/,
         WCHAR* /*pParentName*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -216,6 +271,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugThread* /*pThread*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -225,6 +282,8 @@ namespace Proffy {
         ICorDebugStepper* /*pStepper*/,
         CorDebugStepReason /*reason*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -232,6 +291,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugAssembly* /*pAssembly*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -239,6 +300,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugClass* /*c*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -246,6 +309,8 @@ namespace Proffy {
         ICorDebugAppDomain* /*pAppDomain*/,
         ICorDebugModule* /*pModule*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -254,6 +319,8 @@ namespace Proffy {
         ICorDebugModule* /*pModule*/,
         IStream* /*pSymbolStream*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -264,6 +331,8 @@ namespace Proffy {
         ICorDebugFunction* /*pNewFunction*/,
         ULONG32 /*oldILOffset*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -272,6 +341,8 @@ namespace Proffy {
         CONNID /*dwConnectionId*/,
         WCHAR* /*pConnName*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -279,6 +350,8 @@ namespace Proffy {
         ICorDebugProcess* /*pProcess*/,
         CONNID /*dwConnectionId*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -286,6 +359,8 @@ namespace Proffy {
         ICorDebugProcess* /*pProcess*/,
         CONNID /*dwConnectionId*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -297,6 +372,8 @@ namespace Proffy {
         CorDebugExceptionCallbackType /*dwEventType*/,
         DWORD /*dwFlags*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -306,6 +383,8 @@ namespace Proffy {
         CorDebugExceptionUnwindCallbackType /*dwEventType*/,
         DWORD /*dwFlags*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -314,6 +393,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         ICorDebugFunction* /*pFunction*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 
@@ -322,6 +403,8 @@ namespace Proffy {
         ICorDebugThread* /*pThread*/,
         ICorDebugMDA* /*pMDA*/)
     {
+        ConsoleColor c(Color_Yellow);
+        std::cout << __FUNCTION__ << "\n";
         return S_OK;
     }
 }

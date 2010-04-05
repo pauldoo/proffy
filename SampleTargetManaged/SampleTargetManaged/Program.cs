@@ -24,7 +24,7 @@ namespace SampleTargetManaged
 
         static void Main(string[] args)
         {
-            const string pathToProffyExecutable = "..\\..\\..\\..\\dist\\bin32\\Proffy32.exe";
+            const string pathToProffyExecutable = "..\\..\\..\\..\\dist\\bin64\\Proffy64.exe";
             const string outputFolder = "..\\..\\..\\..\\dist";
             const double delayBetweenSamplesInSeconds = 0.1;
             const bool profileTheProfiler = false;
@@ -47,6 +47,7 @@ namespace SampleTargetManaged
                     argumentsBuilder.Append(" " + semaphoreStopName);
                     argumentsBuilder.Append(" " + delayBetweenSamplesInSeconds);
                     argumentsBuilder.Append(" " + (profileTheProfiler ? "1" : "0"));
+                    System.Console.Out.WriteLine(argumentsBuilder.ToString());
 
                     using (Process process = Process.Start(pathToProffyExecutable, argumentsBuilder.ToString()))
                     {
@@ -57,12 +58,14 @@ namespace SampleTargetManaged
                         long start = System.DateTime.UtcNow.ToFileTimeUtc();
                         long ticksPerSecond = 10000000; // ToFileTimeUtc() returns in units of 100-nanoseconds, ie, 10^7 ticks per second.
                         while (System.DateTime.UtcNow.ToFileTimeUtc() - start < 10 * ticksPerSecond) {
+                            System.Console.Out.Write(".");
                             fib(10);
                         }
+                        System.Console.Out.WriteLine();
                         System.Console.Out.WriteLine("Spun for 10 seconds..");
 
                         stopFlag.Release();
-
+                  
                         System.Console.Out.WriteLine("Waiting for proffy to stop..");
                         process.WaitForExit();
                         System.Console.Out.WriteLine("Done..");
