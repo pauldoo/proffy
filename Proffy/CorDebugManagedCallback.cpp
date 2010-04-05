@@ -101,12 +101,18 @@ namespace Proffy {
 
     HRESULT _stdcall CorDebugManagedCallback::CreateAppDomain(
         ICorDebugProcess* pProcess,
-        ICorDebugAppDomain* /*pAppDomain*/)
+        ICorDebugAppDomain* pAppDomain)
     {
         ConsoleColor c(Color_Yellow);
         std::cout << __FUNCTION__ << "\n";
 
-        const HRESULT result = pProcess->Continue(FALSE);
+        HRESULT result = S_OK;
+
+        result = pAppDomain->Attach();
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
+        result = pProcess->Continue(FALSE);
         std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
         ASSERT(result == S_OK);
 
@@ -126,11 +132,22 @@ namespace Proffy {
     }
 
     HRESULT _stdcall CorDebugManagedCallback::CreateThread(
-        ICorDebugAppDomain* /*pAppDomain*/,
-        ICorDebugThread* /*thread*/)
+        ICorDebugAppDomain* pAppDomain,
+        ICorDebugThread* thread)
     {
         ConsoleColor c(Color_Yellow);
         std::cout << __FUNCTION__ << "\n";
+
+        HRESULT result = S_OK;
+
+        result = thread->SetDebugState(THREAD_RUN);
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
+        result = pAppDomain->Continue(FALSE);
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
         return S_OK;
     }
 
@@ -216,11 +233,29 @@ namespace Proffy {
     }
 
     HRESULT _stdcall CorDebugManagedCallback::LoadAssembly(
-        ICorDebugAppDomain* /*pAppDomain*/,
-        ICorDebugAssembly* /*pAssembly*/)
+        ICorDebugAppDomain* pAppDomain,
+        ICorDebugAssembly* pAssembly)
     {
         ConsoleColor c(Color_Yellow);
         std::cout << __FUNCTION__ << "\n";
+
+        HRESULT result = S_OK;
+
+        std::vector<wchar_t> nameBuffer(1024);
+        ULONG32 nameLength = 0;
+        result = pAssembly->GetName(
+            static_cast<int>(nameBuffer.size()),
+            &nameLength,
+            &(nameBuffer.front()));
+        ASSERT(result == S_OK);
+        nameBuffer.resize(nameLength);
+        std::wstring name(nameBuffer.begin(), nameBuffer.end());
+        std::wcout << "LoadAssembly: " << name << "\n";
+
+        result = pAppDomain->Continue(FALSE);
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
         return S_OK;
     }
 
@@ -234,11 +269,29 @@ namespace Proffy {
     }
 
     HRESULT _stdcall CorDebugManagedCallback::LoadModule(
-        ICorDebugAppDomain* /*pAppDomain*/,
-        ICorDebugModule* /*pModule*/)
+        ICorDebugAppDomain* pAppDomain,
+        ICorDebugModule* pModule)
     {
         ConsoleColor c(Color_Yellow);
         std::cout << __FUNCTION__ << "\n";
+
+        HRESULT result = S_OK;
+
+        std::vector<wchar_t> nameBuffer(1024);
+        ULONG32 nameLength = 0;
+        result = pModule->GetName(
+            static_cast<int>(nameBuffer.size()),
+            &nameLength,
+            &(nameBuffer.front()));
+        ASSERT(result == S_OK);
+        nameBuffer.resize(nameLength);
+        std::wstring name(nameBuffer.begin(), nameBuffer.end());
+        std::wcout << "LoadModule: " << name << "\n";
+
+        result = pAppDomain->Continue(FALSE);
+        std::wcout << __LINE__ << ": " << Utilities::HresultToString(result).c_str() << "\n";
+        ASSERT(result == S_OK);
+
         return S_OK;
     }
 

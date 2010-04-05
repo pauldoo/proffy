@@ -59,7 +59,7 @@ namespace SampleTargetManaged
                         long ticksPerSecond = 10000000; // ToFileTimeUtc() returns in units of 100-nanoseconds, ie, 10^7 ticks per second.
                         while (System.DateTime.UtcNow.ToFileTimeUtc() - start < 10 * ticksPerSecond) {
                             System.Console.Out.Write(".");
-                            fib(10);
+                            fib(30);
                         }
                         System.Console.Out.WriteLine();
                         System.Console.Out.WriteLine("Spun for 10 seconds..");

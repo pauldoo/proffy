@@ -160,9 +160,6 @@ namespace Proffy {
             while (true) {
                 std::wcout << L".";
                 std::wcout.flush();
-                //result = corDebugProcess->Continue(FALSE);
-                //ASSERT(result == S_OK);
-
                 result = ::WaitForSingleObject(stopFlag.fHandle, delayBetweenSamplesInMilliseconds);
                 if (result == WAIT_OBJECT_0) {
                     // Flag is raised
@@ -173,8 +170,15 @@ namespace Proffy {
                     ASSERT(false);
                 }
 
-                //result = corDebugProcess->Stop(INFINITE);
-                //ASSERT(result == S_OK);
+                result = corDebugProcess->Stop(INFINITE);
+                ASSERT(result == S_OK);
+
+                /*
+                    TODO: Enumerate all threads, taking stacks..
+                */
+
+                result = corDebugProcess->Continue(FALSE);
+                ASSERT(result == S_OK);
             }
             std::wcout << L"\n";
 
