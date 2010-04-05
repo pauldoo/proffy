@@ -173,9 +173,57 @@ namespace Proffy {
                 result = corDebugProcess->Stop(INFINITE);
                 ASSERT(result == S_OK);
 
-                /*
-                    TODO: Enumerate all threads, taking stacks..
-                */
+                DWORD helperThreadId = 0;
+                result = corDebugProcess->GetHelperThreadID(&helperThreadId);
+                ASSERT(result == S_OK);
+
+                {
+                    OwnedHandle snapshot = OwnedHandle(::CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0));
+                    ASSERT(snapshot.fHandle != INVALID_HANDLE_VALUE);
+
+                    THREADENTRY32 threadEntry;
+                    threadEntry.dwSize = static_cast<int>(sizeof(threadEntry));
+                    if (Thread32First(snapshot.fHandle, &threadEntry) == TRUE) {
+                        do {
+                            if (threadEntry.th32OwnerProcessID == arguments.fProcessId &&
+                                threadEntry.th32ThreadID != helperThreadId) {
+
+                                ICorDebugThread* corDebugThread = NULL;
+                                result = corDebugProcess->GetThread(
+                                    threadEntry.th32ThreadID,
+                                    &corDebugThread);
+
+                                if (result == S_OK) {
+                                    ASSERT(result == S_OK);
+                                    ASSERT(corDebugThread != NULL);
+
+                                    ICorDebugThread2* corDebugThread2 = NULL;
+                                    result = corDebugThread->QueryInterface(
+                                        __uuidof(ICorDebugThread2),
+                                        reinterpret_cast<void**>(&corDebugThread2));
+                                    ASSERT(result == S_OK);
+                                    ASSERT(corDebugThread2 != NULL);
+
+
+                                    std::vector<COR_ACTIVE_FUNCTION> activeFunctions(100);
+                                    ULONG32 activeFunctionsSize = 0;
+                                    result = corDebugThread2->GetActiveFunctions(
+                                        static_cast<int>(activeFunctions.size()),
+                                        &activeFunctionsSize,
+                                        &(activeFunctions.front()));
+                                    ASSERT(result == S_OK);
+                                    ASSERT(activeFunctionsSize <= activeFunctions.size());
+                                    activeFunctions.resize(activeFunctionsSize);
+
+                                    std::wcout << "Stack:\n";
+                                    for (int i = 0; i < activeFunctions.size(); i++) {
+                                        std::wcout << activeFunctions.at(i).ilOffset << "\n";
+                                    }
+                                }
+                            }
+                        } while (Thread32Next(snapshot.fHandle, &threadEntry) == TRUE);
+                    }
+                }
 
                 result = corDebugProcess->Continue(FALSE);
                 ASSERT(result == S_OK);

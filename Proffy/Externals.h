@@ -27,6 +27,7 @@
 #include <windows.h>
 #include <winerror.h>
 #include <comdef.h>
+#include <tlhelp32.h>
 
 // DbgEng includes
 #include <dbgeng.h>
