@@ -502,6 +502,9 @@ LPEXT_API_VERSION
 #define IG_TYPED_DATA                 43
 #define IG_DISASSEMBLE_BUFFER         44
 #define IG_GET_ANY_MODULE_IN_RANGE    45
+#define IG_VIRTUAL_TO_PHYSICAL        46
+#define IG_PHYSICAL_TO_VIRTUAL        47
+#define IG_GET_CONTEXT_EX             48
 
 #define IG_GET_TEB_ADDRESS           128
 #define IG_GET_PEB_ADDRESS           129
@@ -660,6 +663,26 @@ typedef struct _TRANSLATE_VIRTUAL_TO_PHYSICAL {
     ULONG64     Virtual;
     ULONG64     Physical;
 } TRANSLATE_VIRTUAL_TO_PHYSICAL, *PTRANSLATE_VIRTUAL_TO_PHYSICAL;
+
+typedef struct _VIRTUAL_TO_PHYSICAL {
+    ULONG       Status;
+    ULONG       Size;
+    ULONG64     PdeAddress;
+    ULONG64     Virtual;
+    ULONG64     Physical;
+} VIRTUAL_TO_PHYSICAL, *PVIRTUAL_TO_PHYSICAL;
+
+typedef struct _PHYSICAL_TO_VIRTUAL {
+    ULONG       Status;
+    ULONG       Size;
+    ULONG64     PdeAddress;
+} PHYSICAL_TO_VIRTUAL, *PPHYSICAL_TO_VIRTUAL;
+
+typedef struct _GET_CONTEXT_EX {
+    ULONG       Status;
+    ULONG       ContextSize;
+    PVOID       pContext;
+} GET_CONTEXT_EX, *PGET_CONTEXT_EX;
 
 #define PTR_SEARCH_PHYS_ALL_HITS         0x00000001
 #define PTR_SEARCH_PHYS_PTE              0x00000002
@@ -883,6 +906,7 @@ typedef enum _DBGKD_MAJOR_TYPES
     DBGKD_MAJOR_TNT,
     DBGKD_MAJOR_SINGULARITY,
     DBGKD_MAJOR_HYPERVISOR,
+    DBGKD_MAJOR_MIDORI,
     DBGKD_MAJOR_COUNT
 } DBGKD_MAJOR_TYPES;
 
@@ -1417,6 +1441,10 @@ typedef struct _KDDEBUGGER_DATA64 {
     ULONG64   MmBadPagesDetected;
     ULONG64   MmZeroedPageSingleBitErrorsDetected;
 
+    // Windows 7 addition
+
+    ULONG64   EtwpDebuggerData;
+    USHORT    OffsetPrcbContext;
 
 } KDDEBUGGER_DATA64, *PKDDEBUGGER_DATA64;
 
@@ -1574,6 +1602,7 @@ typedef struct _KDDEBUGGER_DATA64 {
 #define CANNOT_ALLOCATE_MEMORY       0x09
 #define INSUFFICIENT_SPACE_TO_COPY   0x0a
 #define ADDRESS_TYPE_INDEX_NOT_FOUND 0x0b
+#define UNAVAILABLE_ERROR            0x0c
 
 
 //////////////////////////////////////////////////////////////////////////*/
@@ -2593,7 +2622,7 @@ GetFieldOffset (
 
    Sym.nFields = 1;
    Err = Ioctl( IG_DUMP_SYMBOL_INFO, &Sym, Sym.size );
-   *pOffset = (ULONG) (flds.address - Sym.addr);
+   *pOffset = (ULONG) flds.FieldOffset;
    return Err;
 }
 

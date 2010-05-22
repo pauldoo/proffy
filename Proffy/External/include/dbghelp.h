@@ -36,6 +36,8 @@ Revision History:
 #endif
 #endif
 
+#include <pshpack8.h>
+
 // For those without specstrings.h
 // Since there are different versions of this header, I need to
 // individually test each item and define it if it is not around.
@@ -87,6 +89,15 @@ Revision History:
 #endif
 #ifndef __out_ecount_opt
  #define __out_ecount_opt(x)
+#endif
+#ifndef __in_bcount_opt
+ #define __in_bcount_opt(x)
+#endif
+#ifndef __out_bcount_opt
+ #define __out_bcount_opt(x)
+#endif
+#ifndef __deref_out_opt
+ #define __deref_out_opt
 #endif
 
 
@@ -533,7 +544,7 @@ UnDecorateSymbolNameW(
 
 #define DBHHEADER_DEBUGDIRS     0x1
 #define DBHHEADER_CVMISC        0x2
-
+#define DBHHEADER_PDBGUID       0x3
 typedef struct _MODLOAD_DATA {
     DWORD   ssize;                  // size of this struct
     DWORD   ssig;                   // signature identifying the passed data
@@ -550,6 +561,11 @@ typedef struct _MODLOAD_CVMISC {
     DWORD   dtImage;                // datetime stamp of the image
     DWORD   cImage;                 // size of the image
 } MODLOAD_CVMISC, *PMODLOAD_CVMISC;
+
+typedef struct _MODLOAD_PDBGUID_PDBAGE {
+    GUID    PdbGuid;                // Pdb Guid 
+    DWORD   PdbAge;                 // Pdb Age 
+} MODLOAD_PDBGUID_PDBAGE, *PMODLOAD_PDBGUID_PDBAGE;
 
 //
 // StackWalking API
@@ -1097,6 +1113,7 @@ enum SymTagEnum
     SymTagCustomType,
     SymTagManagedType,
     SymTagDimension,
+    SymTagCallSite,
     SymTagMax
 };
 
@@ -1123,6 +1140,7 @@ enum SymTagEnum
 #define SYMFLAG_ILREL            0x00010000
 #define SYMFLAG_METADATA         0x00020000
 #define SYMFLAG_CLR_TOKEN        0x00040000
+#define SYMFLAG_NULL             0x00080000
 
 // this resets SymNext/Prev to the beginning
 // of the module passed in the address field
@@ -1250,6 +1268,9 @@ typedef struct _IMAGEHLP_MODULE64 {
     // new elements: 17-Dec-2003
     BOOL     SourceIndexed;          // pdb supports source server
     BOOL     Publics;                // contains public symbols
+    // new element: 15-Jul-2009
+    DWORD    MachineType;            // IMAGE_FILE_MACHINE_XXX from ntimage.h and winnt.h
+    DWORD    Reserved;               // Padding - don't remove.
 } IMAGEHLP_MODULE64, *PIMAGEHLP_MODULE64;
 
 typedef struct _IMAGEHLP_MODULEW64 {
@@ -1278,6 +1299,9 @@ typedef struct _IMAGEHLP_MODULEW64 {
     // new elements: 17-Dec-2003
     BOOL     SourceIndexed;          // pdb supports source server
     BOOL     Publics;                // contains public symbols
+    // new element: 15-Jul-2009
+    DWORD    MachineType;            // IMAGE_FILE_MACHINE_XXX from ntimage.h and winnt.h
+    DWORD    Reserved;               // Padding - don't remove.
 } IMAGEHLP_MODULEW64, *PIMAGEHLP_MODULEW64;
 
 #if !defined(_IMAGEHLP_SOURCE_) && defined(_IMAGEHLP64)
@@ -2666,6 +2690,7 @@ typedef enum _IMAGEHLP_SYMBOL_TYPE_INFO {
     TI_GET_VIRTUALBASEDISPINDEX,
     TI_GET_IS_REFERENCE,
     TI_GET_INDIRECTVIRTUALBASECLASS,
+    TI_GET_VIRTUALBASETABLETYPE,
     IMAGEHLP_SYMBOL_TYPE_INFO_MAX,
 } IMAGEHLP_SYMBOL_TYPE_INFO;
 
@@ -3546,6 +3571,8 @@ SymGetSymPrevW(
 #define IMAGEHLP_SYMBOL_THUNK                      SYMF_THUNK           // 0x2000
 #define IMAGEHLP_SYMBOL_INFO_TLSRELATIVE           SYMF_TLSREL          // 0x4000
 
+#include <poppack.h>
+
 
 #include <pshpack4.h>
 
@@ -3651,6 +3678,7 @@ typedef enum _MINIDUMP_STREAM_TYPE {
     MemoryInfoListStream        = 16,
     ThreadInfoListStream        = 17,
     HandleOperationListStream   = 18,
+    TokenStream                 = 19,
 
     ceStreamNull                = 0x8000,
     ceStreamSystemInfo          = 0x8001,
@@ -4064,9 +4092,13 @@ typedef struct _MINIDUMP_UNLOADED_MODULE_LIST {
 // bit is set.
 //
 
-#define MINIDUMP_MISC1_PROCESS_ID           0x00000001
-#define MINIDUMP_MISC1_PROCESS_TIMES        0x00000002
-#define MINIDUMP_MISC1_PROCESSOR_POWER_INFO 0x00000004
+#define MINIDUMP_MISC1_PROCESS_ID            0x00000001
+#define MINIDUMP_MISC1_PROCESS_TIMES         0x00000002
+#define MINIDUMP_MISC1_PROCESSOR_POWER_INFO  0x00000004
+#define MINIDUMP_MISC3_PROCESS_INTEGRITY     0x00000010
+#define MINIDUMP_MISC3_PROCESS_EXECUTE_FLAGS 0x00000020
+#define MINIDUMP_MISC3_TIMEZONE              0x00000040
+#define MINIDUMP_MISC3_PROTECTED_PROCESS     0x00000080
 
 typedef struct _MINIDUMP_MISC_INFO {
     ULONG32 SizeOfInfo;
@@ -4091,8 +4123,27 @@ typedef struct _MINIDUMP_MISC_INFO_2 {
     ULONG32 ProcessorCurrentIdleState;
 } MINIDUMP_MISC_INFO_2, *PMINIDUMP_MISC_INFO_2;
 
+typedef struct _MINIDUMP_MISC_INFO_3 {
+    ULONG32 SizeOfInfo;
+    ULONG32 Flags1;
+    ULONG32 ProcessId;
+    ULONG32 ProcessCreateTime;
+    ULONG32 ProcessUserTime;
+    ULONG32 ProcessKernelTime;
+    ULONG32 ProcessorMaxMhz;
+    ULONG32 ProcessorCurrentMhz;
+    ULONG32 ProcessorMhzLimit;
+    ULONG32 ProcessorMaxIdleState;
+    ULONG32 ProcessorCurrentIdleState;
+    ULONG32 ProcessIntegrityLevel;
+    ULONG32 ProcessExecuteFlags;
+    ULONG32 ProtectedProcess;
+    ULONG32 TimeZoneId;
+    TIME_ZONE_INFORMATION TimeZone;
+} MINIDUMP_MISC_INFO_3, *PMINIDUMP_MISC_INFO_3;
+
 // The latest MINIDUMP_MISC_INFO definition.
-typedef MINIDUMP_MISC_INFO_2 MINIDUMP_MISC_INFO_N;
+typedef MINIDUMP_MISC_INFO_3 MINIDUMP_MISC_INFO_N;
 typedef MINIDUMP_MISC_INFO_N* PMINIDUMP_MISC_INFO_N;
 
 
@@ -4156,6 +4207,21 @@ typedef struct _MINIDUMP_THREAD_INFO_LIST {
     ULONG NumberOfEntries;
 } MINIDUMP_THREAD_INFO_LIST, *PMINIDUMP_THREAD_INFO_LIST;
 
+//
+// Support for token information.
+//
+typedef struct _MINIDUMP_TOKEN_INFO_HEADER {
+    ULONG   TokenSize;   // The size of the token structure.
+    ULONG   TokenId;     // The PID in NtOpenProcessToken() call or TID in NtOpenThreadToken() call.
+    ULONG64 TokenHandle; // The handle value returned.
+} MINIDUMP_TOKEN_INFO_HEADER, *PMINIDUMP_TOKEN_INFO_HEADER;
+
+typedef struct _MINIDUMP_TOKEN_INFO_LIST {
+    ULONG TokenListSize;
+    ULONG TokenListEntries;
+    ULONG ListHeaderSize;
+    ULONG ElementHeaderSize;
+} MINIDUMP_TOKEN_INFO_LIST, *PMINIDUMP_TOKEN_INFO_LIST;
 
 //
 // Support for arbitrary user-defined information.
@@ -4423,7 +4489,8 @@ typedef enum _MINIDUMP_TYPE {
     MiniDumpWithFullAuxiliaryState         = 0x00008000,
     MiniDumpWithPrivateWriteCopyMemory     = 0x00010000,
     MiniDumpIgnoreInaccessibleMemory       = 0x00020000,
-    MiniDumpValidTypeFlags                 = 0x0003ffff,
+    MiniDumpWithTokenInformation           = 0x00040000,
+    MiniDumpValidTypeFlags                 = 0x0007ffff,
 } MINIDUMP_TYPE;
 
 //
