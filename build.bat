@@ -1,4 +1,5 @@
-set WINDOWS_SDK_PATH=C:\Program Files\Microsoft SDKs\Windows\v6.1
+set WINDOWS_SDK_PATH=C:\Program Files\Microsoft SDKs\Windows\v7.1
+set PATH=%PATH%;c:\cygwin\bin
 
 c:\cygwin\bin\sh getversion.sh > Proffy\Version.inc
 IF %ERRORLEVEL% NEQ 0 exit 1

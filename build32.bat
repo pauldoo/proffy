@@ -10,11 +10,7 @@ mkdir obj32
 
 cl.exe /Febin32\Proffy32 /Fdbin32\Proffy32 %COMPILE_OPTIONS% %SOURCE_FILES% %LINK_OPTIONS% %LIBRARY_FILES%
 IF %ERRORLEVEL% NEQ 0 exit 1
-mt.exe -manifest bin32\Proffy32.exe.manifest -outputresource:bin32\Proffy32.exe;1
-IF %ERRORLEVEL% NEQ 0 exit 1
 
 cl.exe /Febin32\SampleTarget32 /Fdbin32\SampleTarget32 %COMPILE_OPTIONS% /GL- SampleTarget\Main.cpp %LINK_OPTIONS%
-IF %ERRORLEVEL% NEQ 0 exit 1
-mt.exe -manifest bin32\SampleTarget32.exe.manifest -outputresource:bin32\SampleTarget32.exe;1
 IF %ERRORLEVEL% NEQ 0 exit 1
 
