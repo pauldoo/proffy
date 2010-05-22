@@ -10,11 +10,7 @@ mkdir obj64
 
 cl.exe /Febin64\Proffy64 /Fdbin64\Proffy64 %COMPILE_OPTIONS% %SOURCE_FILES% %LINK_OPTIONS% %LIBRARY_FILES%
 IF %ERRORLEVEL% NEQ 0 exit 1
-mt.exe -manifest bin64\Proffy64.exe.manifest -outputresource:bin64\Proffy64.exe;1
-IF %ERRORLEVEL% NEQ 0 exit 1
 
 cl.exe /Febin64\SampleTarget64 /Fdbin64\SampleTarget64 %COMPILE_OPTIONS% /GL- SampleTarget\Main.cpp %LINK_OPTIONS%
-IF %ERRORLEVEL% NEQ 0 exit 1
-mt.exe -manifest bin64\SampleTarget64.exe.manifest -outputresource:bin64\SampleTarget64.exe;1
 IF %ERRORLEVEL% NEQ 0 exit 1
 
