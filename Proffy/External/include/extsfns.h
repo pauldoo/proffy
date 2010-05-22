@@ -30,7 +30,7 @@ Revision History:
 #ifndef _EXTFNS_H
 #define _EXTFNS_H
 
-#define _EXTSAPI_VER_ 9
+#define _EXTSAPI_VER_ 10
 
 #ifndef _KDEXTSFN_H
 #define _KDEXTSFN_H
@@ -227,7 +227,8 @@ typedef struct _DEBUG_POOL_DATA {
             ULONG   Pageable:1;
             ULONG   Protected:1;
             ULONG   Allocated:1;
-            ULONG   Reserved:26;
+            ULONG   Session:1;
+            ULONG   Reserved:25;
         };
         ULONG AsUlong;
     };
@@ -455,6 +456,7 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_PNP_TRIAGE_DATA, // DEBUG_PNP_TRIAGE_INFO struct
     DEBUG_FLR_HANDLE_VALUE,
     DEBUG_FLR_WHEA_ERROR_RECORD, // WHEA_ERROR_RECORD for bugcheck 0x124
+    DEBUG_FLR_VERIFIER_FOUND_DEADLOCK, // Possible deadlock found, run !deadlock
 
     DEBUG_FLR_IRP_ADDRESS = 0x100,
     DEBUG_FLR_IRP_MAJOR_FN,
@@ -464,6 +466,8 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_INVALID_USEREVENT,
     DEBUG_FLR_VIDEO_TDR_CONTEXT,
     DEBUG_FLR_VERIFIER_DRIVER_ENTRY,
+    DEBUG_FLR_PNP_IRP_ADDRESS,
+
 
     // Previous mode 0 == KernelMode , 1 == UserMode
     DEBUG_FLR_PREVIOUS_MODE,
@@ -511,6 +515,7 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_MANAGED_BITNESS_MISMATCH,
     DEBUG_FLR_MANAGED_OBJECT_NAME,
     DEBUG_FLR_MANAGED_EXCEPTION_CONTEXT_MESSAGE,
+    DEBUG_FLR_MANAGED_STACK_COMMAND,
 
 
     // Constant values / exception code / bugcheck subtypes etc
@@ -606,6 +611,7 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_GSFAILURE_FUNCTION,
     DEBUG_FLR_GSFAILURE_MODULE_COOKIE,
     DEBUG_FLR_GSFAILURE_FRAME_COOKIE,
+    DEBUG_FLR_GSFAILURE_FRAME_COOKIE_COMPLEMENT,
     DEBUG_FLR_GSFAILURE_CORRUPTED_COOKIE,
     DEBUG_FLR_GSFAILURE_CORRUPTED_EBP,
     DEBUG_FLR_GSFAILURE_OVERRUN_LOCAL,
@@ -618,6 +624,8 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_GSFAILURE_ANALYSIS_TEXT,
     DEBUG_FLR_GSFAILURE_OFF_BY_ONE_OVERRUN,
     DEBUG_FLR_GSFAILURE_RA_SMASHED,
+    DEBUG_FLR_GSFAILURE_NOT_UP2DATE,
+    DEBUG_FLR_GSFAILURE_UP2DATE_UNKNOWN,
     DEBUG_FLR_OS_BUILD_NAME,
     DEBUG_FLR_CPU_MICROCODE_VERSION,
     DEBUG_FLR_INSTR_POINTER_ON_STACK,
@@ -637,6 +645,15 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_CANCELLATION_NOT_SUPPORTED,
     DEBUG_FLR_DETOURED_IMAGE, // At least one of images on target is detoured
     DEBUG_FLR_EXCEPTION_CONTEXT_RECURSION,
+    DEBUG_FLR_DISKIO_READ_FAILURE,
+    DEBUG_FLR_DISKIO_WRITE_FAILURE,
+    // this belongs with the GS related tags above, but here so that we dont distrub the order
+    DEBUG_FLR_GSFAILURE_MISSING_ESTABLISHER_FRAME,
+    DEBUG_FLR_GSFAILURE_COOKIES_MATCH_EXH,
+    DEBUG_FLR_GSFAILURE_MANAGED,
+    DEBUG_FLR_MANAGED_FRAME_CHAIN_CORRUPTION,  // not really a GS Failure, but reported and analyzed detected in the same way
+    DEBUG_FLR_GSFAILURE_MANAGED_THREADID,
+    DEBUG_FLR_GSFAILURE_MANAGED_FRAMEID,
 
     // Internal data, retated to the OCA database
     DEBUG_FLR_INTERNAL_RAID_BUG = 0x4000,
@@ -656,6 +673,7 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_WATSON_MODULE_TIMESTAMP,
     DEBUG_FLR_WATSON_PROCESS_TIMESTAMP,
     DEBUG_FLR_WATSON_GENERIC_EVENT_NAME,
+    DEBUG_FLR_WATSON_STAGEONE_STR,
 
     // Data extracted from cabbed files with dump
     DEBUG_FLR_SYSXML_LOCALEID = 0x4200,
@@ -714,6 +732,10 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_IMAGE_CLASS,
     DEBUG_FLR_SYMBOL_ROUTINE_NAME, 
     DEBUG_FLR_HARDWARE_BUCKET_TAG,
+    DEBUG_FLR_KERNEL_LOG_PROCESS_NAME,
+    DEBUG_FLR_KERNEL_LOG_STATUS,
+    DEBUG_FLR_REGISTRYTXT_SOURCE,
+    
 
     // User-mode specific stuff
     DEBUG_FLR_USERMODE_DATA = 0x100000,
@@ -729,15 +751,15 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_SUSPECT_CODE_PATH_HASH,
     DEBUG_FLR_LOADERLOCK_IN_WAIT_CHAIN,
     DEBUG_FLR_XPROC_HANG,
-    DEBUG_FLR_SEARCH_HANG,
     DEBUG_FLR_DEADLOCK_INPROC,
     DEBUG_FLR_DEADLOCK_XPROC,
     DEBUG_FLR_WCT_XML_AVAILABLE,
     DEBUG_FLR_XPROC_DUMP_AVAILABLE,
     DEBUG_FLR_DESKTOP_HEAP_MISSING,
     DEBUG_FLR_HANG_REPORT_THREAD_IS_IDLE,
-    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_MF,
+    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_MF,    // these fault thread hash variations are used in kernel mode too
     DEBUG_FLR_FAULT_THREAD_SHA1_HASH_MFO,
+    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_M,
     DEBUG_FLR_WAIT_CHAIN_COMMAND,
     DEBUG_FLR_NTGLOBALFLAG,
     DEBUG_FLR_APPVERIFERFLAGS,
@@ -753,7 +775,13 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_URLS,
     DEBUG_FLR_URL_ENTRY,
     DEBUG_FLR_WATSON_IBUCKET_S1_RESP,        
-   	DEBUG_FLR_WATSON_IBUCKETTABLE_S1_RESP,      
+    DEBUG_FLR_WATSON_IBUCKETTABLE_S1_RESP,      
+    DEBUG_FLR_SEARCH_HANG,
+    DEBUG_FLR_WER_DATA_COLLECTION_INFO,
+    DEBUG_FLR_WER_MACHINE_ID,
+    DEBUG_FLR_ULS_SCRIPT_EXCEPTION,
+    DEBUG_FLR_LCIE_ISO_AVAILABLE,
+    DEBUG_FLR_SHOW_LCIE_ISO_DATA,
 
     // Analysis structured data
     DEBUG_FLR_STACK = 0x200000,
@@ -801,9 +829,9 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_XML_ATTRIBUTE,
     DEBUG_FLR_XML_ATTRIBUTE_NAME,
     DEBUG_FLR_XML_ATTRIBUTE_VALUE,
-	DEBUG_FLR_XML_ATTRIBUTE_D1VALUE,
-	DEBUG_FLR_XML_ATTRIBUTE_D2VALUE,
-	DEBUG_FLR_XML_ATTRIBUTE_DOVALUE,
+    DEBUG_FLR_XML_ATTRIBUTE_D1VALUE,
+    DEBUG_FLR_XML_ATTRIBUTE_D2VALUE,
+    DEBUG_FLR_XML_ATTRIBUTE_DOVALUE,
     DEBUG_FLR_XML_ATTRIBUTE_VALUE_TYPE,
     DEBUG_FLR_XML_ATTRIBUTE_FRAME_NUMBER,
     DEBUG_FLR_XML_ATTRIBUTE_THREAD_INDEX, 
@@ -815,8 +843,18 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_XML_PROBLEMCLASS_FRAME_NUMBER,
     DEBUG_FLR_XML_PROBLEMCLASS_THREAD_INDEX, 
     DEBUG_FLR_XML_STACK_FRAME_TRIAGE_STATUS, 
-           
-    
+    DEBUG_FLR_CONTEXT_METADATA,
+    DEBUG_FLR_STACK_FRAMES,
+    DEBUG_FLR_XML_ENCODED_OFFSETS,
+    DEBUG_FLR_FA_PERF_DATA,
+    DEBUG_FLR_FA_PERF_ITEM,
+    DEBUG_FLR_FA_PERF_ITEM_NAME,
+    DEBUG_FLR_FA_PERF_ITERATIONS,
+    DEBUG_FLR_FA_PERF_ELAPSED_MS,    
+    DEBUG_FLR_STACK_SHA1_HASH_MF,
+    DEBUG_FLR_STACK_SHA1_HASH_MFO,
+    DEBUG_FLR_STACK_SHA1_HASH_M,
+
     // cabbed text data / structured data
     DEBUG_FLR_REGISTRY_DATA = 0x300000,
     DEBUG_FLR_WMI_QUERY_DATA = 0x301000,
@@ -826,32 +864,37 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
 
 #ifdef AUTOBUG_PROCESSING_SUPPORT
     // tabs to support autobug cab processing
-    DEBUG_FLR_AUTOBUG_EXCEPTION_CODE_STR = 0x101000,    // This is the string representation of the exception code (ie. c0000005)
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_PREFIX_STR,  // This is the prefix part of BUCKET_ID. Everything before the start of the module name
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_MODULE_STR,  // This is module, without the .dll/exe/tmp, etc. extension
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_MODVER_STR,  // This is version of the aforementioned module, 0.0.0.0 if none.
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_FUNCTION_STR,// This is same as Sym from Watson. If missing 'unknown'.
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_OFFSET,      // The offset portion SYMBOL_NAME
-    DEBUG_FLR_AUTOBUG_OSBUILD,               // This is the OS build number.
-    DEBUG_FLR_AUTOBUG_OSSERVICEPACK,         // This is the trailing part of the oca tag BUILD.
-    DEBUG_FLR_AUTOBUG_BUILDLAB_STR,          // Only the build lab part of BUILD_VERSION_STRING (like winmain_idx03)
-    DEBUG_FLR_AUTOBUG_BUILDDATESTAMP_STR,    // The time date stamp part of BUILD_VERSION_STRING (like 051214-1910)
-    DEBUG_FLR_AUTOBUG_BUILDOSVER_STR,        // The OS version parth of BUILD_VERSION_STRING (like 6.0.5270.9).
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_TIMEDATESTAMP,
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_CHECKSUM,
-    DEBUG_FLR_AUTOBUG_BUILD_FLAVOR_STR,
-    DEBUG_FLR_AUTOBUG_BUCKET_ID_FLAVOR_STR,      // Is the failing module chk or fre
-    DEBUG_FLR_AUTOBUG_OS_SKU,
-    DEBUG_FLR_AUTOBUG_PRODUCT_TYPE,
-    DEBUG_FLR_AUTOBUG_SUITE_MASK,
-    DEBUG_FLR_AUTOBUG_USER_LCID,
-    DEBUG_FLR_AUTOBUG_OS_REVISION,            // OS revision
-    DEBUG_FLR_AUTOBUG_OS_NAME,                // OS Name
-    DEBUG_FLR_AUTOBUG_OS_NAME_EDITION,        // Complete OS Name along with edition
-    DEBUG_FLR_AUTOBUG_OS_PLATFORM_TYPE,       // OS type - x86 / x64 / ia64
-    DEBUG_FLR_AUTOBUG_OSSERVICEPACK_NUMBER,   // This is service pack number
-    DEBUG_FLR_AUTOBUG_OS_LOCALE,              // OS locale string such as en-us
-    DEBUG_FLR_AUTOBUG_BUILDDATESTAMP,         // The time date stamp value for kernel
+    DEBUG_FLR_EXCEPTION_CODE_STR_deprecated = 0x101000,    // This is the string representation of the exception code (ie. c0000005)
+    // this is defined earlier as DEBUG_FLR_EXCEPTION_CODE_STR
+    DEBUG_FLR_BUCKET_ID_PREFIX_STR,  // This is the prefix part of BUCKET_ID. Everything before the start of the module name
+    DEBUG_FLR_BUCKET_ID_MODULE_STR,  // This is module, without the .dll/exe/tmp, etc. extension
+    DEBUG_FLR_BUCKET_ID_MODVER_STR,  // This is version of the aforementioned module, 0.0.0.0 if none.
+    DEBUG_FLR_BUCKET_ID_FUNCTION_STR,// This is same as Sym from Watson. If missing 'unknown'.
+    DEBUG_FLR_BUCKET_ID_OFFSET,      // The offset portion SYMBOL_NAME
+    DEBUG_FLR_OSBUILD,               // This is the OS build number.
+    DEBUG_FLR_OSSERVICEPACK,         // This is the trailing part of the oca tag BUILD.
+    DEBUG_FLR_BUILDLAB_STR,          // Only the build lab part of BUILD_VERSION_STRING (like winmain_idx03)
+    DEBUG_FLR_BUILDDATESTAMP_STR,    // The time date stamp part of BUILD_VERSION_STRING (like 051214-1910)
+    DEBUG_FLR_BUILDOSVER_STR,        // The OS version parth of BUILD_VERSION_STRING (like 6.0.5270.9).
+    DEBUG_FLR_BUCKET_ID_TIMEDATESTAMP,
+    DEBUG_FLR_BUCKET_ID_CHECKSUM,
+    DEBUG_FLR_BUILD_FLAVOR_STR,
+    DEBUG_FLR_BUCKET_ID_FLAVOR_STR,      // Is the failing module chk or fre
+    DEBUG_FLR_OS_SKU,
+    DEBUG_FLR_PRODUCT_TYPE,
+    DEBUG_FLR_SUITE_MASK,
+    DEBUG_FLR_USER_LCID,
+    DEBUG_FLR_OS_REVISION,            // OS revision
+    DEBUG_FLR_OS_NAME,                // OS Name
+    DEBUG_FLR_OS_NAME_EDITION,        // Complete OS Name along with edition
+    DEBUG_FLR_OS_PLATFORM_TYPE,       // OS type - x86 / x64 / ia64
+    DEBUG_FLR_OSSERVICEPACK_NUMBER,   // This is service pack number
+    DEBUG_FLR_OS_LOCALE,              // OS locale string such as en-us
+    DEBUG_FLR_BUILDDATESTAMP,         // The time date stamp value for kernel
+    DEBUG_FLR_USER_LCID_STR,
+    DEBUG_FLR_ANALYSIS_SESSION_TIME,  // time stamp when analysis is running
+    DEBUG_FLR_ANALYSIS_SESSION_HOST,  // machine on which analysis is running
+    DEBUG_FLR_ANALYSIS_SESSION_ELAPSED_TIME, // processing time for analysis set in milliseconds
 #endif
 
 
@@ -882,6 +925,37 @@ typedef enum _DEBUG_FLR_PARAM_TYPE {
     DEBUG_FLR_MASK_ALL = 0xFFFFFFFF
 
 } DEBUG_FLR_PARAM_TYPE;
+
+#ifdef AUTOBUG_PROCESSING_SUPPORT
+    // redifine older tabs to support autobug cab processing
+#define DEBUG_FLR_AUTOBUG_EXCEPTION_CODE_STR 	DEBUG_FLR_EXCEPTION_CODE_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_PREFIX_STR 	DEBUG_FLR_BUCKET_ID_PREFIX_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_MODULE_STR 	DEBUG_FLR_BUCKET_ID_MODULE_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_MODVER_STR 	DEBUG_FLR_BUCKET_ID_MODVER_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_FUNCTION_STR DEBUG_FLR_BUCKET_ID_FUNCTION_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_OFFSET 	DEBUG_FLR_BUCKET_ID_OFFSET
+#define DEBUG_FLR_AUTOBUG_OSBUILD 		DEBUG_FLR_OSBUILD
+#define DEBUG_FLR_AUTOBUG_OSSERVICEPACK 	DEBUG_FLR_OSSERVICEPACK
+#define DEBUG_FLR_AUTOBUG_BUILDLAB_STR 		DEBUG_FLR_BUILDLAB_STR
+#define DEBUG_FLR_AUTOBUG_BUILDDATESTAMP_STR 	DEBUG_FLR_BUILDDATESTAMP_STR
+#define DEBUG_FLR_AUTOBUG_BUILDOSVER_STR 	DEBUG_FLR_BUILDOSVER_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_TIMEDATESTAMP DEBUG_FLR_BUCKET_ID_TIMEDATESTAMP
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_CHECKSUM 	DEBUG_FLR_BUCKET_ID_CHECKSUM
+#define DEBUG_FLR_AUTOBUG_BUILD_FLAVOR_STR 	DEBUG_FLR_BUILD_FLAVOR_STR
+#define DEBUG_FLR_AUTOBUG_BUCKET_ID_FLAVOR_STR 	DEBUG_FLR_BUCKET_ID_FLAVOR_STR
+#define DEBUG_FLR_AUTOBUG_OS_SKU 		DEBUG_FLR_OS_SKU
+#define DEBUG_FLR_AUTOBUG_PRODUCT_TYPE 		DEBUG_FLR_PRODUCT_TYPE
+#define DEBUG_FLR_AUTOBUG_SUITE_MASK 		DEBUG_FLR_SUITE_MASK
+#define DEBUG_FLR_AUTOBUG_USER_LCID 		DEBUG_FLR_USER_LCID
+#define DEBUG_FLR_AUTOBUG_OS_REVISION 		DEBUG_FLR_OS_REVISION
+#define DEBUG_FLR_AUTOBUG_OS_NAME 		DEBUG_FLR_OS_NAME
+#define DEBUG_FLR_AUTOBUG_OS_NAME_EDITION 	DEBUG_FLR_OS_NAME_EDITION
+#define DEBUG_FLR_AUTOBUG_OS_PLATFORM_TYPE 	DEBUG_FLR_OS_PLATFORM_TYPE
+#define DEBUG_FLR_AUTOBUG_OSSERVICEPACK_NUMBER 	DEBUG_FLR_OSSERVICEPACK_NUMBER
+#define DEBUG_FLR_AUTOBUG_OS_LOCALE 		DEBUG_FLR_OS_LOCALE
+#define DEBUG_FLR_AUTOBUG_BUILDDATESTAMP 	DEBUG_FLR_BUILDDATESTAMP
+#define DEBUG_FLR_AUTOBUG_USER_LCID_STR 	DEBUG_FLR_USER_LCID_STR
+#endif
 
 typedef struct _DBG_THREAD_ATTRIBUTES
 {
@@ -1482,6 +1556,7 @@ typedef struct _OS_INFO {
     ULONG   SrvPackNumber;          // Service pack number of OS
     ULONG   ServicePackBuild;       // Service pack build
     ULONG   Architecture;           // Architecture name such as x86, ia64 or x64
+    ULONG   Lcid;		    // Language id 
     CHAR    Name[64];               // Short name of OS
     CHAR    FullName[256];          // Full name of OS includeing SP, Suite, product
     CHAR    Language[30];           // OS language
@@ -1630,10 +1705,14 @@ typedef struct _DEBUG_ANALYSIS_PROCESSOR_INFO {
 // Queried target build binary dir, the build dir string is returned in pData
 // pQueryInfo must be null
 #define EXTDLL_DATA_QUERY_BUILD_BINDIR 1
-
-// Queried target build index, the build symbols dir string is returned in pData
-// pQueryInfo must be null
 #define EXTDLL_DATA_QUERY_BUILD_SYMDIR 2
+#define EXTDLL_DATA_QUERY_BUILD_WOW64SYMDIR 3
+#define EXTDLL_DATA_QUERY_BUILD_WOW64BINDIR 4
+
+#define EXTDLL_DATA_QUERY_BUILD_BINDIR_SYMSRV 11
+#define EXTDLL_DATA_QUERY_BUILD_SYMDIR_SYMSRV 12
+#define EXTDLL_DATA_QUERY_BUILD_WOW64SYMDIR_SYMSRV 13
+#define EXTDLL_DATA_QUERY_BUILD_WOW64BINDIR_SYMSRV 14
 
 //
 // Extension function ExtDllQueryDataByTag exported by ext.dll to query
@@ -1679,5 +1758,40 @@ typedef HRESULT
     PSTR Buffer,           // Buffer to receive the value in
     ULONG BufferSize       // size of buffer
     );
+
+
+
+
+ /*++
+
+    Structures defined that are used to pass data
+    between ext.dll & wmiTrace.dll debug extensions
+ 
+ --*/
+
+
+
+typedef enum _TANALYZE_RETURN{
+    NO_TYPE,
+    PROCESS_END,
+    EXIT_STATUS,
+    DISK_READ_0_BYTES,
+    DISK_WRITE,
+    NT_STATUS_CODE,
+}TANALYZE_RETURN;
+
+
+typedef struct _CKCL_DATA{
+    PVOID NextLogEvent;
+    CHAR * TAnalyzeString;
+    TANALYZE_RETURN TAnalyzeReturnType;
+}CKCL_DATA, *PCKCL_DATA;
+
+
+typedef struct _CKCL_LISTHEAD{
+    PCKCL_DATA LogEventListHead;
+    HANDLE  Heap;
+}CKCL_LISTHEAD,*PCKCL_LISTHEAD;
+
 
 #endif // _EXTFNS_H
