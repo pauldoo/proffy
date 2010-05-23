@@ -1,7 +1,0 @@
-In rough order of priority, from highest to lowest:
-
-* Remove dead code added during initial exploration of DbgEng.
-
-* Port to C++/CLI.
-
-* Investigate better symbol searching (e.g. MS symbol server).

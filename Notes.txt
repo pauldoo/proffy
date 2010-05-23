@@ -1,2 +1,0 @@
-_NT_SYMBOL_PATH
-symsrv*symsrv.dll*C:\Documents and Settings\Paul\Symbols*http://msdl.microsoft.com/download/symbols
