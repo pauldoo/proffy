@@ -21,7 +21,9 @@ About:
 
 Instructions:
 
-    Add #include <C:/path/to/Proffy/Proffy/Launcher.h>
+    Find the source file in which you want to start/stop profiling and add:
+
+        #include <C:/path/to/Proffy/Proffy/Launcher.h>
 
     Decorate the function to be profiled like this (note the {} braces for
     scoping of Proffy::Launcher variable):
@@ -50,7 +52,18 @@ Instructions:
 
 Frequently asked questions:
 
-    I get very little readable output.
+    I get an error on startup about "MSCVP100.dll".
+
+        This is because I am lazy and do not distribute the Microsoft Visual C++
+        2010 redistributable packages with Proffy. Download links are given
+        here.
+
+        For 32-bit Proffy:
+            http://www.microsoft.com/downloads/details.aspx?familyid=A7B7A05E-6DE6-4D3A-A423-37BF0912DB84
+        For 64-bit Proffy:
+            http://www.microsoft.com/downloads/details.aspx?familyid=BD512D9E-43C8-4655-81BF-9350143D5867
+
+    I get very little readable output in the Proffy results.
 
         Ensure that debug symbols are being generated for the code you wish to
         profile.
@@ -111,6 +124,5 @@ Future to-do list:
 
     * Port to C++/CLI.
 
-    * Investigate better symbol searching (e.g. MS symbol server). Find the
-    outer source file which you want to profile and:
+    * Investigate better symbol searching (e.g. MS symbol server).
 
