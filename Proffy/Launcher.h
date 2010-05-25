@@ -80,7 +80,7 @@ namespace Proffy {
 
             std::wostringstream buf;
             buf
-                << proffyExecutable
+                << L"\"" << proffyExecutable << L"\""
                 << L" " << ::GetCurrentProcessId()
                 << L" \"" << outputDirectory << L"\""
                 << L" " << reinterpret_cast<uintptr_t>(fStartFlag->fHandle)
