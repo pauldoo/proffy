@@ -70,6 +70,7 @@
         <para>Target application invokes "Stop" function now that profiling should end.</para>
         <para>Proffy saves results to XML and GraphViz "dot" formats.</para>
         <para>Human can view XML file in a browser.</para>
+        <speakernotes>test</speakernotes>
     </foil>
     <foil>
         <title>Launching</title>
