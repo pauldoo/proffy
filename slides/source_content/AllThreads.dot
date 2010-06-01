@@ -1,0 +1,43 @@
+strict digraph Awesome {
+    node_0 [label="SampleTarget32!Proffy::Launcher::Finish@6112\n1"];
+    node_1 [label="SampleTarget32!__tmainCRTStartup@26231\n0"];
+    node_2 [label="SampleTarget32!main@4096\n0"];
+    node_3 [label="SampleTarget32!std::_Insertion_sort1<int *,int>@24880\n10"];
+    node_4 [label="SampleTarget32!std::_Insertion_sort<int *>@24304\n0"];
+    node_5 [label="SampleTarget32!std::_Med3<int *>@25104\n1"];
+    node_6 [label="SampleTarget32!std::_Median<int *>@24432\n1"];
+    node_7 [label="SampleTarget32!std::_Move_backward<int *,int *>@25552\n1"];
+    node_8 [label="SampleTarget32!std::_Move_backward<int *,int *>@25824\n3"];
+    node_9 [label="SampleTarget32!std::_Random_shuffle<int *,int>@22640\n3"];
+    node_10 [label="SampleTarget32!std::_Sort<int *,int>@22816\n0"];
+    node_11 [label="SampleTarget32!std::_Unguarded_partition<int *>@23584\n40"];
+    node_12 [label="SampleTarget32!std::forward<int * &>@25200\n11"];
+    node_13 [label="SampleTarget32!std::iter_swap<int *,int *>@23488\n7"];
+    node_14 [label="SampleTarget32!std::pair<int *,int *>::pair<int *,int *><int * &,int * &>@24656\n0"];
+    node_15 [label="SampleTarget32!std::random_shuffle<std::_Vector_iterator<std::_Vector_val<int,std::allocator<int> > > >@21584\n9"];
+    node_16 [label="SampleTarget32!std::sort<std::_Vector_iterator<std::_Vector_val<int,std::allocator<int> > > >@21664\n0"];
+    node_17 [label="SampleTarget32!std::swap<int>@23520\n16"];
+
+    node_1 -> node_2 [label="103", weight=103];
+    node_2 -> node_0 [label="1", weight=1];
+    node_2 -> node_15 [label="21", weight=21];
+    node_2 -> node_16 [label="81", weight=81];
+    node_3 -> node_7 [label="4", weight=4];
+    node_3 -> node_12 [label="2", weight=2];
+    node_4 -> node_3 [label="16", weight=16];
+    node_5 -> node_13 [label="1", weight=1];
+    node_6 -> node_5 [label="2", weight=2];
+    node_7 -> node_8 [label="3", weight=3];
+    node_9 -> node_13 [label="9", weight=9];
+    node_10 -> node_4 [label="16", weight=16];
+    node_10 -> node_10 [label="145", weight=145];
+    node_10 -> node_11 [label="65", weight=65];
+    node_11 -> node_6 [label="3", weight=3];
+    node_11 -> node_13 [label="21", weight=21];
+    node_11 -> node_14 [label="1", weight=1];
+    node_13 -> node_17 [label="24", weight=24];
+    node_14 -> node_12 [label="1", weight=1];
+    node_15 -> node_9 [label="12", weight=12];
+    node_16 -> node_10 [label="81", weight=81];
+    node_17 -> node_12 [label="8", weight=8];
+}

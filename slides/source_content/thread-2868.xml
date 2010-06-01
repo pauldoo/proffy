@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml-stylesheet type="text/xsl" href="Xhtml.xsl"?>
+<ProffyResults>
+
+  <Summary>
+    <DelayBetweenSamplesInSeconds>0.05</DelayBetweenSamplesInSeconds>
+    <Title>thread-2868</Title>
+    <SampleCount>103</SampleCount>
+    <CallstackCount>1</CallstackCount>
+    <WallClockTimeInSeconds>14.642</WallClockTimeInSeconds>
+  </Summary>
+
+  <PointsEncountered/>
+
+  <CallCounters/>
+
+  <Files/>
+
+</ProffyResults>

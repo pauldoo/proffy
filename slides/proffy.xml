@@ -17,91 +17,74 @@
         </confgroup>
     </slidesinfo>
     <foil>
-        <title>Agenda</title>
+        <programlisting>
+            <![CDATA[
+const clock_t begin = clock();
+while ((clock() - begin) < 10*CLOCKS_PER_SEC) {
+    std::random_shuffle(
+        values.begin(),
+        values.end());
+    std::sort(
+        values.begin(),
+        values.end());
+}
+            ]]>
+        </programlisting>
+    </foil>
+    <foil>
+        <programlisting>
+<emphasis><![CDATA[Proffy::Launcher profiler(
+    L"C:/path/to/proffy32.exe",
+    L"C:/path/for/results",
+    1.0 / 20);]]></emphasis>
+<![CDATA[const clock_t begin = clock();
+while ((clock() - begin) < 10*CLOCKS_PER_SEC) {
+    std::random_shuffle(
+        values.begin(),
+        values.end());
+    std::sort(
+        values.begin(),
+        values.end());
+}]]>
+<emphasis><![CDATA[profiler.Finish();]]></emphasis>
+        </programlisting>
+    </foil>
+    <foil>
+        <para>Contents of <code>C:/path/for/results</code>:</para>
         <itemizedlist>
-            <listitem>Who? Who was involved?</listitem>
-            <listitem>What? What happened (what's the story)?</listitem>
-            <listitem>Where? Where did it take place?</listitem>
-            <listitem>When? When did it take place?</listitem>
-            <listitem>Why? Why did it happen?</listitem>
-            <listitem>How? How did it happen?</listitem>
+            <listitem><code>AllThreads.xml</code></listitem>
+            <listitem><code>AllThreads.dot</code></listitem>
+            <listitem><code>Thread-<emphasis>NNNN</emphasis>.xml</code></listitem>
+            <listitem><code>Thread-<emphasis>NNNN</emphasis>.dot</code></listitem>
+            <listitem><code>...</code></listitem>
         </itemizedlist>
     </foil>
     <foil>
-        <title>Who?</title>
-        <para>Just me.</para>
+        <imagedata fileref="source_content/xml_summary.png" width="100%" height="100%" scalefit="1"/>
     </foil>
     <foil>
-        <title>What?</title>
-        <para>I created a profiler for measuring execution time of native windows applications.</para>
+        <imagedata fileref="source_content/xml_source1.png" width="100%" height="100%" scalefit="1"/>
     </foil>
     <foil>
-        <title>Where?</title>
-        <para>At home, this project is not related in any way to my employer (Toshiba).</para>
+        <imagedata fileref="source_content/xml_source2.png" width="100%" height="100%" scalefit="1"/>
     </foil>
     <foil>
-        <title>When?</title>
-        <para>Started in November 2008 using my spare time.</para>
-        <para>It was after Christmas before it worked well enough to be useful.</para>
-        <para>Development has been sporadic since then due to many distractions<footnote><para>Mostly fractals</para></footnote>.</para>
+        <imagedata fileref="source_content/dot_graph.png" width="100%" height="100%" scalefit="1"/>
     </foil>
     <foil>
-        <title>Why?</title>
-        <para>I was unhappy with existing profilers provided to me at work.</para>
+        <para>Tech:</para>
         <itemizedlist>
-            <listitem>
-                AMD Code Analyst only did hot spot analysis.
-            </listitem>
-            <listitem>
-                Intel VTune could do call graph profiling, but it needed invasive instrumentation to do so.  Application was also very fussy about my particular PC.
-            </listitem>
-            <listitem>
-                Both had heavyweight interfaces.
-            </listitem>
+            <listitem>Sampling only</listitem>
+            <listitem>Callgraphs</listitem>
+            <listitem>DbgEng</listitem>
+            <listitem>XSLT</listitem>
         </itemizedlist>
-        <para>There was no free (as in speech) native code profiler on Windows<footnote><para>Actually "Very Sleepy" existed then, but I didn't know of it.</para></footnote>.</para>
-    </foil>
-    <foil>
-        <title>How?</title>
-        <para>Target application includes a header file.</para>
-        <para>Target application invokes "Launch" function when profiling should begin.</para>
-        <para>Proffy launches, and signals to the target it may now resume.</para>
-        <para>Proffy periodically pauses the target (just like hitting "break"), and examines the callstack on every thread.</para>
-        <para>Target application invokes "Stop" function now that profiling should end.</para>
-        <para>Proffy saves results to XML and GraphViz "dot" formats.</para>
-        <para>Human can view XML file in a browser.</para>
-        <speakernotes>test</speakernotes>
-    </foil>
-    <foil>
-        <title>Launching</title>
-        <para>Use only a header to invoke Proffy form inside the target applicaiton.</para>
-        <para>Precise way to start/stop profiling exactly on the interesting code.</para>
-        <para>Allows Proffy to be used in an automated environment.</para>
-    </foil>
-    <foil>
-        <title>DbgEng</title>
-        <para>Guts of debuggers like Microsoft WinDebug and Visual Studio.</para>
-        <para>Undocumented COM monster, which took many weeks of guessing to figure out.</para>
-        <para>Simply horrible.</para>
-    </foil>
-    <foil>
-        <title>XSLT</title>
-        <para>XML output from Proffy is very raw.</para>
-        <para>All processing to produce readable output is performed by an XSLT.</para>
-        <para>Spent many days learning how to optimize XSLT execution time<footnote><para>Should I write an XSLT profiler?</para></footnote>.</para>
-    </foil>
-    <foil>
-        <title>GraphViz</title>
-        <para>Layout each function as a node, connect with edges showing time spent calling between them.</para>
-        <para>Not sure it's very useful.</para>
-    </foil>
-    <foil>
-        <title>Future</title>
-        <para>Support managed (.NET) targets..</para>
-        <para>Friendlier output (better XSLT).</para>
-        <para>Saner display for recursive or threaded functions.</para>
-    </foil>
-    <foil>
-        <title>Fin!</title>
+        <para>Future:</para>
+        <itemizedlist>
+            <listitem>Support managed (.NET) targets.</listitem>
+            <listitem>Friendlier output (better XSLT).</listitem>
+            <listitem>Saner display for recursive or threaded functions.</listitem>
+        </itemizedlist>
     </foil>
 </slides>
+
