@@ -1,0 +1,90 @@
+<?xml version='1.0'?>
+<!DOCTYPE slides PUBLIC "-//Norman Walsh//DTD Slides V3.4.0//EN"
+    "http://docbook.sourceforge.net/release/slides/3.4.0/schema/dtd/slides.dtd">
+<slides>
+    <slidesinfo>
+        <title>Proffy</title>
+        <author>
+            <firstname>Paul</firstname>
+            <surname>Richards</surname>
+        </author>
+        <author>
+            <othername>@pauldoo</othername>
+        </author>
+        <confgroup>
+            <conftitle>Edinburgh TechMeetup</conftitle>
+            <confdates>Wednesday, 9 June 2010</confdates>
+        </confgroup>
+    </slidesinfo>
+    <foil>
+        <programlisting>
+            <![CDATA[
+const clock_t begin = clock();
+while ((clock() - begin) < 10*CLOCKS_PER_SEC) {
+    std::random_shuffle(
+        values.begin(),
+        values.end());
+    std::sort(
+        values.begin(),
+        values.end());
+}
+            ]]>
+        </programlisting>
+    </foil>
+    <foil>
+        <programlisting>
+<emphasis><![CDATA[Proffy::Launcher profiler(
+    L"C:/path/to/proffy32.exe",
+    L"C:/path/for/results",
+    1.0 / 20);]]></emphasis>
+<![CDATA[const clock_t begin = clock();
+while ((clock() - begin) < 10*CLOCKS_PER_SEC) {
+    std::random_shuffle(
+        values.begin(),
+        values.end());
+    std::sort(
+        values.begin(),
+        values.end());
+}]]>
+<emphasis><![CDATA[profiler.Finish();]]></emphasis>
+        </programlisting>
+    </foil>
+    <foil>
+        <para>Contents of <code>C:/path/for/results</code>:</para>
+        <itemizedlist>
+            <listitem><code>AllThreads.xml</code></listitem>
+            <listitem><code>AllThreads.dot</code></listitem>
+            <listitem><code>Thread-<emphasis>NNNN</emphasis>.xml</code></listitem>
+            <listitem><code>Thread-<emphasis>NNNN</emphasis>.dot</code></listitem>
+            <listitem><code>...</code></listitem>
+        </itemizedlist>
+    </foil>
+    <foil>
+        <imagedata fileref="source_content/xml_summary.png" width="100%" height="100%" scalefit="1"/>
+    </foil>
+    <foil>
+        <imagedata fileref="source_content/xml_source1.png" width="100%" height="100%" scalefit="1"/>
+    </foil>
+    <foil>
+        <imagedata fileref="source_content/xml_source2.png" width="100%" height="100%" scalefit="1"/>
+    </foil>
+    <foil>
+        <imagedata fileref="source_content/dot_graph.png" width="100%" height="100%" scalefit="1"/>
+    </foil>
+    <foil>
+        <para>Tech:</para>
+        <itemizedlist>
+            <listitem>Sampling only</listitem>
+            <listitem>Callgraphs</listitem>
+            <listitem>DbgEng</listitem>
+            <listitem>XSLT</listitem>
+        </itemizedlist>
+        <para>Future:</para>
+        <itemizedlist>
+            <listitem>Support managed (.NET) targets.</listitem>
+            <listitem>Friendlier output (better XSLT).</listitem>
+            <listitem>Saner display for recursive or threaded functions.</listitem>
+        </itemizedlist>
+    </foil>
+</slides>
+
