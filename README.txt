@@ -14,7 +14,8 @@ About:
 
     * Can profile multi-threaded applications.
 
-    Created by Paul Richards and released as free software under the ISC license.
+    Created by Paul Richards and released as free software under the ISC
+    license.
 
     http://pauldoo.com/proffy/
 
