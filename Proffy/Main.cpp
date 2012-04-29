@@ -1,7 +1,7 @@
 /*
     Copyright (c) 2008, 2009, 2010, 2012 Paul Richards <paul.richards@gmail.com>
 
-    Permission to use, copy, modify, and distribute this software for any
+    Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
     copyright notice and this permission notice appear in all copies.
 
@@ -41,7 +41,7 @@ namespace Proffy {
             << L"\n"
             << L"Copyright (c) 2008, 2009, 2010, 2012 Paul Richards <paul.richards@gmail.com>\n"
             << L"\n"
-            << L"Permission to use, copy, modify, and distribute this software for any\n"
+            << L"Permission to use, copy, modify, and/or distribute this software for any\n"
             << L"purpose with or without fee is hereby granted, provided that the above\n"
             << L"copyright notice and this permission notice appear in all copies.\n"
             << L"\n"
