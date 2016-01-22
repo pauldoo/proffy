@@ -1,7 +1,7 @@
 set WINDOWS_SDK_PATH=C:\Program Files\Microsoft SDKs\Windows\v7.1
-set PATH=%PATH%;c:\cygwin\bin
+set PATH=%PATH%;c:\cygwin64\bin
 
-c:\cygwin\bin\sh getversion.sh > Proffy\Version.inc
+c:\cygwin64\bin\sh getversion.sh > Proffy\Version.inc
 IF %ERRORLEVEL% NEQ 0 exit 1
 
 cmd.exe /E:ON /V:ON /C build32.bat
