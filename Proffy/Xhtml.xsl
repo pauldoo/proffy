@@ -49,17 +49,17 @@
     <xsl:key
         name="CountersBy_CallerSymbol"
         match="/ProffyResults/CallCounters/Counter"
-        use="key('PointsBy_Id', @CallerId)/@SymbolName"/>
+		use="/ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@SymbolName"/>
 
     <xsl:key
         name="CountersBy_CallerSymbol_CallerFileName_CallerLineNumber"
         match="/ProffyResults/CallCounters/Counter"
-        use="concat(key('PointsBy_Id', @CallerId)/@SymbolName, '#', key('PointsBy_Id', @CallerId)/@FileName, '#', key('PointsBy_Id', @CallerId)/@LineNumber)"/>
+		use="concat(/ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@SymbolName, '#', /ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@FileName, '#', /ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@LineNumber)"/>
 
     <xsl:key
         name="CountersBy_CalleeSymbol_CallerSymbol_CallerFileName_CallerLineNumber"
         match="/ProffyResults/CallCounters/Counter"
-        use="concat(key('PointsBy_Id', @CalleeId)/@SymbolName, '#', key('PointsBy_Id', @CallerId)/@SymbolName, '#', key('PointsBy_Id', @CallerId)/@FileName, '#', key('PointsBy_Id', @CallerId)/@LineNumber)"/>
+		use="concat(/ProffyResults/PointsEncountered/Point[@Id=current()/@CalleeId]/@SymbolName, '#', /ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@SymbolName, '#', /ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@FileName, '#', /ProffyResults/PointsEncountered/Point[@Id=current()/@CallerId]/@LineNumber)"/>
 
     <xsl:template name="CssStylesheet">
         <style type="text/css">
